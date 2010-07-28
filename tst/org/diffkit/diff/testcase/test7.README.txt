@@ -1,0 +1,21 @@
+test7 README
+=========
+
+Description
+----------
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan. Plan limits total number of diffs (maxDiffs) to 2.
+
+
+Assumptions
+-----------
+- lhs & rhs are File tables
+- lhs vs. rhs has both row and column diffs
+- TableModel specifies compound primary key
+- Comparisons are all passthrough-- column identical on both sides & only Equals comparison
+- maxDiffs = 2
+
+Expectations
+-----------
+- only the first 2 diffs are reported
+- diffs 3-6 are ignored

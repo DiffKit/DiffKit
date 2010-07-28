@@ -1,0 +1,18 @@
+test1 README
+=========
+
+Description
+----------
+A basic sanity check that compares two identical DB tables using the most straightforward possible 
+comparison. Everything is wired explicitly into a PassthroughPlan.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- lhs == rhs
+- Comparisons are all passthrough-- column identical on both sides & only Equals comparison
+
+Expectations
+-----------
+- no diffs

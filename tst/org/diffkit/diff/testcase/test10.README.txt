@@ -1,0 +1,26 @@
+test10 README
+=========
+
+Description
+----------
+Compare two DB tables using mostly automatic default provided by the MagicPlan. Plan specifies keyColumnNames, 
+which are different from the pk defined in the database for the target table. If alignment was carried out using 
+table pk (column1), all rows would be row diffs. Instead, engine is able to align the rows and produce only column diffs
+because of the keyColumnName override (column3).
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- lhs vs. rhs has only column diffs
+- plan file supplies lhs table name and rhs table name
+- plan file supplies ConnectionInfo to H2 DB
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+- MagicPlan uses COLUMN 3 as the key for both tables. This overrides the definition in the DB (column1).
+
+
+Expectations
+-----------
+- 7 column diffs

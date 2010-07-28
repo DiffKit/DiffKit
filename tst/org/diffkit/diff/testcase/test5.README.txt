@@ -1,0 +1,21 @@
+test5 README
+=========
+
+Description
+----------
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan. Plan limits diffs to ROW_DIFF diffs only.
+
+
+Assumptions
+-----------
+- lhs & rhs are File tables
+- lhs vs. rhs has both row and column diffs
+- TableModel specifies compound primary key
+- Comparisons are all passthrough-- column identical on both sides & only Equals comparison
+- only report ROW diffs
+
+Expectations
+-----------
+- no column diffs in expected, even though column diffs exist between sources
+- four row diffs

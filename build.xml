@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ author: jpanico
+-->
+
+<project name="diffkit">
+
+	<property name="root.dir" location="." />
+	<property name="src.dir" location="${root.dir}/src" />
+	<property name="lib.dir" location="${root.dir}/lib" />
+	<property name="deploy.dir" location="${root.dir}/deploy" />
+	<property name="build.dir" location="${root.dir}/build" />
+	<property name="run.dir" location="${root.dir}/run" />
+   <property name="dist.dir" location="${root.dir}/dist" />
+   <property name="expression.dir" location="${root.dir}/src/com/legacy/foundation/predicate" />
+
+	<patternset id="build.resources">
+		<include name="**/*.xml" />
+		<include name="**/*.txt" />
+	</patternset>
+
+	<fileset id="libs" dir="${lib.dir}">
+		<include name="*.jar" />
+		<include name="*.zip" />
+	</fileset>
+
+	<fileset id="confs" dir="${conf.dir}">
+		<include name="*.xml" />
+	</fileset>
+
+	<path id="build.classpath">
+		<fileset refid="libs" />
+	</path>
+
+	<path id="run.classpath">
+		<fileset refid="libs" />
+	</path>
+
+	<target name="dist-properties">
+
+		<propertyfile file="${dist.properties.file}">
+			<entry key="version.date" type="date" value="now" pattern="MM/dd/yyyy" />
+		</propertyfile>
+
+		<property file="${dist.properties.file}" />
+	</target>
+
+	<target name="info">
+		<echo>basedir--> ${basedir}</echo>
+		<echo>ant.file--> ${ant.file}</echo>
+		<echo>ant.version--> ${ant.version}</echo>
+		<echo>ant.project.name--> ${ant.project.name}</echo>
+		<echo>ant.java.version--> ${ant.java.version}</echo>
+	</target>
+
+	<target name="build">
+
+		<mkdir dir="${build.dir}" />
+
+		<javac srcdir="${src.dir}" destdir="${build.dir}" verbose="off" classpathref="build.classpath" target="1.6" source="1.6" debug="on" deprecation="off" />
+
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<patternset refid="build.resources" />
+			</fileset>
+		</copy>
+
+	</target>
+
+
+	<target name="dist" depends="build">
+
+		<property name="version" value="${version.major}.${version.minor}.${version.patch}-${version.build}" />
+
+		<property name="zip.dir" location="${dist.dir}/${version}" />
+
+		<mkdir dir="${zip.dir}" />
+		<mkdir dir="${zip.dir}/conf" />
+		<mkdir dir="${zip.dir}/lib" />
+		<mkdir dir="${zip.dir}/deploy" />
+
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false" />
+	</target>
+
+</project>

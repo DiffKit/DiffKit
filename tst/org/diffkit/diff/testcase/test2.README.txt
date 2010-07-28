@@ -1,0 +1,20 @@
+test2 README
+=========
+
+Description
+----------
+Compare two DB tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- lhs vs. rhs has both row and column diffs
+- TableModel specifies compound primary key
+- Comparisons are all passthrough-- column identical on both sides & only Equals comparison
+
+Expectations
+-----------
+- first and last diffs are column diffs
+- four other row diffs

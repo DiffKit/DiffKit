@@ -1,0 +1,26 @@
+test16 README
+=========
+
+Description
+----------
+Test DBSource where clause. There are two rows on the lhs (COLUMN1=0, 5555) that are not on the rhs.
+By default, these would generate ROW diffs. However, we add a lhsWhereClause to the MagicPlan that
+excludes all rows only the rhs that are not on the lhs. The result is that the diff report contains only 
+column diffs.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- lhs vs. rhs has column and row diffs
+- plan file supplies lhs table name and rhs table name
+- plan file supplies ConnectionInfo to H2 DB
+- plan file supplies where clause to lhs DBSource that will filter out rows not on the rhs
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+
+Expectations
+-----------
+- 12 COLUMN diffs
+

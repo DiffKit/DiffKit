@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bean id="comparison" class="org.diffkit.conf.DKComparison">
+	<property name="beanOne">
+		<ref bean="anotherExampleBean" />
+	</property>
+	<property name="beanTwo">
+		<ref bean="yetAnotherBean" />
+	</property>
+	<property name="integerProperty">
+		<value>1</value>
+	</property>
+</bean>

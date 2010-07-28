@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
+			</Pattern>
+		</layout>
+	</appender>
+
+
+   <logger name="org.diffkit.diff.diffor.DKEqualsDiffor">
+      <level value="info" />
+   </logger>
+   
+   <logger name="org.diffkit.diff.sns.DKFileSource">
+      <level value="info" />
+   </logger>
+   
+   <logger name="org.diffkit.diff.engine.DKStandardTableComparison">
+      <level value="info" />
+   </logger>
+   
+   <logger name="org.diffkit.diff.conf.DKAutomaticTableComparison">
+      <level value="info" />
+   </logger>
+   
+   <logger name="org.diffkit">
+      <level value="info" />
+   </logger>
+
+	<logger name="org.diffkit.diff.sns.DKFileSource">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.diffkit.diff.sns.DKDBSource">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.diffkit.diff.engine.DKDiffEngine">
+		<level value="info" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

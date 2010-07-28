@@ -1,0 +1,29 @@
+test14 README
+=========
+
+Description
+----------
+Demonstrate the use of ignorefColumnNames and displayColumnNames in MagicPlan.  There are diffs in 
+column3 and column4. The plan uses ignorefColumnNames to exclude column3 and column4 from diffing,
+ensuring that only row diffs are found (there are no column diffs in column2).  By default, only key columns
+are used for display in the diff report, but the plan specifies that column1 and column3 should be used 
+in the display of rows within the diff report.
+
+
+Assumptions
+-----------
+- lhs & rhs are FILE tables
+- lhs vs. rhs has both row and column diffs
+- plan file supplies lhs table  and rhs table file paths
+- plan file supplies file path for Sink
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the column headers in the data file
+- MagicPlan excludes column3 and column4 from diffing; only column2 is diffed
+- MagicPlan forces non-default display columns in output: column1 & column3
+- MagicPlan uses Equals Diff across the board
+- MagicPlan defaults to looking for ROW and COLUMN type Diffs
+- MagicPlan sets max diffs to Long.MAX
+
+Expectations
+-----------
+- 3 row diffs

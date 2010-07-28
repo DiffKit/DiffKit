@@ -1,0 +1,28 @@
+test12 README
+=========
+
+Description
+----------
+Compare heterogenous sources, lhs is DB rhs is FILE, using MagicPlan. Differences in table structure are
+silently ignored by AutomaticTableComparison. Column3 is a BIGINT in the DB, but a STRING in the FILE, 
+because the FILE is only auto modelled. So the Diffor has to perform conversion.
+
+
+Assumptions
+-----------
+- lhs is DB table
+- rhs is FILE table
+- lhs vs. rhs has both row and column diffs
+- table structures are different. AutomaticTableComparison ensures that only matching column names are used
+- plan file supplies lhs table name and rhs file name
+- plan file supplies ConnectionInfo to H2 DB
+- MagicPlan reverse engineers lhs TableModel from the database
+- MagicPlan reverse engineers rhs TableModel from the file
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+- Column3 comparison converts the FILE value from STRING to LONG before diffing
+
+Expectations
+-----------
+- 2 column diffs
+- 3 row diffs
+- diff in row COLUMN1=3333 is not found because it occurs in COLUMN4, which was not in diffColumnNames list.
