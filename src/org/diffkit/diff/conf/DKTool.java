@@ -31,9 +31,9 @@ public class DKTool {
    private static final Logger LOG = LoggerFactory.getLogger(DKTool.class);
 
    public static void main(String[] args_) {
-      LOG.info("args_->", Arrays.toString(args_));
+      LOG.info("args_->{}", Arrays.toString(args_));
       ApplicationContext context = new ClassPathXmlApplicationContext(args_);
-      LOG.info("context->", context);
+      LOG.info("context->{}", context);
       DKPlan plan = (DKPlan) context.getBean("plan");
       LOG.info("plan->{}", plan);
       if (plan == null)

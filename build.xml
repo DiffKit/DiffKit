@@ -8,11 +8,11 @@
 	<property name="root.dir" location="." />
 	<property name="src.dir" location="${root.dir}/src" />
 	<property name="lib.dir" location="${root.dir}/lib" />
-	<property name="deploy.dir" location="${root.dir}/deploy" />
+	<property name="conf.dir" location="${root.dir}/conf" />
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="run.dir" location="${root.dir}/run" />
-   <property name="dist.dir" location="${root.dir}/dist" />
-   <property name="expression.dir" location="${root.dir}/src/com/legacy/foundation/predicate" />
+	<property name="dist.dir" location="${root.dir}/dist" />
+	<property name="dist.properties.file" location="${conf.dir}/dist.properties" />
 
 	<patternset id="build.resources">
 		<include name="**/*.xml" />
@@ -29,10 +29,6 @@
 	</fileset>
 
 	<path id="build.classpath">
-		<fileset refid="libs" />
-	</path>
-
-	<path id="run.classpath">
 		<fileset refid="libs" />
 	</path>
 
@@ -53,7 +49,7 @@
 		<echo>ant.java.version--> ${ant.java.version}</echo>
 	</target>
 
-	<target name="build">
+	<target name="build" depends="dist-properties">
 
 		<mkdir dir="${build.dir}" />
 
@@ -67,17 +63,34 @@
 
 	</target>
 
-
 	<target name="dist" depends="build">
 
-		<property name="version" value="${version.major}.${version.minor}.${version.patch}-${version.build}" />
+		<property name="version" value="${version.major}.${version.minor}.${version.patch}" />
+      <property name="libjar" value="${ant.project.name}-${version}.jar" />
+      <property name="appjar" value="${ant.project.name}-app.jar" />
 
-		<property name="zip.dir" location="${dist.dir}/${version}" />
+		<mkdir dir="${dist.dir}" />
 
-		<mkdir dir="${zip.dir}" />
-		<mkdir dir="${zip.dir}/conf" />
-		<mkdir dir="${zip.dir}/lib" />
-		<mkdir dir="${zip.dir}/deploy" />
+		<!-- create the diffkit library as jar -->
+		<jar destfile="${dist.dir}/${libjar}" basedir="${build.dir}" includes="org/diffkit/**/**" excludes="**/DKLauncher**" />
+
+		<copy todir="${dist.dir}">
+			<fileset dir="${build.dir}">
+				<include name="com/jdotsoft/**/**" />
+				<include name="org/diffkit/**/DKLauncher*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+
+		<!-- create the diffkit standalone application that includes diffkit library and all its dependencies -->
+		<jar destfile="${dist.dir}/${appjar}" basedir="${dist.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="org.diffkit.diff.conf.DKLauncher" />
+			</manifest>
+		</jar>
 
 	</target>
 
