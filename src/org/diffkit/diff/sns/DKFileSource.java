@@ -99,6 +99,9 @@ public class DKFileSource implements DKSource {
             "model_", "keyColumnNames_"));
 
       _file = this.getFile(filePath_);
+      if (_file == null)
+         throw new RuntimeException(String.format(
+            "could not find file for filePath_->%s", filePath_));
       _delimiter = delimiter_;
       _model = model_;
       _keyColumnNames = keyColumnNames_;
@@ -109,7 +112,7 @@ public class DKFileSource implements DKSource {
 
       _isSorted = isSorted_;
       _validateLazily = validateLazily_;
-      DKValidate.notNull(_file, _delimiter);
+      DKValidate.notNull(_delimiter);
       if (!_isSorted)
          throw new NotImplementedException(String.format(
             "isSorted_->%s is not currently supported", _isSorted));

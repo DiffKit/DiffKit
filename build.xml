@@ -64,6 +64,7 @@
 		<property name="version" value="${version.major}.${version.minor}.${version.patch}" />
 		<property name="libjar" value="${ant.project.name}-${version}.jar" />
 		<property name="appjar" value="${ant.project.name}-app.jar" />
+		<property name="distzip" value="${ant.project.name}-${version}.zip" />
 
 		<mkdir dir="${dist.dir}" />
 
@@ -95,6 +96,13 @@
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
 			<fileset dir="${dist.dir}" excludes="${appjar}" />
+		</delete>
+
+		<zip destfile="${dist.dir}/${distzip}" basedir="${dist.dir}" />
+
+		<!-- cleanup -->
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}" excludes="${distzip}" />
 		</delete>
 
 	</target>
