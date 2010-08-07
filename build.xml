@@ -24,10 +24,6 @@
 		<include name="*.zip" />
 	</fileset>
 
-	<fileset id="confs" dir="${conf.dir}">
-		<include name="*.xml" />
-	</fileset>
-
 	<path id="build.classpath">
 		<fileset refid="libs" />
 	</path>
@@ -66,8 +62,8 @@
 	<target name="dist" depends="build">
 
 		<property name="version" value="${version.major}.${version.minor}.${version.patch}" />
-      <property name="libjar" value="${ant.project.name}-${version}.jar" />
-      <property name="appjar" value="${ant.project.name}-app.jar" />
+		<property name="libjar" value="${ant.project.name}-${version}.jar" />
+		<property name="appjar" value="${ant.project.name}-app.jar" />
 
 		<mkdir dir="${dist.dir}" />
 
@@ -85,12 +81,21 @@
 			<fileset dir="${lib.dir}" />
 		</copy>
 
+		<copy todir="${dist.dir}/conf">
+			<fileset dir="${conf.dir}" />
+		</copy>
+
 		<!-- create the diffkit standalone application that includes diffkit library and all its dependencies -->
 		<jar destfile="${dist.dir}/${appjar}" basedir="${dist.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="org.diffkit.diff.conf.DKLauncher" />
 			</manifest>
 		</jar>
+
+		<!-- cleanup -->
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}" excludes="${appjar}" />
+		</delete>
 
 	</target>
 
