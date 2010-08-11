@@ -55,10 +55,11 @@
 
 		<mkdir dir="${build.dir}" />
 
-		<javac srcdir="${src.dir}" destdir="${build.dir}" verbose="off" classpathref="build.classpath" target="1.6" source="1.6" debug="on" deprecation="off" />
-
-		<groovyc srcdir="${tst.dir}" destdir="${build.dir}" includes="**/testcase/*,**/DBTestSetup*" classpathref="build.classpath" verbose="off">
-			<javac target="1.6" source="1.6" debug="on" deprecation="off" />
+		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
+			<src path="${src.dir}" />
+			<src path="${tst.dir}" />
+			<exclude name="**/tst/Test*" />
+			<javac target="1.6" source="1.6" debug="on" deprecation="off/" />
 		</groovyc>
 
 		<copy todir="${build.dir}">
@@ -136,6 +137,13 @@
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false" />
+		<!-- clean up scratch files created by Unit tests and TCR -->
+		<delete>
+			<fileset dir="${root.dir}" includes="*.diff" />
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${root.dir}" includes="tcr*/**" />
+		</delete>
 	</target>
 
 </project>

@@ -18,7 +18,7 @@ package org.diffkit.diff.conf;
 import com.jdotsoft.jarloader.JarClassLoader;
 
 public class DKLauncher {
-   private static final String TOOL_CLASS_NAME = "org.diffkit.diff.conf.DKTool";
+   private static final String TOOL_CLASS_NAME = "org.diffkit.diff.conf.DKApplication";
    private static final String LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY = "logback.configurationFile";
    private static final String DEFAULT_LOGBACK_CONFIGURATION_FILE_PATH = "conf/logback.xml";
 

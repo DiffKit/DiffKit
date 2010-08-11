@@ -19,8 +19,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
@@ -29,29 +34,80 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
 import org.diffkit.diff.engine.DKDiffEngine;
+import org.diffkit.diff.testcase.TestCaseRunner;
 
 /**
  * @author jpanico
  */
 public class DKApplication {
+   private static final String VERSION_OPTION_KEY = "version";
+   private static final String HELP_OPTION_KEY = "help";
+   private static final String TEST_OPTION_KEY = "test";
+   private static final String PLAN_FILE_OPTION_KEY = "planfile";
+   private static final Options OPTIONS = new Options();
+
    private static final String PLAN_FILE_NAME_REGEX = ".*\\.plan\\.xml";
    private static final Pattern PLAN_FILE_PATTERN = Pattern.compile(PLAN_FILE_NAME_REGEX);
    private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
 
+   static {
+      OPTIONS.addOption(new Option(VERSION_OPTION_KEY,
+         "print the version information and exit"));
+      OPTIONS.addOption(new Option(HELP_OPTION_KEY, "print this message"));
+      OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
+   }
+
    public static void main(String[] args_) {
       LOG.debug("args_->{}", Arrays.toString(args_));
-      validateArgs(args_);
-      String planFilePath = args_[0];
+      try {
+         CommandLineParser parser = new PosixParser();
+         CommandLine line = parser.parse(OPTIONS, args_);
+         if (line.hasOption(VERSION_OPTION_KEY))
+            printVersion();
+         else if (line.hasOption(HELP_OPTION_KEY))
+            printHelp();
+         else if (line.hasOption(TEST_OPTION_KEY))
+            runTestCases();
+         else
+            printInvalidArguments(args_);
+      }
+      catch (ParseException e_) {
+         System.err.println(e_.getMessage());
+      }
+   }
 
-      AbstractXmlApplicationContext context = getContext(planFilePath);
+   private static void printVersion() {
+      System.out.println("version->" + DKDistProperties.getPublicVersionString());
+      System.exit(0);
+   }
+
+   private static void printInvalidArguments(String[] args_) {
+      System.err.println(String.format("Invalid command line arguments: %s",
+         Arrays.toString(args_)));
+      printHelp();
+   }
+
+   private static void printHelp() {
+      // automatically generate the help statement
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("java -jar diffkit-app.jar", OPTIONS);
+   }
+
+   private static void runTestCases() {
+      LOG.debug("running TestCases");
+      TestCaseRunner.main((String[]) null);
+   }
+
+   private static void runPlan(String planFilePath_) {
+      AbstractXmlApplicationContext context = getContext(planFilePath_);
       LOG.info("context->{}", context);
       context.setClassLoader(DKApplication.class.getClassLoader());
       context.refresh();
       DKPlan plan = (DKPlan) context.getBean("plan");
       LOG.info("plan->{}", plan);
       if (plan == null)
-         throw new RuntimeException(String.format("no 'plan' bean in config files->",
-            Arrays.toString(args_)));
+         throw new RuntimeException(String.format("no 'plan' bean in plan file->",
+            planFilePath_));
       DKDiffEngine engine = new DKDiffEngine();
       LOG.info("engine->{}", engine);
       try {
@@ -63,6 +119,7 @@ public class DKApplication {
          LOG.error(null, e_);
          System.exit(-1);
       }
+
    }
 
    /**
@@ -77,25 +134,4 @@ public class DKApplication {
       return new ClassPathXmlApplicationContext(planFilePath_);
    }
 
-   private static void validateArgs(String[] args_) {
-      if ((ArrayUtils.isEmpty(args_) || args_.length > 1))
-         exitWithUsage();
-      String arg = StringUtils.trimToNull(args_[0]);
-      if (arg == null)
-         exitWithUsage();
-      if (arg.equals("-version"))
-         exitWithVersion();
-      if (!PLAN_FILE_PATTERN.matcher(arg).matches())
-         exitWithUsage();
-   }
-
-   private static void exitWithVersion() {
-      System.out.println("version->" + DKDistProperties.getPublicVersionString());
-      System.exit(0);
-   }
-
-   private static void exitWithUsage() {
-      System.err.println("args must be: [-version | <xml plan file name>]");
-      System.exit(-1);
-   }
 }
