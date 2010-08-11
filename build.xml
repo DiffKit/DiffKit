@@ -7,8 +7,10 @@
 
 	<property name="root.dir" location="." />
 	<property name="src.dir" location="${root.dir}/src" />
+	<property name="tst.dir" location="${root.dir}/tst" />
 	<property name="lib.dir" location="${root.dir}/lib" />
 	<property name="conf.dir" location="${root.dir}/conf" />
+	<property name="doc.dir" location="${root.dir}/doc" />
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="run.dir" location="${root.dir}/run" />
 	<property name="dist.dir" location="${root.dir}/dist" />
@@ -17,6 +19,8 @@
 	<patternset id="build.resources">
 		<include name="**/*.xml" />
 		<include name="**/*.txt" />
+		<include name="**/*.csv" />
+		<include name="**/*.diff" />
 	</patternset>
 
 	<fileset id="libs" dir="${lib.dir}">
@@ -27,6 +31,8 @@
 	<path id="build.classpath">
 		<fileset refid="libs" />
 	</path>
+
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="build.classpath" />
 
 	<target name="dist-properties">
 
@@ -51,8 +57,15 @@
 
 		<javac srcdir="${src.dir}" destdir="${build.dir}" verbose="off" classpathref="build.classpath" target="1.6" source="1.6" debug="on" deprecation="off" />
 
+		<groovyc srcdir="${tst.dir}" destdir="${build.dir}" includes="**/testcase/*,**/DBTestSetup*" classpathref="build.classpath" verbose="off">
+			<javac target="1.6" source="1.6" debug="on" deprecation="off" />
+		</groovyc>
+
 		<copy todir="${build.dir}">
 			<fileset dir="${src.dir}">
+				<patternset refid="build.resources" />
+			</fileset>
+			<fileset dir="${tst.dir}">
 				<patternset refid="build.resources" />
 			</fileset>
 		</copy>
@@ -105,7 +118,11 @@
 				<include name="**/logback.xml" />
 			</fileset>
 		</copy>
-		
+
+		<copy todir="${dist.dir}/doc">
+			<fileset dir="${doc.dir}" />
+		</copy>
+
 		<zip destfile="${dist.dir}/${distzip}" basedir="${dist.dir}" />
 
 		<!-- cleanup -->

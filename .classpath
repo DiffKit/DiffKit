@@ -20,5 +20,9 @@
 	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/paranamer-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-core-1.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-1.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
