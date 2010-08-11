@@ -9,26 +9,13 @@
 		</layout>
 	</appender>
 
+	<logger name="org.diffkit.diff.engine.DKStandardTableComparison">
+		<level value="info" />
+	</logger>
 
-   <logger name="org.diffkit.diff.diffor.DKEqualsDiffor">
-      <level value="info" />
-   </logger>
-   
-   <logger name="org.diffkit.diff.sns.DKFileSource">
-      <level value="info" />
-   </logger>
-   
-   <logger name="org.diffkit.diff.engine.DKStandardTableComparison">
-      <level value="info" />
-   </logger>
-   
-   <logger name="org.diffkit.diff.conf.DKAutomaticTableComparison">
-      <level value="info" />
-   </logger>
-   
-   <logger name="org.diffkit">
-      <level value="info" />
-   </logger>
+	<logger name="org.diffkit.diff.conf.DKAutomaticTableComparison">
+		<level value="info" />
+	</logger>
 
 	<logger name="org.diffkit.diff.sns.DKFileSource">
 		<level value="info" />

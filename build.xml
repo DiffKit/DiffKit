@@ -83,7 +83,9 @@
 		</copy>
 
 		<copy todir="${dist.dir}/conf">
-			<fileset dir="${conf.dir}" />
+			<fileset dir="${conf.dir}">
+				<exclude name="**/logback.xml" />
+			</fileset>
 		</copy>
 
 		<!-- create the diffkit standalone application that includes diffkit library and all its dependencies -->
@@ -98,6 +100,12 @@
 			<fileset dir="${dist.dir}" excludes="${appjar}" />
 		</delete>
 
+		<copy todir="${dist.dir}/conf">
+			<fileset dir="${conf.dir}">
+				<include name="**/logback.xml" />
+			</fileset>
+		</copy>
+		
 		<zip destfile="${dist.dir}/${distzip}" basedir="${dist.dir}" />
 
 		<!-- cleanup -->
