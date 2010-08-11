@@ -60,8 +60,8 @@ public class DKDistProperties {
       }
       String versionMajor = properties.getProperty("version.major");
       String versionMinor = properties.getProperty("version.minor");
-      String versionPatch = properties.getProperty("version.patch");
-      _publicVersionString = versionMajor + "." + versionMinor + "." + versionPatch;
+      String versionMicro = properties.getProperty("version.micro");
+      _publicVersionString = versionMajor + "." + versionMinor + "." + versionMicro;
 
       return _publicVersionString;
    }

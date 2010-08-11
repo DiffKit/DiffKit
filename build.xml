@@ -61,7 +61,7 @@
 
 	<target name="dist" depends="build">
 
-		<property name="version" value="${version.major}.${version.minor}.${version.patch}" />
+		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
 		<property name="libjar" value="${ant.project.name}-${version}.jar" />
 		<property name="appjar" value="${ant.project.name}-app.jar" />
 		<property name="distzip" value="${ant.project.name}-${version}.zip" />
