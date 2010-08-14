@@ -30,6 +30,8 @@ public interface DKPlan {
 
    public DKSink getSink();
 
+   public void setSink(DKSink sink_);
+
    public DKTableComparison getTableComparison();
 
 }

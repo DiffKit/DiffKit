@@ -59,6 +59,8 @@ public class DKApplication {
 
    public static void main(String[] args_) {
       LOG.debug("args_->{}", Arrays.toString(args_));
+      LOG.info("package->{}", DKApplication.class.getPackage());
+
       try {
          CommandLineParser parser = new PosixParser();
          CommandLine line = parser.parse(OPTIONS, args_);

@@ -31,56 +31,56 @@ import org.diffkit.util.DKFileUtil;
  * @author jpanico
  */
 public class TestCaseRun {
-	
-	public final TestCase testCase
-	public final DKPlan plan
-	public Date start
-	public Date end
-	public String actualFile
-	public boolean isExecuted
-	private final Logger _log = LoggerFactory.getLogger(this.getClass())
-	
-	public TestCaseRun(TestCase testCase_, DKPlan plan_){
-		this(testCase_, plan_, null, null, null)
-	}
-	
-	public TestCaseRun(TestCase testCase_, DKPlan plan_, Date start_, Date end_,  
-	String actualFile_){
-		
-		testCase = testCase_
-		plan = new DKPassthroughPlan(plan_)
-		start = start_
-		end = end_
-		actualFile = actualFile_
-		DKValidate.notNull(testCase, plan)
-	}
-	
-	private void execute(){
-		DKDiffEngine engine = []
-		try{
-			isExecuted = true
-			engine.diff(plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison)
-		}
-		catch(Exception e_){
-			_log.error(null,e_)
-		}
-	}
-	
-	public String getReport(){
-		if(!isExecuted)
-			return 'Not yet executed!'
-		File expectedFile = testCase.expectedFile
-		// N.B. TestCaseRunner ensures that sink is File type
-		File actualFile = plan.sink.file
-		String expectedContent = DKFileUtil.readFullyAsString(expectedFile)
-		String actualContent = DKFileUtil.readFullyAsString(actualFile)
-		def passed = StringUtils.equals( expectedContent, actualContent)
-		def resultString = passed ? 'PASSED' : '*FAILED*'
-		return "${testCase.name} $resultString"
-	}
-	
-	public String toString() {
-		return String.format("%s(%s)",
-		ClassUtils.getShortClassName(this.getClass()), testCase.name);
-	}
+   
+   public final TestCase testCase
+   public final DKPlan plan
+   public Date start
+   public Date end
+   public String actualFile
+   public boolean isExecuted
+   private final Logger _log = LoggerFactory.getLogger(this.getClass())
+   
+   public TestCaseRun(TestCase testCase_, DKPlan plan_){
+      this(testCase_, plan_, null, null, null)
+   }
+   
+   public TestCaseRun(TestCase testCase_, DKPlan plan_, Date start_, Date end_,  
+   String actualFile_){
+      
+      testCase = testCase_
+      plan = new DKPassthroughPlan(plan_)
+      start = start_
+      end = end_
+      actualFile = actualFile_
+      DKValidate.notNull(testCase, plan)
+   }
+   
+   public void execute(){
+      DKDiffEngine engine = []
+      try{
+         isExecuted = true
+         engine.diff(plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison)
+      }
+      catch(Exception e_){
+         _log.error(null,e_)
+      }
+   }
+   
+   public String getReport(){
+      if(!isExecuted)
+         return 'Not yet executed!'
+      File expectedFile = testCase.expectedFile
+      // N.B. TestCaseRunner ensures that sink is File type
+      File actualFile = plan.sink.file
+      String expectedContent = DKFileUtil.readFullyAsString(expectedFile)
+      String actualContent = DKFileUtil.readFullyAsString(actualFile)
+      def passed = StringUtils.equals( expectedContent, actualContent)
+      def resultString = passed ? 'PASSED' : '*FAILED*'
+      return "${testCase.name} $resultString"
+   }
+   
+   public String toString() {
+      return String.format("%s(%s)",
+      ClassUtils.getShortClassName(this.getClass()), testCase.name);
+   }
 }
