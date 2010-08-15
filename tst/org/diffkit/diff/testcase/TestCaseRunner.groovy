@@ -99,15 +99,7 @@ public class TestCaseRunner {
     */
    private TestCaseRunnerRun setupRunnerRun(){
       TestCaseRunnerRun runnerRun = [new File('./')]
-//      URL dataUrl = this.class.classLoader.getResource('org/diffkit/diff/testcase/testcaserunner.xml')
-      String contents  = DKResourceUtil.getResourceContents('org/diffkit/diff/testcase/')
-      _log.info("contents->{}",contents)
-      String filePath = StringUtils.removeStart(dataUrl.toExternalForm(), 'jar:file:')
-      _log.info("filePath->{}",filePath)
-      File dataDir = new File(filePath)
-      assert dataDir.isDirectory()
-      _log.info("contents->{}",Arrays.toString(dataDir.list()))
-      
+      //      URL dataUrl = this.class.classLoader.getResource('org/diffkit/diff/testcase/testcaserunner.xml')
       //      if(dataUrl.toExternalForm().startsWith("jar:")){
       //         InputStream dataInputStream = dataUrl.openStream()
       //         _log.info("dataInputStream->{}",dataInputStream)
