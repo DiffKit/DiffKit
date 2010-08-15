@@ -53,7 +53,7 @@ public class DKClassUtil {
             return null;
          for (Method method : declaredMethods) {
             int modifiers = method.getModifiers();
-            if ((Modifier.isStatic(modifiers)) || (Modifier.isAbstract(modifiers)))
+            if (Modifier.isAbstract(modifiers))
                continue;
             if (!methodName_.equals(method.getName()))
                continue;

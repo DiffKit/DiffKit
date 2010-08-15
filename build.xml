@@ -23,6 +23,10 @@
 		<include name="**/*.diff" />
 	</patternset>
 
+	<patternset id="executables">
+		<include name="**/*.class" />
+	</patternset>
+
 	<fileset id="libs" dir="${lib.dir}">
 		<include name="*.jar" />
 		<include name="*.zip" />
@@ -57,8 +61,13 @@
 
 		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
 			<src path="${src.dir}" />
+			<javac target="1.6" source="1.6" debug="on" deprecation="off/" />
+		</groovyc>
+
+		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
 			<src path="${tst.dir}" />
-			<exclude name="**/tst/Test*" />
+			<include name="**/testcase/**" />
+			<include name="**/DBTestSetup*" />
 			<javac target="1.6" source="1.6" debug="on" deprecation="off/" />
 		</groovyc>
 
@@ -66,24 +75,51 @@
 			<fileset dir="${src.dir}">
 				<patternset refid="build.resources" />
 			</fileset>
+
 			<fileset dir="${tst.dir}">
-				<patternset refid="build.resources" />
+				<include name="**/testcase/**" />
+				<exclude name="**/testcaserunner*" />
+				<exclude name="**/*.groovy" />
 			</fileset>
 		</copy>
 
 	</target>
 
-	<target name="dist" depends="build">
+	<target name="dist" depends="clean,build">
 
 		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
+		<property name="testcasedatajar" value="testcasedata.jar" />
 		<property name="libjar" value="${ant.project.name}-${version}.jar" />
 		<property name="appjar" value="${ant.project.name}-app.jar" />
 		<property name="distzip" value="${ant.project.name}-${version}.zip" />
 
 		<mkdir dir="${dist.dir}" />
 
+		<copy todir="${dist.dir}">
+			<fileset dir="${build.dir}">
+				<include name="org/diffkit/**/*.class" />
+				<exclude name="**/DKLauncher**" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dist.dir}/testcasedata" />
+		<copy todir="${dist.dir}/testcasedata" flatten="true">
+			<fileset dir="${build.dir}/org/diffkit/diff/testcase/">
+				<patternset refid="build.resources" />
+			</fileset>
+		</copy>
+		<!-- jar up TestCase resources -->
+		<jar destfile="${dist.dir}/org/diffkit/diff/testcase/${testcasedatajar}">
+			<fileset dir="${dist.dir}/testcasedata/" />
+		</jar>
+
 		<!-- create the diffkit library as jar -->
-		<jar destfile="${dist.dir}/${libjar}" basedir="${build.dir}" includes="org/diffkit/**/**" excludes="**/DKLauncher**" />
+		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}" excludes="testcasedata/" />
+
+		<!-- cleanup -->
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}" excludes="${libjar}" />
+		</delete>
 
 		<copy todir="${dist.dir}">
 			<fileset dir="${build.dir}">
@@ -111,7 +147,7 @@
 
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
-			<fileset dir="${dist.dir}" excludes="${appjar}" />
+			<fileset dir="${dist.dir}" excludes="${appjar},${testcasedatajar}" />
 		</delete>
 
 		<copy todir="${dist.dir}/conf">

@@ -16,6 +16,7 @@
 package org.diffkit.diff.conf;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
 import org.diffkit.diff.engine.DKDiffEngine;
-import org.diffkit.diff.testcase.TestCaseRunner;
+import org.diffkit.util.DKClassUtil;
 
 /**
  * @author jpanico
@@ -97,7 +98,16 @@ public class DKApplication {
 
    private static void runTestCases() {
       LOG.debug("running TestCases");
-      TestCaseRunner.main((String[]) null);
+      try {
+         Class<?> testCaseRunnerClass = Class.forName("org.diffkit.diff.testcase.TestCaseRunner");
+         LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
+         Method mainMethod = DKClassUtil.findMethod("main", 1, testCaseRunnerClass);
+         LOG.debug("mainMethod->{}", mainMethod);
+         mainMethod.invoke(testCaseRunnerClass, new Object[] { null });
+      }
+      catch (Exception e_) {
+         LOG.error(null, e_);
+      }
    }
 
    private static void runPlan(String planFilePath_) {
