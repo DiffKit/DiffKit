@@ -54,9 +54,11 @@ public class DBTestSetup {
       ApplicationContext context = null
       _log.debug("dbSetupFile_->{}",dbSetupFile_.canonicalPath)
       if(dbSetupFile_.exists())
-         context = new FileSystemXmlApplicationContext('file:'+dbSetupFile_.absolutePath)
+         context = new FileSystemXmlApplicationContext((String[])['file:'+dbSetupFile_.absolutePath], false)
       else 
-         context = new ClassPathXmlApplicationContext(dbSetupFile_.path)
+         context = new ClassPathXmlApplicationContext((String[])[dbSetupFile_.path],false)
+      context.setClassLoader(DBTestSetup.class.getClassLoader())
+      context.refresh()
       assert context
       
       def connectionSource = context.getBean('connectionSource')

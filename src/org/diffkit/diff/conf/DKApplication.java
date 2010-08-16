@@ -104,7 +104,7 @@ public class DKApplication {
          LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
          Constructor<Runnable> constructor = (Constructor<Runnable>) DKClassUtil.findLongestConstructor(testCaseRunnerClass);
          LOG.debug("constructor->{}", constructor);
-         Runnable testCaseRunner = constructor.newInstance(null, null);
+         Runnable testCaseRunner = constructor.newInstance((Object) null);
          testCaseRunner.run();
       }
       catch (Exception e_) {

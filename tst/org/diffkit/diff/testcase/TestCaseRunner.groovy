@@ -19,6 +19,7 @@ package org.diffkit.diff.testcase
 
 
 import java.net.URL;
+import java.util.jar.JarInputStream;
 import java.util.regex.Pattern 
 
 import org.slf4j.Logger
@@ -33,6 +34,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
 
 import org.diffkit.common.DKRegexFilenameFilter;
+import org.diffkit.common.DKUnjar;
 import org.diffkit.common.DKValidate;
 
 import org.diffkit.db.DKDBConnectionSource 
@@ -61,6 +63,7 @@ public class TestCaseRunner implements Runnable {
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
    private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt']
    private static final FileFilter TEST_CASE_DATA_FILTER = new SuffixFileFilter(TEST_CASE_DATA_SUFFIXES)
+   private static final String TEST_CASE_DATA_ARCHIVE_NAE = "testcasedata.jar"
    
    private List<Integer> _testCaseNumbers
    private String _dataPath
@@ -80,6 +83,10 @@ public class TestCaseRunner implements Runnable {
    
    public void run(){
       def runnerRun = this.setupRunnerRun()
+      if(!runnerRun) {
+         _log.info("can't setup runnerRun; exiting.")
+         return
+      }
       _allTestCases = this.fetchAllTestCases(runnerRun)
       _log.debug("_allTestCases->{}",_allTestCases)
       def List<TestCase> testCases = null
@@ -91,6 +98,11 @@ public class TestCaseRunner implements Runnable {
          testCases = _allTestCases.findAll {
             _testCaseNumbers.contains(it.id)
          }
+      
+      if(!testCases) {
+         _log.info("could not find any TestCases to run; exiting.")
+         return
+      }
       
       Collections.sort(testCases)
       _log.info("testCases->{}",testCases)
@@ -105,12 +117,22 @@ public class TestCaseRunner implements Runnable {
     */
    private TestCaseRunnerRun setupRunnerRun(){
       TestCaseRunnerRun runnerRun = [new File('./')]
+      DKResourceUtil.addResourceDir(runnerRun.dir)
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
-      DKResourceUtil.addResourceDir(runnerRun.dir)
       URL dataPathUrl = classLoader.getResource(_dataPath)
       _log.info("dataPathUrl->{}",dataPathUrl)
       if(dataPathUrl.toExternalForm().startsWith("jar:")){
+         String testDataArchiveResourcePath = _dataPath + TEST_CASE_DATA_ARCHIVE_NAE
+         _log.info("testDataArchiveResourcePath->{}",testDataArchiveResourcePath)
+         InputStream archiveInputStream = classLoader.getResourceAsStream(testDataArchiveResourcePath)
+         _log.info("archiveInputStream->{}",archiveInputStream)
+         if(!archiveInputStream) {
+            _log.error("couldn't find archive at path->{}",testDataArchiveResourcePath)
+            return null
+         }
+         JarInputStream jarInputStream = new JarInputStream(archiveInputStream)
+         DKUnjar.unjar( jarInputStream, runnerRun.dir)
       }
       else {
          File dataDir = [dataPathUrl.toURI()]
@@ -136,7 +158,9 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKPlan getPlan(TestCase testCase_){
-      ApplicationContext context = new FileSystemXmlApplicationContext('file:'+testCase_.planFile.absolutePath);
+      ApplicationContext context = new FileSystemXmlApplicationContext((String[])['file:'+testCase_.planFile.absolutePath], false);
+      context.setClassLoader(this.class.getClassLoader())
+      context.refresh()
       assert context
       def plan = context.getBean('plan')
       _log.debug("plan->{}",plan)
@@ -163,8 +187,6 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKSource setupSource(DKSource source_, TestCaseRunnerRun runnerRun_){
-//      if(source_.kind == DKSourceSink.Kind.FILE)
-//         return this.setupFileSource( source_, runnerRun_)
       return source_
    }
    
