@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 
-	<logger name="org.diffkit.diff.engine.DKStandardTableComparison">
+	<logger name="org.diffkit">
 		<level value="info" />
 	</logger>
 

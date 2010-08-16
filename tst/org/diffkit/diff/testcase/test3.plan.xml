@@ -69,7 +69,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKFileSource">
 		<constructor-arg index="0"
-			value="org/diffkit/diff/testcase/test3.rhs.csv" />
+			value="./test3.rhs.csv" />
 		<constructor-arg index="1" ref="lhs.table.model" />
 		<constructor-arg index="2">
 			<null />
@@ -84,7 +84,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKFileSource">
 		<constructor-arg index="0"
-			value="org/diffkit/diff/testcase/test3.lhs.csv" />
+			value="./test3.lhs.csv" />
 		<constructor-arg index="1" ref="lhs.table.model" />
       <constructor-arg index="2">
          <null />

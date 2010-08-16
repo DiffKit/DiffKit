@@ -99,9 +99,6 @@ public class DKFileSource implements DKSource {
             "model_", "keyColumnNames_"));
 
       _file = this.getFile(filePath_);
-      if (_file == null)
-         throw new RuntimeException(String.format(
-            "could not find file for filePath_->%s", filePath_));
       _delimiter = delimiter_;
       _model = model_;
       _keyColumnNames = keyColumnNames_;
@@ -116,8 +113,12 @@ public class DKFileSource implements DKSource {
       if (!_isSorted)
          throw new NotImplementedException(String.format(
             "isSorted_->%s is not currently supported", _isSorted));
-      if (!validateLazily_)
+      if (!_validateLazily) {
+         if (_file == null)
+            throw new RuntimeException(String.format(
+               "could not find file for filePath_->%s", filePath_));
          this.open();
+      }
    }
 
    public File getFile() {
@@ -263,15 +264,18 @@ public class DKFileSource implements DKSource {
    private File getFile(String filePath_) {
       if (filePath_ == null)
          return null;
-      File file = new File(filePath_);
-      if (file.exists())
-         return file;
+      File fsFile = new File(filePath_);
+      if (fsFile.exists())
+         return fsFile;
       try {
-         return DKResourceUtil.findResourceAsFile(filePath_);
+         File resourceFile = DKResourceUtil.findResourceAsFile(filePath_);
+         if (resourceFile != null)
+            return resourceFile;
       }
       catch (URISyntaxException e_) {
          throw new RuntimeException(e_);
       }
+      return fsFile;
    }
 
    private void validateFile() throws IOException {

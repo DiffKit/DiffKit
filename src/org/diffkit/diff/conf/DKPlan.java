@@ -26,7 +26,11 @@ public interface DKPlan {
 
    public DKSource getLhsSource();
 
+   public void setLhsSource(DKSource source_);
+
    public DKSource getRhsSource();
+
+   public void setRhsSource(DKSource source_);
 
    public DKSink getSink();
 

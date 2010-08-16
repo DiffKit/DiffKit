@@ -45,7 +45,9 @@ import org.diffkit.diff.engine.DKSource
 import org.diffkit.diff.engine.DKSourceSink 
 import org.diffkit.diff.engine.DKSourceSink.Kind
 import org.diffkit.diff.sns.DKFileSink 
+import org.diffkit.diff.sns.DKFileSource 
 import org.diffkit.diff.sns.DKWriterSink 
+import org.diffkit.util.DKResourceUtil;
 import org.diffkit.util.DKStringUtil 
 
 
@@ -103,7 +105,10 @@ public class TestCaseRunner implements Runnable {
     */
    private TestCaseRunnerRun setupRunnerRun(){
       TestCaseRunnerRun runnerRun = [new File('./')]
-      URL dataPathUrl = this.class.classLoader.getResource(_dataPath)
+      def classLoader = this.class.classLoader
+      _log.info("classLoader->{}",classLoader)
+      DKResourceUtil.addResourceDir(runnerRun.dir)
+      URL dataPathUrl = classLoader.getResource(_dataPath)
       _log.info("dataPathUrl->{}",dataPathUrl)
       if(dataPathUrl.toExternalForm().startsWith("jar:")){
       }
@@ -152,7 +157,15 @@ public class TestCaseRunner implements Runnable {
    }
    
    private void setup(TestCaseRun run_, TestCaseRunnerRun runnerRun_){
+      run_.plan.lhsSource = this.setupSource( run_.plan.lhsSource, runnerRun_)
+      run_.plan.rhsSource = this.setupSource( run_.plan.rhsSource, runnerRun_)
       run_.plan.sink = this.setupSink( run_.plan.sink, runnerRun_)
+   }
+   
+   private DKSource setupSource(DKSource source_, TestCaseRunnerRun runnerRun_){
+//      if(source_.kind == DKSourceSink.Kind.FILE)
+//         return this.setupFileSource( source_, runnerRun_)
+      return source_
    }
    
    private DKSink setupSink(DKSink sink_, TestCaseRunnerRun runnerRun_){
@@ -160,6 +173,14 @@ public class TestCaseRunner implements Runnable {
          return this.setupFileSink( sink_, runnerRun_)
       else
          throw new RuntimeException("unrecognized sink_.kind->${sink_.kind}")
+   }
+   
+   private DKSource setupFileSource(DKFileSource source_, TestCaseRunnerRun runnerRun_){
+      File newSourcePath = [runnerRun_.dir, source_.file.path]
+      _log.debug("newSourcePath->{}",newSourcePath)
+      return new DKFileSource(newSourcePath.absolutePath, source_.model, 
+      source_.keyColumnNames, source_.readColumnIdxs, source_.delimeter, 
+      source_.isSorted, source_.validateLazily )
    }
    
    private DKSink setupFileSink(DKWriterSink sink_, TestCaseRunnerRun runnerRun_){

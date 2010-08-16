@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +21,18 @@ import org.slf4j.LoggerFactory;
  */
 public class DKResourceUtil {
    private static final Logger LOG = LoggerFactory.getLogger(DKResourceUtil.class);
+
+   private static File[] _resourceDirs;
+
+   public static synchronized void addResourceDir(File dir_) {
+      if (dir_ == null)
+         return;
+      _resourceDirs = (File[]) ArrayUtils.add(_resourceDirs, dir_);
+   }
+
+   public static synchronized File[] getResourceDirs() {
+      return _resourceDirs;
+   }
 
    public static String getResourceContents(String resource_) {
       LOG.debug("resource_->{}", resource_);
@@ -62,6 +77,9 @@ public class DKResourceUtil {
          return null;
       ClassLoader classLoader = DKResourceUtil.class.getClassLoader();
       LOG.debug("classLoader->{}", classLoader);
+      if (classLoader instanceof URLClassLoader)
+         LOG.debug("classLoader urls->{}",
+            Arrays.toString(((URLClassLoader) classLoader).getURLs()));
       URL resource = classLoader.getResource(resource_);
       LOG.debug("resource->{}", resource);
       return resource;
@@ -78,6 +96,10 @@ public class DKResourceUtil {
     * uses findResource(String)
     */
    public static File findResourceAsFile(String resource_) throws URISyntaxException {
+      File localFile = findLocalResource(resource_);
+      if (localFile != null)
+         return localFile;
+
       URL resourceUrl = findResource(resource_);
       LOG.debug("resourceUrl->{}", resourceUrl);
       if (resourceUrl == null)
@@ -85,4 +107,16 @@ public class DKResourceUtil {
       return new File(resourceUrl.toURI());
    }
 
+   private static File findLocalResource(String resource_) {
+      if (resource_ == null)
+         return null;
+      if (_resourceDirs == null)
+         return null;
+      for (File resourceDir : _resourceDirs) {
+         File resource = new File(resourceDir, resource_);
+         if (resource.exists())
+            return resource;
+      }
+      return null;
+   }
 }
