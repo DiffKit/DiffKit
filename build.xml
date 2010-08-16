@@ -135,7 +135,6 @@
 
 		<copy todir="${dist.dir}/conf">
 			<fileset dir="${conf.dir}">
-				<exclude name="**/logback.xml" />
 			</fileset>
 		</copy>
 

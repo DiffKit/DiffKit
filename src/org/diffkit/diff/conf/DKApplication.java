@@ -24,6 +24,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -56,11 +57,16 @@ public class DKApplication {
          "print the version information and exit"));
       OPTIONS.addOption(new Option(HELP_OPTION_KEY, "print this message"));
       OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
+      OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
+
+      OptionBuilder.withArgName("file");
+      OptionBuilder.hasArg();
+      OptionBuilder.withDescription("use given file for plan");
+      OPTIONS.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
    }
 
    public static void main(String[] args_) {
       LOG.debug("args_->{}", Arrays.toString(args_));
-      LOG.info("package->{}", DKApplication.class.getPackage());
 
       try {
          CommandLineParser parser = new PosixParser();
@@ -71,6 +77,8 @@ public class DKApplication {
             printHelp();
          else if (line.hasOption(TEST_OPTION_KEY))
             runTestCases();
+         else if (line.hasOption(PLAN_FILE_OPTION_KEY))
+            runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY));
          else
             printInvalidArguments(args_);
       }
@@ -113,10 +121,9 @@ public class DKApplication {
    }
 
    private static void runPlan(String planFilePath_) {
+      LOG.info("planFilePath_->{}", planFilePath_);
       AbstractXmlApplicationContext context = getContext(planFilePath_);
       LOG.info("context->{}", context);
-      context.setClassLoader(DKApplication.class.getClassLoader());
-      context.refresh();
       DKPlan plan = (DKPlan) context.getBean("plan");
       LOG.info("plan->{}", plan);
       if (plan == null)
@@ -143,9 +150,15 @@ public class DKApplication {
     */
    private static AbstractXmlApplicationContext getContext(String planFilePath_) {
       File file = new File(planFilePath_);
+      AbstractXmlApplicationContext context = null;
       if (file.canRead())
-         return new FileSystemXmlApplicationContext(new String[] { planFilePath_ }, false);
-      return new ClassPathXmlApplicationContext(planFilePath_);
+         context = new FileSystemXmlApplicationContext(new String[] { planFilePath_ },
+            false);
+      else
+         context = new ClassPathXmlApplicationContext(planFilePath_);
+      context.setClassLoader(DKApplication.class.getClassLoader());
+      context.refresh();
+      return context;
    }
 
 }
