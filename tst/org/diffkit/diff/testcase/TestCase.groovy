@@ -15,11 +15,12 @@
  */
 package org.diffkit.diff.testcase
 
+import java.io.File;
+
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import org.diffkit.common.DKValidate;
-import org.diffkit.util.DKResourceUtil;
 
 
 
@@ -31,36 +32,25 @@ public class TestCase implements Comparable<TestCase>{
    public final Integer id
    public final String name
    public final String description
-   public final String dbSetupPath
-   public final String lhsSourcePath
-   public final String rhsSourcePath
-   public final String planFile
-   public final String expectedPath
+   public final File dbSetupFile
+   public final File lhsSourceFile
+   public final File rhsSourceFile
+   public final File planFile
+   public final File expectedFile
    
-   public TestCase(Integer id_, String name_, String description_, String dbSetupPath_, String lhsSourcePath_, 
-   String rhsSourcePath_, String planFile_, String expectedPath_){
+   public TestCase(Integer id_, String name_, String description_, File dbSetupFile_, File lhsSourceFile_, 
+   File rhsSourceFile_, File planFile_, File expectedFile_){
       
       id = id_
       name = name_
       description = description_
-      dbSetupPath = dbSetupPath_
+      dbSetupFile = dbSetupFile_
       planFile = planFile_
-      lhsSourcePath = lhsSourcePath_
-      rhsSourcePath = rhsSourcePath_
-      expectedPath = expectedPath_
-      DKValidate.notNull(id, name,  lhsSourcePath, rhsSourcePath, planFile, expectedPath)
-   }
-   
-   public File getLhsSourceFile(){
-      return DKResourceUtil.findResourceAsFile(lhsSourcePath)
-   }
-   
-   public File getRhsSourceFile(){
-      return DKResourceUtil.findResourceAsFile(rhsSourcePath)
-   }
-   
-   public File getExpectedFile(){
-      return DKResourceUtil.findResourceAsFile(expectedPath)
+      lhsSourceFile = lhsSourceFile_
+      rhsSourceFile = rhsSourceFile_
+      expectedFile = expectedFile_
+      DKValidate.notNull(id, name)
+      this.validate()
    }
    
    public String toString() {
@@ -84,25 +74,17 @@ public class TestCase implements Comparable<TestCase>{
    /**
     * the receiver validates itself
     */
-   public void validate(){
-      this.validateResource(lhsSourcePath)
-      this.validateResource(rhsSourcePath)
-      this.validateResource(planFile)
-      this.validateResource(expectedPath)
+   private void validate(){
+      this.validateResourceFile('lhsSourceFile',lhsSourceFile)
+      this.validateResourceFile('rhsSourceFile', rhsSourceFile)
+      this.validateResourceFile('planFile', planFile)
+      this.validateResourceFile('expectedFile', expectedFile)
    }
    
-   private String getAbsolutePathForResource(String resourcePath_){
-      File resourceFile = DKResourceUtil.findResourceAsFile(resourcePath_)
-      if(!resourceFile)
-         return null
-      return resourceFile.absolutePath
-   }
-   
-   private void validateResource(String resourcePath_){
-      def resourceFile = DKResourceUtil.findResourceAsFile(resourcePath_)
-      if(!resourceFile)
-         throw new RuntimeException("couldn't find resourcePath_->$resourcePath_")
-      if(!resourceFile.canRead())
-         throw new RuntimeException("can't read resourceFile->$resourceFile")
+   private void validateResourceFile(String name_, File resourceFile_){
+      if(!resourceFile_)
+         throw new RuntimeException("does not allow null value for->$name_")
+      if(!resourceFile_.canRead())
+         throw new RuntimeException("cannot read resourceFile_->$resourceFile_")
    }
 }

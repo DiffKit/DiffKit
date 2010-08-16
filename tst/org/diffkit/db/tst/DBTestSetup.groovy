@@ -29,55 +29,64 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext 
 import org.springframework.context.support.ClassPathXmlApplicationContext 
+import org.springframework.context.support.FileSystemXmlApplicationContext 
 
 
 /**
  * @author jpanico
  */
 public class DBTestSetup {
-	
-	private static final Logger _log = LoggerFactory.getLogger(DBTestSetup.class)
-	
-	public static void setupDB(String dbSetupPath_, String lhsSourcePath_, String rhsSourcePath_) {
-		File lhsSourceFile = DKResourceUtil.findResourceAsFile(lhsSourcePath_)
-		File rhsSourceFile = DKResourceUtil.findResourceAsFile(rhsSourcePath_)
-		setupDB( dbSetupPath_, lhsSourceFile, rhsSourceFile)
-	}
-	
-	public static void setupDB(String dbSetupPath_, File lhsSourceFile_, File rhsSourceFile_) {
-		if(!dbSetupPath_)
-			return 
-		ApplicationContext context = new ClassPathXmlApplicationContext(dbSetupPath_)
-		assert context
-		def connectionSource = context.getBean('connectionSource')
-		_log.debug("connectionSource->{}",connectionSource)
-		if(!connectionSource)
-			throw new RuntimeException("no 'connectionSource' bean in dbsetup file->${dbSetupPath_}")
-		def beanName = 'lhs.table'
-		if(context.containsBean(beanName)) {
-			def lhsTable = context.getBean(beanName)
-			_log.debug("lhsTable->{}",lhsTable)
-			setupDBTable( lhsTable, lhsSourceFile_, connectionSource)
-		}
-		beanName = 'rhs.table'
-		if(context.containsBean(beanName)) {
-			def rhsTable = context.getBean(beanName)
-			_log.debug("rhsTable->{}",rhsTable)
-			setupDBTable( rhsTable, rhsSourceFile_, connectionSource)				
-		}
-	}
-	
-	private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBConnectionSource connectionSource_){
-		if(!table_)
-			return
-		
-		Connection connection = connectionSource_.connection
-		_log.debug("connection->{}",connection)
-		DKDBTable.createTable( table_, connection)
-		DKSqlUtil.close(connection)
-		DKDBTableLoader loader = new DKDBH2Loader(connectionSource_)
-		_log.debug("loader->{}",loader)
-		loader.load(table_, dataFile_)                  
-	}
-	
+   
+   private static final Logger _log = LoggerFactory.getLogger(DBTestSetup.class)
+   
+   public static void setupDB(File dbSetupFile_, String lhsSourcePath_, String rhsSourcePath_) {
+      File lhsSourceFile = DKResourceUtil.findResourceAsFile(lhsSourcePath_)
+      File rhsSourceFile = DKResourceUtil.findResourceAsFile(rhsSourcePath_)
+      setupDB( dbSetupFile_, lhsSourceFile, rhsSourceFile)
+   }
+   
+   /**
+    * dbSetupFile_ can be a FS file path, or a classpath resource path
+    */
+   public static void setupDB(File dbSetupFile_, File lhsSourceFile_, File rhsSourceFile_) {
+      if(!dbSetupFile_)
+         return 
+      ApplicationContext context = null
+      _log.debug("dbSetupFile_->{}",dbSetupFile_.canonicalPath)
+      if(dbSetupFile_.exists())
+         context = new FileSystemXmlApplicationContext('file:'+dbSetupFile_.absolutePath)
+      else 
+         context = new ClassPathXmlApplicationContext(dbSetupFile_.path)
+      assert context
+      
+      def connectionSource = context.getBean('connectionSource')
+      _log.debug("connectionSource->{}",connectionSource)
+      if(!connectionSource)
+         throw new RuntimeException("no 'connectionSource' bean in dbsetup file->${dbSetupFile_}")
+      def beanName = 'lhs.table'
+      if(context.containsBean(beanName)) {
+         def lhsTable = context.getBean(beanName)
+         _log.debug("lhsTable->{}",lhsTable)
+         setupDBTable( lhsTable, lhsSourceFile_, connectionSource)
+      }
+      beanName = 'rhs.table'
+      if(context.containsBean(beanName)) {
+         def rhsTable = context.getBean(beanName)
+         _log.debug("rhsTable->{}",rhsTable)
+         setupDBTable( rhsTable, rhsSourceFile_, connectionSource)
+      }
+   }
+   
+   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBConnectionSource connectionSource_){
+      if(!table_)
+         return
+      
+      Connection connection = connectionSource_.connection
+      _log.debug("connection->{}",connection)
+      DKDBTable.createTable( table_, connection)
+      DKSqlUtil.close(connection)
+      DKDBTableLoader loader = new DKDBH2Loader(connectionSource_)
+      _log.debug("loader->{}",loader)
+      loader.load(table_, dataFile_)
+   }
 }

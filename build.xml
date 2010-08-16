@@ -13,6 +13,7 @@
 	<property name="doc.dir" location="${root.dir}/doc" />
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="run.dir" location="${root.dir}/run" />
+	<property name="tstscratch.dir" location="${root.dir}/tstscratch" />
 	<property name="dist.dir" location="${root.dir}/dist" />
 	<property name="dist.properties.file" location="${conf.dir}/dist.properties" />
 
@@ -179,6 +180,9 @@
 		</delete>
 		<delete includeemptydirs="true">
 			<fileset dir="${root.dir}" includes="tcr*/**" />
+		</delete>
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${tstscratch.dir}" />
 		</delete>
 	</target>
 

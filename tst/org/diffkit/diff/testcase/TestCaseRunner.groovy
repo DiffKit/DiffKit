@@ -26,7 +26,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext 
 import org.springframework.context.support.AbstractXmlApplicationContext 
 import org.springframework.context.support.ClassPathXmlApplicationContext 
+import org.springframework.context.support.FileSystemXmlApplicationContext 
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
 
 import org.diffkit.common.DKRegexFilenameFilter;
@@ -43,8 +46,6 @@ import org.diffkit.diff.engine.DKSourceSink
 import org.diffkit.diff.engine.DKSourceSink.Kind
 import org.diffkit.diff.sns.DKFileSink 
 import org.diffkit.diff.sns.DKWriterSink 
-import org.diffkit.util.DKFileUtil;
-import org.diffkit.util.DKResourceUtil 
 import org.diffkit.util.DKStringUtil 
 
 
@@ -56,6 +57,8 @@ public class TestCaseRunner implements Runnable {
    public static final String TEST_CASE_FILE_NAME = 'testcaserunner.xml'
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
+   private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt']
+   private static final FileFilter TEST_CASE_DATA_FILTER = new SuffixFileFilter(TEST_CASE_DATA_SUFFIXES)
    
    private List<Integer> _testCaseNumbers
    private String _dataPath
@@ -66,17 +69,16 @@ public class TestCaseRunner implements Runnable {
    /**
     * @param dataPath_ expressed as a classpath resource
     */
-   public TestCaseRunner(List<Integer> testCaseNumbers_, String dataPath_){
+   public TestCaseRunner(List<Integer> testCaseNumbers_){
       _log.debug("testCaseNumbers_->{}",testCaseNumbers_)
-      _log.debug("dataPath_",dataPath_)
       _testCaseNumbers = testCaseNumbers_
-      _dataPath = (dataPath_!=null? dataPath_: getDefaultDataPath())
+      _dataPath =  getDefaultDataPath()
       DKValidate.notNull(_dataPath)
    }
    
    public void run(){
       def runnerRun = this.setupRunnerRun()
-      _allTestCases = this.fetchAllTestCases(_dataPath)
+      _allTestCases = this.fetchAllTestCases(runnerRun)
       _log.debug("_allTestCases->{}",_allTestCases)
       def List<TestCase> testCases = null
       if( !_testCaseNumbers) {
@@ -84,7 +86,9 @@ public class TestCaseRunner implements Runnable {
          testCases = _allTestCases
       }
       else
-         testCases = _allTestCases.findAll { _testCaseNumbers.contains(it.id) }
+         testCases = _allTestCases.findAll {
+            _testCaseNumbers.contains(it.id)
+         }
       
       Collections.sort(testCases)
       _log.info("testCases->{}",testCases)
@@ -95,31 +99,19 @@ public class TestCaseRunner implements Runnable {
    }
    
    /**
-    * if the data files are archived, extract them into the output directory for this particular TestCaseRunnerRun
+    * copy the data files into the TestCaseRunnerRun working directory
     */
    private TestCaseRunnerRun setupRunnerRun(){
       TestCaseRunnerRun runnerRun = [new File('./')]
       URL dataPathUrl = this.class.classLoader.getResource(_dataPath)
       _log.info("dataPathUrl->{}",dataPathUrl)
-      if(!dataPathUrl.toExternalForm().startsWith("jar:"))
-         return runnerRun
-      
-      _log.info("testcasedata is jarred")
-      String testCaseDataPath = _dataPath+"testcasedata.jar";
-      _log.info("testCaseDataPath->{}",testCaseDataPath)
-      URL jarUrl = this.class.classLoader.getResource(testCaseDataPath)
-      byte[] jarBytes = DKResourceUtil.getResourceBytes(testCaseDataPath)
-      _log.info("jarUrl->{}", jarUrl )
-      _log.info("jarBytes->{}", jarBytes )
-      DKFileUtil.writeContents( new File("./testcasedata.jar"), jarBytes)
-      //         InputStream dataInputStream = dataUrl.openStream()
-      //         _log.info("dataInputStream->{}",dataInputStream)
-      //         JarInputStream zipStream = new JarInputStream(dataInputStream)
-      //         _log.info("zipStream->{}",zipStream)
-      //         JarEntry entry= zipStream.getNextJarEntry()
-      //         _log.info("entry->{}",entry)
-      //         
-      //      }
+      if(dataPathUrl.toExternalForm().startsWith("jar:")){
+      }
+      else {
+         File dataDir = [dataPathUrl.toURI()]
+         FileUtils.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER)
+      }
+      return runnerRun
    }
    
    private TestCaseRun run(TestCase testCase_, TestCaseRunnerRun runnerRun_){
@@ -135,11 +127,11 @@ public class TestCaseRunner implements Runnable {
    }
    
    private void setupDB(TestCase testCase_) {
-      DBTestSetup.setupDB(testCase_.dbSetupPath, testCase_.lhsSourceFile, testCase_.rhsSourceFile)
+      DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.lhsSourceFile, testCase_.rhsSourceFile)
    }
    
    private DKPlan getPlan(TestCase testCase_){
-      ApplicationContext context = new ClassPathXmlApplicationContext(testCase_.planFile);
+      ApplicationContext context = new FileSystemXmlApplicationContext('file:'+testCase_.planFile.absolutePath);
       assert context
       def plan = context.getBean('plan')
       _log.debug("plan->{}",plan)
@@ -159,9 +151,6 @@ public class TestCaseRunner implements Runnable {
       run_.execute()
    }
    
-   /**
-    * if it's a File source, set the path on the infile; if it's a Database, load the source table
-    */
    private void setup(TestCaseRun run_, TestCaseRunnerRun runnerRun_){
       run_.plan.sink = this.setupSink( run_.plan.sink, runnerRun_)
    }
@@ -222,49 +211,35 @@ public class TestCaseRunner implements Runnable {
          throw new RuntimeException("sinkPath must be relative path starting with ./")
    }
    
-   private List<TestCase> fetchAllTestCases(String dataPath_){
-      File dataDir = this.getDataDir(dataPath_)
-      File[] planFiles = dataDir.listFiles(TEST_CASE_PLAN_FILTER)
+   private List<TestCase> fetchAllTestCases(TestCaseRunnerRun runnerRun_){
+      File[] planFiles = runnerRun_.dir.listFiles(TEST_CASE_PLAN_FILTER)
       if(!planFiles)
          return null
       def testCases = new ArrayList(planFiles.length)
       planFiles.each {
-         def testCase = this.createTestCase(it, dataPath_)
+         def testCase = this.createTestCase(it, runnerRun_.dir)
          if(testCase)
             testCases.add(testCase)
       }
       return testCases
    }
    
-   private TestCase createTestCase(File planFile_, String dataPath_){
-      def planFileName = planFile_.name
-      def matcher = Pattern.compile(TEST_CASE_PLAN_FILE_PATTERN).matcher(planFileName)
-      planFileName = "${dataPath_}${planFileName}"
+   private TestCase createTestCase(File planFile_, File dir_){
+      def matcher = Pattern.compile(TEST_CASE_PLAN_FILE_PATTERN).matcher(planFile_.name)
       matcher.matches()
       def numberString = matcher.group(1)
       _log.debug("numberString->{}",numberString)		
       def number = Integer.parseInt(numberString)
-      def dbSetupFileName = "${dataPath_}test${numberString}.dbsetup.xml"
-      _log.debug("dbSetupFileName->{}",dbSetupFileName)
-      if(!DKResourceUtil.resourceExists(dbSetupFileName))
-         dbSetupFileName = null
+      def dbSetupFile = new File(dir_, "test${numberString}.dbsetup.xml")
+      _log.debug("dbSetupFile->{}",dbSetupFile)
+      if(!dbSetupFile.exists())
+         dbSetupFile = null
       def name = "test$numberString"
-      def lhsSourceFileName = "${dataPath_}test${numberString}.lhs.csv"
-      def rhsSourceFileName = "${dataPath_}test${numberString}.rhs.csv"
-      def expectedFileName = "${dataPath_}test${numberString}.expected.diff"
-      def testCase= new TestCase(number,name,null, dbSetupFileName, lhsSourceFileName, rhsSourceFileName, planFileName, expectedFileName)
-      _log.debug("testCase->{}",testCase)
-      testCase.validate()
+      def lhsSourceFile = new File(dir_, "test${numberString}.lhs.csv")
+      def rhsSourceFile = new File(dir_, "test${numberString}.rhs.csv")
+      def expectedFile = new File(dir_, "test${numberString}.expected.diff")
+      def testCase= new TestCase(number,name,null, dbSetupFile, lhsSourceFile, rhsSourceFile, planFile_, expectedFile)
       return testCase
-   }
-   
-   private File getDataDir(String dataPath_){
-      File dataDir = DKResourceUtil.findResourceAsFile(dataPath_)
-      if(!dataDir)
-         throw new RuntimeException("couldn't find directory for dataPath_->$dataPath_")
-      if(!dataDir.canRead())
-         throw new RuntimeException("can't read dataDir->$dataDir")
-      return dataDir
    }
    
    private static String getDefaultDataPath(){

@@ -17,6 +17,7 @@ package org.diffkit.common.tst
 
 
 
+import java.io.File;
 import java.net.URL;
 import java.util.jar.JarInputStream;
 
@@ -35,8 +36,8 @@ public class TestUnjar extends GroovyTestCase {
       println "jarURL->$jarURL"
       assert jarURL
       JarInputStream jarInStream = new JarInputStream(jarURL.openStream())
-      File outDir = new File("./testUnjar")
-      outDir.mkdir()
+      File outDir = new File("./tstscratch/testUnjar")
+      outDir.mkdirs()
       DKUnjar.unjar( jarInStream, outDir)
       
       String[] fileNames = outDir.list()
