@@ -6,6 +6,7 @@ package org.diffkit.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,6 +52,45 @@ public class DKStreamUtil {
       catch (Exception e_) {
          LOG.warn(null, e_);
       }
+   }
+
+   /**
+    * closes the inputStream before returning
+    */
+   public static byte[] readFully(InputStream inputStream_) throws IOException {
+      if (inputStream_ == null)
+         return null;
+      inputStream_ = ensureBuffered(inputStream_);
+      if (inputStream_ == null)
+         return null;
+
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      copy(inputStream_, outputStream);
+      inputStream_.close();
+      return outputStream.toByteArray();
+   }
+
+   /**
+    * calls copy(InputStream, OutputStream, int) with DEFAULT_BUFFER_SIZE
+    */
+   public static void copy(InputStream input_, OutputStream output_) throws IOException {
+      copy(input_, output_, DEFAULT_BUFFER_SIZE);
+   }
+
+   /**
+    * Copy chars from a <code>InputStream</code> to a <code>OutputStream</code>.
+    * 
+    * @param bufferSize_
+    *           Size of internal buffer to use.
+    */
+   public static void copy(InputStream input_, OutputStream output_, int bufferSize_)
+      throws IOException {
+      if ((input_ == null) || (output_ == null))
+         return;
+      byte[] buffer = new byte[bufferSize_];
+      int bytesRead = -1;
+      while ((bytesRead = input_.read(buffer, 0, buffer.length)) != -1)
+         output_.write(buffer, 0, bytesRead);
    }
 
    /**

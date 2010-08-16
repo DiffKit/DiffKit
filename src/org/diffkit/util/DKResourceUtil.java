@@ -36,6 +36,23 @@ public class DKResourceUtil {
       }
    }
 
+   public static byte[] getResourceBytes(String resource_) {
+      LOG.debug("resource_->{}", resource_);
+      if (resource_ == null)
+         return null;
+      URL resourceURL = findResource(resource_);
+      LOG.debug("resourceURL->{}", resourceURL);
+
+      try {
+         InputStream inputStream = resourceURL.openStream();
+         return DKStreamUtil.readFully(inputStream);
+      }
+      catch (IOException e_) {
+         LOG.error(null, e_);
+         return null;
+      }
+   }
+
    /**
     * uses the ClassLoader of the receiver
     */

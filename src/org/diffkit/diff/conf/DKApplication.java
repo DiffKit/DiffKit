@@ -16,7 +16,7 @@
 package org.diffkit.diff.conf;
 
 import java.io.File;
-import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -96,14 +96,16 @@ public class DKApplication {
       formatter.printHelp("java -jar diffkit-app.jar", OPTIONS);
    }
 
+   @SuppressWarnings("unchecked")
    private static void runTestCases() {
       LOG.debug("running TestCases");
       try {
          Class<?> testCaseRunnerClass = Class.forName("org.diffkit.diff.testcase.TestCaseRunner");
          LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
-         Method mainMethod = DKClassUtil.findMethod("main", 1, testCaseRunnerClass);
-         LOG.debug("mainMethod->{}", mainMethod);
-         mainMethod.invoke(testCaseRunnerClass, new Object[] { null });
+         Constructor<Runnable> constructor = (Constructor<Runnable>) DKClassUtil.findLongestConstructor(testCaseRunnerClass);
+         LOG.debug("constructor->{}", constructor);
+         Runnable testCaseRunner = constructor.newInstance(null, null);
+         testCaseRunner.run();
       }
       catch (Exception e_) {
          LOG.error(null, e_);

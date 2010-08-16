@@ -28,7 +28,6 @@ import org.springframework.context.support.AbstractXmlApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext 
 
 import org.apache.commons.lang.ClassUtils 
-import org.apache.commons.lang.StringUtils;
 
 import org.diffkit.common.DKRegexFilenameFilter;
 import org.diffkit.common.DKValidate;
@@ -44,6 +43,7 @@ import org.diffkit.diff.engine.DKSourceSink
 import org.diffkit.diff.engine.DKSourceSink.Kind
 import org.diffkit.diff.sns.DKFileSink 
 import org.diffkit.diff.sns.DKWriterSink 
+import org.diffkit.util.DKFileUtil;
 import org.diffkit.util.DKResourceUtil 
 import org.diffkit.util.DKStringUtil 
 
@@ -51,7 +51,7 @@ import org.diffkit.util.DKStringUtil
 /**
  * @author jpanico
  */
-public class TestCaseRunner {
+public class TestCaseRunner implements Runnable {
    
    public static final String TEST_CASE_FILE_NAME = 'testcaserunner.xml'
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
@@ -99,8 +99,19 @@ public class TestCaseRunner {
     */
    private TestCaseRunnerRun setupRunnerRun(){
       TestCaseRunnerRun runnerRun = [new File('./')]
-      //      URL dataUrl = this.class.classLoader.getResource('org/diffkit/diff/testcase/testcaserunner.xml')
-      //      if(dataUrl.toExternalForm().startsWith("jar:")){
+      URL dataPathUrl = this.class.classLoader.getResource(_dataPath)
+      _log.info("dataPathUrl->{}",dataPathUrl)
+      if(!dataPathUrl.toExternalForm().startsWith("jar:"))
+         return runnerRun
+      
+      _log.info("testcasedata is jarred")
+      String testCaseDataPath = _dataPath+"testcasedata.jar";
+      _log.info("testCaseDataPath->{}",testCaseDataPath)
+      URL jarUrl = this.class.classLoader.getResource(testCaseDataPath)
+      byte[] jarBytes = DKResourceUtil.getResourceBytes(testCaseDataPath)
+      _log.info("jarUrl->{}", jarUrl )
+      _log.info("jarBytes->{}", jarBytes )
+      DKFileUtil.writeContents( new File("./testcasedata.jar"), jarBytes)
       //         InputStream dataInputStream = dataUrl.openStream()
       //         _log.info("dataInputStream->{}",dataInputStream)
       //         JarInputStream zipStream = new JarInputStream(dataInputStream)
@@ -109,7 +120,6 @@ public class TestCaseRunner {
       //         _log.info("entry->{}",entry)
       //         
       //      }
-      return runnerRun
    }
    
    private TestCaseRun run(TestCase testCase_, TestCaseRunnerRun runnerRun_){
