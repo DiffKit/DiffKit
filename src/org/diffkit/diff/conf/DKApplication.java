@@ -18,7 +18,6 @@ package org.diffkit.diff.conf;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -48,8 +47,9 @@ public class DKApplication {
    private static final String PLAN_FILE_OPTION_KEY = "planfile";
    private static final Options OPTIONS = new Options();
 
-   private static final String PLAN_FILE_NAME_REGEX = ".*\\.plan\\.xml";
-   private static final Pattern PLAN_FILE_PATTERN = Pattern.compile(PLAN_FILE_NAME_REGEX);
+   // private static final String PLAN_FILE_NAME_REGEX = ".*\\.plan\\.xml";
+   // private static final Pattern PLAN_FILE_PATTERN =
+   // Pattern.compile(PLAN_FILE_NAME_REGEX);
    private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
 
    static {
@@ -57,11 +57,10 @@ public class DKApplication {
          "print the version information and exit"));
       OPTIONS.addOption(new Option(HELP_OPTION_KEY, "print this message"));
       OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
-      OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
 
       OptionBuilder.withArgName("file");
       OptionBuilder.hasArg();
-      OptionBuilder.withDescription("use given file for plan");
+      OptionBuilder.withDescription("perform diff using given file for plan");
       OPTIONS.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
    }
 
@@ -140,7 +139,6 @@ public class DKApplication {
          LOG.error(null, e_);
          System.exit(-1);
       }
-
    }
 
    /**
