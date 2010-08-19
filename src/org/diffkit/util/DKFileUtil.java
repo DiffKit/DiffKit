@@ -21,6 +21,15 @@ public class DKFileUtil {
 
    private static final Logger LOG = LoggerFactory.getLogger(DKFileUtil.class);
 
+   public static boolean isRelative(File target_) {
+      if (target_ == null)
+         return false;
+      String path = target_.getPath();
+      if (path == null)
+         return false;
+      return path.startsWith(".");
+   }
+
    public static boolean exists(String filePath_) {
       if (filePath_ == null)
          return false;

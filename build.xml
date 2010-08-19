@@ -39,6 +39,9 @@
 
 	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="build.classpath" />
 
+	<!-- why doesn't this work ?? -->
+	<defaultexcludes echo="false" add="**/*.__hold__" />
+
 	<target name="dist-properties">
 
 		<propertyfile file="${dist.properties.file}">
@@ -46,6 +49,10 @@
 		</propertyfile>
 
 		<property file="${dist.properties.file}" />
+
+		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
+		<property name="bin-distzip" value="${ant.project.name}-${version}.zip" />
+		<property name="src-distzip" value="${ant.project.name}-src-${version}.zip" />
 	</target>
 
 	<target name="info">
@@ -86,13 +93,18 @@
 
 	</target>
 
-	<target name="dist" depends="clean,build">
+	<target name="dist" depends="dist-properties">
+		<antcall target="bin-dist" />
+		<move file="${dist.dir}/${bin-distzip}" tofile="${dist.dir}/${bin-distzip}.__hold__" />
+		<antcall target="src-dist" />
+		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
+	</target>
 
-		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
+	<target name="bin-dist" depends="clean,build">
+
 		<property name="testcasedatajar" value="testcasedata.jar" />
 		<property name="libjar" value="${ant.project.name}-${version}.jar" />
 		<property name="appjar" value="${ant.project.name}-app.jar" />
-		<property name="distzip" value="${ant.project.name}-${version}.zip" />
 
 		<mkdir dir="${dist.dir}" />
 
@@ -160,19 +172,47 @@
 			<fileset dir="${doc.dir}" />
 		</copy>
 
-		<zip destfile="${dist.dir}/${distzip}" basedir="${dist.dir}" />
+		<zip destfile="${dist.dir}/${bin-distzip}" basedir="${dist.dir}" />
 
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
-			<fileset dir="${dist.dir}" excludes="${distzip}" />
+			<fileset dir="${dist.dir}" excludes="${bin-distzip}" />
 		</delete>
 
+	</target>
+
+	<target name="src-dist" depends="clean,dist-properties">
+
+		<mkdir dir="${dist.dir}" />
+
+		<copy todir="${dist.dir}">
+			<fileset dir="${root.dir}">
+				<include name=".classpath" />
+				<include name=".project" />
+				<include name=".settings" />
+				<include name="build.xml" />
+				<include name="conf/**" />
+				<include name="doc/**" />
+				<include name="lib/**" />
+				<include name="src/**" />
+				<include name="tst/**" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${dist.dir}/${src-distzip}" basedir="${dist.dir}" />
+
+		<!-- cleanup -->
+		<delete includeemptydirs="true">
+			<fileset dir="${dist.dir}" excludes="*.zip" />
+		</delete>
 	</target>
 
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
-		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
+			<exclude name="*.__hold__" />
+		</delete>
 		<!-- clean up scratch files created by Unit tests and TCR -->
 		<delete>
 			<fileset dir="${root.dir}" includes="*.diff" />

@@ -49,6 +49,7 @@ import org.diffkit.diff.engine.DKSourceSink.Kind
 import org.diffkit.diff.sns.DKFileSink 
 import org.diffkit.diff.sns.DKFileSource 
 import org.diffkit.diff.sns.DKWriterSink 
+import org.diffkit.util.DKFileUtil;
 import org.diffkit.util.DKResourceUtil;
 import org.diffkit.util.DKStringUtil 
 
@@ -249,9 +250,8 @@ public class TestCaseRunner implements Runnable {
       if(!(kind == DKSourceSink.Kind.FILE))
          throw new RuntimeException("can only work with Sources of Kind->${[DKSourceSink.Kind.FILE]}")
       File sinkFile = sink_.file
-      String sinkPath = sinkFile.path
-      if(!sinkPath.startsWith('./'))
-         throw new RuntimeException("sinkPath must be relative path starting with ./")
+      if(!DKFileUtil.isRelative(sinkFile) )
+         throw new RuntimeException("sinkPath '$sinkFile' must be relative path!")
    }
    
    private List<TestCase> fetchAllTestCases(TestCaseRunnerRun runnerRun_){
