@@ -54,7 +54,7 @@ public class DKWriterSink extends DKAbstractSink {
       DKValidate.notNull(_writer, _formatter);
    }
 
-   @Override
+//   @Override
    public Kind getKind() {
       return Kind.STREAM;
    }

@@ -77,11 +77,11 @@ public class DKListSource implements DKSource {
       return _lastIndex;
    }
 
-   @Override
+//   @Override
    public void close(DKContext context_) throws IOException {
    }
 
-   @Override
+//   @Override
    public void open(DKContext context_) throws IOException {
    }
 }

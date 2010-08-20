@@ -23,9 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.db.DKDBConnectionSource;
@@ -37,6 +34,8 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKSqlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
@@ -94,7 +93,7 @@ public class DKDBSource implements DKSource {
       return _tableName;
    }
 
-   @Override
+   // @Override
    public void close(DKContext context_) throws IOException {
       this.ensureOpen();
       DKSqlUtil.close(_resultSet);
@@ -104,7 +103,7 @@ public class DKDBSource implements DKSource {
       _isOpen = false;
    }
 
-   @Override
+ //  @Override
    public void open(DKContext context_) throws IOException {
       this.ensureNotOpen();
       try {
@@ -121,7 +120,7 @@ public class DKDBSource implements DKSource {
          _connection = null;
          _resultSet = null;
          _isOpen = false;
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
    }
 
@@ -146,27 +145,27 @@ public class DKDBSource implements DKSource {
          return DKSqlUtil.readRow(_resultSet, _readColumnNames);
       }
       catch (Exception e_) {
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
    }
 
-   @Override
+//   @Override
    public Kind getKind() {
       return Kind.DB;
    }
 
-   @Override
+//   @Override
    public long getLastIndex() {
       return _lastIndex;
    }
 
-   @Override
+//   @Override
    public URI getURI() throws IOException {
       try {
          return new URI(_connectionSource.getConnectionInfo().getJDBCUrl());
       }
       catch (URISyntaxException e_) {
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
    }
 

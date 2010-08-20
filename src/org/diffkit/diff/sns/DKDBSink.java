@@ -19,12 +19,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
@@ -39,6 +35,8 @@ import org.diffkit.diff.engine.DKRowDiff;
 import org.diffkit.diff.engine.DKSide;
 import org.diffkit.util.DKObjectUtil;
 import org.diffkit.util.DKSqlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
@@ -61,7 +59,7 @@ public class DKDBSink extends DKAbstractSink {
       DKValidate.notNull(_connectionSource, _diffContextTable, _diffTable);
    }
 
-   @Override
+   // @Override
    public Kind getKind() {
       return Kind.DB;
    }
@@ -75,7 +73,7 @@ public class DKDBSink extends DKAbstractSink {
       }
       catch (SQLException e_) {
          _log.error(null, e_);
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
       _log.info("_connection->{}", _connection);
    }
@@ -97,7 +95,7 @@ public class DKDBSink extends DKAbstractSink {
          _diffCount++;
       }
       catch (SQLException e_) {
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
    }
 

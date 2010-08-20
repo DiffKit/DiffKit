@@ -235,7 +235,7 @@ public class DKFileSource implements DKSource {
       }
       catch (ParseException e_) {
          _log.error(null, e_);
-         throw new IOException(e_);
+         throw new RuntimeException(e_);
       }
    }
 
@@ -253,7 +253,7 @@ public class DKFileSource implements DKSource {
       return _lastIndex;
    }
 
-   @Override
+//   @Override
    public void close(DKContext context_) throws IOException {
       this.ensureOpen();
       _lineReader.close();
@@ -283,7 +283,7 @@ public class DKFileSource implements DKSource {
          throw new IOException(String.format("can't read file->%s", _file));
    }
 
-   @Override
+//   @Override
    public void open(DKContext context_) throws IOException {
       this.open();
    }

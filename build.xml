@@ -67,16 +67,15 @@
 
 		<mkdir dir="${build.dir}" />
 
-		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
+		<javac destdir="${build.dir}" classpathref="build.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
 			<src path="${src.dir}" />
-			<javac target="1.6" source="1.6" debug="on" deprecation="off/" />
-		</groovyc>
+		</javac>
 
 		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
-			<javac target="1.6" source="1.6" debug="on" deprecation="off/" />
+			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
 		</groovyc>
 
 		<copy todir="${build.dir}">
