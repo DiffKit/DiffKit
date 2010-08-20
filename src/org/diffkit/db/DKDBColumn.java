@@ -96,7 +96,7 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
       return ReflectionToStringBuilder.toString(this);
    }
 
-   @Override
+//   @Override
    public int compareTo(DKDBColumn target_) {
       if (_ordinalPosition < target_._ordinalPosition)
          return -1;

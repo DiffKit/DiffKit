@@ -42,7 +42,7 @@ public class DKDBConnectionSource {
          Class.forName(_connectionInfo.getDriverName());
       }
       catch (ClassNotFoundException e_) {
-         throw new SQLException(e_);
+         throw new RuntimeException(e_);
       }
       String jdbcUrl = _connectionInfo.getJDBCUrl();
       _log.debug("jdbcUrl->{}", jdbcUrl);
