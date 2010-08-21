@@ -182,6 +182,8 @@ public class DKMagicPlanRule {
          String dependencyParmName = (DKKeyValueCoder.isPath(ruleParmName)
             ? dependency_.getParentConstructorParmNamePath()
             : dependency_.getParentConstructorParmName());
+         _rule.getLog().trace("ruleParmName->{}", ruleParmName);
+         _rule.getLog().trace("dependencyParmName->{}", dependencyParmName);
          return StringUtils.equals(ruleParmName, dependencyParmName);
       }
 

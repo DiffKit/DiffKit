@@ -1,3 +1,5 @@
+package org.diffkit.db.tst
+
 /**
  * Copyright 2010 Joseph Panico
  *
@@ -13,7 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.db.tst
+
+import org.diffkit.util.DKResourceUtil
+import org.slf4j.LoggerFactory
 
 import java.io.File;
 import java.sql.Connection 
@@ -61,21 +65,35 @@ public class DBTestSetup {
       context.refresh()
       assert context
       
-      def connectionSource = context.getBean('connectionSource')
+      def connectionSource = (!context.containsBean('connectionSource')?null:context.getBean('connectionSource'))
+      def lhsConnectionSource = (!context.containsBean('lhsConnectionSource')?null:context.getBean('lhsConnectionSource'))
+      def rhsConnectionSource = (!context.containsBean('rhsConnectionSource')?null:context.getBean('rhsConnectionSource'))
       _log.debug("connectionSource->{}",connectionSource)
-      if(!connectionSource)
-         throw new RuntimeException("no 'connectionSource' bean in dbsetup file->${dbSetupFile_}")
+      _log.debug("lhsConnectionSource->{}",lhsConnectionSource)
+      _log.debug("rhsConnectionSource->{}",rhsConnectionSource)
+      if(!connectionSource && ! (lhsConnectionSource && rhsConnectionSource))
+         throw new RuntimeException("connectionSource bean(s) not in dbsetup file->${dbSetupFile_}")
+      if(connectionSource && (lhsConnectionSource || rhsConnectionSource))
+         throw new RuntimeException("cannot specify both 'connectionSource' and ('lhsConnectionSource' or 'rhsConnectionSource') bean in dbsetup file->${dbSetupFile_}; choose one or the other")
+      
+      if(!lhsConnectionSource)
+         lhsConnectionSource = connectionSource
+      if(!rhsConnectionSource)
+         rhsConnectionSource = connectionSource
+      _log.debug("lhsConnectionSource->{}",lhsConnectionSource)
+      _log.debug("rhsConnectionSource->{}",rhsConnectionSource)
+      
       def beanName = 'lhs.table'
       if(context.containsBean(beanName)) {
          def lhsTable = context.getBean(beanName)
          _log.debug("lhsTable->{}",lhsTable)
-         setupDBTable( lhsTable, lhsSourceFile_, connectionSource)
+         setupDBTable( lhsTable, lhsSourceFile_, lhsConnectionSource)
       }
       beanName = 'rhs.table'
       if(context.containsBean(beanName)) {
          def rhsTable = context.getBean(beanName)
          _log.debug("rhsTable->{}",rhsTable)
-         setupDBTable( rhsTable, rhsSourceFile_, connectionSource)
+         setupDBTable( rhsTable, rhsSourceFile_, rhsConnectionSource)
       }
    }
    

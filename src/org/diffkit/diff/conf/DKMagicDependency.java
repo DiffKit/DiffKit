@@ -116,7 +116,7 @@ public class DKMagicDependency<T> {
       DKMagicDependency<?> parentDependency = this.getParentDependency();
       if (parentDependency == null)
          return thisValue;
-      String parentsValue = parentDependency.getParentConstructorParmName();
+      String parentsValue = parentDependency.getParentConstructorParmNamePath();
       if (parentsValue == null)
          return thisValue;
       return parentsValue + "." + thisValue;

@@ -41,6 +41,8 @@ public class DKMagicPlan implements DKPlan {
    private String _sinkFilePath;
    private String _delimiter;
    private DKDBConnectionInfo _dbConnectionInfo;
+   private DKDBConnectionInfo _lhsDBConnectionInfo;
+   private DKDBConnectionInfo _rhsDBConnectionInfo;
    private String[] _keyColumnNames;
    private String[] _diffColumnNames;
    private String[] _ignoreColumnNames;
@@ -169,6 +171,22 @@ public class DKMagicPlan implements DKPlan {
 
    public void setDbConnectionInfo(DKDBConnectionInfo dbConnectionInfo_) {
       _dbConnectionInfo = dbConnectionInfo_;
+   }
+
+   public DKDBConnectionInfo getLhsDBConnectionInfo() {
+      return _lhsDBConnectionInfo;
+   }
+
+   public void setLhsDBConnectionInfo(DKDBConnectionInfo lhsDBConnectionInfo_) {
+      _lhsDBConnectionInfo = lhsDBConnectionInfo_;
+   }
+
+   public DKDBConnectionInfo getRhsDBConnectionInfo() {
+      return _rhsDBConnectionInfo;
+   }
+
+   public void setRhsDBConnectionInfo(DKDBConnectionInfo rhsDBConnectionInfo_) {
+      _rhsDBConnectionInfo = rhsDBConnectionInfo_;
    }
 
    public String[] getKeyColumnNames() {

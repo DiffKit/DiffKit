@@ -22,17 +22,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBConnectionSource;
 
 /**
  * @author jpanico
  */
 public class DKMagicPlanBuilder {
+
+   private static final Class<?>[] NON_CACHEABLE_CLASSES = { DKDBConnectionInfo.class,
+      DKDBConnectionSource.class };
 
    private final DKMagicPlan _providedPlan;
    private final Map<String, Object> _resolutionCache = new HashMap<String, Object>();
@@ -127,6 +133,8 @@ public class DKMagicPlanBuilder {
    }
 
    private boolean isCacheable(Class<?> targetClass_) {
+      if (ArrayUtils.contains(NON_CACHEABLE_CLASSES, targetClass_))
+         return false;
       String targetPackageName = ClassUtils.getPackageName(targetClass_);
       if (targetPackageName.startsWith("org.diffkit"))
          return true;
@@ -147,6 +155,7 @@ public class DKMagicPlanBuilder {
 
    private DKMagicPlanRule getRule(DKMagicDependency<?> dependency_) {
       List<DKMagicPlanRule> allApplicableRules = this.getRulesApplyingTo(dependency_);
+      _log.debug("dependency->{} allApplicableRules->{}", dependency_, allApplicableRules);
       if ((allApplicableRules == null) || (allApplicableRules.isEmpty()))
          return null;
 

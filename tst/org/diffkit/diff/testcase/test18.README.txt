@@ -1,0 +1,30 @@
+test18 README
+=========
+
+Description
+----------
+Compare across different databases. Compare two DB tables using the most automatic 
+default provided by the MagicPlan. Only the two table names and the ConnectionInfo are 
+provided in the plan file. Everything else is figured out by MagicPlan.
+
+
+Assumptions
+-----------
+- lhs is in one database, rhs is in a different database
+- lhs vs. rhs has both row and column diffs
+- plan file supplies lhs table name and rhs table name
+- plan file supplies lhs and rhs ConnectionInfo to H2 DB
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+- MagicPlan uses EqualsDiffor across the board
+- MagicPlan defaults to looking for ROW and COLUMN type Diffs
+- MagicPlan sets max diffs to Long.MAX
+
+
+
+Expectations
+-----------
+- 2 column diffs
+- 4 row diffs
+

@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 
 import org.diffkit.common.kvc.DKKeyValueCoder;
 import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBConnectionSource;
 import org.diffkit.diff.conf.DKMagicPlanRule.RuleImplementation;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKSink;
@@ -68,7 +69,17 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "dbConnectionInfo",
       "if dbConnectionInfo is specified in plan, then use it in any constructor that requires one",
-      null, DKDBConnectionInfo.class, "connectionInfo_", "dbConnectionInfo", true,
+      null, DKDBConnectionInfo.class, "connectionInfo_", "dbConnectionInfo", false,
+      new PlanValue(true));
+   private static final DKMagicPlanRule LHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
+      "lhsDBConnectionInfo",
+      "if lhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the lhs DBSource",
+      DKDBConnectionSource.class, "lhsSource_.connectionSource_.connectionInfo_", "lhsDBConnectionInfo", true,
+      new PlanValue(true));
+   private static final DKMagicPlanRule RHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
+      "rhsDBConnectionInfo",
+      "if rhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the rhs DBSource",
+      DKDBConnectionSource.class, "rhsSource_.connectionSource_.connectionInfo_", "rhsDBConnectionInfo", true,
       new PlanValue(true));
    private static final DKMagicPlanRule MODEL_DEFAULT_RULE = new DKMagicPlanRule(
       "modelDefault",
@@ -167,14 +178,14 @@ public class DKMagicPlanRules {
 
    public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_RULE, RHS_DB_SOURCE_RULE,
       LHS_DB_TABLE_NAME_RULE, RHS_DB_TABLE_NAME_RULE, LHS_WHERE_CLAUSE_RULE,
-      RHS_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE,
-      KEY_COLUMN_NAMES_RULE, READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE,
-      RHS_FILE_SOURCE_RULE, RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE,
-      DEFAULT_SINK_RULE, AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE,
-      DEFAULT_DELIMITER_RULE, IS_SORTED_RULE, VALIDATE_LAZILY_RULE,
-      DEFAULT_DIFF_KIND_RULE, DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE,
-      DISPLAY_COLUMN_NAMES_RULE, MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE,
-      NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE };
+      RHS_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE, LHS_DB_CONNECTION_INFO_RULE,
+      RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE, KEY_COLUMN_NAMES_RULE,
+      READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE, RHS_FILE_SOURCE_RULE,
+      RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE, DEFAULT_SINK_RULE,
+      AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE, DEFAULT_DELIMITER_RULE,
+      IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DEFAULT_DIFF_KIND_RULE,
+      DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE, DISPLAY_COLUMN_NAMES_RULE,
+      MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;
