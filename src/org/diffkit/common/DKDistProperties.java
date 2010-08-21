@@ -35,9 +35,9 @@ public class DKDistProperties {
    private static String _buildDateString;
 
    public synchronized static String getVersionString() {
-      if (_versionString != null) {
+      if (_versionString != null)
          return _versionString;
-      }
+
       Properties properties = getProperties();
       if (properties == null) {
          LOG.warn("couldn't find properties");
@@ -50,9 +50,9 @@ public class DKDistProperties {
    }
 
    public synchronized static String getPublicVersionString() {
-      if (_publicVersionString != null) {
+      if (_publicVersionString != null)
          return _publicVersionString;
-      }
+
       Properties properties = getProperties();
       if (properties == null) {
          LOG.warn("couldn't find properties");
@@ -67,34 +67,37 @@ public class DKDistProperties {
    }
 
    public synchronized static String getBuildDateString() {
-      if (_buildDateString == null) {
-         Properties properties = getProperties();
-         if (properties == null) {
-            LOG.warn("couldn't find properties");
-            return null;
-         }
-         _buildDateString = properties.getProperty("version.date");
+      if (_buildDateString != null)
+         return _buildDateString;
+
+      Properties properties = getProperties();
+      if (properties == null) {
+         LOG.warn("couldn't find properties");
+         return null;
       }
+      _buildDateString = properties.getProperty("version.date");
       return _buildDateString;
    }
 
    private static Properties getProperties() {
-      if (_properties == null) {
-         ClassLoader classLoader = DKDistProperties.class.getClassLoader();
-         try {
-            InputStream propertiesStream = classLoader.getResourceAsStream(FILE_RESOURCE_PATH);
-            if (propertiesStream == null) {
-               LOG.warn("couldn't not find properties file: " + FILE_RESOURCE_PATH);
-               return null;
-            }
-            _properties = new Properties();
-            _properties.load(propertiesStream);
-            LOG.debug("_properties: " + _properties);
+      if (_properties != null)
+         return _properties;
+
+      ClassLoader classLoader = DKDistProperties.class.getClassLoader();
+      try {
+         InputStream propertiesStream = classLoader.getResourceAsStream(FILE_RESOURCE_PATH);
+         if (propertiesStream == null) {
+            LOG.warn("couldn't not find properties file: " + FILE_RESOURCE_PATH);
+            return null;
          }
-         catch (Exception e_) {
-            LOG.error(null, e_);
-         }
+         _properties = new Properties();
+         _properties.load(propertiesStream);
+         LOG.debug("_properties: " + _properties);
+         return _properties;
       }
-      return _properties;
+      catch (Exception e_) {
+         LOG.error(null, e_);
+         return null;
+      }
    }
 }

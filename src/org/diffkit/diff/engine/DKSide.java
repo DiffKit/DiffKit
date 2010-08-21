@@ -32,4 +32,12 @@ public enum DKSide {
    public static DKSide getEnumForConstant(int constant_) {
       return DKSide.class.getEnumConstants()[constant_];
    }
+
+   public static int flip(int target_) {
+      if (target_ == LEFT_INDEX)
+         return RIGHT_INDEX;
+      if (target_ == RIGHT_INDEX)
+         return LEFT_INDEX;
+      return target_;
+   }
 }

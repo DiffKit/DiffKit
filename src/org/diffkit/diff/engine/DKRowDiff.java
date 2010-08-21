@@ -56,6 +56,9 @@ public class DKRowDiff implements DKDiff {
       return _displayValues;
    }
 
+   /**
+    * the DKSide that the row is missing from
+    */
    public DKSide getSide() {
       return _side;
    }

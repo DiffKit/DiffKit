@@ -82,7 +82,8 @@ public class DKDiffEngine {
             _log.debug("oneSide->{}", oneSide);
          }
          if (oneSided) {
-            this.recordRowDiff(rows[oneSide], oneSide, context_, context_._sink);
+            this.recordRowDiff(rows[oneSide], DKSide.flip(oneSide), context_,
+               context_._sink);
             rows[oneSide] = null;
             continue;
          }
@@ -91,13 +92,13 @@ public class DKDiffEngine {
             rows[DKSide.RIGHT_INDEX]);
          // LEFT < RIGHT
          if (comparison < 0) {
-            this.recordRowDiff(rows[DKSide.LEFT_INDEX], DKSide.LEFT_INDEX, context_,
+            this.recordRowDiff(rows[DKSide.LEFT_INDEX], DKSide.RIGHT_INDEX, context_,
                context_._sink);
             rows[DKSide.LEFT_INDEX] = null;
          }
          // LEFT > RIGHT
          else if (comparison > 0) {
-            this.recordRowDiff(rows[DKSide.RIGHT_INDEX], DKSide.RIGHT_INDEX, context_,
+            this.recordRowDiff(rows[DKSide.RIGHT_INDEX], DKSide.LEFT_INDEX, context_,
                context_._sink);
             rows[DKSide.RIGHT_INDEX] = null;
          }

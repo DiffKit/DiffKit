@@ -3,13 +3,13 @@ column2
 <1111
 >xxxx
 !{column2=2222, column3=1}
->
+<
 !{column2=4444, column3=1}
-<
-!{column2=4444, column3=2}
-<
-!{column2=5555, column3=2}
 >
+!{column2=4444, column3=2}
+>
+!{column2=5555, column3=2}
+<
 @{column2=6666:xxxx, column3=1}
 column2
 <6666
