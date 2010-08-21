@@ -23,6 +23,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.db.DKDBConnectionSource;
@@ -34,8 +37,6 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKSqlUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
@@ -55,6 +56,9 @@ public class DKDBSource implements DKSource {
    private transient long _lastIndex;
    private transient boolean _isOpen;
    private transient boolean _isValidated;
+   // DB2 does not allow repeated call to ResultSet.next() after the end of the
+   // RS is reached, so we have to track that state ourselves
+   private transient boolean _rsIsConsumed;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebug = _log.isDebugEnabled();
 
@@ -101,9 +105,10 @@ public class DKDBSource implements DKSource {
       _resultSet = null;
       _connection = null;
       _isOpen = false;
+      _rsIsConsumed = true;
    }
 
- //  @Override
+   // @Override
    public void open(DKContext context_) throws IOException {
       this.ensureNotOpen();
       try {
@@ -112,8 +117,9 @@ public class DKDBSource implements DKSource {
          _resultSet = this.createResultSet();
          if (_isDebug)
             _log.debug("_resultSet->{}", _resultSet);
-         _isOpen = true;
          _lastIndex = -1;
+         _rsIsConsumed = false;
+         _isOpen = true;
       }
       catch (Exception e_) {
          _log.error(null, e_);
@@ -139,8 +145,12 @@ public class DKDBSource implements DKSource {
    public Object[] getNextRow() throws IOException {
       try {
          this.ensureOpen();
-         if (!_resultSet.next())
+         if (_rsIsConsumed)
             return null;
+         if (!_resultSet.next()) {
+            _rsIsConsumed = true;
+            return null;
+         }
          _lastIndex++;
          return DKSqlUtil.readRow(_resultSet, _readColumnNames);
       }
@@ -149,17 +159,17 @@ public class DKDBSource implements DKSource {
       }
    }
 
-//   @Override
+   // @Override
    public Kind getKind() {
       return Kind.DB;
    }
 
-//   @Override
+   // @Override
    public long getLastIndex() {
       return _lastIndex;
    }
 
-//   @Override
+   // @Override
    public URI getURI() throws IOException {
       try {
          return new URI(_connectionSource.getConnectionInfo().getJDBCUrl());
