@@ -196,8 +196,11 @@ public class DKDBTable {
    }
 
    public String toString() {
+      String qualifiedTableName = _tableName;
+      if (_schema != null)
+         qualifiedTableName = String.format("%s.%s", _schema, qualifiedTableName);
       return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
-         _tableName);
+         qualifiedTableName);
    }
 
    public String getDescription() {

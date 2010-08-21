@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKMapKeyValueComparator;
 import org.diffkit.common.DKValidate;
+import org.diffkit.util.DKMapUtil;
 import org.diffkit.util.DKNumberUtil;
 import org.diffkit.util.DKSqlUtil;
 import org.diffkit.util.DKStringUtil;
@@ -39,8 +40,10 @@ import org.diffkit.util.DKStringUtil;
  */
 public class DKDBTableDataAccess {
 
-   private static final String TABLE_CATALOG_KEY = "TABLE_CATALOG";
-   private static final String TABLE_SCHEMA_KEY = "TABLE_SCHEMA";
+   // uggg!! H2 calls it TABLE_CATALOG and DB2 calls it TABLE_CAT
+   private static final String TABLE_CATALOG_KEY = "TABLE_CAT";
+   // uggg!! H2 calls it TABLE_SCHEMA and DB2 calls it TABLE_SCHEM
+   private static final String TABLE_SCHEMA_KEY = "TABLE_SCHEM";
    private static final String TABLE_NAME_KEY = "TABLE_NAME";
 
    private final DKDBConnectionSource _connectionSource;
@@ -117,8 +120,10 @@ public class DKDBTableDataAccess {
    @SuppressWarnings("unchecked")
    private DKDBTable constructTable(Map<String, ?> tableMap_, List<Map> columnMaps_,
                                     List<Map> pkMaps_) {
-      String catalogName = (String) tableMap_.get(TABLE_CATALOG_KEY);
-      String schemaName = (String) tableMap_.get(TABLE_SCHEMA_KEY);
+      String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_CATALOG_KEY);
+      String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_SCHEMA_KEY);
       String tableName = (String) tableMap_.get(TABLE_NAME_KEY);
       _log.debug("catalogName->{}", catalogName);
       _log.debug("schemaName->{}", schemaName);
@@ -173,8 +178,10 @@ public class DKDBTableDataAccess {
    @SuppressWarnings("unchecked")
    private List<Map> getColumnMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
       throws SQLException {
-      String catalogName = (String) tableMap_.get(TABLE_CATALOG_KEY);
-      String schemaName = (String) tableMap_.get(TABLE_SCHEMA_KEY);
+      String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_CATALOG_KEY);
+      String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_SCHEMA_KEY);
       String tableName = (String) tableMap_.get(TABLE_NAME_KEY);
       _log.debug("catalogName->{}", catalogName);
       _log.debug("schemaName->{}", schemaName);
@@ -208,8 +215,10 @@ public class DKDBTableDataAccess {
    @SuppressWarnings("unchecked")
    private List<Map> getPKMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
       throws SQLException {
-      String catalogName = (String) tableMap_.get(TABLE_CATALOG_KEY);
-      String schemaName = (String) tableMap_.get(TABLE_SCHEMA_KEY);
+      String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_CATALOG_KEY);
+      String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
+         TABLE_SCHEMA_KEY);
       String tableName = (String) tableMap_.get(TABLE_NAME_KEY);
       _log.debug("catalogName->{}", catalogName);
       _log.debug("schemaName->{}", schemaName);

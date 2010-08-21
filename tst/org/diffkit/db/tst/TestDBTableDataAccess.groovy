@@ -30,6 +30,8 @@ public class TestDBTableDataAccess extends GroovyTestCase {
 	
 	public void testGetTables(){
 		
+      println "startsWith->" + 'TABLE_SCHEMA'.startsWith('TABLE_SCHEM')
+      
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
 		DKDBConnectionSource connectionSource = [connectionInfo]

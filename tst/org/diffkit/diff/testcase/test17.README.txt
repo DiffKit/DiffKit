@@ -1,0 +1,23 @@
+test17 README
+=========
+
+Description
+----------
+Test the boundary case where one table (LHS) has rows, but the other table (RHS) is empty.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- lhs has rows, rhs is empty
+- all rows from lhs should show up as ROW diffs
+- plan file supplies lhs table name and rhs table name
+- plan file supplies ConnectionInfo to H2 DB
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+
+Expectations
+-----------
+- 12 ROW diffs -- all rows from LHS 
+

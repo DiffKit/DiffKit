@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.db.tst
+package org.diffkit.util.tst
 
 
-import org.diffkit.db.DKDBConnectionInfo;
+
+import org.diffkit.diff.sns.DKListSink;
+import org.diffkit.util.DKClassUtil;
+import org.diffkit.util.DKMapUtil;
 
 import groovy.util.GroovyTestCase;
 
@@ -24,15 +27,17 @@ import groovy.util.GroovyTestCase;
 /**
  * @author jpanico
  */
-public class TestDBConnectionInfobleComparator extends GroovyTestCase {
+public class TestMapUtil extends GroovyTestCase {
    
-   public void testH2(){
+   public void testValueForKeyPrefix(){
       
-      DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
-      println "connectionInfo->$connectionInfo"
+      def target = ['aaa111':'value1', 'bbb111':'value2','ccc111':'value3','ccc112':'value4','ddd111':'value5']
       
-      assert connectionInfo.JDBCUrl
-      assert connectionInfo.JDBCUrl == 'jdbc:h2:mem:test'
-      assert connectionInfo.driverName == 'org.h2.Driver'
+      assert DKMapUtil.getValueForKeyPrefix(target, 'aaa') == 'value1'
+      assert DKMapUtil.getValueForKeyPrefix(target, 'bbb') == 'value2'
+      assert ! DKMapUtil.getValueForKeyPrefix(target, 'zzz') 
+      assert ! DKMapUtil.getValueForKeyPrefix(target, null)
+      assert DKMapUtil.getValueForKeyPrefix(target, 'ccc')
+      
    }
 }

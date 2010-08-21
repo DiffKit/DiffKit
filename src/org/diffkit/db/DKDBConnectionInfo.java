@@ -17,7 +17,6 @@ package org.diffkit.db;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
-
 import org.diffkit.common.DKValidate;
 
 /**
@@ -25,7 +24,8 @@ import org.diffkit.common.DKValidate;
  */
 public class DKDBConnectionInfo {
    public enum Kind {
-      H2("org.h2.Driver"), MYSQL(""), ORACLE(""), DB2(""), SYBASE("");
+      H2("org.h2.Driver"), MYSQL(""), ORACLE(""), DB2("com.ibm.db2.jcc.DB2Driver"), SYBASE(
+         "");
 
       public final String _driverName;
 
@@ -53,11 +53,6 @@ public class DKDBConnectionInfo {
       _username = username_;
       _password = password_;
 
-      if ((_host != null) || (_port != null))
-         throw new NotImplementedException("only in memory db currently supported");
-      if (!_database.startsWith("mem:"))
-         throw new NotImplementedException("only in memory db currently supported");
-
       DKValidate.notNull(_name, _kind, _database, _username, _password);
    }
 
@@ -65,6 +60,8 @@ public class DKDBConnectionInfo {
       switch (_kind) {
       case H2:
          return this.getH2Url();
+      case DB2:
+         return this.getDB2Url();
 
       default:
          throw new NotImplementedException();
@@ -77,6 +74,11 @@ public class DKDBConnectionInfo {
 
    private String getH2Url() {
       return "jdbc:h2:" + _database;
+   }
+
+   // jdbc:db2://<host>[:<port>]/<database_name>
+   private String getDB2Url() {
+      return String.format("jdbc:db2://%s:%s/%s", _host, _port, _database);
    }
 
    public String getUsername() {

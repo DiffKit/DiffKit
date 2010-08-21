@@ -18,17 +18,19 @@ package org.diffkit.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Properties;
 
 import org.diffkit.common.DKValidate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
  */
 public class DKDBConnectionSource {
 
+   private static final String USERNAME_KEY = "user";
+   private static final String PASSWORD_KEY = "password";
    private final DKDBConnectionInfo _connectionInfo;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
@@ -46,7 +48,10 @@ public class DKDBConnectionSource {
       }
       String jdbcUrl = _connectionInfo.getJDBCUrl();
       _log.debug("jdbcUrl->{}", jdbcUrl);
-      return DriverManager.getConnection(jdbcUrl);
+      Properties properties = new Properties();
+      properties.put(USERNAME_KEY, _connectionInfo.getUsername());
+      properties.put(PASSWORD_KEY, _connectionInfo.getPassword());
+      return DriverManager.getConnection(jdbcUrl, properties);
    }
 
    public DKDBConnectionInfo getConnectionInfo() {
