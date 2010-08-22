@@ -45,6 +45,7 @@ public class DKApplication {
    private static final String HELP_OPTION_KEY = "help";
    private static final String TEST_OPTION_KEY = "test";
    private static final String PLAN_FILE_OPTION_KEY = "planfile";
+   private static final String ERROR_ON_DIFF_OPTION_KEY = "errorOnDiff";
    private static final Options OPTIONS = new Options();
 
    // private static final String PLAN_FILE_NAME_REGEX = ".*\\.plan\\.xml";
@@ -62,11 +63,13 @@ public class DKApplication {
       OptionBuilder.hasArg();
       OptionBuilder.withDescription("perform diff using given file for plan");
       OPTIONS.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
+      OPTIONS.addOption(new Option(
+         ERROR_ON_DIFF_OPTION_KEY,
+         "exit with error status code (-1) if diffs are detected. otherwise will always exit with 0 unless an operating Exception was encountered"));
    }
 
    public static void main(String[] args_) {
       LOG.debug("args_->{}", Arrays.toString(args_));
-
       try {
          CommandLineParser parser = new PosixParser();
          CommandLine line = parser.parse(OPTIONS, args_);
@@ -77,7 +80,8 @@ public class DKApplication {
          else if (line.hasOption(TEST_OPTION_KEY))
             runTestCases();
          else if (line.hasOption(PLAN_FILE_OPTION_KEY))
-            runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY));
+            runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
+               line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
          else
             printInvalidArguments(args_);
       }
@@ -119,7 +123,7 @@ public class DKApplication {
       }
    }
 
-   private static void runPlan(String planFilePath_) {
+   private static void runPlan(String planFilePath_, boolean errorOnDiff_) {
       LOG.info("planFilePath_->{}", planFilePath_);
       AbstractXmlApplicationContext context = getContext(planFilePath_);
       LOG.info("context->{}", context);
@@ -133,6 +137,10 @@ public class DKApplication {
       try {
          engine.diff(plan.getLhsSource(), plan.getRhsSource(), plan.getSink(),
             plan.getTableComparison());
+         if (!errorOnDiff_)
+            System.exit(0);
+         if (plan.getSink().getDiffCount() > 0)
+            System.exit(-1);
          System.exit(0);
       }
       catch (Exception e_) {
