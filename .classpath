@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="tst"/>
 	<classpathentry kind="src" path="conf"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/logback-classic-0.9.18.jar"/>
@@ -20,12 +19,13 @@
 	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/paranamer-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-core-1.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/groovy-all-1.7.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/db2jcc_license_cu.jar"/>
 	<classpathentry kind="lib" path="lib/db2jcc.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-1.7.3.jar"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

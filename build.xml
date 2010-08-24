@@ -37,7 +37,7 @@
 		<fileset refid="libs" />
 	</path>
 
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="build.classpath" />
+   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"  classpathref="build.classpath"/>
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -71,11 +71,11 @@
 			<src path="${src.dir}" />
 		</javac>
 
-		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="off">
+		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="on">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
-			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
+			<javac target="1.6" source="1.6" debug="on" deprecation="off" />
 		</groovyc>
 
 		<copy todir="${build.dir}">
