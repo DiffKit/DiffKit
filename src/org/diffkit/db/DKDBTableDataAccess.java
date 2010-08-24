@@ -94,7 +94,6 @@ public class DKDBTableDataAccess {
       return tables.get(0);
    }
 
-   @SuppressWarnings("unchecked")
    public List<DKDBTable> getTables(String catalog_, String schema_, String tableName_)
       throws SQLException {
       Connection connection = this.getConnection();

@@ -134,7 +134,6 @@ public class DKSqlUtil {
    /**
     * does not close connection_
     */
-   @SuppressWarnings("unchecked")
    public static List<Map> readRows(String selectSql_, Connection connection_)
       throws SQLException {
       LOG.debug("selectSql_", selectSql_);
@@ -167,7 +166,6 @@ public class DKSqlUtil {
    /**
     * does not close resultSet_
     */
-   @SuppressWarnings("unchecked")
    public static List<Map> readRows(ResultSet resultSet_) throws SQLException {
       if (resultSet_ == null)
          return null;

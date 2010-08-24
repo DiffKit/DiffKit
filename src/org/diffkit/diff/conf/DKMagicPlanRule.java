@@ -156,7 +156,7 @@ public class DKMagicPlanRule {
          boolean targetClassMatches = this.targetClassMatches(dependency_, providedPlan_);
          boolean targetParmNameMatches = this.targetParmNameMatches(dependency_,
             providedPlan_);
-         boolean planKeyValuePresent = this.playValuePresent(dependency_,
+         boolean planKeyValuePresent = this.planValuePresent(dependency_,
             providedPlan_);
          _rule.getLog().trace("_rule->{}", _rule);
          _rule.getLog().trace("targetDependentClassMatches->{}",
@@ -168,7 +168,7 @@ public class DKMagicPlanRule {
             && targetParmNameMatches && planKeyValuePresent);
       }
 
-      protected boolean playValuePresent(DKMagicDependency<?> dependency_,
+      protected boolean planValuePresent(DKMagicDependency<?> dependency_,
                                             DKMagicPlan providedPlan_) {
          String planKey = _rule.getMagicPlanKey();
          if (planKey == null)

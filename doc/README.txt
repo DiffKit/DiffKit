@@ -4,14 +4,12 @@ DiffKit README File
 Prerequisites 
 ------------- 
 DiffKit is written in Java so you need a Java Runtime Environment (JRE) (version
-1.5 or later) to execute the diffkit standalone application. Java is installed
-by default in OS X and Linux. You can download a JRE from the official Java
-website http://www.java.com/getjava/index.jsp.
-
+1.5 or later) to execute the DiffKit standalone application. You can download a
+J2SE JRE from the official Java website http://www.java.com/getjava/index.jsp.
 
 Obtaining DiffKit
 ------------------
-DiffKit is available on the Google code development site:
+DiffKit is available on the Google Code development site:
 http://code.google.com/p/diffkit/downloads/list
 
 
@@ -19,11 +17,11 @@ Environments
 -----
 DiffKit has been tested on the following environments:
 
-- Mac OS X.5
+- Mac OS X.6
 - Windows 95
-- Linux
-- H2 Database
-- DB2
+- RH Linux
+- H2 Database 1.2
+- DB2 9.5
 
 
 COPYING

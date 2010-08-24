@@ -242,7 +242,6 @@ public class DKDBTable {
       return DKSqlUtil.executeUpdate(insertSql, connection_);
    }
 
-   @SuppressWarnings("unchecked")
    public static List<Map> readAllRows(DKDBTable table_, Connection connection_)
       throws SQLException {
       if ((table_ == null) || (connection_ == null))
