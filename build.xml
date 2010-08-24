@@ -37,7 +37,7 @@
 		<fileset refid="libs" />
 	</path>
 
-   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"  classpathref="build.classpath"/>
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="build.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -75,7 +75,7 @@
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
-			<javac target="1.6" source="1.6" debug="on" deprecation="off" />
+			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
 		</groovyc>
 
 		<copy todir="${build.dir}">
@@ -167,9 +167,9 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${dist.dir}/doc">
-			<fileset dir="${doc.dir}" />
-		</copy>
+		<antcall target="doc-dist" />
+
+		<touch file="${dist.dir}/VERSION-${version}" />
 
 		<zip destfile="${dist.dir}/${bin-distzip}" basedir="${dist.dir}" />
 
@@ -178,6 +178,18 @@
 			<fileset dir="${dist.dir}" excludes="${bin-distzip}" />
 		</delete>
 
+	</target>
+
+	<target name="doc-dist">
+
+		<copy todir="${dist.dir}/doc">
+			<fileset dir="${doc.dir}" />
+		</copy>
+		
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="false" searchpath="true">
+			<arg line="README.txt"/>
+		</exec>
+		
 	</target>
 
 	<target name="src-dist" depends="clean,dist-properties">

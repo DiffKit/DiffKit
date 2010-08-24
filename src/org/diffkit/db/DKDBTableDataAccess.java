@@ -152,7 +152,6 @@ public class DKDBTableDataAccess {
          dataTypeName, DKNumberUtil.getInt(columnSize, -1), isNullable);
    }
 
-   @SuppressWarnings("unchecked")
    private DKDBPrimaryKey constructPrimaryKey(List<Map> pkMaps_, DKDBColumn[] columns_) {
       if ((pkMaps_ == null || (pkMaps_.isEmpty())))
          return null;
@@ -174,7 +173,6 @@ public class DKDBTableDataAccess {
       return new DKDBPrimaryKey(pkName, keyColumnNames);
    }
 
-   @SuppressWarnings("unchecked")
    private List<Map> getColumnMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
       throws SQLException {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
@@ -193,7 +191,6 @@ public class DKDBTableDataAccess {
       return columnMaps;
    }
 
-   @SuppressWarnings("unchecked")
    private List<Map> getTableMaps(String catalog_, String schema_, String tableName_,
                                   DatabaseMetaData dbMeta_) throws SQLException {
       _log.debug("catalog_->{}", catalog_);
@@ -211,7 +208,6 @@ public class DKDBTableDataAccess {
       return tableMaps;
    }
 
-   @SuppressWarnings("unchecked")
    private List<Map> getPKMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
       throws SQLException {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
