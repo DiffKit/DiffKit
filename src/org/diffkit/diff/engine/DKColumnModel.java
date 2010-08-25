@@ -32,6 +32,9 @@ public class DKColumnModel {
       STRING, NUMBER, DATE, TIME, TIMESTAMP
    }
 
+   private static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
+   private static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
+
    /**
     * 0's based
     */
@@ -106,12 +109,22 @@ public class DKColumnModel {
 
    private Format createFormat(Type type_, String formatString_) {
       switch (type_) {
+
       case STRING:
          return null;
-
       case NUMBER: {
          if (formatString_ == null)
             return null;
+         return new DecimalFormat(formatString_);
+      }
+      case DATE: {
+         if (formatString_ == null)
+            formatString_ = DEFAULT_DATE_FORMAT_STRING;
+         return new DecimalFormat(formatString_);
+      }
+      case TIME: {
+         if (formatString_ == null)
+            formatString_ = DEFAULT_TIME_FORMAT_STRING;
          return new DecimalFormat(formatString_);
       }
 
