@@ -3,13 +3,13 @@ test19 README
 
 Description
 ----------
-Exercise of various SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT
+Exercise of various SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL
 
 
 Assumptions
 -----------
 - lhs & rhs are DB tables
-- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT
+- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL
 - lhs vs. rhs has both row and column diffs
 - plan file supplies lhs table name and rhs table name
 - plan file supplies ConnectionInfo to H2 DB

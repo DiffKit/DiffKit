@@ -21,6 +21,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             <ref bean="rhs.column4" />
             <ref bean="rhs.column5" />
             <ref bean="rhs.column6" />
+            <ref bean="rhs.column7" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4" ref="rhs.pk" />
@@ -51,6 +52,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             <ref bean="lhs.column4" />
             <ref bean="lhs.column5" />
             <ref bean="lhs.column6" />
+            <ref bean="lhs.column7" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4" ref="lhs.pk" />
@@ -112,6 +114,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
       <constructor-arg index="3" value="0" />
       <constructor-arg index="4" value="true" />
    </bean>
+   
+   <bean id="rhs.column7" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="column7" />
+      <constructor-arg index="1" value="7" />
+      <constructor-arg index="2" value="DECIMAL" />
+      <constructor-arg index="3" value="10" />
+      <constructor-arg index="4" value="2" />
+      <constructor-arg index="5" value="true" />
+   </bean>
 
 	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
       <constructor-arg index="0" value="column1" />
@@ -159,6 +170,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
       <constructor-arg index="2" value="INT" />
       <constructor-arg index="3" value="0" />
       <constructor-arg index="4" value="true" />
+   </bean>
+   
+   <bean id="lhs.column7" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="column7" />
+      <constructor-arg index="1" value="7" />
+      <constructor-arg index="2" value="DECIMAL" />
+      <constructor-arg index="3" value="10" />
+      <constructor-arg index="4" value="2" />
+      <constructor-arg index="5" value="true" />
    </bean>
 
 	<bean id="connectionSource" class="org.diffkit.db.DKDBConnectionSource">
