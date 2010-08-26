@@ -144,11 +144,16 @@
 			<fileset dir="${lib.dir}" />
 		</copy>
 
+	   <copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
+	   <copy file="${conf.dir}/dist.properties" todir="${dist.dir}/conf/" />
+
+		<!--
 		<copy todir="${dist.dir}/conf">
 			<fileset dir="${conf.dir}">
 			</fileset>
 		</copy>
-
+      -->
+		
 		<!-- create the diffkit standalone application that includes diffkit library and all its dependencies -->
 		<jar destfile="${dist.dir}/${appjar}" basedir="${dist.dir}">
 			<manifest>
@@ -161,11 +166,7 @@
 			<fileset dir="${dist.dir}" excludes="${appjar},${testcasedatajar}" />
 		</delete>
 
-		<copy todir="${dist.dir}/conf">
-			<fileset dir="${conf.dir}">
-				<include name="**/logback.xml" />
-			</fileset>
-		</copy>
+		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
 
 		<antcall target="doc-dist" />
 
@@ -185,11 +186,11 @@
 		<copy todir="${dist.dir}/doc">
 			<fileset dir="${doc.dir}" />
 		</copy>
-		
+
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="false" searchpath="true">
-			<arg line="README.txt"/>
+			<arg line="README.txt" />
 		</exec>
-		
+
 	</target>
 
 	<target name="src-dist" depends="clean,dist-properties">

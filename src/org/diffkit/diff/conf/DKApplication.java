@@ -44,13 +44,10 @@ public class DKApplication {
    private static final String VERSION_OPTION_KEY = "version";
    private static final String HELP_OPTION_KEY = "help";
    private static final String TEST_OPTION_KEY = "test";
-   private static final String PLAN_FILE_OPTION_KEY = "planfile";
+   private static final String PLAN_FILE_OPTION_KEY = "planfiles";
    private static final String ERROR_ON_DIFF_OPTION_KEY = "errorOnDiff";
    private static final Options OPTIONS = new Options();
 
-   // private static final String PLAN_FILE_NAME_REGEX = ".*\\.plan\\.xml";
-   // private static final Pattern PLAN_FILE_PATTERN =
-   // Pattern.compile(PLAN_FILE_NAME_REGEX);
    private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
 
    static {
@@ -59,9 +56,9 @@ public class DKApplication {
       OPTIONS.addOption(new Option(HELP_OPTION_KEY, "print this message"));
       OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
 
-      OptionBuilder.withArgName("file");
+      OptionBuilder.withArgName("file1[,file2...]");
       OptionBuilder.hasArg();
-      OptionBuilder.withDescription("perform diff using given file for plan");
+      OptionBuilder.withDescription("perform diff using given file(s) for plan");
       OPTIONS.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
       OPTIONS.addOption(new Option(
          ERROR_ON_DIFF_OPTION_KEY,
@@ -155,6 +152,7 @@ public class DKApplication {
     *           a resource style path that will be resolved via the classpath
     */
    private static AbstractXmlApplicationContext getContext(String planFilePath_) {
+      LOG.debug("planFilePath_->{}", planFilePath_);
       File file = new File(planFilePath_);
       AbstractXmlApplicationContext context = null;
       if (file.canRead())
