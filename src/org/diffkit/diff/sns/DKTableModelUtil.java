@@ -114,6 +114,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.TIME;
       case Types.TIMESTAMP:
          return DKColumnModel.Type.TIMESTAMP;
+      case Types.BOOLEAN:
+         return DKColumnModel.Type.BOOLEAN;
 
       default:
          throw new RuntimeException(String.format("unrecognized sqlType_->%s", sqlType_));

@@ -3,13 +3,14 @@ test19 README
 
 Description
 ----------
-Exercise of various SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL
+Exercise of various SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, 
+DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT
 
 
 Assumptions
 -----------
 - lhs & rhs are DB tables
-- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL
+- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT
 - lhs vs. rhs has both row and column diffs
 - plan file supplies lhs table name and rhs table name
 - plan file supplies ConnectionInfo to H2 DB
@@ -23,5 +24,5 @@ Assumptions
 
 Expectations
 -----------
-- first and last diffs are column diffs
-- four other row diffs
+- 13 column diff
+- 2 row diffs

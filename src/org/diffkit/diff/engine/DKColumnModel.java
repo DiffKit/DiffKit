@@ -29,11 +29,22 @@ import org.diffkit.common.DKValidate;
 public class DKColumnModel {
 
    public enum Type {
-      STRING, NUMBER, DATE, TIME, TIMESTAMP
+      STRING, NUMBER, DATE, TIME, TIMESTAMP, BOOLEAN
    }
 
+   /**
+    * should be ISO 8601 compliant
+    */
    private static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
+   /**
+    * should be ISO 8601 compliant
+    */
    private static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
+   /**
+    * should be ISO 8601 compliant
+    */
+   private static final String DEFAULT_TIMESTAMP_FORMAT_STRING = DEFAULT_DATE_FORMAT_STRING
+      + "T" + DEFAULT_TIME_FORMAT_STRING;
 
    /**
     * 0's based
@@ -127,6 +138,13 @@ public class DKColumnModel {
             formatString_ = DEFAULT_TIME_FORMAT_STRING;
          return new DecimalFormat(formatString_);
       }
+      case TIMESTAMP: {
+         if (formatString_ == null)
+            formatString_ = DEFAULT_TIMESTAMP_FORMAT_STRING;
+         return new DecimalFormat(formatString_);
+      }
+      case BOOLEAN:
+         return null;
 
       default:
          throw new RuntimeException(String.format("unhandled type_->%s", type_));
