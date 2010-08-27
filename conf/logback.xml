@@ -2,12 +2,18 @@
 
 <configuration>
 
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
-			</Pattern>
-		</layout>
-	</appender>
+   <appender name="SYSTEM" class="ch.qos.logback.core.ConsoleAppender">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+         <Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
+         </Pattern>
+      </layout>
+   </appender>
+
+   <appender name="USER" class="ch.qos.logback.core.ConsoleAppender">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+         <Pattern>%message%n</Pattern>
+      </layout>
+   </appender>
 
 	<logger name="org.diffkit">
 		<level value="info" />
@@ -25,11 +31,16 @@
 		<level value="info" />
 	</logger>
 
-	<logger name="org.diffkit.diff.engine.DKDiffEngine">
-		<level value="info" />
-	</logger>
+   <logger name="org.diffkit.diff.engine.DKDiffEngine">
+      <level value="info" />
+   </logger>
+   
+   <logger name="user" additivity="false">
+      <level value="info" />
+      <appender-ref ref="USER" />
+   </logger>
 
 	<root level="info">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="SYSTEM" />
 	</root>
 </configuration>

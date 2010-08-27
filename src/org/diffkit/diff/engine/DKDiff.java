@@ -15,6 +15,8 @@
  */
 package org.diffkit.diff.engine;
 
+import java.util.List;
+
 import org.apache.commons.collections.OrderedMap;
 
 /**
@@ -41,4 +43,5 @@ public interface DKDiff extends Comparable<DKDiff> {
     * convenience that formats RowDisplayValues
     */
    public String getRowDisplayString();
+
 }

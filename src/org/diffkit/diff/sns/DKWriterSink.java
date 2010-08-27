@@ -34,7 +34,6 @@ public class DKWriterSink extends DKAbstractSink {
 
    private Writer _writer;
    private DKDiffFormatter _formatter;
-   private long _diffCount;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    protected DKWriterSink() {
@@ -54,13 +53,9 @@ public class DKWriterSink extends DKAbstractSink {
       DKValidate.notNull(_writer, _formatter);
    }
 
-//   @Override
+   // @Override
    public Kind getKind() {
       return Kind.STREAM;
-   }
-
-   public long getDiffCount() {
-      return _diffCount;
    }
 
    public Writer getWriter() {
@@ -80,7 +75,6 @@ public class DKWriterSink extends DKAbstractSink {
          _log.error(String.format("could not format diff->%s", diff_));
          return;
       }
-      _diffCount++;
       _writer.write(diffString + "\n");
    }
 

@@ -29,6 +29,8 @@ public abstract class DKAbstractSink implements DKSink {
    private boolean _isStarted;
    private boolean _isEnded;
    private DKContext _context;
+   private long _rowDiffCount;
+   private long _columnDiffCount;
 
    public void open(DKContext context_) throws IOException {
       this.ensureNotStarted();
@@ -57,9 +59,25 @@ public abstract class DKAbstractSink implements DKSink {
          throw new RuntimeException(String.format(
             "context_->%s does not match _context at open->%s", context_._id,
             _context._id));
+      if (diff_ == null)
+         return;
+      if (diff_.getKind() == DKDiff.Kind.ROW_DIFF)
+         _rowDiffCount++;
+      else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF)
+         _columnDiffCount++;
    }
 
-   public abstract long getDiffCount();
+   public long getRowDiffCount() {
+      return _rowDiffCount;
+   }
+
+   public long getColumnDiffCount() {
+      return _columnDiffCount;
+   }
+
+   public long getDiffCount() {
+      return (this.getRowDiffCount() + this.getColumnDiffCount());
+   }
 
    protected void ensureNotStarted() {
       if (_isStarted)

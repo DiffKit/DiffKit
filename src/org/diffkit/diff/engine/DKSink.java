@@ -36,4 +36,7 @@ public interface DKSink extends DKSourceSink {
     */
    public long getDiffCount();
 
+   public long getRowDiffCount();
+
+   public long getColumnDiffCount();
 }

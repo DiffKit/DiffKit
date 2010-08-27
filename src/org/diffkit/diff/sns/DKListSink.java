@@ -47,7 +47,7 @@ public class DKListSink extends DKAbstractSink {
       }
    }
 
- //  @Override
+   // @Override
    public Kind getKind() {
       return Kind.MEMORY;
    }
@@ -56,10 +56,27 @@ public class DKListSink extends DKAbstractSink {
       return _diffs;
    }
 
+   @Override
    public long getDiffCount() {
       if (_diffs == null)
          return 0;
       return _diffs.size();
+   }
+
+   @Override
+   public long getRowDiffCount() {
+      List<DKDiff> rowDiffs = DKDiffUtil.getRowDiffs(this.getDiffs());
+      if (rowDiffs == null)
+         return 0;
+      return rowDiffs.size();
+   }
+
+   @Override
+   public long getColumnDiffCount() {
+      List<DKDiff> columnDiffs = DKDiffUtil.getColumnDiffs(this.getDiffs());
+      if (columnDiffs == null)
+         return 0;
+      return columnDiffs.size();
    }
 
    public URI getURI() {

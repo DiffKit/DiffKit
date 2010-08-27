@@ -48,7 +48,6 @@ public class DKDBSink extends DKAbstractSink {
    private final DKDBTable _diffContextTable;
    private final DKDBTable _diffTable;
    private transient Connection _connection;
-   private transient long _diffCount;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKDBSink(DKDBConnectionSource connectionSource_) {
@@ -84,15 +83,10 @@ public class DKDBSink extends DKAbstractSink {
       super.close(context_);
    }
 
-   public long getDiffCount() {
-      return _diffCount;
-   }
-
    public void record(DKDiff diff_, DKContext context_) throws IOException {
       super.record(diff_, context_);
       try {
          this.saveDiff(diff_, context_);
-         _diffCount++;
       }
       catch (SQLException e_) {
          throw new RuntimeException(e_);

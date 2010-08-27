@@ -35,6 +35,9 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
 import org.diffkit.diff.engine.DKDiffEngine;
+import org.diffkit.diff.engine.DKSink;
+import org.diffkit.diff.engine.DKSource;
+import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.util.DKClassUtil;
 
 /**
@@ -49,6 +52,7 @@ public class DKApplication {
    private static final Options OPTIONS = new Options();
 
    private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
+   private static final Logger USER_LOG = LoggerFactory.getLogger("user");
 
    static {
       OPTIONS.addOption(new Option(VERSION_OPTION_KEY,
@@ -88,12 +92,12 @@ public class DKApplication {
    }
 
    private static void printVersion() {
-      System.out.println("version->" + DKDistProperties.getPublicVersionString());
+      USER_LOG.info("version->" + DKDistProperties.getPublicVersionString());
       System.exit(0);
    }
 
    private static void printInvalidArguments(String[] args_) {
-      System.err.println(String.format("Invalid command line arguments: %s",
+      USER_LOG.info(String.format("Invalid command line arguments: %s",
          Arrays.toString(args_)));
       printHelp();
    }
@@ -106,7 +110,7 @@ public class DKApplication {
 
    @SuppressWarnings("unchecked")
    private static void runTestCases() {
-      LOG.debug("running TestCases");
+      USER_LOG.info("running TestCases");
       try {
          Class<?> testCaseRunnerClass = Class.forName("org.diffkit.diff.testcase.TestCaseRunner");
          LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
@@ -121,7 +125,7 @@ public class DKApplication {
    }
 
    private static void runPlan(String planFilePath_, boolean errorOnDiff_) {
-      LOG.info("planFilePath_->{}", planFilePath_);
+      USER_LOG.info("planFilePath_->{}", planFilePath_);
       AbstractXmlApplicationContext context = getContext(planFilePath_);
       LOG.info("context->{}", context);
       DKPlan plan = (DKPlan) context.getBean("plan");
@@ -132,8 +136,15 @@ public class DKApplication {
       DKDiffEngine engine = new DKDiffEngine();
       LOG.info("engine->{}", engine);
       try {
-         engine.diff(plan.getLhsSource(), plan.getRhsSource(), plan.getSink(),
-            plan.getTableComparison());
+         DKSource lhsSource = plan.getLhsSource();
+         DKSource rhsSource = plan.getRhsSource();
+         DKSink sink = plan.getSink();
+         DKTableComparison tableComparison = plan.getTableComparison();
+         USER_LOG.info("lhsSource->{}", lhsSource);
+         USER_LOG.info("rhsSource->{}", rhsSource);
+         USER_LOG.info("sink->{}", sink);
+         USER_LOG.info("tableComparison->{}", tableComparison);
+         engine.diff(lhsSource, rhsSource, sink, tableComparison);
          if (!errorOnDiff_)
             System.exit(0);
          if (plan.getSink().getDiffCount() > 0)
