@@ -36,8 +36,8 @@ public class DKDiffEngine {
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebug = _log.isDebugEnabled();
 
-   public void diff(DKSource lhs_, DKSource rhs_, DKSink sink_,
-                    DKTableComparison tableComparison_) throws IOException {
+   public DKContext diff(DKSource lhs_, DKSource rhs_, DKSink sink_,
+                         DKTableComparison tableComparison_) throws IOException {
       _log.info("lhs_->{}", lhs_);
       _log.info("rhs_->{}", rhs_);
       _log.info("sink_->{}", sink_);
@@ -47,6 +47,7 @@ public class DKDiffEngine {
       DKContext context = new DKContext(lhs_, rhs_, sink_, tableComparison_);
       _log.info("context->{}", context);
       this.diff(context);
+      return context;
    }
 
    private void diff(DKContext context_) throws IOException {

@@ -16,6 +16,7 @@
 package org.diffkit.diff.conf;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
@@ -27,6 +28,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
@@ -34,6 +36,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
+import org.diffkit.common.DKUserException;
+import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffEngine;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
@@ -89,6 +93,16 @@ public class DKApplication {
       catch (ParseException e_) {
          System.err.println(e_.getMessage());
       }
+      catch (Throwable e_) {
+         Throwable rootCause = ExceptionUtils.getRootCause(e_);
+         if ((rootCause instanceof DKUserException)
+            || (rootCause instanceof FileNotFoundException)) {
+            LOG.info(null, e_);
+            USER_LOG.info("error->" + rootCause.getMessage());
+         }
+         else
+            LOG.error(null, e_);
+      }
    }
 
    private static void printVersion() {
@@ -124,37 +138,40 @@ public class DKApplication {
       }
    }
 
-   private static void runPlan(String planFilePath_, boolean errorOnDiff_) {
-      USER_LOG.info("planFilePath_->{}", planFilePath_);
-      AbstractXmlApplicationContext context = getContext(planFilePath_);
-      LOG.info("context->{}", context);
-      DKPlan plan = (DKPlan) context.getBean("plan");
+   private static void runPlan(String planFilesString_, boolean errorOnDiff_)
+      throws Exception {
+      LOG.info("planFilesString_->{}", planFilesString_);
+      String[] planFiles = planFilesString_.split("\\,");
+      USER_LOG.info("planfile(s)->{}", planFiles);
+      AbstractXmlApplicationContext appContext = getContext(planFiles);
+      LOG.info("appContext->{}", appContext);
+      DKPlan plan = (DKPlan) appContext.getBean("plan");
       LOG.info("plan->{}", plan);
       if (plan == null)
-         throw new RuntimeException(String.format("no 'plan' bean in plan file->",
-            planFilePath_));
+         throw new RuntimeException(String.format("no 'plan' bean in  planFiles_->",
+            planFilesString_));
       DKDiffEngine engine = new DKDiffEngine();
       LOG.info("engine->{}", engine);
-      try {
-         DKSource lhsSource = plan.getLhsSource();
-         DKSource rhsSource = plan.getRhsSource();
-         DKSink sink = plan.getSink();
-         DKTableComparison tableComparison = plan.getTableComparison();
-         USER_LOG.info("lhsSource->{}", lhsSource);
-         USER_LOG.info("rhsSource->{}", rhsSource);
-         USER_LOG.info("sink->{}", sink);
-         USER_LOG.info("tableComparison->{}", tableComparison);
-         engine.diff(lhsSource, rhsSource, sink, tableComparison);
-         if (!errorOnDiff_)
-            System.exit(0);
-         if (plan.getSink().getDiffCount() > 0)
-            System.exit(-1);
+      DKSource lhsSource = plan.getLhsSource();
+      DKSource rhsSource = plan.getRhsSource();
+      DKSink sink = plan.getSink();
+      DKTableComparison tableComparison = plan.getTableComparison();
+      USER_LOG.info("lhsSource->{}", lhsSource);
+      USER_LOG.info("rhsSource->{}", rhsSource);
+      USER_LOG.info("sink->{}", sink);
+      USER_LOG.info("tableComparison->{}", tableComparison);
+      DKContext diffContext = engine.diff(lhsSource, rhsSource, sink, tableComparison);
+      USER_LOG.info("---");
+      USER_LOG.info("diff'd {} rows, found:", diffContext._rowStep);
+      if (plan.getSink().getDiffCount() == 0) {
+         USER_LOG.info("(no diffs)");
          System.exit(0);
       }
-      catch (Exception e_) {
-         LOG.error(null, e_);
+      USER_LOG.info("!{} row diffs", plan.getSink().getRowDiffCount());
+      USER_LOG.info("@{} column diffs", plan.getSink().getColumnDiffCount());
+      if (errorOnDiff_)
          System.exit(-1);
-      }
+      System.exit(0);
    }
 
    /**
@@ -162,18 +179,25 @@ public class DKApplication {
     *           can be either a FS file path (relative or absolute) or it can be
     *           a resource style path that will be resolved via the classpath
     */
-   private static AbstractXmlApplicationContext getContext(String planFilePath_) {
-      LOG.debug("planFilePath_->{}", planFilePath_);
-      File file = new File(planFilePath_);
+   private static AbstractXmlApplicationContext getContext(String[] planFiles_) {
+      LOG.debug("planFiles_->{}", planFiles_);
       AbstractXmlApplicationContext context = null;
-      if (file.canRead())
-         context = new FileSystemXmlApplicationContext(new String[] { planFilePath_ },
-            false);
+      if (canReadPlanFilePaths(planFiles_))
+         context = new FileSystemXmlApplicationContext(planFiles_, false);
       else
-         context = new ClassPathXmlApplicationContext(planFilePath_);
+         context = new ClassPathXmlApplicationContext(planFiles_);
       context.setClassLoader(DKApplication.class.getClassLoader());
       context.refresh();
       return context;
    }
 
+   private static boolean canReadPlanFilePaths(String[] planFiles_) {
+      if (planFiles_ == null)
+         return false;
+      for (String filePath : planFiles_) {
+         if (!new File(filePath).canRead())
+            return false;
+      }
+      return true;
+   }
 }

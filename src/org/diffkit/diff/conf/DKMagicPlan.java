@@ -241,7 +241,6 @@ public class DKMagicPlan implements DKPlan {
          _builtPlan = builder.build();
       }
       catch (Exception e_) {
-         _log.error(null, e_);
          throw new RuntimeException(e_);
       }
       return _builtPlan;

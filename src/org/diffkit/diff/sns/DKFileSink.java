@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.apache.commons.lang.ClassUtils;
 
+import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
 
@@ -36,10 +37,11 @@ public class DKFileSink extends DKWriterSink {
       this(new File(filePath_));
    }
 
-   private DKFileSink(File file_) throws IOException {
+   private DKFileSink(File file_) {
       DKValidate.notNull(file_);
       if (file_.exists())
-         throw new IOException(String.format("already exists file->%s", file_));
+         throw new DKUserException(String.format(
+            "sink file [%s] already exists! please remove it and try again.", file_));
       _file = file_;
    }
 
