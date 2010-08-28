@@ -95,10 +95,12 @@ public class DKApplication {
       }
       catch (Throwable e_) {
          Throwable rootCause = ExceptionUtils.getRootCause(e_);
+         if (rootCause == null)
+            rootCause = e_;
          if ((rootCause instanceof DKUserException)
             || (rootCause instanceof FileNotFoundException)) {
             LOG.info(null, e_);
-            USER_LOG.info("error->" + rootCause.getMessage());
+            USER_LOG.info("error->{}", rootCause.getMessage());
          }
          else
             LOG.error(null, e_);

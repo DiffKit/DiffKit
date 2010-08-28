@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.diff.engine.DKColumnModel;
@@ -253,7 +254,7 @@ public class DKFileSource implements DKSource {
       return _lastIndex;
    }
 
-//   @Override
+   // @Override
    public void close(DKContext context_) throws IOException {
       this.ensureOpen();
       _lineReader.close();
@@ -278,12 +279,12 @@ public class DKFileSource implements DKSource {
       return fsFile;
    }
 
-   private void validateFile() throws IOException {
+   private void validateFile() {
       if (!_file.canRead())
-         throw new IOException(String.format("can't read file->%s", _file));
+         throw new DKUserException(String.format("can't read file [%s]", _file));
    }
 
-//   @Override
+   // @Override
    public void open(DKContext context_) throws IOException {
       this.open();
    }
