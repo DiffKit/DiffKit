@@ -16,24 +16,8 @@
    </appender>
 
 	<logger name="org.diffkit">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
-
-	<logger name="org.diffkit.diff.conf.DKAutomaticTableComparison">
-		<level value="info" />
-	</logger>
-
-	<logger name="org.diffkit.diff.sns.DKFileSource">
-		<level value="info" />
-	</logger>
-
-	<logger name="org.diffkit.diff.sns.DKDBSource">
-		<level value="info" />
-	</logger>
-
-   <logger name="org.diffkit.diff.engine.DKDiffEngine">
-      <level value="info" />
-   </logger>
    
    <logger name="user" additivity="false">
       <level value="info" />

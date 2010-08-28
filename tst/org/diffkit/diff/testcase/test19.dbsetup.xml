@@ -26,8 +26,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="rhs.column9" />
 				<ref bean="rhs.column10" />
 				<ref bean="rhs.column11" />
-            <ref bean="rhs.column12" />
+				<ref bean="rhs.column12" />
             <ref bean="rhs.column13" />
+            <ref bean="rhs.column14" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4" ref="rhs.pk" />
@@ -63,8 +64,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="lhs.column9" />
 				<ref bean="lhs.column10" />
 				<ref bean="lhs.column11" />
-            <ref bean="lhs.column12" />
+				<ref bean="lhs.column12" />
             <ref bean="lhs.column13" />
+            <ref bean="lhs.column14" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4" ref="lhs.pk" />
@@ -184,6 +186,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="4" value="true" />
 	</bean>
 
+	<bean id="rhs.column14" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="column14" />
+		<constructor-arg index="1" value="14" />
+		<constructor-arg index="2" value="CLOB" />
+		<constructor-arg index="3" value="1000" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
 	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column1" />
 		<constructor-arg index="1" value="1" />
@@ -286,6 +296,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="13" />
 		<constructor-arg index="2" value="SMALLINT" />
 		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="lhs.column14" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="column14" />
+		<constructor-arg index="1" value="14" />
+		<constructor-arg index="2" value="CLOB" />
+		<constructor-arg index="3" value="1000" />
 		<constructor-arg index="4" value="true" />
 	</bean>
 

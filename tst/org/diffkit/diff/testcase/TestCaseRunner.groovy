@@ -144,14 +144,21 @@ public class TestCaseRunner implements Runnable {
    
    private TestCaseRun run(TestCase testCase_, TestCaseRunnerRun runnerRun_){
       _log.info("testCase_->{}",testCase_.description)
-      this.setupDB( testCase_)
-      TestCaseRun run = [testCase_, this.getPlan(testCase_)]
-      runnerRun_.addRun( run)
-      _log.debug("run->{}",run)
-      this.validate(run)
-      this.setup(run, runnerRun_)
-      this.execute(run)
-      return run
+      try{
+         this.setupDB( testCase_)
+         //      TestCaseRun run = [testCase_, this.getPlan(testCase_)]
+         TestCaseRun run = new TestCaseRun(testCase_, this.getPlan(testCase_))
+         runnerRun_.addRun( run)
+         _log.debug("run->{}",run)
+         this.validate(run)
+         this.setup(run, runnerRun_)
+         this.execute(run)
+         return run
+      }
+      catch(Exception e_){
+         _log.error(null,e_)
+         return null
+      }
    }
    
    private void setupDB(TestCase testCase_) {
