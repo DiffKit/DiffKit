@@ -37,6 +37,7 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKSqlUtil;
+import org.diffkit.util.DKSqlUtil.ReadType;
 
 /**
  * @author jpanico
@@ -50,6 +51,7 @@ public class DKDBSource implements DKSource {
    private final String[] _keyColumnNames;
    private final DKDBConnectionSource _connectionSource;
    private String[] _readColumnNames;
+   private ReadType[] _readTypes;
    private final DKDBTable _table;
    private transient Connection _connection;
    private transient ResultSet _resultSet;
@@ -113,6 +115,7 @@ public class DKDBSource implements DKSource {
       this.ensureNotOpen();
       try {
          _readColumnNames = _model.getColumnNames();
+         _readTypes = _table.getReadTypes(_readColumnNames);
          _connection = _connectionSource.getConnection();
          _resultSet = this.createResultSet();
          if (_isDebug)
@@ -152,7 +155,7 @@ public class DKDBSource implements DKSource {
             return null;
          }
          _lastIndex++;
-         return DKSqlUtil.readRow(_resultSet, _readColumnNames);
+         return DKSqlUtil.readRow(_resultSet, _readColumnNames, _readTypes);
       }
       catch (Exception e_) {
          throw new RuntimeException(e_);

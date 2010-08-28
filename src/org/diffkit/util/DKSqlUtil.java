@@ -37,6 +37,10 @@ import org.slf4j.LoggerFactory;
  * @author jpanico
  */
 public class DKSqlUtil {
+   public static enum ReadType {
+      OBJECT, STRING;
+   }
+
    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
       DEFAULT_DATE_PATTERN);
@@ -97,6 +101,31 @@ public class DKSqlUtil {
       }
    }
 
+   public static ReadType getReadTypeForSqlType(int dataType_) {
+      switch (dataType_) {
+      case Types.CLOB:
+         return ReadType.STRING;
+      case Types.CHAR:
+         return ReadType.STRING;
+      case Types.VARCHAR:
+         return ReadType.STRING;
+      case Types.LONGVARCHAR:
+         return ReadType.STRING;
+      default:
+         return ReadType.OBJECT;
+      }
+   }
+
+   public static ReadType getReadTypeForSqlType(String sqlTypeName_) {
+      if (sqlTypeName_ == null)
+         return null;
+      Integer sqlType = getSqlTypeForName(sqlTypeName_);
+      if (sqlType == null)
+         throw new RuntimeException(String.format(
+            "couldn't find sqlType for sqlTypeName_ []", sqlTypeName_));
+      return getReadTypeForSqlType(sqlType);
+   }
+
    public static String getNameForSqlType(Integer sqlType_) {
       if (sqlType_ == null)
          return null;
@@ -153,13 +182,25 @@ public class DKSqlUtil {
     * 
     * @throws SQLException
     */
-   public static Object[] readRow(ResultSet resultSet_, String[] columnNames_)
-      throws SQLException {
-      if ((resultSet_ == null) || (columnNames_ == null) || (columnNames_.length == 0))
+   public static Object[] readRow(ResultSet resultSet_, String[] columnNames_,
+                                  ReadType[] readTypes_) throws SQLException {
+      if ((resultSet_ == null) || (columnNames_ == null) || (columnNames_.length == 0)
+         || (readTypes_ == null))
          return null;
       Object[] row = new Object[columnNames_.length];
-      for (int i = 0; i < columnNames_.length; i++)
-         row[i] = resultSet_.getObject(columnNames_[i]);
+      for (int i = 0; i < columnNames_.length; i++) {
+         switch (readTypes_[i]) {
+         case STRING:
+            row[i] = resultSet_.getString(columnNames_[i]);
+            break;
+         case OBJECT:
+            row[i] = resultSet_.getObject(columnNames_[i]);
+            break;
+         default:
+            throw new RuntimeException(String.format("unrecognized ReadType->%s",
+               readTypes_[i]));
+         }
+      }
       return row;
    }
 

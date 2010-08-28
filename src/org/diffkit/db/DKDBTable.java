@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.util.DKSqlUtil;
+import org.diffkit.util.DKSqlUtil.ReadType;
 import org.diffkit.util.DKStringUtil;
 
 /**
@@ -177,6 +178,23 @@ public class DKDBTable {
       for (int i = 0; i < columnsNames_.length; i++)
          indices[i] = this.getIndexOfColumn(columnsNames_[i]);
       return indices;
+   }
+
+   /**
+    * convenience method
+    */
+   public ReadType[] getReadTypes(String[] columnNames_) {
+      if ((columnNames_ == null) || (columnNames_.length == 0))
+         return null;
+      ReadType[] readTypes = new ReadType[columnNames_.length];
+      for (int i = 0; i < columnNames_.length; i++) {
+         DKDBColumn column = this.getColumn(columnNames_[i]);
+         if (column == null)
+            throw new RuntimeException(String.format(
+               "could not find column for columnName [%s]", columnNames_[i]));
+         readTypes[i] = column.getReadType();
+      }
+      return readTypes;
    }
 
    public int getIndexOfColumn(String columnName_) {
