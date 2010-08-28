@@ -210,19 +210,27 @@ public class DKDBSource implements DKSource {
    }
 
    private String generateOrderByClause() throws SQLException {
+      String[] orderByColumnNames = this.getOrderByColumnNames();
+      if (orderByColumnNames == null)
+         return null;
+      StringBuilder builder = new StringBuilder();
+      builder.append("ORDER BY ");
+      for (int i = 0; i < orderByColumnNames.length; i++) {
+         builder.append(orderByColumnNames[i]);
+         if (i < orderByColumnNames.length - 1)
+            builder.append(", ");
+      }
+      return builder.toString();
+   }
+
+   private String[] getOrderByColumnNames() throws SQLException {
+      if (_keyColumnNames != null)
+         return _keyColumnNames;
       DKDBTable table = this.getTable();
       DKDBPrimaryKey primaryKey = table.getPrimaryKey();
       if (primaryKey == null)
          return null;
-      String[] primaryKeyColumnNames = primaryKey.getColumnNames();
-      StringBuilder builder = new StringBuilder();
-      builder.append("ORDER BY ");
-      for (int i = 0; i < primaryKeyColumnNames.length; i++) {
-         builder.append(primaryKeyColumnNames[i]);
-         if (i < primaryKeyColumnNames.length - 1)
-            builder.append(", ");
-      }
-      return builder.toString();
+      return primaryKey.getColumnNames();
    }
 
    public DKTableModel getModel(DKTableModel model_, String[] keyColumnNames_,

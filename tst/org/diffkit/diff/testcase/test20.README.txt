@@ -1,0 +1,30 @@
+test20 README
+=========
+
+Description
+----------
+Demos issue 5. The target DB tables do not have PK defined at the SQL level. User
+has specified keyColumnNames in the plan file. DKDBSource must reorder the rows 
+appropriately for the key definition in the plan file to assure that there is only
+1 row diff.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- DB tables do not have PK defined
+- plan file supplies lhs table name and rhs table name
+- plan file supplies ConnectionInfo to H2 DB
+- lhs and rhs tables have identical structure
+- plan file supplies key for ordering the rows
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan generates default TableComparison by aligning lhs column to rhs column based on name
+- MagicPlan generates SQL SELECT using plan supplied keyColumnNames for the ORDER BY clause
+- MagicPlan uses EqualsDiffor across the board
+- MagicPlan defaults to looking for ROW and COLUMN type Diffs
+- MagicPlan sets max diffs to Long.MAX
+
+
+Expectations
+-----------
+- 1 row diff
