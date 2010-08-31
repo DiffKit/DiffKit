@@ -17,6 +17,7 @@ package org.diffkit.diff.sns;
 
 import java.sql.Types;
 
+import org.diffkit.common.DKUserException;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
@@ -72,6 +73,12 @@ public class DKTableModelUtil {
          keyIndices = table_.getIndicesOfColumns(keyColumnNames_);
       else
          keyIndices = table_.getPrimaryKeyColumnIndices();
+      if ((keyIndices == null) && (keyColumnNames_ == null))
+         throw new DKUserException(
+            String.format(
+               "Cannot create model for table [%s]. The table does not have a PK defined in the database and no keyColumnNames were specified.",
+               table_));
+
       return new DKTableModel(tableName, columnModels, keyIndices);
    }
 
