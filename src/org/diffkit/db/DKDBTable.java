@@ -260,7 +260,7 @@ public class DKDBTable {
       return DKSqlUtil.executeUpdate(insertSql, connection_);
    }
 
-   public static List<Map> readAllRows(DKDBTable table_, Connection connection_)
+   public static List<Map<String, ?>> readAllRows(DKDBTable table_, Connection connection_)
       throws SQLException {
       if ((table_ == null) || (connection_ == null))
          return null;

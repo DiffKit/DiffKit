@@ -163,7 +163,7 @@ public class DKSqlUtil {
    /**
     * does not close connection_
     */
-   public static List<Map> readRows(String selectSql_, Connection connection_)
+   public static List<Map<String, ?>> readRows(String selectSql_, Connection connection_)
       throws SQLException {
       LOG.debug("selectSql_", selectSql_);
       LOG.debug("connection_->{}", connection_);
@@ -172,7 +172,7 @@ public class DKSqlUtil {
       ResultSet resultSet = executeQuery(selectSql_, connection_);
       if (resultSet == null)
          return null;
-      List<Map> rows = readRows(resultSet);
+      List<Map<String, ?>> rows = readRows(resultSet);
       close(resultSet);
       return rows;
    }
@@ -207,7 +207,7 @@ public class DKSqlUtil {
    /**
     * does not close resultSet_
     */
-   public static List<Map> readRows(ResultSet resultSet_) throws SQLException {
+   public static List<Map<String, ?>> readRows(ResultSet resultSet_) throws SQLException {
       if (resultSet_ == null)
          return null;
       SQLWarning warnings = resultSet_.getWarnings();
@@ -221,7 +221,7 @@ public class DKSqlUtil {
          return null;
       }
 
-      List<Map> maps = new ArrayList<Map>();
+      List<Map<String, ?>> maps = new ArrayList<Map<String, ?>>();
       while (resultSet_.next()) {
          Map<String, ?> map = getRowMap(columnNames, resultSet_);
          LOG.debug("map->{}", map);

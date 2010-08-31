@@ -98,15 +98,16 @@ public class DKDBTableDataAccess {
       throws SQLException {
       Connection connection = this.getConnection();
       DatabaseMetaData dbMeta = connection.getMetaData();
-      List<Map> tableMaps = this.getTableMaps(catalog_, schema_, tableName_, dbMeta);
+      List<Map<String, ?>> tableMaps = this.getTableMaps(catalog_, schema_, tableName_,
+         dbMeta);
       if ((tableMaps == null) || (tableMaps.isEmpty()))
          return null;
       List<DKDBTable> tables = new ArrayList<DKDBTable>(tableMaps.size());
       for (Map<String, ?> tableMap : tableMaps) {
          _log.debug("tableMap->{}", tableMap);
-         List<Map> columMaps = this.getColumnMaps(tableMap, dbMeta);
+         List<Map<String, ?>> columMaps = this.getColumnMaps(tableMap, dbMeta);
          _log.debug("columMaps->{}", columMaps);
-         List<Map> pkMaps = this.getPKMaps(tableMap, dbMeta);
+         List<Map<String, ?>> pkMaps = this.getPKMaps(tableMap, dbMeta);
          _log.debug("pkMaps->{}", pkMaps);
          DKDBTable table = this.constructTable(tableMap, columMaps, pkMaps);
          _log.debug("table->{}", table);
@@ -117,8 +118,9 @@ public class DKDBTableDataAccess {
    }
 
    @SuppressWarnings("unchecked")
-   private DKDBTable constructTable(Map<String, ?> tableMap_, List<Map> columnMaps_,
-                                    List<Map> pkMaps_) {
+   private DKDBTable constructTable(Map<String, ?> tableMap_,
+                                    List<Map<String, ?>> columnMaps_,
+                                    List<Map<String, ?>> pkMaps_) {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
          TABLE_CATALOG_KEY);
       String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
@@ -135,7 +137,7 @@ public class DKDBTableDataAccess {
          columns[i] = this.constructColumn(columnMaps_.get(i));
          _log.debug("i->{} columns[i]->{}", i, columns[i]);
       }
-      DKDBPrimaryKey primaryKey = this.constructPrimaryKey((List<Map>) pkMaps_, columns);
+      DKDBPrimaryKey primaryKey = this.constructPrimaryKey(pkMaps_, columns);
 
       return new DKDBTable(catalogName, schemaName, tableName, columns, primaryKey);
    }
@@ -152,7 +154,8 @@ public class DKDBTableDataAccess {
          dataTypeName, DKNumberUtil.getInt(columnSize, -1), isNullable);
    }
 
-   private DKDBPrimaryKey constructPrimaryKey(List<Map> pkMaps_, DKDBColumn[] columns_) {
+   private DKDBPrimaryKey constructPrimaryKey(List<Map<String, ?>> pkMaps_,
+                                              DKDBColumn[] columns_) {
       if ((pkMaps_ == null || (pkMaps_.isEmpty())))
          return null;
       List<Map> pkMaps = new ArrayList<Map>(pkMaps_);
@@ -173,7 +176,8 @@ public class DKDBTableDataAccess {
       return new DKDBPrimaryKey(pkName, keyColumnNames);
    }
 
-   private List<Map> getColumnMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
+   private List<Map<String, ?>> getColumnMaps(Map<String, ?> tableMap_,
+                                              DatabaseMetaData dbMeta_)
       throws SQLException {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
          TABLE_CATALOG_KEY);
@@ -185,14 +189,15 @@ public class DKDBTableDataAccess {
       _log.debug("tableName->{}", tableName);
 
       ResultSet columnsRS = dbMeta_.getColumns(catalogName, schemaName, tableName, null);
-      List<Map> columnMaps = DKSqlUtil.readRows(columnsRS);
+      List<Map<String, ?>> columnMaps = DKSqlUtil.readRows(columnsRS);
       _log.debug("columnMaps->{}", columnMaps);
       DKSqlUtil.close(columnsRS);
       return columnMaps;
    }
 
-   private List<Map> getTableMaps(String catalog_, String schema_, String tableName_,
-                                  DatabaseMetaData dbMeta_) throws SQLException {
+   private List<Map<String, ?>> getTableMaps(String catalog_, String schema_,
+                                             String tableName_, DatabaseMetaData dbMeta_)
+      throws SQLException {
       _log.debug("catalog_->{}", catalog_);
       _log.debug("schema_->{}", schema_);
       _log.debug("tableName_->{}", tableName_);
@@ -202,14 +207,14 @@ public class DKDBTableDataAccess {
          _log.warn("no tablesRS for catalog_->{} schema_->{} tableName_->{}");
          return null;
       }
-      List<Map> tableMaps = DKSqlUtil.readRows(tablesRS);
+      List<Map<String, ?>> tableMaps = DKSqlUtil.readRows(tablesRS);
       _log.debug("tableMaps->{}", tableMaps);
       DKSqlUtil.close(tablesRS);
       return tableMaps;
    }
 
-   private List<Map> getPKMaps(Map<String, ?> tableMap_, DatabaseMetaData dbMeta_)
-      throws SQLException {
+   private List<Map<String, ?>> getPKMaps(Map<String, ?> tableMap_,
+                                          DatabaseMetaData dbMeta_) throws SQLException {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
          TABLE_CATALOG_KEY);
       String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
@@ -224,7 +229,7 @@ public class DKDBTableDataAccess {
          _log.warn("no primaryKeyRS for catalog_->{} schema_->{} tableName_->{}");
          return null;
       }
-      List<Map> pkMaps = DKSqlUtil.readRows(primaryKeyRS);
+      List<Map<String, ?>> pkMaps = DKSqlUtil.readRows(primaryKeyRS);
       _log.debug("pkMaps->{}", pkMaps);
       DKSqlUtil.close(primaryKeyRS);
       return pkMaps;
