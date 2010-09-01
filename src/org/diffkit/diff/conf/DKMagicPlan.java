@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKStandardTableComparison;
@@ -43,6 +44,7 @@ public class DKMagicPlan implements DKPlan {
    private DKDBConnectionInfo _dbConnectionInfo;
    private DKDBConnectionInfo _lhsDBConnectionInfo;
    private DKDBConnectionInfo _rhsDBConnectionInfo;
+   private DKDiff.Kind _diffKind;
    private String[] _keyColumnNames;
    private String[] _diffColumnNames;
    private String[] _ignoreColumnNames;
@@ -187,6 +189,14 @@ public class DKMagicPlan implements DKPlan {
 
    public void setRhsDBConnectionInfo(DKDBConnectionInfo rhsDBConnectionInfo_) {
       _rhsDBConnectionInfo = rhsDBConnectionInfo_;
+   }
+
+   public void setDiffKind(DKDiff.Kind diffKind) {
+      _diffKind = diffKind;
+   }
+
+   public DKDiff.Kind getDiffKind() {
+      return _diffKind;
    }
 
    public String[] getKeyColumnNames() {

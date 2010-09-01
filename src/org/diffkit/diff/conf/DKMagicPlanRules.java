@@ -74,13 +74,13 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule LHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "lhsDBConnectionInfo",
       "if lhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the lhs DBSource",
-      DKDBConnectionSource.class, "lhsSource_.connectionSource_.connectionInfo_", "lhsDBConnectionInfo", true,
-      new PlanValue(true));
+      DKDBConnectionSource.class, "lhsSource_.connectionSource_.connectionInfo_",
+      "lhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule RHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "rhsDBConnectionInfo",
       "if rhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the rhs DBSource",
-      DKDBConnectionSource.class, "rhsSource_.connectionSource_.connectionInfo_", "rhsDBConnectionInfo", true,
-      new PlanValue(true));
+      DKDBConnectionSource.class, "rhsSource_.connectionSource_.connectionInfo_",
+      "rhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule MODEL_DEFAULT_RULE = new DKMagicPlanRule(
       "modelDefault",
       "if no TableModel is explicitly supplied, set it to null so that target object will default it from its ultimate source",
@@ -138,6 +138,9 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule VALIDATE_LAZILY_RULE = new DKMagicPlanRule(
       "validateLazily", "hardwire validateLazily to false", DKFileSource.class,
       "validateLazily_", null, true, new Constant(Boolean.FALSE));
+   private static final DKMagicPlanRule DIFF_KIND_RULE = new DKMagicPlanRule("diffKind",
+      "assign diffKind from Plan to AutomaticTableComparison",
+      DKAutomaticTableComparison.class, "kind_", "diffKind", true, new PlanValue(true));
    private static final DKMagicPlanRule DEFAULT_DIFF_KIND_RULE = new DKMagicPlanRule(
       "defaultDiffKind", "if no Diff.Kind specified, default to BOTH",
       DKAutomaticTableComparison.class, "kind_", null, false, new Constant(
@@ -183,7 +186,7 @@ public class DKMagicPlanRules {
       READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE, RHS_FILE_SOURCE_RULE,
       RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE, DEFAULT_SINK_RULE,
       AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE, DEFAULT_DELIMITER_RULE,
-      IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DEFAULT_DIFF_KIND_RULE,
+      IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE, DEFAULT_DIFF_KIND_RULE,
       DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE, DISPLAY_COLUMN_NAMES_RULE,
       MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE };
 

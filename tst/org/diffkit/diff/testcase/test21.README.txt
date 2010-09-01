@@ -1,0 +1,22 @@
+test21 README
+=========
+
+Description
+----------
+Test of diffKind property in MagicPlan. Plan limits diffs to ROW_DIFF diffs only. 
+If BOTH kinds of diffs were reported, there would be 4 COLUMN_DIFFs, in addition
+to the 2 ROW_DIFFs. But the diffKind property filters those out.
+
+
+Assumptions
+-----------
+- lhs & rhs are File tables
+- lhs vs. rhs has both row and column diffs
+- MagicPlan figures everything out
+- only report ROW diffs
+
+
+Expectations
+-----------
+- no column diffs in expected, even though column diffs exist between sources
+- two row diffs
