@@ -12,6 +12,7 @@
 	<property name="conf.dir" location="${root.dir}/conf" />
 	<property name="doc.dir" location="${root.dir}/doc" />
 	<property name="build.dir" location="${root.dir}/build" />
+	<property name="unit.build.dir" location="${root.dir}/unit.build" />
 	<property name="run.dir" location="${root.dir}/run" />
 	<property name="tstscratch.dir" location="${root.dir}/tstscratch" />
 	<property name="dist.dir" location="${root.dir}/dist" />
@@ -33,11 +34,11 @@
 		<include name="*.zip" />
 	</fileset>
 
-	<path id="build.classpath">
+	<path id="lib.classpath">
 		<fileset refid="libs" />
 	</path>
 
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="build.classpath" />
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -66,13 +67,15 @@
 	<target name="build" depends="dist-properties">
 
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${unit.build.dir}" />
 
-		<javac destdir="${build.dir}" classpathref="build.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
-			<compilerarg value="-Xlint"/>
+		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+			<compilerarg value="-Xlint" />
 			<src path="${src.dir}" />
 		</javac>
 
-		<groovyc destdir="${build.dir}" classpathref="build.classpath" verbose="on">
+		<!-- build the TestCases -->
+		<groovyc destdir="${build.dir}" classpathref="lib.classpath" verbose="on">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
@@ -91,13 +94,46 @@
 			</fileset>
 		</copy>
 
+		<!-- build the JUnit test -->
+		<groovyc destdir="${unit.build.dir}" verbose="on">
+			<classpath>
+				<path refid="lib.classpath" />
+				<pathelement location="${build.dir}" />
+			</classpath>
+			<src path="${tst.dir}" />
+			<include name="**/tst/*" />
+			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
+		</groovyc>
+
+		<copy todir="${unit.build.dir}">
+
+			<fileset dir="${tst.dir}">
+            <include name="**/*.jar" />
+            <include name="**/*.csv" />
+            <include name="**/*.diff" />
+            <include name="**/*.xml" />
+			</fileset>
+		</copy>
+
 	</target>
 
-	<target name="dist" depends="dist-properties">
-		<antcall target="bin-dist" />
-		<move file="${dist.dir}/${bin-distzip}" tofile="${dist.dir}/${bin-distzip}.__hold__" />
-		<antcall target="src-dist" />
-		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
+	<!-- run JUnit tests -->
+	<target name="unit" depends="build">
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<path refid="lib.classpath" />
+				<pathelement location="${build.dir}" />
+				<pathelement location="${unit.build.dir}" />
+			</classpath>
+			<batchtest fork="yes">
+				<fileset dir="${unit.build.dir}">
+					<include name="**/Test*" />
+					<!-- a '$' in the filename means it's an inner class -->
+					<exclude name="**/*$*" />
+					<exclude name="**/TestDBConnection*" />
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 	<target name="bin-dist" depends="clean,build">
@@ -175,18 +211,6 @@
 
 	</target>
 
-	<target name="doc-dist">
-
-		<copy todir="${dist.dir}/doc">
-			<fileset dir="${doc.dir}" />
-		</copy>
-
-		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="false" searchpath="true">
-			<arg line="README.txt" />
-		</exec>
-
-	</target>
-
 	<target name="src-dist" depends="clean,dist-properties">
 
 		<mkdir dir="${dist.dir}" />
@@ -213,15 +237,38 @@
 		</delete>
 	</target>
 
+	<target name="dist" depends="dist-properties">
+		<antcall target="bin-dist" />
+		<move file="${dist.dir}/${bin-distzip}" tofile="${dist.dir}/${bin-distzip}.__hold__" />
+		<antcall target="src-dist" />
+		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
+	</target>
+
+	<target name="doc-dist">
+
+		<copy todir="${dist.dir}/doc">
+			<fileset dir="${doc.dir}" />
+		</copy>
+
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="false" searchpath="true">
+			<arg line="README.txt" />
+		</exec>
+
+	</target>
+
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${unit.build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
 			<exclude name="*.__hold__" />
 		</delete>
 		<!-- clean up scratch files created by Unit tests and TCR -->
 		<delete>
-			<fileset dir="${root.dir}" includes="*.diff" />
+		   <fileset dir="${root.dir}">
+		      <include name="*.diff" />
+		      <include name="*.txt" />
+		   </fileset>
 		</delete>
 		<delete includeemptydirs="true">
 			<fileset dir="${root.dir}" includes="tcr*/**" />
