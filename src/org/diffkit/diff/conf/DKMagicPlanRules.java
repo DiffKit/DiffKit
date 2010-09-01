@@ -166,7 +166,7 @@ public class DKMagicPlanRules {
       new PlanValue(true));
    private static final DKMagicPlanRule DEFAULT_MAX_DIFFS_RULE = new DKMagicPlanRule(
       "defaultMaxDiffs", "assign default value to maxDiffs if value in Plan is null",
-      DKAutomaticTableComparison.class, "maxDiffs_", null, true, new Constant(
+      DKAutomaticTableComparison.class, "maxDiffs_", null, false, new Constant(
          Long.MAX_VALUE));
    private static final DKMagicPlanRule NUMBER_TOLERANCE_RULE = new DKMagicPlanRule(
       "numberTolerance",

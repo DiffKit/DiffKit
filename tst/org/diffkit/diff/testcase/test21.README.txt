@@ -2,11 +2,14 @@ test21 README
 =========
 
 Description
-----------
-Test of diffKind property in MagicPlan. Plan limits diffs to ROW_DIFF diffs only. 
-If BOTH kinds of diffs were reported, there would be 4 COLUMN_DIFFs, in addition
-to the 2 ROW_DIFFs. But the diffKind property filters those out.
-
+---------- 
+Test of diffKind and maxDiffs properties in MagicPlan. Plan limits
+diffs to ROW_DIFF diffs only, and maxDiffs of 2. If BOTH kinds of diffs were
+reported, there would be 4 COLUMN_DIFFs, in addition to the 2 ROW_DIFFs. But the
+diffKind property filters those out. If maxDiff was not specified, it would 
+default to a huge number (Long.MAX), and all 3 row diffs would be reported. But 
+since maxDiffs is specified to the MagicPlan, only the first 2 ROW_DIFFs are
+reported.
 
 Assumptions
 -----------
@@ -14,9 +17,10 @@ Assumptions
 - lhs vs. rhs has both row and column diffs
 - MagicPlan figures everything out
 - only report ROW diffs
+- report maxDiffs = 2
 
 
 Expectations
 -----------
 - no column diffs in expected, even though column diffs exist between sources
-- two row diffs
+- two row diffs, even though 3 exist
