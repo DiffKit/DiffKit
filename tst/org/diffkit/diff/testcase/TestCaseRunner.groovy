@@ -111,6 +111,9 @@ public class TestCaseRunner implements Runnable {
          this.run(it, runnerRun)
       }
       this.report(runnerRun)
+      if(runnerRun.failed)
+         System.exit(-1)
+      System.exit(0)
    }
    
    /**

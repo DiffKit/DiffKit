@@ -25,31 +25,39 @@ import org.diffkit.common.DKValidate;
  * @author jpanico
  */
 public class TestCaseRunnerRun {
-	
-	private static final SimpleDateFormat DIR_NAME_FORMAT = new SimpleDateFormat('MM.dd.yy.HH.mm.ss');
-	
-	public final File dir
-	public List<TestCaseRun> testCaseRuns
-	
-	public TestCaseRunnerRun(File parentDir_){
-		DKValidate.notNull(parentDir_)
-		dir = this.createDir(parentDir_)
-		DKValidate.notNull(dir)
-	}
-	
-	private File createDir(File parentDir){
-		String dirName ='tcr.run.'+ DIR_NAME_FORMAT.format(new Date())
-		File dirFile = new File(parentDir, dirName)
-		if (!dirFile.mkdir() )
-			throw new RuntimeException("couldn't create directory->$dirFile")
-		return dirFile
-	}
-	
-	public void addRun(TestCaseRun run_){
-		if(!run_)
-			return;
-		if(!testCaseRuns)
-			testCaseRuns = new ArrayList<TestCaseRun>()
-		testCaseRuns.add(run_)
-	}
+   
+   private static final SimpleDateFormat DIR_NAME_FORMAT = new SimpleDateFormat('MM.dd.yy.HH.mm.ss');
+   
+   public final File dir
+   public List<TestCaseRun> testCaseRuns
+   
+   public TestCaseRunnerRun(File parentDir_){
+      DKValidate.notNull(parentDir_)
+      dir = this.createDir(parentDir_)
+      DKValidate.notNull(dir)
+   }
+   
+   private File createDir(File parentDir){
+      String dirName ='tcr.run.'+ DIR_NAME_FORMAT.format(new Date())
+      File dirFile = new File(parentDir, dirName)
+      if (!dirFile.mkdir() )
+         throw new RuntimeException("couldn't create directory->$dirFile")
+      return dirFile
+   }
+   
+   public void addRun(TestCaseRun run_){
+      if(!run_)
+         return;
+      if(!testCaseRuns)
+         testCaseRuns = new ArrayList<TestCaseRun>()
+      testCaseRuns.add(run_)
+   }
+   
+   public Boolean getFailed(){
+      for(def run : testCaseRuns){
+         if(run.failed)
+            return true
+      }
+      return false
+   }
 }

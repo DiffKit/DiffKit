@@ -38,6 +38,7 @@ public class TestCaseRun {
    public Date end
    public String actualFile
    public boolean isExecuted
+   private Boolean _failed
    private final Logger _log = LoggerFactory.getLogger(this.getClass())
    
    public TestCaseRun(TestCase testCase_, DKPlan plan_){
@@ -66,16 +67,24 @@ public class TestCaseRun {
       }
    }
    
-   public String getReport(){
+   public Boolean getFailed(){
+      if(_failed)
+         return _failed
       if(!isExecuted)
-         return 'Not yet executed!'
+         return null
       File expectedFile = testCase.expectedFile
       // N.B. TestCaseRunner ensures that sink is File type
       File actualFile = plan.sink.file
       String expectedContent = DKFileUtil.readFullyAsString(expectedFile)
       String actualContent = DKFileUtil.readFullyAsString(actualFile)
-      def passed = StringUtils.equals( expectedContent, actualContent)
-      def resultString = passed ? 'PASSED' : '*FAILED*'
+      _failed = ! StringUtils.equals( expectedContent, actualContent)
+      return _failed
+   }
+   
+   public String getReport(){
+      if(!isExecuted)
+         return 'Not yet executed!'
+      def resultString = (!this.failed ? 'PASSED' : '*FAILED*')
       return "${testCase.name} $resultString"
    }
    
