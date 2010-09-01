@@ -33,7 +33,9 @@ import org.diffkit.common.annot.Stateless;
 @NotThreadSafe
 @Stateless
 public class DKDiffEngine {
+   private static final long PROGRESS_BATCH_SIZE = 1000;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private static final Logger USER_LOG = LoggerFactory.getLogger("user");
    private final boolean _isDebug = _log.isDebugEnabled();
 
    public DKContext diff(DKSource lhs_, DKSource rhs_, DKSink sink_,
@@ -64,6 +66,8 @@ public class DKDiffEngine {
          boolean oneSided = false;
          context_._rowStep++;
          context_._columnStep = 0;
+         if (context_._rowStep % PROGRESS_BATCH_SIZE == 0)
+            USER_LOG.info("->{}", context_._rowStep);
          if (rows[DKSide.LEFT_INDEX] == null)
             rows[DKSide.LEFT_INDEX] = context_._lhs.getNextRow();
          if (rows[DKSide.LEFT_INDEX] == null) {
