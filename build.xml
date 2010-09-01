@@ -34,11 +34,11 @@
 		<include name="*.zip" />
 	</fileset>
 
-	<path id="lib.classpath">
-		<fileset refid="libs" />
-	</path>
-
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
+   <path id="lib.classpath">
+      <fileset refid="libs" />
+   </path>
+	
+   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -89,7 +89,6 @@
 
 			<fileset dir="${tst.dir}">
 				<include name="**/testcase/**" />
-				<exclude name="**/testcaserunner*" />
 				<exclude name="**/*.groovy" />
 			</fileset>
 		</copy>
@@ -108,10 +107,10 @@
 		<copy todir="${unit.build.dir}">
 
 			<fileset dir="${tst.dir}">
-            <include name="**/*.jar" />
-            <include name="**/*.csv" />
-            <include name="**/*.diff" />
-            <include name="**/*.xml" />
+				<include name="**/*.jar" />
+				<include name="**/*.csv" />
+				<include name="**/*.diff" />
+				<include name="**/*.xml" />
 			</fileset>
 		</copy>
 
@@ -134,6 +133,17 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
+
+	<!-- run functional TestCase suite -->
+	<target name="testcases" depends="build">
+		<java classname="org.diffkit.diff.testcase.TestCaseRunner" failonerror="yes">
+			<classpath>
+				<pathelement location="${conf.dir}" />
+				<path refid="lib.classpath" />
+				<pathelement location="${build.dir}" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="bin-dist" depends="clean,build">
@@ -237,7 +247,7 @@
 		</delete>
 	</target>
 
-	<target name="dist" depends="dist-properties">
+	<target name="dist" depends="dist-properties,unit,testcases">
 		<antcall target="bin-dist" />
 		<move file="${dist.dir}/${bin-distzip}" tofile="${dist.dir}/${bin-distzip}.__hold__" />
 		<antcall target="src-dist" />
@@ -265,10 +275,10 @@
 		</delete>
 		<!-- clean up scratch files created by Unit tests and TCR -->
 		<delete>
-		   <fileset dir="${root.dir}">
-		      <include name="*.diff" />
-		      <include name="*.txt" />
-		   </fileset>
+			<fileset dir="${root.dir}">
+				<include name="*.diff" />
+				<include name="*.txt" />
+			</fileset>
 		</delete>
 		<delete includeemptydirs="true">
 			<fileset dir="${root.dir}" includes="tcr*/**" />
