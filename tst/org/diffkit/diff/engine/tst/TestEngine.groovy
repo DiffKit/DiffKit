@@ -191,7 +191,7 @@ public class TestEngine extends GroovyTestCase {
 		File sinkFile = ['./'+sinkFileName_]
 		if(sinkFile.exists())
 			sinkFile.delete()
-		return new DKFileSink(sinkFile)
+		return new DKFileSink(sinkFile, false)
 	}
 	
 	private DKStandardTableComparison createComparison2(DKDBTable lhsDBTable_, DKDBTable rhsDBTable_) {
@@ -261,7 +261,7 @@ public class TestEngine extends GroovyTestCase {
 		File sinkFile = ['./'+filename]
 		if(sinkFile.exists())
 			sinkFile.delete()
-		DKFileSink sink = [sinkFile]
+		DKFileSink sink = [sinkFile, false]
 		DKStandardTableComparison tableComparison = this.createSimpleComparison()
 		println "tableComparison->$tableComparison"
 		DKDiffEngine engine = new DKDiffEngine()

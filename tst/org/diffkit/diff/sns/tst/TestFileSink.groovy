@@ -46,7 +46,7 @@ public class TestFileSink extends GroovyTestCase {
 		if(sinkFile.exists())
 			sinkFile.delete()
 		
-		DKFileSink sink = [sinkFile]
+		DKFileSink sink = [sinkFile, false]
 		Object[] row = ['1111', '1111', 1]
 		def plan = this.createSimplePlan()
 		def keyValues = plan.getRowKeyValues( row, DKSide.LEFT_INDEX)
