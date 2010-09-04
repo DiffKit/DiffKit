@@ -41,6 +41,7 @@ import org.diffkit.db.DKDBConnectionSource
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTableLoader 
 import org.diffkit.db.tst.DBTestSetup 
+import org.diffkit.diff.conf.DKPassthroughPlan;
 import org.diffkit.diff.conf.DKPlan 
 import org.diffkit.diff.engine.DKSink 
 import org.diffkit.diff.engine.DKSource 
@@ -158,7 +159,7 @@ public class TestCaseRunner implements Runnable {
       _log.debug("plan->{}",plan)
       if(!plan)
          throw new RuntimeException("no 'plan' bean in planFile->${testCase_.planFile}")
-      return plan
+      return new DKPassthroughPlan(plan)
    }
    
    private void report(TestCaseRunnerRun runnerRun_){
@@ -170,19 +171,31 @@ public class TestCaseRunner implements Runnable {
    
    private void setupAndExecute(TestCase testCase_, TestCaseRunnerRun runnerRun_){
       _log.info("testCase_->{}",testCase_.description)
+      DKPlan plan = null
+      Exception exception = null
       try{
          this.setupDB( testCase_)
-         TestCaseRun run = new TestCaseRun(testCase_, this.getPlan(testCase_))
-         runnerRun_.addRun( run)
-         _log.debug("run->{}",run)
+         plan = this.getPlan(testCase_)
+      }
+      catch(Exception e_){
+         _log.info(null,e_)
+         exception = e_
+      }
+      TestCaseRun run = new TestCaseRun(testCase_, plan)
+      _log.debug("run->{}",run)
+      runnerRun_.addRun( run)
+      if(exception){
+         run.setException(exception)
+         return
+      }
+      try{
          this.validate(run)
          this.setup(run, runnerRun_)
          run.diff()
          run.setIsExecuted(true)
       }
-      catch(Exception e_) {
-         _log.info(null,e_)
-         //         run_.setException(e_)
+      catch(Exception e_){
+         run.setException(exception)
       }
    }
    

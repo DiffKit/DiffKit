@@ -17,6 +17,7 @@ package org.diffkit.diff.testcase
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class TestCaseRun {
       this(testCase_, plan_, null, null, null)
    }
    
-   public TestCaseRun(TestCase testCase_, DKPlan plan_, Date start_, Date end_,  
+   public TestCaseRun(TestCase testCase_, DKPassthroughPlan plan_, Date start_, Date end_,  
    String actualFile_){
       
       testCase = testCase_
@@ -57,12 +58,8 @@ public class TestCaseRun {
       DKValidate.notNull(testCase)
    }
    
-   public void setPlan(plan_){
-      if(plan_==null) {
-         plan = null
-         return
-      }
-      plan = new DKPassthroughPlan(plan_)
+   public void setPlan(DKPassthroughPlan plan_){
+      plan = plan_
    }
    
    public void diff(){
@@ -81,8 +78,7 @@ public class TestCaseRun {
    public Boolean getFailed(){
       if(_failed)
          return _failed
-      if(!_isExecuted)
-         return null
+      _log.debug("expectDiff->{}",testCase.expectDiff())
       if(testCase.expectDiff())
          return this.getDiffFailed();
       else if(testCase.expectException())
@@ -107,16 +103,21 @@ public class TestCaseRun {
       }
       if(!_exception)
          return true
-      if(_exception.class != testCase.exceptionClass)
+      Exception rootException = ExceptionUtils.getRootCause(_exception)
+      Class expectedExceptionClass = testCase.exceptionClass
+      _log.debug("rootException->{}",rootException)
+      _log.debug("expectedExceptionClass->{}",expectedExceptionClass)
+      _log.debug("rootException.class != expectedExceptionClass->{}",rootException.class != expectedExceptionClass)
+      if(rootException.class != expectedExceptionClass)
          return true
-      if(!_exception.message.startsWith(testCase.exceptionMessage ))
+      _log.debug("rootException.class != expectedExceptionClass->{}",rootException.class != expectedExceptionClass)
+      if(!rootException.message.startsWith(testCase.exceptionMessage ))
          return true
       return false
    }
    
    public String getReport(){
-      if(!_isExecuted)
-         return 'Not yet executed!'
+      _log.info("_exception->{}",_exception)
       def resultString = (!this.failed ? 'PASSED' : '*FAILED*')
       return "${testCase.name} $resultString"
    }
