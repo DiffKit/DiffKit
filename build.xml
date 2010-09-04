@@ -22,7 +22,8 @@
 		<include name="**/*.xml" />
 		<include name="**/*.txt" />
 		<include name="**/*.csv" />
-		<include name="**/*.diff" />
+      <include name="**/*.diff" />
+      <include name="**/*.exception" />
 	</patternset>
 
 	<patternset id="executables">
@@ -110,7 +111,8 @@
 				<include name="**/*.jar" />
 				<include name="**/*.csv" />
 				<include name="**/*.diff" />
-				<include name="**/*.xml" />
+            <include name="**/*.xml" />
+            <include name="**/*.txt" />
 			</fileset>
 		</copy>
 
@@ -118,7 +120,7 @@
 
 	<!-- run JUnit tests -->
 	<target name="unit" depends="build">
-		<junit printsummary="yes" haltonfailure="yes">
+		<junit printsummary="yes" haltonfailure="yes" showoutput="no">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${build.dir}" />
@@ -128,7 +130,7 @@
 				<fileset dir="${unit.build.dir}">
 					<include name="**/Test*" />
 					<!-- a '$' in the filename means it's an inner class -->
-					<exclude name="**/*$*" />
+               <exclude name="**/*$*" />
 					<exclude name="**/TestDBConnection*" />
 				</fileset>
 			</batchtest>
@@ -277,7 +279,8 @@
 		<delete>
 			<fileset dir="${root.dir}">
 				<include name="*.diff" />
-				<include name="*.txt" />
+            <include name="*.txt" />
+            <include name="*.tst" />
 			</fileset>
 		</delete>
 		<delete includeemptydirs="true">

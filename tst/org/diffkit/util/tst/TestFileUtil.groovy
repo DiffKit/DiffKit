@@ -33,7 +33,7 @@ public class TestFileUtil extends GroovyTestCase {
    public void testPrepend() {
       File sourceTarget = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/prepend_target.txt")
       assert sourceTarget
-      File testTarget = ['./prependTest']
+      File testTarget = ['./prependTest.tst']
       FileUtils.copyFile( sourceTarget, testTarget)
       def prependString = 'prepend\nprepend\nprepend\n---\n'
       DKFileUtil.prepend( prependString, testTarget)

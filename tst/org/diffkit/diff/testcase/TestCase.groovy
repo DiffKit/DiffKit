@@ -16,8 +16,11 @@
 package org.diffkit.diff.testcase
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import org.diffkit.common.DKValidate;
@@ -37,9 +40,13 @@ public class TestCase implements Comparable<TestCase>{
    public final File rhsSourceFile
    public final File planFile
    public final File expectedFile
+   public final File exceptionFile
+   public final Class exceptionClass
+   public final String exceptionMessage
+   private Boolean _expectedDiff
    
    public TestCase(Integer id_, String name_, String description_, File dbSetupFile_, File lhsSourceFile_, 
-   File rhsSourceFile_, File planFile_, File expectedFile_){
+   File rhsSourceFile_, File planFile_, File expectedFile_, File exceptionFile_){
       
       id = id_
       name = name_
@@ -49,8 +56,18 @@ public class TestCase implements Comparable<TestCase>{
       lhsSourceFile = lhsSourceFile_
       rhsSourceFile = rhsSourceFile_
       expectedFile = expectedFile_
+      exceptionFile = exceptionFile_
       DKValidate.notNull(id, name)
       this.validate()
+      Exception exception = this.parseExceptionFile()
+      if(exception != null){
+         exceptionClass = exception.class
+         exceptionMessage = exception.message
+      }
+      else {
+         exceptionClass=null
+         exceptionMessage=null
+      }
    }
    
    public String toString() {
@@ -71,6 +88,28 @@ public class TestCase implements Comparable<TestCase>{
       return 0;
    }
    
+   public Boolean expectDiff(){
+      if(_expectedDiff!=null)
+         return _expectedDiff
+      _expectedDiff = expectedFile.canRead()
+      return _expectedDiff
+   }
+   
+   public boolean expectException() {
+      return ! (this.expectDiff())
+   }
+   
+   private Exception parseExceptionFile(){
+      if(!exceptionFile.canRead())
+         return null
+      String exceptionString = FileUtils.readFileToString(exceptionFile)
+      String[] lines = StringUtils.split(exceptionString, '\n')
+      if(!lines.length == 2)
+         throw new RuntimeException(String.format("invalid exception file contents [%s]", exceptionString))
+      Class exceptionClass = Class.forName(lines[0])
+      Constructor exceptionConstructor = exceptionClass.getDeclaredConstructor(String.class)
+      return exceptionConstructor.newInstance(lines[1])
+   }
    /**
     * the receiver validates itself
     */
@@ -78,7 +117,13 @@ public class TestCase implements Comparable<TestCase>{
       this.validateResourceFile('lhsSourceFile',lhsSourceFile)
       this.validateResourceFile('rhsSourceFile', rhsSourceFile)
       this.validateResourceFile('planFile', planFile)
-      this.validateResourceFile('expectedFile', expectedFile)
+      boolean expectedPresent = expectedFile.canRead()
+      boolean exceptionPresent = exceptionFile.canRead()
+      // need either one or the other
+      if(! (expectedPresent || exceptionPresent) )
+         throw new RuntimeException("Missing one or the other of [$expectedFile], [$exceptionFile]")
+      if( expectedPresent && exceptionPresent)
+         throw new RuntimeException("Cannot specify both files, only one or the other: [$expectedFile], [$exceptionFile]")
    }
    
    private void validateResourceFile(String name_, File resourceFile_){

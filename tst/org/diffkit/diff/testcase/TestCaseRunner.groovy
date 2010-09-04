@@ -62,7 +62,7 @@ public class TestCaseRunner implements Runnable {
    public static final String TEST_CASE_FILE_NAME = 'testcaserunner.xml'
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
-   private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt']
+   private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt', 'exception']
    private static final FileFilter TEST_CASE_DATA_FILTER = new SuffixFileFilter(TEST_CASE_DATA_SUFFIXES)
    private static final String TEST_CASE_DATA_ARCHIVE_NAE = "testcasedata.jar"
    
@@ -149,13 +149,11 @@ public class TestCaseRunner implements Runnable {
       _log.info("testCase_->{}",testCase_.description)
       try{
          this.setupDB( testCase_)
-         //      TestCaseRun run = [testCase_, this.getPlan(testCase_)]
          TestCaseRun run = new TestCaseRun(testCase_, this.getPlan(testCase_))
          runnerRun_.addRun( run)
          _log.debug("run->{}",run)
          this.validate(run)
-         this.setup(run, runnerRun_)
-         this.execute(run)
+         this.setupAndExecute(run, runnerRun_)
          return run
       }
       catch(Exception e_){
@@ -187,8 +185,15 @@ public class TestCaseRunner implements Runnable {
       println "\n"
    }
    
-   private void execute(TestCaseRun run_){
-      run_.execute()
+   private void setupAndExecute(TestCaseRun run_, TestCaseRunnerRun runnerRun_){
+      try{
+         this.setup(run_, runnerRun_)
+         run_.diff()
+      }
+      catch(Exception e_) {
+         run_.setException(e_)
+      }
+      run_.setIsExecuted(true)
    }
    
    private void setup(TestCaseRun run_, TestCaseRunnerRun runnerRun_){
@@ -291,7 +296,8 @@ public class TestCaseRunner implements Runnable {
       def lhsSourceFile = new File(dir_, "test${numberString}.lhs.csv")
       def rhsSourceFile = new File(dir_, "test${numberString}.rhs.csv")
       def expectedFile = new File(dir_, "test${numberString}.expected.diff")
-      def testCase= new TestCase(number,name,null, dbSetupFile, lhsSourceFile, rhsSourceFile, planFile_, expectedFile)
+      def exceptionFile = new File(dir_, "test${numberString}.exception")
+      def testCase= new TestCase(number,name,null, dbSetupFile, lhsSourceFile, rhsSourceFile, planFile_, expectedFile, exceptionFile)
       return testCase
    }
    

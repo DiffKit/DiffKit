@@ -34,11 +34,12 @@ public class TestCaseRun {
    
    public final TestCase testCase
    public final DKPlan plan
-   public Date start
-   public Date end
-   public String actualFile
-   public boolean isExecuted
+   private Date _start
+   private Date _end
+   private String _actualFile
+   private boolean _isExecuted
    private Boolean _failed
+   private Exception _exception
    private final Logger _log = LoggerFactory.getLogger(this.getClass())
    
    public TestCaseRun(TestCase testCase_, DKPlan plan_){
@@ -50,28 +51,38 @@ public class TestCaseRun {
       
       testCase = testCase_
       plan = new DKPassthroughPlan(plan_)
-      start = start_
-      end = end_
-      actualFile = actualFile_
+      _start = start_
+      _end = end_
+      _actualFile = actualFile_
       DKValidate.notNull(testCase, plan)
    }
    
-   public void execute(){
+   public void diff(){
       DKDiffEngine engine = []
-      try{
-         isExecuted = true
-         engine.diff(plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison)
-      }
-      catch(Exception e_){
-         _log.error(null,e_)
-      }
+      engine.diff(plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison)
+   }
+   
+   public void setIsExecuted(boolean isExecuted_){
+      _isExecuted = isExecuted_
+   }
+   
+   public void setException(Exception exception_){
+      _exception = exception_;
    }
    
    public Boolean getFailed(){
       if(_failed)
          return _failed
-      if(!isExecuted)
+      if(!_isExecuted)
          return null
+      if(testCase.expectDiff())
+         return this.getDiffFailed();
+      else if(testCase.expectException())
+         return this.getExceptionFailed();
+      throw new RuntimeException("reached unanticipated point in code")
+   }
+   
+   private Boolean getDiffFailed(){
       File expectedFile = testCase.expectedFile
       // N.B. TestCaseRunner ensures that sink is File type
       File actualFile = plan.sink.file
@@ -81,8 +92,22 @@ public class TestCaseRun {
       return _failed
    }
    
+   private Boolean getExceptionFailed(){
+      if(!testCase.expectException()){
+         if(_exception)
+            return true
+      }
+      if(!_exception)
+         return true
+      if(_exception.class != testCase.exceptionClass)
+         return true
+      if(!_exception.message.startsWith(testCase.exceptionMessage ))
+         return true
+      return false
+   }
+   
    public String getReport(){
-      if(!isExecuted)
+      if(!_isExecuted)
          return 'Not yet executed!'
       def resultString = (!this.failed ? 'PASSED' : '*FAILED*')
       return "${testCase.name} $resultString"
