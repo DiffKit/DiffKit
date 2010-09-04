@@ -29,7 +29,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
@@ -163,12 +162,10 @@ public class DKApplication {
       USER_LOG.info("rhsSource->{}", rhsSource);
       USER_LOG.info("sink->{}", sink);
       USER_LOG.info("tableComparison->{}", tableComparison);
-      StopWatch stopwatch = new StopWatch();
-      stopwatch.start();
       DKContext diffContext = engine.diff(lhsSource, rhsSource, sink, tableComparison);
-      stopwatch.stop();
       USER_LOG.info("---");
-      USER_LOG.info("diff'd {} rows in {}, found:", diffContext._rowStep, stopwatch);
+      USER_LOG.info("diff'd {} rows in {}, found:", diffContext._rowStep,
+         diffContext.getElapsedTimeString());
       if (plan.getSink().getDiffCount() == 0) {
          USER_LOG.info("(no diffs)");
          System.exit(0);

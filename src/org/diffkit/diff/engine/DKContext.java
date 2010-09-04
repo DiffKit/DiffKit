@@ -15,7 +15,10 @@
  */
 package org.diffkit.diff.engine;
 
+import java.io.IOException;
 import java.util.UUID;
+
+import org.apache.commons.lang.time.StopWatch;
 
 import org.diffkit.common.DKValidate;
 
@@ -33,6 +36,7 @@ public class DKContext {
    public long _rowStep;
    // current or last
    public int _columnStep;
+   private final StopWatch _stopwatch = new StopWatch();
 
    /**
     * for testing only
@@ -51,6 +55,24 @@ public class DKContext {
       _sink = sink_;
       _tableComparison = plan_;
       DKValidate.notNull(_lhs, _rhs, _sink, _tableComparison);
+   }
+
+   public void open() throws IOException {
+      _sink.open(this);
+      _lhs.open(this);
+      _rhs.open(this);
+      _stopwatch.start();
+   }
+
+   public void close() throws IOException {
+      _stopwatch.stop();
+      _sink.close(this);
+      _lhs.close(this);
+      _rhs.close(this);
+   }
+
+   public String getElapsedTimeString() {
+      return _stopwatch.toString();
    }
 
    public DKSource getLhs() {

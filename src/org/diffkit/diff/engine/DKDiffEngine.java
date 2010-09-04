@@ -55,9 +55,7 @@ public class DKDiffEngine {
    private void diff(DKContext context_) throws IOException {
       long maxDiffs = context_._tableComparison.getMaxDiffs();
       _log.info("maxDiffs->{}", maxDiffs);
-      context_._sink.open(context_);
-      context_._lhs.open(context_);
-      context_._rhs.open(context_);
+      context_.open();
       int oneSide = -1;
       Object[][] rows = new Object[2][];
       Comparator<Object[]> rowComparator = context_._tableComparison.getRowComparator();
@@ -115,9 +113,7 @@ public class DKDiffEngine {
             rows[DKSide.RIGHT_INDEX] = null;
          }
       }
-      context_._sink.close(context_);
-      context_._lhs.close(context_);
-      context_._rhs.close(context_);
+      context_.close();
    }
 
    private void diffRow(Object[] lhs_, Object[] rhs_, DKContext context_, DKSink sink_)
