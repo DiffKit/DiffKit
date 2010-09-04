@@ -108,7 +108,7 @@ public class TestCaseRunner implements Runnable {
       Collections.sort(testCases)
       _log.info("testCases->{}",testCases)
       testCases.each {
-         this.run(it, runnerRun)
+         this.setupAndExecute(it, runnerRun)
       }
       this.report(runnerRun)
       if(runnerRun.failed)
@@ -145,23 +145,6 @@ public class TestCaseRunner implements Runnable {
       return runnerRun
    }
    
-   private TestCaseRun run(TestCase testCase_, TestCaseRunnerRun runnerRun_){
-      _log.info("testCase_->{}",testCase_.description)
-      try{
-         this.setupDB( testCase_)
-         TestCaseRun run = new TestCaseRun(testCase_, this.getPlan(testCase_))
-         runnerRun_.addRun( run)
-         _log.debug("run->{}",run)
-         this.validate(run)
-         this.setupAndExecute(run, runnerRun_)
-         return run
-      }
-      catch(Exception e_){
-         _log.error(null,e_)
-         return null
-      }
-   }
-   
    private void setupDB(TestCase testCase_) {
       DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.lhsSourceFile, testCase_.rhsSourceFile)
    }
@@ -185,15 +168,22 @@ public class TestCaseRunner implements Runnable {
       println "\n"
    }
    
-   private void setupAndExecute(TestCaseRun run_, TestCaseRunnerRun runnerRun_){
+   private void setupAndExecute(TestCase testCase_, TestCaseRunnerRun runnerRun_){
+      _log.info("testCase_->{}",testCase_.description)
       try{
-         this.setup(run_, runnerRun_)
-         run_.diff()
+         this.setupDB( testCase_)
+         TestCaseRun run = new TestCaseRun(testCase_, this.getPlan(testCase_))
+         runnerRun_.addRun( run)
+         _log.debug("run->{}",run)
+         this.validate(run)
+         this.setup(run, runnerRun_)
+         run.diff()
+         run.setIsExecuted(true)
       }
       catch(Exception e_) {
-         run_.setException(e_)
+         _log.info(null,e_)
+         //         run_.setException(e_)
       }
-      run_.setIsExecuted(true)
    }
    
    private void setup(TestCaseRun run_, TestCaseRunnerRun runnerRun_){

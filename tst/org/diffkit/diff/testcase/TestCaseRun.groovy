@@ -33,7 +33,7 @@ import org.diffkit.util.DKFileUtil;
 public class TestCaseRun {
    
    public final TestCase testCase
-   public final DKPlan plan
+   public DKPlan plan
    private Date _start
    private Date _end
    private String _actualFile
@@ -50,11 +50,19 @@ public class TestCaseRun {
    String actualFile_){
       
       testCase = testCase_
-      plan = new DKPassthroughPlan(plan_)
+      this.setPlan(plan_)
       _start = start_
       _end = end_
       _actualFile = actualFile_
-      DKValidate.notNull(testCase, plan)
+      DKValidate.notNull(testCase)
+   }
+   
+   public void setPlan(plan_){
+      if(plan_==null) {
+         plan = null
+         return
+      }
+      plan = new DKPassthroughPlan(plan_)
    }
    
    public void diff(){

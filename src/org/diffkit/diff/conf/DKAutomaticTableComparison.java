@@ -29,21 +29,22 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.diffor.DKConvertingDiffor;
 import org.diffkit.diff.diffor.DKEqualsDiffor;
 import org.diffkit.diff.diffor.DKNumberDiffor;
 import org.diffkit.diff.engine.DKColumnComparison;
 import org.diffkit.diff.engine.DKColumnModel;
+import org.diffkit.diff.engine.DKColumnModel.Type;
 import org.diffkit.diff.engine.DKDiff;
+import org.diffkit.diff.engine.DKDiff.Kind;
 import org.diffkit.diff.engine.DKDiffor;
 import org.diffkit.diff.engine.DKSide;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKStandardTableComparison;
 import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.diff.engine.DKTableModel;
-import org.diffkit.diff.engine.DKColumnModel.Type;
-import org.diffkit.diff.engine.DKDiff.Kind;
 import org.diffkit.util.DKArrayUtil;
 
 /**
@@ -64,6 +65,7 @@ public class DKAutomaticTableComparison implements DKTableComparison {
    private final Map<String, Float> _toleranceMap;
    private DKStandardTableComparison _standardComparison;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private static final Logger LOG = LoggerFactory.getLogger(DKAutomaticTableComparison.class);
 
    /**
     * if both diffColumnNames_ and ignoreColumnNames_ are non-null,
@@ -86,6 +88,8 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       _numberTolerance = numberTolerance_;
       _toleranceMap = createToleranceMap(toleranceMap_, _lhsSource.getModel());
       DKValidate.notNull(_lhsSource, _rhsSource, _kind, _maxDiffs);
+      validateColumnNames(_displayColumnNames, "displayColumnNames", lhsSource_,
+         rhsSource_);
       _log.debug("_lhsSource->{}", _lhsSource);
       _log.debug("_rhsSource->{}", _rhsSource);
       _log.debug("_diffColumnNames->{}", Arrays.toString(_diffColumnNames));
@@ -94,6 +98,13 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       _log.debug("_maxDiffs->{}", _maxDiffs);
       _log.debug("_numberTolerance->{}", _numberTolerance);
       _log.debug("_toleranceMap->{}", _toleranceMap);
+   }
+
+   private static void validateColumnNames(String[] columnNames_,
+                                           String columnTypeLabel_, DKSource lhsSource_,
+                                           DKSource rhsSource_) {
+      validateColumnNames(columnNames_, columnTypeLabel_, lhsSource_, "lhsSource");
+      validateColumnNames(columnNames_, columnTypeLabel_, rhsSource_, "rhsSource");
    }
 
    private DKStandardTableComparison getStandardComparison() {
@@ -354,6 +365,22 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       else
          throw new RuntimeException(String.format(
             "unhandled conversion needed: lhsType->%s rhsType->%s", lhsType, rhsType));
+   }
+
+   private static void validateColumnNames(String[] columnNames_,
+                                           String columnTypeLabel_, DKSource source_,
+                                           String sourceLabel_) {
+      if (ArrayUtils.isEmpty(columnNames_))
+         return;
+      DKTableModel model = source_.getModel();
+      if (model == null)
+         throw new RuntimeException(String.format("no model from source_ [%s]", source_));
+      for (String columnName : columnNames_) {
+         if (!model.containsColumn(columnName))
+            throw new DKUserException(String.format(
+               "source [%s] does not contain column [%s] for type [%s]", source_, columnName,
+               columnTypeLabel_));
+      }
    }
 
    /**
