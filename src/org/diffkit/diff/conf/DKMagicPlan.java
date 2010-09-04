@@ -52,6 +52,7 @@ public class DKMagicPlan implements DKPlan {
    private Float _numberTolerance;
    private Map<String, String[]> _toleranceMap;
    private Long _maxDiffs;
+   private Boolean _withSummary;
    private DKPassthroughPlan _builtPlan;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
@@ -165,6 +166,14 @@ public class DKMagicPlan implements DKPlan {
 
    public void setMaxDiffs(Long maxDiffs_) {
       _maxDiffs = maxDiffs_;
+   }
+
+   public void setWithSummary(Boolean withSummary) {
+      _withSummary = withSummary;
+   }
+
+   public Boolean getWithSummary() {
+      return _withSummary;
    }
 
    public DKDBConnectionInfo getDbConnectionInfo() {

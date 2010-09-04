@@ -1,0 +1,20 @@
+test23 README
+=========
+
+Description
+---------- 
+Demonstrates withSummary option of the DKFileSink.
+
+
+Assumptions
+-----------
+- lhs & rhs are File tables
+- lhs vs. rhs has both row and column diffs
+- MagicPlan figures everything out
+- FileSink is configured to produce summary information in output
+
+Expectations
+-----------
+- summary information in the .diff file
+- 2 row diffs
+- 4 column diffs

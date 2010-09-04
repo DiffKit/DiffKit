@@ -178,6 +178,13 @@ public class DKMagicPlanRules {
       "assign toleranceMap from Plan to AutomaticTableComparison, whether null or non-null",
       DKAutomaticTableComparison.class, "toleranceMap_", "toleranceMap", true,
       new PlanValue(false));
+   private static final DKMagicPlanRule WITH_SUMMARY_RULE = new DKMagicPlanRule(
+      "withSummary", "assign withSummary from the Plan to the FileSink",
+      DKFileSink.class, "withSummary_", "withSummary", true, new PlanValue(true));
+   private static final DKMagicPlanRule DEFAULT_WITH_SUMMARY_RULE = new DKMagicPlanRule(
+      "defaultWithSummary",
+      "if no withSummary specified in the Plan, then use this rule", DKFileSink.class,
+      "withSummary_", null, false, new Constant(Boolean.FALSE));
 
    public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_RULE, RHS_DB_SOURCE_RULE,
       LHS_DB_TABLE_NAME_RULE, RHS_DB_TABLE_NAME_RULE, LHS_WHERE_CLAUSE_RULE,
@@ -188,7 +195,8 @@ public class DKMagicPlanRules {
       AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE, DEFAULT_DELIMITER_RULE,
       IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE, DEFAULT_DIFF_KIND_RULE,
       DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE, DISPLAY_COLUMN_NAMES_RULE,
-      MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE };
+      MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE,
+      WITH_SUMMARY_RULE, DEFAULT_WITH_SUMMARY_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

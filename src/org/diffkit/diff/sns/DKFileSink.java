@@ -21,10 +21,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.lang.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
+import org.diffkit.util.DKFileUtil;
 
 /**
  * @author jpanico
@@ -32,17 +35,26 @@ import org.diffkit.diff.engine.DKContext;
 public class DKFileSink extends DKWriterSink {
 
    private final File _file;
+   private final boolean _withSummary;
+   private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKFileSink(String filePath_) throws IOException {
-      this(new File(filePath_));
+      this(new File(filePath_), false);
    }
 
-   private DKFileSink(File file_) {
+   public DKFileSink(String filePath_, Boolean withSummary_) throws IOException {
+      this(new File(filePath_), withSummary_);
+   }
+
+   private DKFileSink(File file_, boolean withSummary_) {
       DKValidate.notNull(file_);
       if (file_.exists())
          throw new DKUserException(String.format(
             "sink file [%s] already exists! please remove it and try again.", file_));
       _file = file_;
+      _withSummary = withSummary_;
+      _log.debug("_file->{}", _file);
+      _log.debug("_withSummary->{}", _withSummary);
    }
 
    @Override
@@ -52,6 +64,10 @@ public class DKFileSink extends DKWriterSink {
 
    public File getFile() {
       return _file;
+   }
+
+   public Boolean getWithSummary() {
+      return _withSummary;
    }
 
    @Override
@@ -65,4 +81,14 @@ public class DKFileSink extends DKWriterSink {
          _file.getAbsolutePath());
    }
 
+   private String generateSummary() {
+      return "summary\n---\n";
+   }
+
+   @Override
+   public void close(DKContext context_) throws IOException {
+      super.close(context_);
+      if (_withSummary)
+         DKFileUtil.prepend(this.generateSummary(), _file);
+   }
 }

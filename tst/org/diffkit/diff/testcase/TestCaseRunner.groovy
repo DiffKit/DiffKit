@@ -225,9 +225,9 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKSink setupFileSink(DKWriterSink sink_, TestCaseRunnerRun runnerRun_){
-      File newSinkPath = [runnerRun_.dir, sink_.file.path]
+      File newSinkPath = [runnerRun_.dir, sink_.file.path ]
       _log.debug("newSinkPath->{}",newSinkPath)
-      return new DKFileSink(newSinkPath.absolutePath)
+      return new DKFileSink(newSinkPath.absolutePath, sink_.withSummary)
    }
    
    private DKDBTableLoader getLoaderForSource(DKDBConnectionSource source_){

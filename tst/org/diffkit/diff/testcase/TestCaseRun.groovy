@@ -117,7 +117,7 @@ public class TestCaseRun {
    }
    
    public String getReport(){
-      _log.info("_exception->{}",_exception)
+      _log.debug("_exception->{}",_exception)
       def resultString = (!this.failed ? 'PASSED' : '*FAILED*')
       return "${testCase.name} $resultString"
    }

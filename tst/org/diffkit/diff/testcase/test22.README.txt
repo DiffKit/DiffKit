@@ -3,12 +3,25 @@ test22 README
 
 Description
 ---------- 
+Demonstrates ability of TestCaseRunner to test for Exceptions (or failures) of 
+a specified type. In this case, the MagicPlan file specifies displayColumnNames
+that don't exist in the sources. So we expect that the framework will throw an
+appropriate exception.
 
 
 Assumptions
 -----------
-
-
+- lhs & rhs are DB tables
+- plan file supplies lhs table name and rhs table name
+- plan file supplies ConnectionInfo to H2 DB
+- lhs and rhs tables have identical structure
+- plan file supplies key for ordering the rows
+- plan file specifies displayColumnNames that don't exist in specified sources
+- MagicPlan reverse engineers TableModels from the database
+- MagicPlan construction process validates the displayColumnNames against DB tables
 
 Expectations
 -----------
+- displayColumNames validation fails
+- a DKUserException (end user targeted) is thrown by framework, and caught by TCR
+- message in DKUserException indicates which column names fail validation
