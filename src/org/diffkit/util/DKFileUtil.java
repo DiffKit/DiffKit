@@ -10,7 +10,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +22,47 @@ import org.slf4j.LoggerFactory;
  */
 public class DKFileUtil {
 
+   private static final String HOLD_SUFFIX = ".__hold__";
    private static final Logger LOG = LoggerFactory.getLogger(DKFileUtil.class);
+
+   /**
+    * insert the String prepend_ at the beginning of the content in File target_
+    */
+   public static void prepend(String prepend_, File target_) throws IOException {
+      if ((prepend_ == null) || (target_ == null))
+         return;
+      if (!(target_.canRead() && (target_.canWrite())))
+         throw new RuntimeException(String.format("file is not readable/writeable [%s]",
+            target_));
+      File holdFile = new File(target_.getParentFile(), target_.getName() + HOLD_SUFFIX);
+      target_.renameTo(holdFile);
+      OutputStream outStream = toBufferedOutputStream(target_);
+      Writer outWriter = new OutputStreamWriter(outStream);
+      outWriter.write(prepend_);
+      outWriter.flush();
+
+      FileInputStream holdInStream = new FileInputStream(holdFile);
+      IOUtils.copy(holdInStream, outStream);
+      outStream.flush();
+      outStream.close();
+      holdFile.delete();
+   }
+
+   /**
+    * silently eats all exceptions, so only call if you know for a fact that the
+    * file is writable, etc.
+    */
+   public static OutputStream toBufferedOutputStream(File target_) {
+      if (target_ == null)
+         return null;
+      try {
+         return new BufferedOutputStream(new FileOutputStream(target_));
+      }
+      catch (Exception e_) {
+         LOG.info(null, e_);
+         return null;
+      }
+   }
 
    public static boolean isRelative(File target_) {
       if (target_ == null)

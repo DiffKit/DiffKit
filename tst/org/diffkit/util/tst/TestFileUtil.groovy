@@ -17,7 +17,10 @@ package org.diffkit.util.tst
 
 
 
+import org.apache.commons.io.FileUtils;
+
 import org.diffkit.util.DKFileUtil;
+import org.diffkit.util.DKResourceUtil;
 
 import groovy.util.GroovyTestCase;
 
@@ -26,6 +29,20 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestFileUtil extends GroovyTestCase {
+   
+   public void testPrepend() {
+      File sourceTarget = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/prepend_target.txt")
+      assert sourceTarget
+      File testTarget = ['./prependTest']
+      FileUtils.copyFile( sourceTarget, testTarget)
+      def prependString = 'prepend\nprepend\nprepend\n---\n'
+      DKFileUtil.prepend( prependString, testTarget)
+      
+      def sourceText = FileUtils.readFileToString(sourceTarget)
+      def prependedText = FileUtils.readFileToString(testTarget)
+      
+      assert prependedText == prependString + sourceText
+   }
    
    public void testIsRelative(){
       println "separtor->${File.separator}"
