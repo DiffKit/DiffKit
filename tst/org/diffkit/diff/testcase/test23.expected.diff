@@ -1,5 +1,20 @@
-summary
----
+--- vhl summary ---
+diff'd 9 rows in xxx, found:
+!4 row diffs
+@7 column diffs
+-------------------
+--- row diff summary ---
+1 row diffs <
+3 row diffs >
+------------------------
+--- column diff summary ---
+columns having diffs->(column3, column2, column4)
+column3 has 4 diffs
+column2 has 1 diffs
+column4 has 2 diffs
+---------------------------
+!{column1=0000}
+<
 !{column1=1111}
 >
 @{column1=2222}
@@ -7,13 +22,22 @@ column3
 <2
 >1
 @{column1=3333}
+column2
+<0000
+>3333
 column3
 <3
 >1
+column4
+<bbbb
+>aaaa
 @{column1=4444}
 column3
 <4
 >1
+column4
+<bbbb
+>aaaa
 @{column1=5555}
 column3
 <5

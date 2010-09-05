@@ -16,5 +16,5 @@ Assumptions
 Expectations
 -----------
 - summary information in the .diff file
-- 2 row diffs
-- 4 column diffs
+- 4 row diffs
+- 7 column diffs

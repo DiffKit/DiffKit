@@ -81,14 +81,11 @@ public class DKFileSink extends DKWriterSink {
          _file.getAbsolutePath());
    }
 
-   private String generateSummary() {
-      return "summary\n---\n";
-   }
-
    @Override
    public void close(DKContext context_) throws IOException {
       super.close(context_);
       if (_withSummary)
-         DKFileUtil.prepend(this.generateSummary(), _file);
+         DKFileUtil.prepend(this.generateSummary(context_), _file);
    }
+
 }

@@ -61,6 +61,8 @@ public class DKDiffEngine {
       Comparator<Object[]> rowComparator = context_._tableComparison.getRowComparator();
       _log.info("rowComparator->{}", rowComparator);
       while (context_._sink.getDiffCount() < maxDiffs) {
+         if (_isDebug)
+            _log.debug("diffCount->{}", context_._sink.getDiffCount());
          boolean oneSided = false;
          context_._rowStep++;
          context_._columnStep = 0;

@@ -36,6 +36,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
+import org.diffkit.common.DKProperties;
 import org.diffkit.common.DKUserException;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffEngine;
@@ -126,6 +127,7 @@ public class DKApplication {
 
    @SuppressWarnings("unchecked")
    private static void runTestCases() {
+      System.setProperty(DKProperties.IS_TEST_PROPERTY, "true");
       USER_LOG.info("running TestCases");
       try {
          Class<?> testCaseRunnerClass = Class.forName("org.diffkit.diff.testcase.TestCaseRunner");
@@ -163,15 +165,9 @@ public class DKApplication {
       USER_LOG.info("sink->{}", sink);
       USER_LOG.info("tableComparison->{}", tableComparison);
       DKContext diffContext = engine.diff(lhsSource, rhsSource, sink, tableComparison);
-      USER_LOG.info("---");
-      USER_LOG.info("diff'd {} rows in {}, found:", diffContext._rowStep,
-         diffContext.getElapsedTimeString());
-      if (plan.getSink().getDiffCount() == 0) {
-         USER_LOG.info("(no diffs)");
+      USER_LOG.info(sink.generateSummary(diffContext));
+      if (plan.getSink().getDiffCount() == 0)
          System.exit(0);
-      }
-      USER_LOG.info("!{} row diffs", plan.getSink().getRowDiffCount());
-      USER_LOG.info("@{} column diffs", plan.getSink().getColumnDiffCount());
       if (errorOnDiff_)
          System.exit(-1);
       System.exit(0);

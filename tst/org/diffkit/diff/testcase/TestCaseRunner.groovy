@@ -195,6 +195,7 @@ public class TestCaseRunner implements Runnable {
          run.setIsExecuted(true)
       }
       catch(Exception e_){
+         _log.info(null,e_)
          run.setException(exception)
       }
    }

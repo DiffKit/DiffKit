@@ -22,6 +22,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBConnectionSource;
@@ -35,8 +38,6 @@ import org.diffkit.diff.engine.DKRowDiff;
 import org.diffkit.diff.engine.DKSide;
 import org.diffkit.util.DKObjectUtil;
 import org.diffkit.util.DKSqlUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
@@ -209,5 +210,9 @@ public class DKDBSink extends DKAbstractSink {
       else
          throw new RuntimeException(String.format("unrecognized diff Kind->%s",
             diff_.getKind()));
+   }
+
+   public String generateSummary(DKContext context_) {
+      return "summary";
    }
 }

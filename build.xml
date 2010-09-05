@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- author: jpanico
--->
+<!-- author: jpanico -->
 
 <project name="diffkit">
 
@@ -22,8 +20,8 @@
 		<include name="**/*.xml" />
 		<include name="**/*.txt" />
 		<include name="**/*.csv" />
-      <include name="**/*.diff" />
-      <include name="**/*.exception" />
+		<include name="**/*.diff" />
+		<include name="**/*.exception" />
 	</patternset>
 
 	<patternset id="executables">
@@ -35,11 +33,12 @@
 		<include name="*.zip" />
 	</fileset>
 
-   <path id="lib.classpath">
-      <fileset refid="libs" />
-   </path>
-	
-   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
+	<path id="lib.classpath">
+		<fileset refid="libs" />
+	</path>
+
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"
+		classpathref="lib.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -52,7 +51,8 @@
 
 		<property file="${dist.properties.file}" />
 
-		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
+		<property name="version"
+			value="${version.major}.${version.minor}.${version.micro}" />
 		<property name="bin-distzip" value="${ant.project.name}-${version}.zip" />
 		<property name="src-distzip" value="${ant.project.name}-src-${version}.zip" />
 	</target>
@@ -70,13 +70,15 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${unit.build.dir}" />
 
-		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+		<javac destdir="${build.dir}" classpathref="lib.classpath"
+			verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
 			<compilerarg value="-Xlint" />
 			<src path="${src.dir}" />
 		</javac>
 
 		<!-- build the TestCases -->
-		<groovyc destdir="${build.dir}" classpathref="lib.classpath" verbose="on">
+		<groovyc destdir="${build.dir}" classpathref="lib.classpath"
+			verbose="on">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
@@ -111,8 +113,8 @@
 				<include name="**/*.jar" />
 				<include name="**/*.csv" />
 				<include name="**/*.diff" />
-            <include name="**/*.xml" />
-            <include name="**/*.txt" />
+				<include name="**/*.xml" />
+				<include name="**/*.txt" />
 			</fileset>
 		</copy>
 
@@ -130,7 +132,7 @@
 				<fileset dir="${unit.build.dir}">
 					<include name="**/Test*" />
 					<!-- a '$' in the filename means it's an inner class -->
-               <exclude name="**/*$*" />
+					<exclude name="**/*$*" />
 					<exclude name="**/TestDBConnection*" />
 				</fileset>
 			</batchtest>
@@ -139,12 +141,14 @@
 
 	<!-- run functional TestCase suite -->
 	<target name="testcases" depends="build">
-		<java classname="org.diffkit.diff.testcase.TestCaseRunner" failonerror="yes">
+		<java classname="org.diffkit.diff.testcase.TestCaseRunner"
+			failonerror="yes">
 			<classpath>
 				<pathelement location="${conf.dir}" />
 				<path refid="lib.classpath" />
 				<pathelement location="${build.dir}" />
 			</classpath>
+			<sysproperty key="isTest" value="true" />
 		</java>
 	</target>
 
@@ -175,7 +179,8 @@
 		</jar>
 
 		<!-- create the diffkit library as jar -->
-		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}" excludes="testcasedata/" />
+		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}"
+			excludes="testcasedata/" />
 
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
@@ -196,7 +201,8 @@
 		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
 		<copy file="${conf.dir}/dist.properties" todir="${dist.dir}/conf/" />
 
-		<!-- create the diffkit standalone application that includes diffkit library and all its dependencies -->
+		<!-- create the diffkit standalone application that includes diffkit library 
+			and all its dependencies -->
 		<jar destfile="${dist.dir}/${appjar}" basedir="${dist.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="org.diffkit.diff.conf.DKLauncher" />
@@ -262,7 +268,8 @@
 			<fileset dir="${doc.dir}" />
 		</copy>
 
-		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="false" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc"
+			failifexecutionfails="false" searchpath="true">
 			<arg line="README.txt" />
 		</exec>
 
@@ -270,7 +277,8 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
-		<delete dir="${unit.build.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${unit.build.dir}" includeEmptyDirs="true"
+			failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
 			<exclude name="*.__hold__" />
@@ -279,8 +287,8 @@
 		<delete>
 			<fileset dir="${root.dir}">
 				<include name="*.diff" />
-            <include name="*.txt" />
-            <include name="*.tst" />
+				<include name="*.txt" />
+				<include name="*.tst" />
 			</fileset>
 		</delete>
 		<delete includeemptydirs="true">

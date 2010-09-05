@@ -1,5 +1,4 @@
 /**
-
  * Copyright 2010 Joseph Panico
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.diff.engine;
+package org.diffkit.common;
 
-import java.io.IOException;
-
-import org.diffkit.common.annot.ThreadSafe;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
- * Sinks are one-shot-- a new one must be created for each invocation of
- * DKDiffEnging.diff(...) and then thrown away.
- * 
  * @author jpanico
  */
-@ThreadSafe
-public interface DKSink extends DKSourceSink {
+public class DKProperties {
+   public static final String IS_TEST_PROPERTY = "isTest";
+   public static final Boolean IS_TEST;
 
-   public void record(DKDiff diff_, DKContext context_) throws IOException;
-
-   /**
-    * includes DKDiffs of any Kind
-    */
-   public long getDiffCount();
-
-   public long getRowDiffCount();
-
-   public long getColumnDiffCount();
-
-   public String generateSummary(DKContext context_);
-
+   static {
+      IS_TEST = BooleanUtils.toBoolean(System.getProperty(IS_TEST_PROPERTY));
+   }
 }

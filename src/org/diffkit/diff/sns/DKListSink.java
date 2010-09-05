@@ -89,4 +89,8 @@ public class DKListSink extends DKAbstractSink {
          ClassUtils.getShortClassName(this.getClass()), this.getURI(),
          this.getDiffCount());
    }
+
+   public String generateSummary(DKContext context_) {
+      return "summary";
+   }
 }
