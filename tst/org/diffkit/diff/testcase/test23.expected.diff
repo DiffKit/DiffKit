@@ -13,6 +13,12 @@ column3 has 4 diffs
 column2 has 1 diffs
 column4 has 2 diffs
 ---------------------------
+--- column diffs clustered ---
+columnClusters having diffs->(column3, column2.column3.column4, column3.column4)
+column3 has 2 diffs
+column2.column3.column4 has 1 diffs
+column3.column4 has 1 diffs
+---------------------------
 !{column1=0000}
 <
 !{column1=1111}

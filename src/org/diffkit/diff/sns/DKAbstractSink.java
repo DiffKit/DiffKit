@@ -36,17 +36,23 @@ import org.diffkit.util.DKStringUtil;
  */
 public abstract class DKAbstractSink implements DKSink {
 
+   private static final String COLUMN_CLUSTER_KEY_SEPARATOR = ".";
+
    private boolean _isStarted;
    private boolean _isEnded;
    private DKContext _context;
    private long[] _rowDiffCount = new long[2];
    private DKOrderedBag _columnDiffCount = new DKOrderedBag();
+   private long _runningRowStep;
+   private StringBuilder _runningColumnClusterKey;
+   private DKOrderedBag _columnDiffClusterCount = new DKOrderedBag();
 
    public void open(DKContext context_) throws IOException {
       this.ensureNotStarted();
       this.ensureNotEnded();
       _context = context_;
       _isStarted = true;
+      _runningRowStep = -1;
    }
 
    public void close(DKContext context_) throws IOException {
@@ -54,6 +60,10 @@ public abstract class DKAbstractSink implements DKSink {
       this.ensureNotEnded();
       _isEnded = true;
       _context = null;
+
+      if (_runningColumnClusterKey != null)
+         _columnDiffClusterCount.add(_runningColumnClusterKey.toString());
+      _runningRowStep = -1;
    }
 
    public void record(DKDiff diff_, DKContext context_) throws IOException {
@@ -72,17 +82,34 @@ public abstract class DKAbstractSink implements DKSink {
       if (diff_ == null)
          return;
       if (diff_.getKind() == DKDiff.Kind.ROW_DIFF)
-         this.recordRowDiff((DKRowDiff) diff_);
+         this.recordRowDiff((DKRowDiff) diff_, context_);
       else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF)
-         this.recordColumnDiff((DKColumnDiff) diff_);
+         this.recordColumnDiff((DKColumnDiff) diff_, context_);
    }
 
-   private void recordRowDiff(DKRowDiff rowDiff_) {
+   private void recordRowDiff(DKRowDiff rowDiff_, DKContext context_) {
       _rowDiffCount[DKSide.getConstantForEnum(rowDiff_.getSide())]++;
    }
 
-   private void recordColumnDiff(DKColumnDiff columnDiff_) {
+   private void recordColumnDiff(DKColumnDiff columnDiff_, DKContext context_) {
+      this.recordColumnDiffCount(columnDiff_, context_);
+      this.recordColumnDiffClusterCount(columnDiff_, context_);
+   }
+
+   private void recordColumnDiffCount(DKColumnDiff columnDiff_, DKContext context_) {
       _columnDiffCount.add(columnDiff_.getColumnName());
+   }
+
+   private void recordColumnDiffClusterCount(DKColumnDiff columnDiff_, DKContext context_) {
+      if (_runningRowStep != context_._rowStep) {
+         if (_runningColumnClusterKey != null)
+            _columnDiffClusterCount.add(_runningColumnClusterKey.toString());
+         _runningRowStep = context_._rowStep;
+         _runningColumnClusterKey = new StringBuilder();
+      }
+      if (_runningColumnClusterKey.length() != 0)
+         _runningColumnClusterKey.append(COLUMN_CLUSTER_KEY_SEPARATOR);
+      _runningColumnClusterKey.append(columnDiff_.getColumnName());
    }
 
    public long getRowDiffCount() {
@@ -128,12 +155,36 @@ public abstract class DKAbstractSink implements DKSink {
       return builder.toString();
    }
 
+   public String generateColumnDiffClusterSummary(DKContext context_) {
+      StringBuilder builder = new StringBuilder();
+      builder.append("--- column diffs clustered ---\n");
+      List<String> clusterKeys = this.getColumnDiffClusterKeys();
+      builder.append(String.format("columnClusters having diffs->%s\n",
+         DKStringUtil.toSetString(clusterKeys)));
+      Iterator clusterIterator = _columnDiffClusterCount.iterator();
+      while (clusterIterator.hasNext()) {
+         String clusterKey = (String) clusterIterator.next();
+         int diffCount = _columnDiffClusterCount.getCount(clusterKey);
+         builder.append(String.format("%s has %s diffs\n", clusterKey, diffCount));
+      }
+      builder.append("---------------------------\n");
+      return builder.toString();
+   }
+
    @SuppressWarnings("unchecked")
    private List<String> getDiffColumnNames() {
       Iterator columnNameIterator = _columnDiffCount.iterator();
       if (columnNameIterator == null)
          return null;
       return (List<String>) IteratorUtils.toList(columnNameIterator);
+   }
+
+   @SuppressWarnings("unchecked")
+   private List<String> getColumnDiffClusterKeys() {
+      Iterator keyIterator = _columnDiffClusterCount.iterator();
+      if (keyIterator == null)
+         return null;
+      return (List<String>) IteratorUtils.toList(keyIterator);
    }
 
    public String generateRowDiffSummary(DKContext context_) {
@@ -166,8 +217,10 @@ public abstract class DKAbstractSink implements DKSink {
       builder.append(this.generateVeryHighLevelSummary(context_));
       if (this.getRowDiffCount() > 0)
          builder.append(this.generateRowDiffSummary(context_));
-      if (this.getColumnDiffCount() > 0)
+      if (this.getColumnDiffCount() > 0) {
          builder.append(this.generateColumnDiffSummary(context_));
+         builder.append(this.generateColumnDiffClusterSummary(context_));
+      }
       return builder.toString();
    }
 }
