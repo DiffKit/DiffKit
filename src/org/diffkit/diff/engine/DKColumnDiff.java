@@ -45,6 +45,13 @@ public class DKColumnDiff implements DKDiff {
       return _row.getRowDisplayValues();
    }
 
+   /**
+    * convenience method that delegates to underlying ColumnDiffRow
+    */
+   public Object getRowDisplayValue(String columnName_) {
+      return _row.getRowDisplayValue(columnName_);
+   }
+
    public Object[] getRowKeyValues() {
       return _row.getRowKeyValues();
    }

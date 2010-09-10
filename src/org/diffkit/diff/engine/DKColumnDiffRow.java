@@ -54,6 +54,13 @@ public class DKColumnDiffRow {
       return _rowDisplayValues;
    }
 
+   /**
+    * convenience method that gets displayValue for give columnName_
+    */
+   public Object getRowDisplayValue(String columnName_) {
+      return _rowDisplayValues.get(columnName_);
+   }
+
    public DKTableComparison getTableComparison() {
       return _tableComparison;
    }

@@ -36,11 +36,13 @@ public class DKWriterSink extends DKAbstractSink {
    private DKDiffFormatter _formatter;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   protected DKWriterSink() {
+   protected DKWriterSink(String[] groupByColumnNames_) {
+      super(groupByColumnNames_);
       _formatter = null;
    }
 
    public DKWriterSink(Writer writer_, DKDiffFormatter formatter_) throws IOException {
+      super(null);
       this.init(writer_, formatter_);
    }
 

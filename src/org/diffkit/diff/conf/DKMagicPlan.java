@@ -53,6 +53,7 @@ public class DKMagicPlan implements DKPlan {
    private Map<String, String[]> _toleranceMap;
    private Long _maxDiffs;
    private Boolean _withSummary;
+   private String[] _groupByColumnNames;
    private DKPassthroughPlan _builtPlan;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
@@ -174,6 +175,14 @@ public class DKMagicPlan implements DKPlan {
 
    public Boolean getWithSummary() {
       return _withSummary;
+   }
+
+   public String[] getGroupByColumnNames() {
+      return _groupByColumnNames;
+   }
+
+   public void setGroupByColumnNames(String[] groupByColumnNames_) {
+      _groupByColumnNames = groupByColumnNames_;
    }
 
    public DKDBConnectionInfo getDbConnectionInfo() {

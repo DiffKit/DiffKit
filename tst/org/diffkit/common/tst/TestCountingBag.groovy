@@ -18,7 +18,8 @@ package org.diffkit.common.tst
 
 
 
-import org.diffkit.common.DKOrderedBag 
+import org.apache.commons.collections.bidimap.TreeBidiMap 
+import org.diffkit.common.DKCountingBag 
 
 import groovy.util.GroovyTestCase;
 
@@ -26,10 +27,11 @@ import groovy.util.GroovyTestCase;
 /**
  * @author jpanico
  */
-public class TestOrderedBag extends GroovyTestCase {
+public class TestCountingBag extends GroovyTestCase {
+      
    
    public void testCount(){
-      DKOrderedBag target = []
+      DKCountingBag target = []
       assert target.getCount(null) == 0
       def key1 = 'key1'
       def key2 = 'key2'
@@ -39,27 +41,27 @@ public class TestOrderedBag extends GroovyTestCase {
       target.add(key1)
       assert target.getCount(key1) == 1
       assert target.getCount(key2)== 0
-      assert target.size() == 1
+      assert target.totalCount() == 1
       
       target.add(key1,2)
       assert target.getCount(key1) == 3
       assert target.getCount(key2)== 0
-      assert target.size() == 3
-
-      target.add(key2)
+      assert target.totalCount() == 3
+      
+      target.add(key2,5)
       assert target.getCount(key1) == 3
-      assert target.getCount(key2)== 1
-      assert target.size() == 4
+      assert target.getCount(key2)== 5
+      assert target.totalCount() == 8
       
       target.add(key3)
       assert target.getCount(key1) == 3
-      assert target.getCount(key2)== 1
+      assert target.getCount(key2)== 5
       assert target.getCount(key3)== 1
-      assert target.size() == 5
-
+      assert target.totalCount() == 9
+      
       Iterator iterator = target.iterator()
-      assert iterator.next() == key1
       assert iterator.next() == key2
+      assert iterator.next() == key1
       assert iterator.next() == key3
    }
 }

@@ -15,8 +15,6 @@
  */
 package org.diffkit.diff.engine;
 
-import java.util.List;
-
 import org.apache.commons.collections.OrderedMap;
 
 /**

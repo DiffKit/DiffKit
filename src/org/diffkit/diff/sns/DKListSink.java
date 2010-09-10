@@ -35,6 +35,10 @@ public class DKListSink extends DKAbstractSink {
 
    private List<DKDiff> _diffs;
 
+   public DKListSink() {
+      super(null);
+   }
+
    public void record(DKDiff diff_, DKContext context_) {
       this.ensureStarted();
       this.ensureNotEnded();

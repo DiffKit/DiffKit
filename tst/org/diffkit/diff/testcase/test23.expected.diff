@@ -8,10 +8,10 @@ diff'd 9 rows in xxx, found:
 3 row diffs >
 ------------------------
 --- column diff summary ---
-columns having diffs->(column3, column2, column4)
+columns having diffs->(column3, column4, column2)
 column3 has 4 diffs
-column2 has 1 diffs
 column4 has 2 diffs
+column2 has 1 diffs
 ---------------------------
 --- column diffs clustered ---
 columnClusters having diffs->(column3, column2.column3.column4, column3.column4)
@@ -19,15 +19,36 @@ column3 has 2 diffs
 column2.column3.column4 has 1 diffs
 column3.column4 has 1 diffs
 ---------------------------
-!{column1=0000}
+--- row diff groups ---
+1 groups <
+2 groups >
+- <
+column2=0000,column3=1 has 1 diffs
+- >
+column2=1111,column3=1 has 2 diffs
+column2=0000,column3=6 has 1 diffs
+------------------------
+--- column diff groups ---
+column3=3:1 has 2 diffs
+column2=0000:3333 has 1 diffs
+column3=5:1 has 1 diffs
+column3=2:1 has 1 diffs
+------------------------
+--- column diff cluster groups ---
+column3/column2=2222,column3=2:1 has 1 diffs
+column3.column4/column2=4444,column3=3:1 has 1 diffs
+column3/column2=5555,column3=5:1 has 1 diffs
+column2.column3.column4/column2=0000:3333,column3=3:1 has 1 diffs
+------------------------
+!{column1=0000, column2=0000, column3=1}
 <
-!{column1=1111}
+!{column1=1111, column2=1111, column3=1}
 >
-@{column1=2222}
+@{column1=2222, column2=2222, column3=2:1}
 column3
 <2
 >1
-@{column1=3333}
+@{column1=3333, column2=0000:3333, column3=3:1}
 column2
 <0000
 >3333
@@ -37,18 +58,18 @@ column3
 column4
 <bbbb
 >aaaa
-@{column1=4444}
+@{column1=4444, column2=4444, column3=3:1}
 column3
-<4
+<3
 >1
 column4
 <bbbb
 >aaaa
-@{column1=5555}
+@{column1=5555, column2=5555, column3=5:1}
 column3
 <5
 >1
-!{column1=6666}
+!{column1=6666, column2=0000, column3=6}
 >
-!{column1=7777}
+!{column1=7777, column2=1111, column3=1}
 >

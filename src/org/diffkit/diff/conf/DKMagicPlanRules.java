@@ -185,6 +185,10 @@ public class DKMagicPlanRules {
       "defaultWithSummary",
       "if no withSummary specified in the Plan, then use this rule", DKFileSink.class,
       "withSummary_", null, false, new Constant(Boolean.FALSE));
+   private static final DKMagicPlanRule GROUP_BY_COLUMN_NAMES_RULE = new DKMagicPlanRule(
+      "groupByColumnNames", "assign groupByColumnNames from Plan to DKFileSink",
+      DKFileSink.class, "groupByColumnNames_", "groupByColumnNames", true, new PlanValue(
+         false));
 
    public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_RULE, RHS_DB_SOURCE_RULE,
       LHS_DB_TABLE_NAME_RULE, RHS_DB_TABLE_NAME_RULE, LHS_WHERE_CLAUSE_RULE,
@@ -196,7 +200,7 @@ public class DKMagicPlanRules {
       IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE, DEFAULT_DIFF_KIND_RULE,
       DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE, DISPLAY_COLUMN_NAMES_RULE,
       MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE,
-      WITH_SUMMARY_RULE, DEFAULT_WITH_SUMMARY_RULE };
+      WITH_SUMMARY_RULE, DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

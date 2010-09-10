@@ -39,14 +39,20 @@ public class DKFileSink extends DKWriterSink {
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKFileSink(String filePath_) throws IOException {
-      this(new File(filePath_), false);
+      this(new File(filePath_), false, null);
    }
 
-   public DKFileSink(String filePath_, Boolean withSummary_) throws IOException {
-      this(new File(filePath_), withSummary_);
+   public DKFileSink(String newFilePath_, DKFileSink toClone_) throws IOException {
+      this(newFilePath_, toClone_.getWithSummary(), toClone_.getGroupByColumnNames());
    }
 
-   private DKFileSink(File file_, boolean withSummary_) {
+   public DKFileSink(String filePath_, Boolean withSummary_, String[] groupByColumnNames_)
+      throws IOException {
+      this(new File(filePath_), withSummary_, groupByColumnNames_);
+   }
+
+   private DKFileSink(File file_, boolean withSummary_, String[] groupByColumnNames_) {
+      super(groupByColumnNames_);
       DKValidate.notNull(file_);
       if (file_.exists())
          throw new DKUserException(String.format(

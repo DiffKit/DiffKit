@@ -23,7 +23,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKColumnModel.Type;
 import org.diffkit.util.DKArrayUtil;
-import org.diffkit.util.DKSqlUtil.ReadType;
 
 /**
  * @author jpanico
