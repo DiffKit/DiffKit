@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DKSqlUtil {
    public static enum ReadType {
-      OBJECT, STRING;
+      OBJECT, STRING, FORMATTED_STRING;
    }
 
    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
@@ -104,7 +104,7 @@ public class DKSqlUtil {
    public static ReadType getReadTypeForSqlType(int dataType_) {
       switch (dataType_) {
       case Types.CLOB:
-         return ReadType.STRING;
+         return ReadType.FORMATTED_STRING;
       case Types.CHAR:
          return ReadType.STRING;
       case Types.VARCHAR:
@@ -190,6 +190,9 @@ public class DKSqlUtil {
       Object[] row = new Object[columnNames_.length];
       for (int i = 0; i < columnNames_.length; i++) {
          switch (readTypes_[i]) {
+         case FORMATTED_STRING:
+            row[i] = resultSet_.getString(columnNames_[i]);
+            break;
          case STRING:
             row[i] = resultSet_.getString(columnNames_[i]);
             break;
