@@ -355,7 +355,7 @@ public abstract class DKAbstractSink implements DKSink {
       StringBuilder builder = new StringBuilder();
       builder.append("--- vhl summary ---\n");
       String timeString = (DKProperties.IS_TEST ? "xxx" : context_.getElapsedTimeString());
-      builder.append(String.format("diff'd %s rows in %s, found:\n", context_._rowStep,
+      builder.append(String.format("diff'd %s rows in %s, found:\n", (context_._rowStep-1),
          timeString));
       if (this.getDiffCount() == 0)
          builder.append("(no diffs)\n");
