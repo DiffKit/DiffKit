@@ -29,7 +29,7 @@ import org.diffkit.common.DKValidate;
 public class DKColumnModel {
 
    public enum Type {
-      STRING, NUMBER, DATE, TIME, TIMESTAMP, BOOLEAN, FORMATTED_STRING
+      STRING, NUMBER, DATE, TIME, TIMESTAMP, BOOLEAN, TEXT
    }
 
    /**
@@ -145,7 +145,7 @@ public class DKColumnModel {
       }
       case BOOLEAN:
          return null;
-      case FORMATTED_STRING:
+      case TEXT:
          return null;
 
       default:

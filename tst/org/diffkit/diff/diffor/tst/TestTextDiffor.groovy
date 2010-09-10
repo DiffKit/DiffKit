@@ -18,7 +18,7 @@ package org.diffkit.diff.diffor.tst
 
 
 import org.apache.commons.lang.StringUtils;
-import org.diffkit.diff.diffor.DKStringDiffor 
+import org.diffkit.diff.diffor.DKTextDiffor 
 
 import groovy.util.GroovyTestCase;
 
@@ -26,18 +26,18 @@ import groovy.util.GroovyTestCase;
 /**
  * @author jpanico
  */
-public class TestStringDiffor extends GroovyTestCase {
+public class TestTextDiffor extends GroovyTestCase {
    
    public void testStringUtils(){
       assert StringUtils.replaceChars('abcdef', 'bd', '') == 'acef'
    }
    
    public void testDiff(){
-      def diffor = new DKStringDiffor("")
+      def diffor = new DKTextDiffor("")
       assert ! diffor.isDiff( 'hello', 'hello', null)
       assert diffor.isDiff( 'hello', 'world', null)
       
-      diffor = new DKStringDiffor("\n\r")
+      diffor = new DKTextDiffor("\n\r")
       assert ! diffor.isDiff( 'hello', 'hello', null)
       assert diffor.isDiff( 'hello', 'world', null)
       assert !diffor.isDiff( 'hello\n\r', 'hello', null)

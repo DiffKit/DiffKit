@@ -23,11 +23,11 @@ import org.diffkit.diff.engine.DKDiffor;
 /**
  * @author jpanico
  */
-public class DKStringDiffor implements DKDiffor {
+public class DKTextDiffor implements DKDiffor {
 
    private final String _ignoreChars;
 
-   private DKStringDiffor(String ignoreChars_) {
+   public DKTextDiffor(String ignoreChars_) {
       _ignoreChars = ignoreChars_;
    }
 

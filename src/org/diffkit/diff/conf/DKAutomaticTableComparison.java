@@ -34,6 +34,7 @@ import org.diffkit.common.DKValidate;
 import org.diffkit.diff.diffor.DKConvertingDiffor;
 import org.diffkit.diff.diffor.DKEqualsDiffor;
 import org.diffkit.diff.diffor.DKNumberDiffor;
+import org.diffkit.diff.diffor.DKTextDiffor;
 import org.diffkit.diff.engine.DKColumnComparison;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKColumnModel.Type;
@@ -51,6 +52,8 @@ import org.diffkit.util.DKArrayUtil;
  * @author jpanico
  */
 public class DKAutomaticTableComparison implements DKTableComparison {
+   private static final DKDiffor DEFAULT_TEXT_DIFFOR = new DKTextDiffor(
+      "\n\r");
    private final DKSource _lhsSource;
    private final DKSource _rhsSource;
    private final DKDiff.Kind _kind;
@@ -339,6 +342,9 @@ public class DKAutomaticTableComparison implements DKTableComparison {
    }
 
    private DKDiffor getBaseDiffor(DKColumnModel lhsColumn_, DKColumnModel rhsColumn_) {
+      if ((lhsColumn_._type == DKColumnModel.Type.TEXT)
+         && (rhsColumn_._type == DKColumnModel.Type.TEXT))
+         return DEFAULT_TEXT_DIFFOR;
       if ((_numberTolerance == null) && (_toleranceMap == null))
          return DKEqualsDiffor.getInstance();
       Float tolerance = (_toleranceMap != null ? _toleranceMap.get(lhsColumn_._name)
@@ -378,8 +384,8 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       for (String columnName : columnNames_) {
          if (!model.containsColumn(columnName))
             throw new DKUserException(String.format(
-               "source [%s] does not contain column [%s] for type [%s]", source_, columnName,
-               columnTypeLabel_));
+               "source [%s] does not contain column [%s] for type [%s]", source_,
+               columnName, columnTypeLabel_));
       }
    }
 

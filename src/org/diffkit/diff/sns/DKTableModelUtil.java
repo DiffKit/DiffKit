@@ -124,7 +124,7 @@ public class DKTableModelUtil {
       case Types.BOOLEAN:
          return DKColumnModel.Type.BOOLEAN;
       case Types.CLOB:
-         return DKColumnModel.Type.FORMATTED_STRING;
+         return DKColumnModel.Type.TEXT;
 
       default:
          throw new RuntimeException(String.format("unrecognized sqlType_->%s", sqlType_));

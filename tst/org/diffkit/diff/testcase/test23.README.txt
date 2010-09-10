@@ -3,18 +3,24 @@ test23 README
 
 Description
 ---------- 
-Demonstrates withSummary option of the DKFileSink.
+Demonstrates withSummary option of the DKFileSink. Also demonstrates the 
+groupByColumnNames option.
 
 
 Assumptions
 -----------
 - lhs & rhs are File tables
 - lhs vs. rhs has both row and column diffs
+- plan file specifies withSummary = TRUE
+- plan file specifies groupByColumnNames = column2,column3
 - MagicPlan figures everything out
 - FileSink is configured to produce summary information in output
 
 Expectations
 -----------
 - summary information in the .diff file
+- summary information shows column diff clusters (clustered by row)
+- summary information also shows results grouped by column2 & column3
+- row, column & cluster diff summaries are shown both ungrouped and grouped 
 - 4 row diffs
 - 7 column diffs
