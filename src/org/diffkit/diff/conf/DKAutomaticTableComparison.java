@@ -52,8 +52,7 @@ import org.diffkit.util.DKArrayUtil;
  * @author jpanico
  */
 public class DKAutomaticTableComparison implements DKTableComparison {
-   private static final DKDiffor DEFAULT_TEXT_DIFFOR = new DKTextDiffor(
-      "\n\r");
+   private static final DKDiffor DEFAULT_TEXT_DIFFOR = new DKTextDiffor("\n\r\t ");
    private final DKSource _lhsSource;
    private final DKSource _rhsSource;
    private final DKDiff.Kind _kind;
