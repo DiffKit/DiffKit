@@ -122,7 +122,7 @@ public class DKSqlUtil {
       Integer sqlType = getSqlTypeForName(sqlTypeName_);
       if (sqlType == null)
          throw new RuntimeException(String.format(
-            "couldn't find sqlType for sqlTypeName_ []", sqlTypeName_));
+            "couldn't find sqlType for sqlTypeName_ [%s]", sqlTypeName_));
       return getReadTypeForSqlType(sqlType);
    }
 
