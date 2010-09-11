@@ -23,53 +23,53 @@ column3.column4 has 1 diffs
 1 groups <
 2 groups >
 - <
-column2=0000,column3=1 has 1 diffs
+column2=0000,column3=x has 1 diffs
 - >
-column2=1111,column3=1 has 2 diffs
-column2=0000,column3=6 has 1 diffs
+column2=1111,column3=x has 2 diffs
+column2=0000,column3=v has 1 diffs
 ------------------------
 --- column diff groups ---
-column3=3:1 has 2 diffs
+column3=z:x has 2 diffs
 column2=0000:3333 has 1 diffs
-column3=5:1 has 1 diffs
-column3=2:1 has 1 diffs
+column3=y:x has 1 diffs
+column3=u:x has 1 diffs
 ------------------------
 --- column diff cluster groups ---
-column3/column2=2222,column3=2:1 has 1 diffs
-column3.column4/column2=4444,column3=3:1 has 1 diffs
-column3/column2=5555,column3=5:1 has 1 diffs
-column2.column3.column4/column2=0000:3333,column3=3:1 has 1 diffs
+column2.column3.column4/column2=0000:3333,column3=z:x has 1 diffs
+column3/column2=5555,column3=u:x has 1 diffs
+column3.column4/column2=4444,column3=z:x has 1 diffs
+column3/column2=2222,column3=y:x has 1 diffs
 ------------------------
-!{column1=0000, column2=0000, column3=1}
+!{column1=1, column2=0000, column3=x}
 <
-!{column1=1111, column2=1111, column3=1}
+!{column1=2, column2=1111, column3=x}
 >
-@{column1=2222, column2=2222, column3=2:1}
+@{column1=3, column2=2222, column3=y:x}
 column3
-<2
->1
-@{column1=3333, column2=0000:3333, column3=3:1}
+<y
+>x
+@{column1=4, column2=0000:3333, column3=z:x}
 column2
 <0000
 >3333
 column3
-<3
->1
+<z
+>x
 column4
 <bbbb
 >aaaa
-@{column1=4444, column2=4444, column3=3:1}
+@{column1=5, column2=4444, column3=z:x}
 column3
-<3
->1
+<z
+>x
 column4
 <bbbb
 >aaaa
-@{column1=5555, column2=5555, column3=5:1}
+@{column1=6, column2=5555, column3=u:x}
 column3
-<5
->1
-!{column1=6666, column2=0000, column3=6}
+<u
+>x
+!{column1=7, column2=0000, column3=v}
 >
-!{column1=7777, column2=1111, column3=1}
+!{column1=8, column2=1111, column3=x}
 >
