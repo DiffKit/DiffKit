@@ -32,16 +32,23 @@ public class TestTextDiffor extends GroovyTestCase {
       assert StringUtils.replaceChars('abcdef', 'bd', '') == 'acef'
    }
    
+   public void testNormalize() {
+	   def diffor = new DKTextDiffor(null)
+	   assert diffor.normalize('in this world of affordable') == 'in this world of affordable'
+	   assert diffor.normalize('in   this    world    of  affordable') == 'in this world of affordable'
+	   assert diffor.normalize('in  \n this\n    world\n\t\r  \r\t\n  of  affordable') == 'in this world of affordable'
+   }
+   
    public void testDiff(){
       def diffor = new DKTextDiffor("")
       assert ! diffor.isDiff( 'hello', 'hello', null)
       assert diffor.isDiff( 'hello', 'world', null)
       
-      diffor = new DKTextDiffor("\n\r")
+      diffor = new DKTextDiffor("")
       assert ! diffor.isDiff( 'hello', 'hello', null)
       assert diffor.isDiff( 'hello', 'world', null)
       assert !diffor.isDiff( 'hello\n\r', 'hello', null)
-      assert !diffor.isDiff( 'hel\nlo\r', 'hello\n\r', null)
+      assert !diffor.isDiff( 'hel\nlo\r', 'hel lo', null)
       
    }
 }

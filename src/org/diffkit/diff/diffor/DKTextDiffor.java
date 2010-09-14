@@ -15,8 +15,9 @@
  */
 package org.diffkit.diff.diffor;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
 
@@ -25,31 +26,46 @@ import org.diffkit.diff.engine.DKDiffor;
  */
 public class DKTextDiffor implements DKDiffor {
 
-   private final String _ignoreChars;
+	private static final Pattern NEWLINE_TAB_PATTERN = Pattern
+			.compile("[\n\r\t]{1}");
+	private static final Pattern SPACE_RUN_PATTERN = Pattern.compile("[ ]+");
 
-   public DKTextDiffor(String ignoreChars_) {
-      _ignoreChars = ignoreChars_;
-   }
+	private final String _ignoreChars;
 
-   /**
-    * @see org.diffkit.diff.engine.DKDiffor#isDiff(java.lang.Object,
-    *      java.lang.Object, org.diffkit.diff.engine.DKContext)
-    */
-   public boolean isDiff(Object lhs_, Object rhs_, DKContext context_) {
-      boolean lhsNull = (lhs_ == null);
-      boolean rhsNull = (rhs_ == null);
-      if (lhsNull && rhsNull)
-         return false;
-      if (lhsNull || rhsNull)
-         return true;
-      boolean equals = lhs_.equals(rhs_);
-      if (equals)
-         return false;
-      if (StringUtils.isEmpty(_ignoreChars))
-         return !equals;
-      String lhsString = StringUtils.replaceChars((String) lhs_, _ignoreChars, "");
-      String rhsString = StringUtils.replaceChars((String) rhs_, _ignoreChars, "");
-      return !lhsString.equals(rhsString);
-   }
+	public DKTextDiffor(String ignoreChars_) {
+		_ignoreChars = ignoreChars_;
+	}
 
+	/**
+	 * @see org.diffkit.diff.engine.DKDiffor#isDiff(java.lang.Object,
+	 *      java.lang.Object, org.diffkit.diff.engine.DKContext)
+	 */
+	public boolean isDiff(Object lhs_, Object rhs_, DKContext context_) {
+		boolean lhsNull = (lhs_ == null);
+		boolean rhsNull = (rhs_ == null);
+		if (lhsNull && rhsNull)
+			return false;
+		if (lhsNull || rhsNull)
+			return true;
+		boolean equals = lhs_.equals(rhs_);
+		if (equals)
+			return false;
+		String normalizedLhs = this.normalize((String) lhs_);
+		String normalizedRhs = this.normalize((String) rhs_);
+		lhsNull = (normalizedLhs == null);
+		rhsNull = (normalizedRhs == null);
+		if (lhsNull && rhsNull)
+			return false;
+		if (lhsNull || rhsNull)
+			return true;
+		return !normalizedLhs.equals(normalizedRhs);
+	}
+
+	private String normalize(String target_) {
+		String normalizedString = NEWLINE_TAB_PATTERN.matcher(target_)
+				.replaceAll(" ");
+		normalizedString = SPACE_RUN_PATTERN.matcher(normalizedString)
+				.replaceAll(" ");
+		return StringUtils.trimToNull(normalizedString);
+	}
 }
