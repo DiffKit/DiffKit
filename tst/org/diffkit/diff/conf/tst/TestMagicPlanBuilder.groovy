@@ -17,6 +17,7 @@
 package org.diffkit.diff.conf.tst
 
 
+import org.apache.commons.io.FilenameUtils;
 import org.diffkit.db.DKDBConnectionInfo 
 import org.diffkit.db.tst.DBTestSetup;
 import org.diffkit.diff.conf.DKMagicPlan 
@@ -82,7 +83,9 @@ public class TestMagicPlanBuilder extends GroovyTestCase {
       def lhsSourceFile = lhsSource.file
       assert lhsSourceFile
       assert lhsSourceFile.exists()
-      assert lhsSourceFile.path.endsWith(lhsFileResourcePath)
+      def normalizedLhsSourceFilePath = FilenameUtils.normalize(lhsSourceFile.path)
+      def normalizedLhsFileResourcePath = FilenameUtils.normalize(lhsFileResourcePath)
+      assert normalizedLhsSourceFilePath.endsWith(normalizedLhsFileResourcePath)
       
       def tableComparison = builtPlan.tableComparison
       assert tableComparison

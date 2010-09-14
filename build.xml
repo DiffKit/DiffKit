@@ -262,7 +262,7 @@
 		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
 	</target>
 
-	<target name="doc-dist">
+	<target name="doc-dist" depends="probe_for_asciidoc">
 
 		<copy todir="${dist.dir}/doc">
 			<fileset dir="${doc.dir}" />
@@ -275,6 +275,18 @@
 
 	</target>
 
+	<target name="probe_for_asciidoc">
+		<property environment="env" />
+		<condition property="asciidoc.found">
+			<or>
+				<available file="asciidoc" filepath="${env.PATH}" />
+				<available file="asciidoc.exe" filepath="${env.Path}" />
+			</or>
+		</condition>
+      <echo>env.PATH = ${env.PATH}}</echo>
+      <echo>asciidoc.found = ${asciidoc.found}</echo>
+	</target>
+	
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${unit.build.dir}" includeEmptyDirs="true"
