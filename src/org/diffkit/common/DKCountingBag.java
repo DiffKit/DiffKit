@@ -16,6 +16,7 @@
 package org.diffkit.common;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang.mutable.MutableInt;
 
 /**
@@ -33,8 +35,10 @@ import org.apache.commons.lang.mutable.MutableInt;
  * @author jpanico
  */
 public class DKCountingBag {
-   @SuppressWarnings("rawtypes")
-   private static final Comparator STORAGE_ENTRY_COMPARATOR = Collections.reverseOrder(new MapEntryValueComparator());
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   private static final Comparator STORAGE_ENTRY_COMPARATOR = new ComparatorChain(
+      Arrays.asList(Collections.reverseOrder(new MapEntryValueComparator()),
+         new MapEntryKeyComparator()));
    private final Map<Object, MutableInt> _storage = new HashMap<Object, MutableInt>();
 
    public DKCountingBag() {
@@ -142,6 +146,15 @@ public class DKCountingBag {
 
       public int compare(Map.Entry<?, Comparable> lhs_, Map.Entry<?, Comparable> rhs_) {
          return lhs_.getValue().compareTo(rhs_.getValue());
+      }
+   }
+
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   private static class MapEntryKeyComparator
+      implements Comparator<Map.Entry<Comparable, ?>> {
+
+      public int compare(Map.Entry<Comparable, ?> lhs_, Map.Entry<Comparable, ?> rhs_) {
+         return lhs_.getKey().compareTo(rhs_.getKey());
       }
    }
 

@@ -31,14 +31,14 @@ column2=0000,column3=v has 1 diffs
 --- column diff groups ---
 column3=z:x has 2 diffs
 column2=0000:3333 has 1 diffs
-column3=y:x has 1 diffs
 column3=u:x has 1 diffs
+column3=y:x has 1 diffs
 ------------------------
 --- column diff cluster groups ---
 column2.column3.column4/column2=0000:3333,column3=z:x has 1 diffs
-column3/column2=5555,column3=u:x has 1 diffs
 column3.column4/column2=4444,column3=z:x has 1 diffs
 column3/column2=2222,column3=y:x has 1 diffs
+column3/column2=5555,column3=u:x has 1 diffs
 ------------------------
 !{column1=1, column2=0000, column3=x}
 <
