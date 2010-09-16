@@ -1,7 +1,7 @@
 DiffKit README File
 ====================
 @AUTHOR@
-v@VERSION@, @BUILDDATE@
+v@VERSION@, @BUILDDATE@ (@REVISION@)
 
 Prerequisites 
 ~~~~~~~~~~~~~

@@ -270,6 +270,7 @@
             <filter token="AUTHOR" value="${author}" />
             <filter token="VERSION" value="${version}" />
             <filter token="BUILDDATE" value="${version.date}" />
+            <filter token="REVISION" value="${revision}" />
 			</filterset>
 		</copy>
 
