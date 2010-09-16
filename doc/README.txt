@@ -1,7 +1,7 @@
 DiffKit README File
 ====================
 @AUTHOR@
-v@VERSION@, @BUILDDATE@ (@REVISION@)
+v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 Prerequisites 
 ~~~~~~~~~~~~~
@@ -19,8 +19,9 @@ http://code.google.com/p/diffkit/downloads/list[DiffKit].
 Running DiffKit
 ~~~~~~~~~~~~~~~~~
 Unzip diffkit-<version>.zip. Then, from a command line:
-"java -jar diffkit-app.jar -help"
-
+-------------------------------
+   java -jar diffkit-app.jar -help
+-------------------------------
 
 Environments
 ~~~~~~~~~~~~
@@ -34,6 +35,13 @@ DiffKit has been tested on the following environments:
 - RH Linux
 - H2 Database 1.2
 - DB2 9.5
+
+
+Next Steps
+~~~~~~~~~~~~
+Read the link:quickstart.html[QuickStart document]. 
+
+Send questions to: diffkit-user@googlegroups.com.
 
 
 COPYING
