@@ -262,14 +262,19 @@
 		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
 	</target>
 
-	<target name="doc-dist" depends="probe_for_asciidoc">
+	<target name="doc-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
 
-		<copy todir="${dist.dir}/doc">
+		<copy todir="${dist.dir}/doc" overwrite="true">
 			<fileset dir="${doc.dir}" />
+			<filterset>
+            <filter token="AUTHOR" value="${author}" />
+            <filter token="VERSION" value="${version}" />
+            <filter token="BUILDDATE" value="${version.date}" />
+			</filterset>
 		</copy>
 
 		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="false" searchpath="true">
+			failifexecutionfails="true" searchpath="true">
 			<arg line="README.txt" />
 		</exec>
 
@@ -283,10 +288,9 @@
 				<available file="asciidoc.exe" filepath="${env.Path}" />
 			</or>
 		</condition>
-      <echo>env.PATH = ${env.PATH}}</echo>
-      <echo>asciidoc.found = ${asciidoc.found}</echo>
+		<echo>asciidoc.found = ${asciidoc.found}</echo>
 	</target>
-	
+
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${unit.build.dir}" includeEmptyDirs="true"
