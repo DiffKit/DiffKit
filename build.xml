@@ -282,6 +282,14 @@
          failifexecutionfails="true" searchpath="true">
          <arg line="quickstart.txt" />
       </exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc"
+         failifexecutionfails="true" searchpath="true">
+         <arg line="faq.txt" />
+      </exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc"
+         failifexecutionfails="true" searchpath="true">
+         <arg line="userguide.txt" />
+      </exec>
 
 	</target>
 

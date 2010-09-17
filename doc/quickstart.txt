@@ -1,15 +1,39 @@
-Quickstart
+DiffKit QuickStart
+====================
+@AUTHOR@
+v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
-{toc}
+Prerequisites 
+~~~~~~~~~~~~~
+Ensure that you have first read the link:README.html[README file].
 
-h1. heading 1
 
-this is *strong*
+Verifying your environment 
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+The DiffKit standalone application carries with it a complete functional test
+suite. In order to verify that the standalone application works properly in your
+particular environment, you should first execute the functional test suite:
+-------------------------------
+   java -jar diffkit-app.jar -test
+-------------------------------
+The resulting output should report that all tests PASSED. If any test FAILED, 
+please report the failure to the DiffKit user group http://groups.google.com/group/diffkit-user[diffkit-user]
+as soon as possible, and don't use DiffKit.
 
-asdf j;lkajdf l;kjasdf adlksjfs alkdfj asdlfkj alkdfjas asdlkjf jklajskdf
-lkajsdflk jasdjkfk ljasdlk jflkj asdkjf k. In this age of affordable beauty,
-there was somthing heraldic about his lack of it.
 
-a list * item 1 * item 2
+Diffing File tables 
+~~~~~~~~~~~~~~~~~~~             
 
-h1. another heading
+Diffing DB tables 
+~~~~~~~~~~~~~~~~~
+
+Modularizing the config files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Next Steps
+~~~~~~~~~~~~
+Read the link:faq.html[faq]. 
+
+Read the link:userguide.html[User Guide]. 
+
+Send questions to: diffkit-user@googlegroups.com.
