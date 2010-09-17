@@ -217,6 +217,7 @@
 		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
 
 		<antcall target="doc-dist" />
+		<antcall target="eg-dist" />
 
 		<touch file="${dist.dir}/VERSION-${version}" />
 
@@ -262,34 +263,56 @@
 		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
 	</target>
 
-	<target name="doc-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
+	<target name="doc-dist" depends="dist-properties">
 
 		<copy todir="${dist.dir}/doc" overwrite="true">
 			<fileset dir="${doc.dir}" />
 			<filterset>
-            <filter token="AUTHOR" value="${author}" />
-            <filter token="VERSION" value="${version}" />
-            <filter token="BUILDDATE" value="${version.date}" />
-            <filter token="REVISION" value="${revision}" />
+				<filter token="AUTHOR" value="${author}" />
+				<filter token="VERSION" value="${version}" />
+				<filter token="BUILDDATE" value="${version.date}" />
+				<filter token="REVISION" value="${revision}" />
 			</filterset>
 		</copy>
 
-      <exec dir="${dist.dir}/doc" executable="asciidoc"
-         failifexecutionfails="true" searchpath="true">
-         <arg line="README.txt" />
-      </exec>
-      <exec dir="${dist.dir}/doc" executable="asciidoc"
-         failifexecutionfails="true" searchpath="true">
-         <arg line="quickstart.txt" />
-      </exec>
-      <exec dir="${dist.dir}/doc" executable="asciidoc"
-         failifexecutionfails="true" searchpath="true">
-         <arg line="faq.txt" />
-      </exec>
-      <exec dir="${dist.dir}/doc" executable="asciidoc"
-         failifexecutionfails="true" searchpath="true">
-         <arg line="userguide.txt" />
-      </exec>
+		<antcall target="html-doc-dist" />
+
+	</target>
+
+	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc"
+		if="asciidoc.found">
+
+		<exec dir="${dist.dir}/doc" executable="asciidoc"
+			failifexecutionfails="true" searchpath="true">
+			<arg line="README.txt" />
+		</exec>
+		<exec dir="${dist.dir}/doc" executable="asciidoc"
+			failifexecutionfails="true" searchpath="true">
+			<arg line="quickstart.txt" />
+		</exec>
+		<exec dir="${dist.dir}/doc" executable="asciidoc"
+			failifexecutionfails="true" searchpath="true">
+			<arg line="faq.txt" />
+		</exec>
+		<exec dir="${dist.dir}/doc" executable="asciidoc"
+			failifexecutionfails="true" searchpath="true">
+			<arg line="userguide.txt" />
+		</exec>
+
+	</target>
+
+	<target name="eg-dist" depends="dist-properties">
+
+		<copy todir="${dist.dir}/eg" overwrite="true">
+			<fileset dir="${tst.dir}">
+				<include name="**/testcase/test9*" />
+				<include name="**/testcase/test11*" />
+				<include name="**/testcase/test13*" />
+				<include name="**/testcase/test14*" />
+				<include name="**/testcase/test21*" />
+			</fileset>
+			<flattenmapper />
+		</copy>
 
 	</target>
 
