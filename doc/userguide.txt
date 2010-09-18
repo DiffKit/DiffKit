@@ -4,12 +4,12 @@ DiffKit User Guide
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 Prerequisites 
-~~~~~~~~~~~~~
+-------------
 Ensure that you have first read the link:README.html[README file].
 
 
 Next Steps
-~~~~~~~~~~
+----------
 Read the link:faq.html[faq]. 
 
 Send questions to: diffkit-user@googlegroups.com.

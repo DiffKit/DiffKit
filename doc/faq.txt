@@ -4,13 +4,13 @@ DiffKit FAQ
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 Prerequisites
-~~~~~~~~~~~~~
+-------------
 Ensure that you have first read the link:quickstart.html[QuickStart document].
 
 
 
 Next Steps
-~~~~~~~~~~
+----------
 
 Read the link:userguide.html[User Guide]. 
 

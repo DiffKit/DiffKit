@@ -4,12 +4,12 @@ DiffKit QuickStart
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 Prerequisites 
-~~~~~~~~~~~~~
+-------------
 Ensure that you have first read the link:README.html[README file].
 
 
 Verifying your environment 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 The DiffKit standalone application carries with it a complete functional test
 suite. In order to verify that the standalone application works properly in your
 particular environment, you should first execute the functional test suite:
@@ -21,17 +21,30 @@ please report the failure to the DiffKit user group http://groups.google.com/gro
 as soon as possible, and don't use DiffKit.
 
 
-Diffing File tables 
-~~~~~~~~~~~~~~~~~~~             
+Diff'ng
+-------
+DiffKit allows you to select two _Sources_ (a Left Hand Source and a Right Hand
+Source) of tabular data for comparison on a value-by-value basis, and to send
+the results of the comparison (diffs) to a _Sink_ (typically a structured file). 
+You must specify the _Sources_ and _Sink_ to DiffKit via an XML configuration file,
+called a _plan_ file. The "eg/" directory in the DiffKit distribution (zip) contains
+many examples of such plan files.
 
-Diffing DB tables 
-~~~~~~~~~~~~~~~~~
+
+Diff'ng File tables
+-------------------
+
+
+Diff'ng DB tables
+-----------------
+
 
 Modularizing the config files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
+
 
 Next Steps
-~~~~~~~~~~~~
+----------
 Read the link:faq.html[faq]. 
 
 Read the link:userguide.html[User Guide]. 
