@@ -308,6 +308,7 @@
 				<include name="**/testcase/test9*" />
 				<include name="**/testcase/test10*" />
 				<include name="**/testcase/test11*" />
+				<include name="**/testcase/test12*" />
 				<include name="**/testcase/test13*" />
 				<include name="**/testcase/test14*" />
 				<include name="**/testcase/test18*" />
