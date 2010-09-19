@@ -16,24 +16,43 @@ particular environment, you should first execute the functional test suite:
 -------------------------------
    java -jar diffkit-app.jar -test
 -------------------------------
-The resulting output should report that all tests PASSED. If any test FAILED, 
-please report the failure to the DiffKit user group http://groups.google.com/group/diffkit-user[diffkit-user]
-as soon as possible, and don't use DiffKit.
+The resulting output should report that all tests PASSED. If any test FAILED,
+please report the failure to the DiffKit user group
+http://groups.google.com/group/diffkit-user[diffkit-user] as soon as possible,
+and don't use DiffKit.
 
 
 Diff'ng
 -------
 DiffKit allows you to select two _Sources_ (a Left Hand Source and a Right Hand
 Source) of tabular data for comparison on a value-by-value basis, and to send
-the results of the comparison (diffs) to a _Sink_ (typically a structured file). 
-You must specify the _Sources_ and _Sink_ to DiffKit via an XML configuration file,
-called a _plan_ file. The "eg/" directory in the DiffKit distribution (zip) contains
-many examples of such plan files.
+the results of the comparison (diffs) to a _Sink_ (typically a structured file).
+You must specify the _Sources_ and _Sink_ to DiffKit via an XML configuration
+file, called a _plan_ file. The "eg/" directory in the DiffKit distribution
+(zip) contains many examples of such plan files.
 
 
 Diff'ng File tables
 -------------------
-
+test9.plan.xml, in the eg/ directory, is a very simple _plan_ file that
+instructs DiffKit to compare two csv files: test9.lhs.csv, and test9.rhs.csv.
+The output (diffs) will be sent to a file named test9.sink.diff. You can invoke
+the DiffKit standalone application to run this _plan_ file. From the
+distribution directory:
+-----------------
+cd eg/
+java -jar ../diffkit-app.jar -planfiles test9.plan.xml
+-----------------
+DiffKit prints a summary of the results to the console:
+-----------------
+diff'd 8 rows in 0:00:00.009, found:
+!4 row diffs
+@2 column diffs
+-----------------
+The summary tells us that there were 4 row diffs; a row diff occurs when DiffKit
+finds a row on one side, but no corresponding row on the other side. Rows are
+uniquely identified by a _key_ (analogous to a primary key in relational DBs)
+which defaults to column1 if not otherwise specified.
 
 Diff'ng DB tables
 -----------------
