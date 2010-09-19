@@ -134,9 +134,92 @@ halt diffing after a certain number of diffs has been recorded:
 Diff'ng DB tables
 -----------------
 Diff'ng DB tables uses plan files in the same fashion as diff'ng files. The only
-difference is that instead of a file paths, you must provide table names, and you 
+difference is that instead of file paths, you must provide table names, and you 
 must also tell DiffKit how to connect to the lhs and rhs databases.
 
+test10.plan.xml demonstrates how to specify the table names used in the comparison:
+-----------------
+   ...
+   <property name="lhsDBTableName" value="LHS_TABLE" />
+   <property name="rhsDBTableName" value="RHS_TABLE" />
+   ...
+-----------------
+The two tables, LHS_TABLE and RHS_TABLE, both reside in the same database. That
+database is identified with these plan elements:
+-----------------
+   ...
+   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
+     <property name="dbConnectionInfo" ref="connectionInfo" />
+   ...
+   <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     <constructor-arg index="0" value="test" />
+     <constructor-arg index="1" value="H2" />
+     <constructor-arg index="2" value="mem:testcase10;DB_CLOSE_DELAY=-1" />
+     <constructor-arg index="3">
+			<null />
+     </constructor-arg>
+     <constructor-arg index="4">
+			<null />
+     </constructor-arg>
+     <constructor-arg index="5" value="test" />
+     <constructor-arg index="6" value="test" />
+  </bean>
+-----------------
+The connectionInfo points to an in-memory H2 database named "testcase10". The 
+username is "test" and the password is "test". If you run this plan file it will
+fail with the following error:
+-----------------
+...
+Caused by: java.lang.RuntimeException: couldn't find table named->LHS_TABLE
+	at org.diffkit.diff.sns.DKDBSource.<init>(DKDBSource.java:89) [diffkit-app.jar:na]
+...
+-----------------
+That's because the tables do not exist. If you want to successfully run this plan
+file you must create and populate the target tables yourself.
+
+The connectionInfo to a similar IBM DB2 database:
+-----------------
+   ...
+   <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     <constructor-arg index="0" value="test" />
+     <constructor-arg index="1" value="DB2" />
+     <constructor-arg index="2" value="testcase10" />
+     <constructor-arg index="3" value="db2host.diffkit.org" />
+     <constructor-arg index="4" value="50000" />
+     <constructor-arg index="5" value="test" />
+     <constructor-arg index="6" value="test" />
+  </bean>
+-----------------
+This connectionInfo points to an IBM DB2 database named "testcase10", running
+on host "db2host.diffkit.org" and port 50000.
+
+DiffKit can compare tables across different physical and/or logical databases.
+test18.plan.xml demonstrates this:
+-----------------
+   ...
+   <bean id="connectionInfo" class="org.diffkit.diff.conf.DKMagicPlan">
+     ...
+     <property name="lhsDBConnectionInfo" ref="lhsDBConnectionInfo" />
+     <property name="rhsDBConnectionInfo" ref="rhsDBConnectionInfo" />
+     ...
+  </bean>
+   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     ...
+     <constructor-arg index="2" value="mem:testcase18_lhs;DB_CLOSE_DELAY=-1" />
+     ...
+  </bean>
+   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     ...
+     <constructor-arg index="2" value="mem:testcase18_rhs;DB_CLOSE_DELAY=-1" />
+     ...
+  </bean>
+-----------------
+In this case, table "LHS_TABLE" is located in a database named "testcase18_lhs",
+while table "RHS_TABLE" is located in a database named "testcase18_rhs".
+
+
+Diff'ng different kinds of Sources
+----------------------------------
 
 
 Modularizing the config files
