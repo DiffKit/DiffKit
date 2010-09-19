@@ -52,10 +52,91 @@ diff'd 8 rows in 0:00:00.009, found:
 The summary tells us that there were 4 row diffs; a row diff occurs when DiffKit
 finds a row on one side, but no corresponding row on the other side. Rows are
 uniquely identified by a _key_ (analogous to a primary key in relational DBs)
-which defaults to column1 if not otherwise specified.
+which defaults to column1 if not otherwise specified. The summary states that
+there were also 2 column diffs, which means that DiffKit was able to join (align)
+the rows, but that values in some of the columns were different between the left
+and right hand side.
 
+Running test9.plan.xml above created an output (diff) file named test9.sink.diff.
+That file contains an entry for each diff discovered. The first entry in that file 
+describes a column diff:
+-----------------
+@{column1=1111}
+column2
+<1111
+>xxxx
+-----------------
+It tells us that the row identified by the key value (column1=1111) has a column
+diff in column2. The lhs value for column2 is 1111 while the rhs value is xxxx.
+The next entry in the diff file describes a row diff:
+-----------------
+!{column1=2222}
+<
+-----------------
+This indicates that the row identified by column1=2222 is missing from the lhs.
+Or put another way, this row is present on the rhs and not present on the lhs. 
+You should open test9.lhs.csv side-by-side with test9.rhs.csv in order to verify
+that all entries in the diff file match your expectations.
+
+test11.plan.xml shows how to explicitly specify which columns constitute the _key_,
+used to align (join) the rows between lhs and rhs:
+-----------------
+   ...
+   <property name="keyColumnNames">
+      <list>
+         <value>column3</value>
+   ...
+-----------------
+
+
+test13.plan.xml demonstrates how to instruct DiffKit to consider only certain
+columns during comparison, ignoring all other columns:
+-----------------
+   ...
+   <property name="diffColumnNames">
+      <list>
+         <value>column2</value>
+   ...
+-----------------
+It also shows how to specify that rows should be identified in the output (diff)
+file by values other than the key values:
+-----------------
+   ...
+   <property name="displayColumnNames">
+      <list>
+         <value>column1</value>
+         <value>column3</value>
+   ...
+-----------------
+
+test14.plan.xml demonstrates how to tell DiffKit to consider all
+columns during comparison except for a specified list (blacklist).
+-----------------
+   ...
+   <property name="ignoreColumnNames">
+      <list>
+         <value>column3</value>
+         <value>column4</value>
+   ...
+-----------------
+
+test21.plan.xml shows how to specify which _kinds_ of diffs should be considered: 
+ROW_DIFF, COLUMN_DIFF, or BOTH (default). It also shows how to tell DiffKit to 
+halt diffing after a certain number of diffs has been recorded:
+-----------------
+   ...
+   <property name="diffKind" value="ROW_DIFF" />
+   <property name="maxDiffs" value="2" />
+   ...
+-----------------
+
+            
 Diff'ng DB tables
 -----------------
+Diff'ng DB tables uses plan files in the same fashion as diff'ng files. The only
+difference is that instead of a file paths, you must provide table names, and you 
+must also tell DiffKit how to connect to the lhs and rhs databases.
+
 
 
 Modularizing the config files
