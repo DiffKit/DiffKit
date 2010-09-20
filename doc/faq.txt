@@ -1,12 +1,12 @@
-DiffKit FAQ
-===========
+DiffKit Frequently Asked Questions
+==================================
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
-Prerequisites
--------------
-Ensure that you have first read the link:quickstart.html[QuickStart document].
 
+== Does DiffKit work with Java 1.4?
+
+No. blah blah blah
 
 
 Next Steps

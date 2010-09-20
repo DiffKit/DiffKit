@@ -60,6 +60,8 @@ and right hand side.
 Running test9.plan.xml above created an output (diff) file named test9.sink.diff.
 That file contains an entry for each diff discovered. The first entry in that file 
 describes a column diff:
+
+.test9.sink.diff
 -----------------
 @{column1=1111}
 column2
@@ -69,6 +71,8 @@ column2
 It tells us that the row identified by the key value (column1=1111) has a column
 diff in column2. The lhs value for column2 is 1111 while the rhs value is xxxx.
 The next entry in the diff file describes a row diff:
+
+.test9.sink.diff cont.
 -----------------
 !{column1=2222}
 <
@@ -80,6 +84,8 @@ that all entries in the diff file match your expectations.
 
 test11.plan.xml shows how to explicitly specify which columns constitute the _key_,
 used to align (join) the rows between lhs and rhs:
+
+.test11.plan.xml
 -----------------
    ...
    <property name="keyColumnNames">
@@ -91,6 +97,8 @@ used to align (join) the rows between lhs and rhs:
 
 test13.plan.xml demonstrates how to instruct DiffKit to consider only certain
 columns during comparison, ignoring all other columns:
+
+.test13.plan.xml
 -----------------
    ...
    <property name="diffColumnNames">
@@ -100,6 +108,8 @@ columns during comparison, ignoring all other columns:
 -----------------
 It also shows how to specify that rows should be identified in the output (diff)
 file by values other than the key values:
+
+.test13.plan.xml cont.
 -----------------
    ...
    <property name="displayColumnNames">
@@ -111,6 +121,8 @@ file by values other than the key values:
 
 test14.plan.xml demonstrates how to tell DiffKit to consider all
 columns during comparison except for a specified list (blacklist).
+
+.test14.plan.xml
 -----------------
    ...
    <property name="ignoreColumnNames">
@@ -123,6 +135,8 @@ columns during comparison except for a specified list (blacklist).
 test21.plan.xml shows how to specify which _kinds_ of diffs should be considered: 
 ROW_DIFF, COLUMN_DIFF, or BOTH (default). It also shows how to tell DiffKit to 
 halt diffing after a certain number of diffs has been recorded:
+
+.test21.plan.xml
 -----------------
    ...
    <property name="diffKind" value="ROW_DIFF" />
@@ -138,6 +152,8 @@ difference is that instead of file paths, you must provide table names, and you
 must also tell DiffKit how to connect to the lhs and rhs databases.
 
 test10.plan.xml demonstrates how to specify the table names used in the comparison:
+
+.test10.plan.xml
 -----------------
    ...
    <property name="lhsDBTableName" value="LHS_TABLE" />
@@ -146,6 +162,8 @@ test10.plan.xml demonstrates how to specify the table names used in the comparis
 -----------------
 The two tables, LHS_TABLE and RHS_TABLE, both reside in the same database. That
 database is identified with these plan elements:
+
+.test10.plan.xml cont.
 -----------------
    ...
    <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
@@ -166,14 +184,14 @@ database is identified with these plan elements:
   </bean>
 -----------------
 The connectionInfo points to an in-memory H2 database named "testcase10". The 
-username is "test" and the password is "test". If you run this plan file it will
+username is "test" and the password is "test". 
+
+WARNING: If you run this plan file it will
 fail with the following error:
------------------
 ...
-Caused by: java.lang.RuntimeException: couldn't find table named->LHS_TABLE
-	at org.diffkit.diff.sns.DKDBSource.<init>(DKDBSource.java:89) [diffkit-app.jar:na]
++Caused by: java.lang.RuntimeException: couldn't find table named->LHS_TABLE
+	at org.diffkit.diff.sns.DKDBSource.<init>(DKDBSource.java:)+
 ...
------------------
 That's because the tables do not exist. If you want to successfully run this plan
 file you must create and populate the target tables yourself.
 
@@ -195,6 +213,8 @@ on host "db2host.diffkit.org" and port 50000.
 
 DiffKit can compare tables across different physical and/or logical databases.
 test18.plan.xml demonstrates this:
+
+.test18.plan.xml
 -----------------
    ...
    <bean id="connectionInfo" class="org.diffkit.diff.conf.DKMagicPlan">
@@ -222,6 +242,8 @@ Diff'ng different kinds of Sources
 ----------------------------------
 Any _kind_ of source can appear on either the lhs or the rhs. That means you can
 mix source _kinds_ in the same comparison. test12.plan.xml demonstrates this:
+
+.test12.plan.xml
 -----------------
    <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
      <property name="lhsDBTableName" value="LHS_TABLE" />
@@ -250,6 +272,8 @@ above cases, DiffKit allows you to reuse plan file elements via composition. For
 instance, test10.plan.xml could be broken up into two pieces. The first piece
 describes the target table names and other characteristics of the comparison;
 test10.scheme.xml:
+
+.test10.scheme.xml
 -----------------
    <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
      <property name="lhsDBTableName" value="LHS_TABLE" />
@@ -265,6 +289,8 @@ test10.scheme.xml:
 -----------------
 
 The other piece just describes which database(s) to point to; test10.connection.xml:
+
+.test10.connection.xml
 -----------------
    <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
      <constructor-arg index="0" value="test" />
