@@ -6,12 +6,66 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 == Does DiffKit work with Java 1.4?
 
-No. blah blah blah
+No. DiffKit works only with Java 1.5+.
 
 
-Next Steps
-----------
+== Does DiffKit have a GUI (Graphical User Interface)?
 
-Read the link:userguide.html[User Guide]. 
+No. DiffKit works strictly from the command line, and is configured with XML
+files.
 
-Send questions to: diffkit-user@googlegroups.com.
+
+== Is there any documentation?
+
+Yes, DiffKit is documented extensively. Please read the QuickStart document and
+the User Guide.
+
+
+== How do I know that DiffKit is producing correct results?
+
+DiffKit is covered by an extensive functional TestSuite, which exercises most
+features of the framework. All tests in this TestSuite are thoroughly documented.
+You can exercise this TestSuite at any time:
+
+---------
+java -jar diffkit-app.jar -test
+---------
+
+
+== Can DiffKit compare DB tables across different physical/logical Databases?
+
+Yes.
+
+
+== Can DiffKit compare DB tables across different vendor Databases (e.g. Oracle
+vs. MySQL)?
+
+Yes.
+
+
+== Does DiffKit work with Java 1.7?
+
+Probably, but we haven't tested it. If you do test DK on Java 1.7, please send us
+a report.
+
+
+== Will DiffKit be backported to Java 1.4?
+
+Not currently planned.
+
+
+== Does DiffKit work with my particular JVM/OS/DB?
+
+Please check the compatibility matrix in the User Guider.
+
+
+== How much does DiffKit cost for commercial use?
+
+DiffKit is licensed under the Apache License 2.0, which allows free commercial
+use.
+
+
+== Can I embed DiffKit (as a library) in a commercial product?
+
+Yes! DiffKit is licensed under the Apache License 2.0, which allows for all
+forms of commercial use.

@@ -292,6 +292,8 @@
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc"
 			failifexecutionfails="true" searchpath="true">
+			<arg line="-a toc" />
+			<!-- <arg line="-a numbered" /> -->
 			<arg line="faq.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc"
