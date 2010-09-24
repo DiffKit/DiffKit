@@ -23,7 +23,7 @@ the User Guide.
 
 == How do I know that DiffKit is producing correct results?
 
-DiffKit is covered by an extensive functional TestSuite, which exercises most
+DiffKit is covered by an extensive functional TestSuite, which exercises all major
 features of the framework. All tests in this TestSuite are thoroughly documented.
 You can exercise this TestSuite at any time:
 
@@ -37,10 +37,19 @@ java -jar diffkit-app.jar -test
 Yes.
 
 
-== Can DiffKit compare DB tables across different vendor Databases (e.g. Oracle
-vs. MySQL)?
+== Can DiffKit compare DB tables across different vendors (e.g. Oracle vs. MySQL)?
 
 Yes.
+
+== Can DiffKit help me diff programming code?
+
+Not really. DiffKit is designed to diff _tabular_ data, not tracts of textual data.
+
+
+== Can DiffKit diff database schemas?
+
+Yes! But you have to point it at the right catalog (or schema) tables, and provide
+appropriate where clauses, for your particular database.
 
 
 == Does DiffKit work with Java 1.7?
