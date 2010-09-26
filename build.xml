@@ -37,8 +37,7 @@
 		<fileset refid="libs" />
 	</path>
 
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"
-		classpathref="lib.classpath" />
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
@@ -51,8 +50,7 @@
 
 		<property file="${dist.properties.file}" />
 
-		<property name="version"
-			value="${version.major}.${version.minor}.${version.micro}" />
+		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
 		<property name="bin-distzip" value="${ant.project.name}-${version}.zip" />
 		<property name="src-distzip" value="${ant.project.name}-src-${version}.zip" />
 	</target>
@@ -70,15 +68,13 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${unit.build.dir}" />
 
-		<javac destdir="${build.dir}" classpathref="lib.classpath"
-			verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
 			<compilerarg value="-Xlint" />
 			<src path="${src.dir}" />
 		</javac>
 
 		<!-- build the TestCases -->
-		<groovyc destdir="${build.dir}" classpathref="lib.classpath"
-			verbose="on">
+		<groovyc destdir="${build.dir}" classpathref="lib.classpath" verbose="on">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
@@ -141,8 +137,7 @@
 
 	<!-- run functional TestCase suite -->
 	<target name="testcases" depends="build">
-		<java classname="org.diffkit.diff.testcase.TestCaseRunner"
-			failonerror="yes">
+		<java classname="org.diffkit.diff.testcase.TestCaseRunner" failonerror="yes">
 			<classpath>
 				<pathelement location="${conf.dir}" />
 				<path refid="lib.classpath" />
@@ -179,8 +174,7 @@
 		</jar>
 
 		<!-- create the diffkit library as jar -->
-		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}"
-			excludes="testcasedata/" />
+		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}" excludes="testcasedata/" />
 
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
@@ -266,7 +260,11 @@
 	<target name="doc-dist" depends="dist-properties">
 
 		<copy todir="${dist.dir}/doc" overwrite="true">
-			<fileset dir="${doc.dir}" />
+			<fileset dir="${doc.dir}">
+				<patternset>
+					<include name="**/*.txt" />
+				</patternset>
+			</fileset>
 			<filterset>
 				<filter token="AUTHOR" value="${author}" />
 				<filter token="VERSION" value="${version}" />
@@ -274,30 +272,32 @@
 				<filter token="REVISION" value="${revision}" />
 			</filterset>
 		</copy>
+		<copy todir="${dist.dir}/doc" overwrite="true">
+			<fileset dir="${doc.dir}">
+				<patternset>
+					<include name="**/*.png" />
+				</patternset>
+			</fileset>
+		</copy>
 
 		<antcall target="html-doc-dist" />
 
 	</target>
 
-	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc"
-		if="asciidoc.found">
+	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
 
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="README.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="quickstart.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a toc" />
 			<!-- <arg line="-a numbered" /> -->
 			<arg line="faq.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="userguide.txt" />
 		</exec>
 
@@ -323,6 +323,7 @@
 
 	<target name="probe_for_asciidoc">
 		<property environment="env" />
+		<echo>env.PATH--> ${env.PATH}</echo>
 		<condition property="asciidoc.found">
 			<or>
 				<available file="asciidoc" filepath="${env.PATH}" />
@@ -334,8 +335,7 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
-		<delete dir="${unit.build.dir}" includeEmptyDirs="true"
-			failonerror="false" />
+		<delete dir="${unit.build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
 			<exclude name="*.__hold__" />
