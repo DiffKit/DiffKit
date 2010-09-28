@@ -17,6 +17,8 @@ package org.diffkit.diff.conf;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
@@ -29,6 +31,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractXmlApplicationContext;
@@ -54,6 +57,7 @@ public class DKApplication {
    private static final String TEST_OPTION_KEY = "test";
    private static final String PLAN_FILE_OPTION_KEY = "planfiles";
    private static final String ERROR_ON_DIFF_OPTION_KEY = "errorOnDiff";
+   private static final String DEMO_DB_OPTION_KEY = "demoDB";
    private static final Options OPTIONS = new Options();
 
    private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
@@ -72,6 +76,7 @@ public class DKApplication {
       OPTIONS.addOption(new Option(
          ERROR_ON_DIFF_OPTION_KEY,
          "exit with error status code (-1) if diffs are detected. otherwise will always exit with 0 unless an operating Exception was encountered"));
+      OPTIONS.addOption(new Option(DEMO_DB_OPTION_KEY, "run embedded demo H2 database"));
    }
 
    public static void main(String[] args_) {
@@ -88,6 +93,8 @@ public class DKApplication {
          else if (line.hasOption(PLAN_FILE_OPTION_KEY))
             runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
                line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
+         else if (line.hasOption(DEMO_DB_OPTION_KEY))
+            runDemoDB();
          else
             printInvalidArguments(args_);
       }
@@ -198,5 +205,14 @@ public class DKApplication {
             return false;
       }
       return true;
+   }
+
+   private static void runDemoDB() throws Exception {
+      USER_LOG.info("running H2 demo db");
+      Server server = Server.createTcpServer((String[]) null).start();
+      Thread.sleep(10000);
+      USER_LOG.info("press <return> to exit...");
+      LineNumberReader lineReader = new LineNumberReader(new InputStreamReader(System.in));
+      lineReader.readLine();
    }
 }
