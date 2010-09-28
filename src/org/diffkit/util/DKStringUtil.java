@@ -136,6 +136,7 @@ public class DKStringUtil {
       return count;
    }
 
+   @SuppressWarnings("unchecked")
    public static String replaceEach(String target_, Map<String, String> replacements_) {
       if (target_ == null)
          return null;

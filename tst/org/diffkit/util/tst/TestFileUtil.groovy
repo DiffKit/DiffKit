@@ -44,6 +44,20 @@ public class TestFileUtil extends GroovyTestCase {
       assert prependedText == prependString + sourceText
    }
    
+   public void testCopyWithSubstitution() {
+      File sourceFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_target.txt")
+      assert sourceFile
+      File copiedFile = ['./copyWithSubstitutionTest.tst']
+      def substitutions = ['Beware':'swear', 'frumious':'frumpy']
+      DKFileUtil.copyFile( sourceFile, copiedFile, substitutions)
+      
+      File expectedFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_expected.txt")
+      def expectedText = FileUtils.readFileToString(expectedFile)
+      def copiedText = FileUtils.readFileToString(copiedFile)
+      
+      assert copiedText == expectedText
+   }
+   
    public void testIsRelative(){
       println "separtor->${File.separator}"
       println "path->${new File('./')}"

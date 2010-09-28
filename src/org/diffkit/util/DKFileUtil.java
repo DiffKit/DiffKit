@@ -124,7 +124,9 @@ public class DKFileUtil {
       if (MapUtils.isEmpty(substitutions_))
          FileUtils.copyFile(srcFile_, destFile_);
 
-      
+      String contents = FileUtils.readFileToString(srcFile_);
+      contents = DKStringUtil.replaceEach(contents, substitutions_);
+      FileUtils.writeStringToFile(destFile_, contents);
    }
 
 }
