@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,10 +136,18 @@ public class DKStringUtil {
       return count;
    }
 
-//   public static String replaceEach(String target_, Map<String, String> replacements_) {
-//      if (target_ == null)
-//         return null;
-//      if (MapUtils.isEmpty(replacements_))
-//         return target_;
-//   }
+   public static String replaceEach(String target_, Map<String, String> replacements_) {
+      if (target_ == null)
+         return null;
+      if (MapUtils.isEmpty(replacements_))
+         return target_;
+      Object[] entries = replacements_.entrySet().toArray();
+      String[] originals = new String[entries.length];
+      String[] subs = new String[entries.length];
+      for (int i = 0; i < entries.length; i++) {
+         originals[i] = ((Map.Entry<String, String>) entries[i]).getKey();
+         subs[i] = ((Map.Entry<String, String>) entries[i]).getValue();
+      }
+      return StringUtils.replaceEach(target_, originals, subs);
+   }
 }

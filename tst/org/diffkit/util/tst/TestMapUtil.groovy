@@ -37,14 +37,4 @@ public class TestMapUtil extends GroovyTestCase {
       assert ! DKMapUtil.getValueForKeyPrefix(target, null)
       assert DKMapUtil.getValueForKeyPrefix(target, 'ccc')
    }
-   
-   public void testKeyArray() {
-      Map target = ['aaa111':'value1', 'bbb111':'value2','ccc111':'value3','ccc112':'value4','ddd111':'value5']
-      assert DKMapUtil.getKeyArray(target) == ['aaa111', 'bbb111','ccc111','ccc112','ddd111']
-   }
-   
-   public void testValueArray() {
-      Map target = ['aaa111':'value1', 'bbb111':'value2','ccc111':'value3','ccc112':'value4','ddd111':'value5']
-      assert DKMapUtil.getValueArray(target) == ['value1', 'value2','value3','value4','value5']
-   }
 }

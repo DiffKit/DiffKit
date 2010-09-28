@@ -26,16 +26,30 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestStringUtil extends GroovyTestCase {
-	
-	public void testToSetString(){
-		assert DKStringUtil.toSetString(['a','b']) == '(a, b)'
-		assert DKStringUtil.toSetString([]) == '()'
-	}
-	
-	public void testQuote(){
-		assert ! DKStringUtil.quote(null,DKStringUtil.Quote.DOUBLE) 
-		assert DKStringUtil.quote("",DKStringUtil.Quote.DOUBLE) == '""'
-		assert DKStringUtil.quote("string",DKStringUtil.Quote.SINGLE) == "'string'"
-		assert DKStringUtil.quote("'string'",DKStringUtil.Quote.SINGLE) == "'string'"
-	}
+   
+   public void testToSetString(){
+      assert DKStringUtil.toSetString(['a','b']) == '(a, b)'
+      assert DKStringUtil.toSetString([]) == '()'
+   }
+   
+   public void testQuote(){
+      assert ! DKStringUtil.quote(null,DKStringUtil.Quote.DOUBLE) 
+      assert DKStringUtil.quote("",DKStringUtil.Quote.DOUBLE) == '""'
+      assert DKStringUtil.quote("string",DKStringUtil.Quote.SINGLE) == "'string'"
+      assert DKStringUtil.quote("'string'",DKStringUtil.Quote.SINGLE) == "'string'"
+   }
+   
+   public void testReplaceEach(){
+      def source =   '''Beware the Jabberwock, my son!
+                        The jaws that bite, the claws that catch!
+                        Beware the Jubjub bird, and shun
+                        The frumious Bandersnatch!'''
+      def expected =   '''swear the Jabberwock, my son!
+                        The jaws that bite, the claws that catch!
+                        swear the Jubjub bird, and shun
+                        The frumpy Bandersnatch!'''
+      def substitutions = ['Beware':'swear', 'frumious':'frumpy']
+      
+      assert DKStringUtil.replaceEach(source, substitutions) == expected
+   }
 }
