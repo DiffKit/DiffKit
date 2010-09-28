@@ -6,8 +6,8 @@
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-		<property name="lhsDBTableName" value="LHS_TABLE" />
-		<property name="rhsDBTableName" value="RHS_TABLE" />
+		<property name="lhsDBTableName" value="TEST8_LHS_TABLE" />
+		<property name="rhsDBTableName" value="TEST8_RHS_TABLE" />
       <property name="dbConnectionInfo" ref="connectionInfo" />
       <property name="sinkFilePath" value="./test8.sink.diff"  />
 	</bean>
@@ -16,7 +16,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test" />
 		<constructor-arg index="1" value="H2" />
 		<constructor-arg index="2"
-			value="mem:testcase8;DB_CLOSE_DELAY=-1" />
+			value="mem:testcase;DB_CLOSE_DELAY=-1" />
 		<constructor-arg index="3">
 			<null />
 		</constructor-arg>

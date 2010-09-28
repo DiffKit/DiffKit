@@ -12,7 +12,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1">
 			<null />
 		</constructor-arg>
-		<constructor-arg index="2" value="RHS_TABLE" />
+		<constructor-arg index="2" value="TEST18_RHS_TABLE" />
 		<constructor-arg index="3">
 			<list>
 				<ref bean="rhs.column1" />
@@ -24,7 +24,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
-		<constructor-arg index="0" value="rhs_pk" />
+		<constructor-arg index="0" value="test18_rhs_pk" />
 		<constructor-arg index="1">
 			<list>
 				<value>column1</value>
@@ -40,7 +40,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1">
 			<null />
 		</constructor-arg>
-		<constructor-arg index="2" value="LHS_TABLE" />
+		<constructor-arg index="2" value="TEST18_LHS_TABLE" />
 		<constructor-arg index="3">
 			<list>
 				<ref bean="lhs.column1" />
@@ -52,7 +52,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
-		<constructor-arg index="0" value="lhs_pk" />
+		<constructor-arg index="0" value="test18_lhs_pk" />
 		<constructor-arg index="1">
 			<list>
 				<value>column1</value>

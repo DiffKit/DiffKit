@@ -6,8 +6,8 @@
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-		<property name="lhsDBTableName" value="LHS_TABLE" />
-		<property name="rhsDBTableName" value="RHS_TABLE" />
+		<property name="lhsDBTableName" value="TEST15_LHS_TABLE" />
+		<property name="rhsDBTableName" value="TEST15_RHS_TABLE" />
 		<property name="numberTolerance" value="2" />
 		<property name="toleranceMap">
 			<map>
@@ -22,7 +22,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test" />
 		<constructor-arg index="1" value="H2" />
 		<constructor-arg index="2"
-			value="mem:testcase15;DB_CLOSE_DELAY=-1" />
+			value="mem:testcase;DB_CLOSE_DELAY=-1" />
 		<constructor-arg index="3">
 			<null />
 		</constructor-arg>

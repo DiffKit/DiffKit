@@ -68,7 +68,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
-		<constructor-arg index="0" value="RHS_TABLE" />
+		<constructor-arg index="0" value="TEST1_RHS_TABLE" />
 		<constructor-arg index="1">
 			<null />
 		</constructor-arg>
@@ -83,7 +83,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
-		<constructor-arg index="0" value="LHS_TABLE" />
+		<constructor-arg index="0" value="TEST1_LHS_TABLE" />
 		<constructor-arg index="1">
 			<null />
 		</constructor-arg>
@@ -173,7 +173,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test" />
 		<constructor-arg index="1" value="H2" />
 		<constructor-arg index="2"
-			value="mem:testcase1;DB_CLOSE_DELAY=-1" />
+			value="mem:testcase;DB_CLOSE_DELAY=-1" />
 		<constructor-arg index="3">
 			<null />
 		</constructor-arg>
