@@ -12,10 +12,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.diffkit.common.DKValidate;
 
 /**
  * @author jpanico
@@ -112,4 +117,14 @@ public class DKFileUtil {
       outStream.flush();
       outStream.close();
    }
+
+   public static void copyFile(File srcFile_, File destFile_,
+                               Map<String, String> substitutions_) throws IOException {
+      DKValidate.notNull(srcFile_, destFile_);
+      if (MapUtils.isEmpty(substitutions_))
+         FileUtils.copyFile(srcFile_, destFile_);
+
+      
+   }
+
 }

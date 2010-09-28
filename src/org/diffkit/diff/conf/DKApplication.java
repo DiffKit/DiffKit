@@ -208,9 +208,8 @@ public class DKApplication {
    }
 
    private static void runDemoDB() throws Exception {
-      USER_LOG.info("running H2 demo db");
-      Server server = Server.createTcpServer((String[]) null).start();
-      Thread.sleep(10000);
+      USER_LOG.info("running H2 demo db...");
+      Server server = Server.createTcpServer("-tcp", "-tcpDaemon", "-web", "-webDaemon").start();
       USER_LOG.info("press <return> to exit...");
       LineNumberReader lineReader = new LineNumberReader(new InputStreamReader(System.in));
       lineReader.readLine();

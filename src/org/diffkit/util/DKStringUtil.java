@@ -18,7 +18,9 @@ package org.diffkit.util;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,4 +135,10 @@ public class DKStringUtil {
       return count;
    }
 
+//   public static String replaceEach(String target_, Map<String, String> replacements_) {
+//      if (target_ == null)
+//         return null;
+//      if (MapUtils.isEmpty(replacements_))
+//         return target_;
+//   }
 }

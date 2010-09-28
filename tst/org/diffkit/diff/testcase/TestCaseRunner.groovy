@@ -89,7 +89,7 @@ public class TestCaseRunner implements Runnable {
          _log.info("can't setup runnerRun; exiting.")
          return
       }
-      _allTestCases = this.fetchAllTestCases(runnerRun)
+      _allTestCases = this.fetchAllTestCases(runnerRun.dir)
       _log.debug("_allTestCases->{}",_allTestCases)
       def List<TestCase> testCases = null
       if( !_testCaseNumbers) {
@@ -273,13 +273,13 @@ public class TestCaseRunner implements Runnable {
          throw new RuntimeException("sinkPath '$sinkFile' must be relative path!")
    }
    
-   private List<TestCase> fetchAllTestCases(TestCaseRunnerRun runnerRun_){
-      File[] planFiles = runnerRun_.dir.listFiles(TEST_CASE_PLAN_FILTER)
+   public  List<TestCase> fetchAllTestCases(File dir_){
+      File[] planFiles = dir_.listFiles(TEST_CASE_PLAN_FILTER)
       if(!planFiles)
          return null
       def testCases = new ArrayList(planFiles.length)
       planFiles.each {
-         def testCase = this.createTestCase(it, runnerRun_.dir)
+         def testCase = this.createTestCase(it, dir_)
          if(testCase)
             testCases.add(testCase)
       }
