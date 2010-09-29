@@ -6,6 +6,7 @@ package org.diffkit.util;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,4 +131,20 @@ public class DKFileUtil {
       FileUtils.writeStringToFile(destFile_, contents);
    }
 
+   public static void copyDirectory(File srcDir_, File destDir_, FileFilter filter_,
+                                    Map<String, String> substitutions_)
+      throws IOException {
+      DKValidate.notNull(srcDir_, destDir_);
+      if (MapUtils.isEmpty(substitutions_))
+         FileUtils.copyDirectory(srcDir_, destDir_, filter_);
+      if (!srcDir_.isDirectory())
+         return;
+      File[] files = srcDir_.listFiles();
+      if (ArrayUtils.isEmpty(files))
+         return;
+      for (int i = 0; i < files.length; i++) {
+         File destFile = new File(destDir_, files[i].getName());
+         copyFile(files[i], destFile, substitutions_);
+      }
+   }
 }

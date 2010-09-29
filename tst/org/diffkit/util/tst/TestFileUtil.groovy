@@ -17,12 +17,11 @@ package org.diffkit.util.tst
 
 
 
-import org.apache.commons.io.FileUtils;
-
-import org.diffkit.util.DKFileUtil;
-import org.diffkit.util.DKResourceUtil;
-
-import groovy.util.GroovyTestCase;
+import java.io.File;
+import org.apache.commons.io.FileUtils 
+import org.apache.commons.io.filefilter.SuffixFileFilter 
+import org.diffkit.util.DKFileUtil 
+import org.diffkit.util.DKResourceUtil 
 
 
 /**
@@ -53,6 +52,33 @@ public class TestFileUtil extends GroovyTestCase {
       
       File expectedFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_expected.txt")
       def expectedText = FileUtils.readFileToString(expectedFile)
+      def copiedText = FileUtils.readFileToString(copiedFile)
+      
+      assert copiedText == expectedText
+   }
+   
+   public void testCopyDirectory() {
+      File sourceFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_target.txt")
+      assert sourceFile
+      File sourceDirectory = sourceFile.getParentFile()
+      assert sourceDirectory
+      assert sourceDirectory.isDirectory()
+      
+      FilenameFilter filenameFilter= new SuffixFileFilter(".txt")
+      File[] sourceFiles = sourceDirectory.listFiles((FilenameFilter)filenameFilter)
+      assert sourceFiles
+      assert sourceFiles.length == 3
+      
+      File destDir = ['./']
+      def substitutions = ['Beware':'swear', 'frumious':'frumpy']
+      DKFileUtil.copyDirectory( sourceDirectory, destDir, filenameFilter,substitutions)
+      File[] destFiles = destDir.listFiles((FilenameFilter)filenameFilter)
+      assert destFiles
+      assert destFiles.length == 3
+      
+      File expectedFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_expected.txt")
+      def expectedText = FileUtils.readFileToString(expectedFile)
+      def copiedFile = new File(destDir, sourceFile.name )
       def copiedText = FileUtils.readFileToString(copiedFile)
       
       assert copiedText == expectedText
