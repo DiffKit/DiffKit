@@ -1,41 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-      <property name="lhsDBTableName" value="TEST22_LHS_TABLE" />
-      <property name="rhsDBTableName" value="TEST22_RHS_TABLE" />
-      <property name="keyColumnNames">
-         <list>
-            <value>COLUMN1</value>
-         </list>
-      </property>
-      <property name="displayColumnNames">
-         <list>
-            <value>COL1</value>
-            <value>column2</value>
-         </list>
-      </property>
-      <property name="dbConnectionInfo" ref="dbConnectionInfo" />
-      <property name="sinkFilePath" value="./test22.sink.diff"  />
-   </bean>
-
-   <bean id="dbConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-      <constructor-arg index="0" value="test" />
-      <constructor-arg index="1" value="H2" />
-      <constructor-arg index="2"
-         value="@TargetDatabase@" />
-      <constructor-arg index="3">
-         <null />
-      </constructor-arg>
-      <constructor-arg index="4">
-         <null />
-      </constructor-arg>
-      <constructor-arg index="5" value="test" />
-      <constructor-arg index="6" value="test" />
-   </bean>
+	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
+		<property name="lhsDBTableName" value="TEST22_LHS_TABLE" />
+		<property name="rhsDBTableName" value="TEST22_RHS_TABLE" />
+		<property name="keyColumnNames">
+			<list>
+				<value>COLUMN1</value>
+			</list>
+		</property>
+		<property name="displayColumnNames">
+			<list>
+				<value>COL1</value>
+				<value>column2</value>
+			</list>
+		</property>
+		<property name="dbConnectionInfo" ref="connectionInfo" />
+		<property name="sinkFilePath" value="./test22.sink.diff" />
+	</bean>
 
 </beans>

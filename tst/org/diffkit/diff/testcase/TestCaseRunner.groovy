@@ -24,10 +24,8 @@ import java.util.regex.Pattern
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationContext 
 import org.springframework.context.support.AbstractXmlApplicationContext 
 import org.springframework.context.support.ClassPathXmlApplicationContext 
-import org.springframework.context.support.FileSystemXmlApplicationContext 
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
@@ -51,6 +49,7 @@ import org.diffkit.diff.sns.DKFileSource
 import org.diffkit.diff.sns.DKWriterSink 
 import org.diffkit.util.DKFileUtil;
 import org.diffkit.util.DKResourceUtil;
+import org.diffkit.util.DKSpringUtil;
 import org.diffkit.util.DKStringUtil 
 
 
@@ -154,11 +153,9 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKPlan getPlan(TestCase testCase_){
-      ApplicationContext context = new FileSystemXmlApplicationContext((String[])['file:'+testCase_.planFile.absolutePath], false);
-      context.setClassLoader(this.class.getClassLoader())
-      context.refresh()
-      assert context
-      def plan = context.getBean('plan')
+      File testCaseDir = testCase_.planFile.parentFile
+      File connectionInfoFile = [testCaseDir, 'dbConnectionInfo.xml']      
+      def plan = DKSpringUtil.getBean("plan", (String[])['file:'+testCase_.planFile.absolutePath, 'file:'+connectionInfoFile.absolutePath],this.class.getClassLoader())
       _log.debug("plan->{}",plan)
       if(!plan)
          throw new RuntimeException("no 'plan' bean in planFile->${testCase_.planFile}")

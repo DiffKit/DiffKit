@@ -87,6 +87,16 @@ public class DKFileUtil {
       return file.exists();
    }
 
+   public static boolean canReadFilePaths(String[] filePaths_) {
+      if (ArrayUtils.isEmpty(filePaths_))
+         return false;
+      for (String filePath : filePaths_) {
+         if (!new File(filePath).canRead())
+            return false;
+      }
+      return true;
+   }
+
    public static String readFullyAsString(File file_) {
       if (file_ == null)
          return null;

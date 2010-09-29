@@ -64,17 +64,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="rhs.column1" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column1" />
 		<constructor-arg index="1" value="1" />
-      <constructor-arg index="2" value="BIGINT" />
-      <constructor-arg index="3" value="32" />
-      <constructor-arg index="4" value="true" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
 	</bean>
 
 	<bean id="rhs.column2" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column2" />
 		<constructor-arg index="1" value="2" />
-      <constructor-arg index="2" value="BIGINT" />
-      <constructor-arg index="3" value="32" />
-      <constructor-arg index="4" value="true" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
 	</bean>
 
 	<bean id="rhs.column3" class="org.diffkit.db.DKDBColumn">
@@ -88,25 +88,25 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="rhs.column4" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column4" />
 		<constructor-arg index="1" value="4" />
-      <constructor-arg index="2" value="BIGINT" />
-      <constructor-arg index="3" value="32" />
-      <constructor-arg index="4" value="true" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
 	</bean>
 
 	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column1" />
 		<constructor-arg index="1" value="1" />
-      <constructor-arg index="2" value="BIGINT" />
-      <constructor-arg index="3" value="32" />
-      <constructor-arg index="4" value="true" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
 	</bean>
 
 	<bean id="lhs.column2" class="org.diffkit.db.DKDBColumn">
 		<constructor-arg index="0" value="column2" />
 		<constructor-arg index="1" value="2" />
-      <constructor-arg index="2" value="BIGINT" />
-      <constructor-arg index="3" value="32" />
-      <constructor-arg index="4" value="true" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
 	</bean>
 
 	<bean id="lhs.column3" class="org.diffkit.db.DKDBColumn">
@@ -127,21 +127,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="connectionSource" class="org.diffkit.db.DKDBConnectionSource">
 		<constructor-arg ref="connectionInfo" />
-	</bean>
-
-	<bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-		<constructor-arg index="0" value="test" />
-		<constructor-arg index="1" value="H2" />
-		<constructor-arg index="2"
-			value="@TargetDatabase@" />
-		<constructor-arg index="3">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="4">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="5" value="test" />
-		<constructor-arg index="6" value="test" />
 	</bean>
 
 </beans>

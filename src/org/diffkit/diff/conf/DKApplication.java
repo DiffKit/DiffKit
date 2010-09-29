@@ -15,7 +15,6 @@
  */
 package org.diffkit.diff.conf;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -34,9 +33,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.AbstractXmlApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import org.diffkit.common.DKDistProperties;
 import org.diffkit.common.DKProperties;
@@ -47,6 +43,7 @@ import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.util.DKClassUtil;
+import org.diffkit.util.DKSpringUtil;
 
 /**
  * @author jpanico
@@ -154,13 +151,9 @@ public class DKApplication {
       LOG.info("planFilesString_->{}", planFilesString_);
       String[] planFiles = planFilesString_.split("\\,");
       USER_LOG.info("planfile(s)->{}", planFiles);
-      AbstractXmlApplicationContext appContext = getContext(planFiles);
-      LOG.info("appContext->{}", appContext);
-      DKPlan plan = (DKPlan) appContext.getBean("plan");
+      DKPlan plan = (DKPlan) DKSpringUtil.getBean("plan", planFiles,
+         DKApplication.class.getClassLoader());
       LOG.info("plan->{}", plan);
-      if (plan == null)
-         throw new RuntimeException(String.format("no 'plan' bean in  planFiles_->",
-            planFilesString_));
       DKDiffEngine engine = new DKDiffEngine();
       LOG.info("engine->{}", engine);
       DKSource lhsSource = plan.getLhsSource();
@@ -178,33 +171,6 @@ public class DKApplication {
       if (errorOnDiff_)
          System.exit(-1);
       System.exit(0);
-   }
-
-   /**
-    * @param planFilePath_
-    *           can be either a FS file path (relative or absolute) or it can be
-    *           a resource style path that will be resolved via the classpath
-    */
-   private static AbstractXmlApplicationContext getContext(String[] planFiles_) {
-      LOG.debug("planFiles_->{}", planFiles_);
-      AbstractXmlApplicationContext context = null;
-      if (canReadPlanFilePaths(planFiles_))
-         context = new FileSystemXmlApplicationContext(planFiles_, false);
-      else
-         context = new ClassPathXmlApplicationContext(planFiles_);
-      context.setClassLoader(DKApplication.class.getClassLoader());
-      context.refresh();
-      return context;
-   }
-
-   private static boolean canReadPlanFilePaths(String[] planFiles_) {
-      if (planFiles_ == null)
-         return false;
-      for (String filePath : planFiles_) {
-         if (!new File(filePath).canRead())
-            return false;
-      }
-      return true;
    }
 
    private static void runDemoDB() throws Exception {

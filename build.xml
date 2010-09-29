@@ -307,6 +307,7 @@
 
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}">
+				<include name="**/testcase/dbConnectionInfo*" />
 				<include name="**/testcase/test9*" />
 				<include name="**/testcase/test10*" />
 				<include name="**/testcase/test11*" />
@@ -316,6 +317,9 @@
 				<include name="**/testcase/test18*" />
 				<include name="**/testcase/test21*" />
 			</fileset>
+			<filterset>
+				<filter token="TargetDatabase" value="${demodb.name}" />
+			</filterset>
 			<flattenmapper />
 		</copy>
 
@@ -345,8 +349,8 @@
 			<fileset dir="${root.dir}">
 				<include name="*.diff" />
 				<include name="*.txt" />
-            <include name="*.tst" />
-            <include name="*.class" />
+				<include name="*.tst" />
+				<include name="*.class" />
 			</fileset>
 		</delete>
 		<delete includeemptydirs="true">
