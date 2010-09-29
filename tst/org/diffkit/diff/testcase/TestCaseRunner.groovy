@@ -29,7 +29,6 @@ import org.springframework.context.support.AbstractXmlApplicationContext
 import org.springframework.context.support.ClassPathXmlApplicationContext 
 import org.springframework.context.support.FileSystemXmlApplicationContext 
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
 
@@ -61,11 +60,13 @@ import org.diffkit.util.DKStringUtil
 public class TestCaseRunner implements Runnable {
    
    public static final String TEST_CASE_FILE_NAME = 'testcaserunner.xml'
+   public static final String TARGET_DATABASE_TOKEN = "@TargetDatabase@"
+   public static final String DEFAULT_TESTCASE_DATABASE = "mem:testcase;DB_CLOSE_DELAY=-1"
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
    private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt', 'exception']
    private static final FileFilter TEST_CASE_DATA_FILTER = new SuffixFileFilter(TEST_CASE_DATA_SUFFIXES)
-   private static final String TEST_CASE_DATA_ARCHIVE_NAE = "testcasedata.jar"
+   private static final String TEST_CASE_DATA_ARCHIVE_NAME = "testcasedata.jar"
    
    private List<Integer> _testCaseNumbers
    private String _dataPath
@@ -127,8 +128,10 @@ public class TestCaseRunner implements Runnable {
       _log.info("classLoader->{}",classLoader)
       URL dataPathUrl = classLoader.getResource(_dataPath)
       _log.info("dataPathUrl->{}",dataPathUrl)
+      def substitutionMap = [:]
+      substitutionMap.put(TARGET_DATABASE_TOKEN, DEFAULT_TESTCASE_DATABASE)
       if(dataPathUrl.toExternalForm().startsWith("jar:")){
-         String testDataArchiveResourcePath = _dataPath + TEST_CASE_DATA_ARCHIVE_NAE
+         String testDataArchiveResourcePath = _dataPath + TEST_CASE_DATA_ARCHIVE_NAME
          _log.info("testDataArchiveResourcePath->{}",testDataArchiveResourcePath)
          InputStream archiveInputStream = classLoader.getResourceAsStream(testDataArchiveResourcePath)
          _log.info("archiveInputStream->{}",archiveInputStream)
@@ -137,11 +140,11 @@ public class TestCaseRunner implements Runnable {
             return null
          }
          JarInputStream jarInputStream = new JarInputStream(archiveInputStream)
-         DKUnjar.unjar( jarInputStream, runnerRun.dir)
+         DKUnjar.unjar( jarInputStream, runnerRun.dir, substitutionMap)
       }
       else {
          File dataDir = [dataPathUrl.toURI()]
-         FileUtils.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER)
+         DKFileUtil.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER, substitutionMap)
       }
       return runnerRun
    }

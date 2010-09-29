@@ -133,7 +133,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test" />
 		<constructor-arg index="1" value="H2" />
 		<constructor-arg index="2"
-			value="mem:testcase;DB_CLOSE_DELAY=-1" />
+			value="@TargetDatabase@" />
 		<constructor-arg index="3">
 			<null />
 		</constructor-arg>

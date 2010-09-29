@@ -1,3 +1,5 @@
+package org.diffkit.util.tst
+
 /**
  * Copyright 2010 Joseph Panico
  *
@@ -13,13 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.util.tst
-
-
-
-import org.diffkit.util.DKStringUtil;
 
 import groovy.util.GroovyTestCase;
+import org.diffkit.diff.testcase.TestCaseRunner;
+import org.diffkit.util.DKStringUtil;
 
 
 /**
@@ -50,6 +49,12 @@ public class TestStringUtil extends GroovyTestCase {
                         The frumpy Bandersnatch!'''
       def substitutions = ['Beware':'swear', 'frumious':'frumpy']
       
+      assert DKStringUtil.replaceEach(source, substitutions) == expected
+      
+      source =   '''this is my test @TargetDatabase@'''
+      expected =   '''this is my test mem:testcase;DB_CLOSE_DELAY=-1'''
+      substitutions = [ : ]
+      substitutions.put(TestCaseRunner.TARGET_DATABASE_TOKEN,TestCaseRunner.DEFAULT_TESTCASE_DATABASE )
       assert DKStringUtil.replaceEach(source, substitutions) == expected
    }
 }

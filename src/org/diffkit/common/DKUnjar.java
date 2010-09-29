@@ -27,6 +27,8 @@ import java.util.jar.JarInputStream;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.util.DKStreamUtil;
 import org.diffkit.util.DKStringUtil;
@@ -35,6 +37,7 @@ import org.diffkit.util.DKStringUtil;
  * @author jpanico
  */
 public class DKUnjar {
+   private static final Logger LOG = LoggerFactory.getLogger(DKUnjar.class);
 
    /**
     * closes inputStream_ at the end
@@ -65,6 +68,10 @@ public class DKUnjar {
     */
    public static void unjar(JarInputStream inputStream_, File outputDir_,
                             Map<String, String> substitutions_) throws IOException {
+      boolean isDebugEnabled = LOG.isDebugEnabled();
+      if (isDebugEnabled)
+         LOG.debug("substitutions_->{}", substitutions_);
+
       if (MapUtils.isEmpty(substitutions_))
          unjar(inputStream_, outputDir_);
 
@@ -76,7 +83,11 @@ public class DKUnjar {
       JarEntry entry = null;
       while ((entry = inputStream_.getNextJarEntry()) != null) {
          String contents = IOUtils.toString(inputStream_);
+         if (isDebugEnabled)
+            LOG.debug("contents->{}", contents);
          contents = DKStringUtil.replaceEach(contents, substitutions_);
+         if (isDebugEnabled)
+            LOG.debug("substituted contents->{}", contents);
          File outFile = new File(outputDir_, entry.getName());
          FileUtils.writeStringToFile(outFile, contents);
       }
