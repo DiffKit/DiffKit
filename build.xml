@@ -345,7 +345,8 @@
 			<fileset dir="${root.dir}">
 				<include name="*.diff" />
 				<include name="*.txt" />
-				<include name="*.tst" />
+            <include name="*.tst" />
+            <include name="*.class" />
 			</fileset>
 		</delete>
 		<delete includeemptydirs="true">

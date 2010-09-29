@@ -20,10 +20,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import org.diffkit.util.DKStreamUtil;
+import org.diffkit.util.DKStringUtil;
 
 /**
  * @author jpanico
@@ -47,6 +53,32 @@ public class DKUnjar {
          DKStreamUtil.copy(inputStream_, outStream);
          outStream.flush();
          outStream.close();
+      }
+      inputStream_.close();
+   }
+
+   /**
+    * N.B. this method is much less efficient than the similar signature without
+    * substitutions, so use that if you don't really need substitutions <br>
+    * 
+    * closes inputStream_ at the end
+    */
+   public static void unjar(JarInputStream inputStream_, File outputDir_,
+                            Map<String, String> substitutions_) throws IOException {
+      if (MapUtils.isEmpty(substitutions_))
+         unjar(inputStream_, outputDir_);
+
+      DKValidate.notNull(inputStream_, outputDir_);
+      if (!outputDir_.isDirectory())
+         throw new RuntimeException(String.format("directory does not exist->%s",
+            outputDir_));
+
+      JarEntry entry = null;
+      while ((entry = inputStream_.getNextJarEntry()) != null) {
+         String contents = IOUtils.toString(inputStream_);
+         contents = DKStringUtil.replaceEach(contents, substitutions_);
+         File outFile = new File(outputDir_, entry.getName());
+         FileUtils.writeStringToFile(outFile, contents);
       }
       inputStream_.close();
    }

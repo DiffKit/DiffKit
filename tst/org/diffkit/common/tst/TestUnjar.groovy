@@ -21,6 +21,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.jar.JarInputStream;
 
+import org.apache.commons.io.FileUtils;
+
 import org.diffkit.common.DKUnjar;
 
 import groovy.util.GroovyTestCase;
@@ -44,5 +46,23 @@ public class TestUnjar extends GroovyTestCase {
       assert fileNames
       assert fileNames.length==3
       assert fileNames == (String[])['unjar1.txt', 'unjar2.txt', 'unjar3.txt']
+   }
+   
+   public void testUnjarWithSubstitutions(){
+      URL jarURL = this.getClass().classLoader.getResource('org/diffkit/common/tst/unjar_test.jar')
+      println "jarURL->$jarURL"
+      assert jarURL
+      JarInputStream jarInStream = new JarInputStream(jarURL.openStream())
+      File outDir = new File("./tstscratch/testUnjarWithSubs")
+      outDir.mkdirs()
+      
+      def substitutions = ['Beware':'swear', 'frumious':'frumpy']
+      DKUnjar.unjar( jarInStream, outDir, substitutions)
+      
+      String[] fileNames = outDir.list()
+      assert fileNames
+      assert fileNames.length==3
+      assert fileNames == (String[])['unjar1.txt', 'unjar2.txt', 'unjar3.txt']
+      assert FileUtils.readFileToString(new File(outDir, fileNames[0])) == FileUtils.readFileToString(new File(outDir, fileNames[2]))
    }
 }
