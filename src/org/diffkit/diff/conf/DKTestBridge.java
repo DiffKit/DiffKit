@@ -45,7 +45,7 @@ public class DKTestBridge {
       }
    }
 
-   public static void ensureData(File testcaseDir_) throws Exception {
+   public static void loadTestCaseData(File testcaseDir_) throws Exception {
       Object testCaseRunner = getTestCaseRunner();
       MethodUtils.invokeExactMethod(testCaseRunner, "setupDB", testcaseDir_);
    }
