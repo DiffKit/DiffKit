@@ -16,9 +16,6 @@
 package org.diffkit.diff.conf;
 
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import org.apache.commons.cli.CommandLine;
@@ -30,19 +27,16 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKDistProperties;
-import org.diffkit.common.DKProperties;
 import org.diffkit.common.DKUserException;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffEngine;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableComparison;
-import org.diffkit.util.DKClassUtil;
 import org.diffkit.util.DKSpringUtil;
 
 /**
@@ -129,23 +123,6 @@ public class DKApplication {
       formatter.printHelp("java -jar diffkit-app.jar", OPTIONS);
    }
 
-   @SuppressWarnings("unchecked")
-   private static void runTestCases() {
-      System.setProperty(DKProperties.IS_TEST_PROPERTY, "true");
-      USER_LOG.info("running TestCases");
-      try {
-         Class<?> testCaseRunnerClass = Class.forName("org.diffkit.diff.testcase.TestCaseRunner");
-         LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
-         Constructor<Runnable> constructor = (Constructor<Runnable>) DKClassUtil.findLongestConstructor(testCaseRunnerClass);
-         LOG.debug("constructor->{}", constructor);
-         Runnable testCaseRunner = constructor.newInstance((Object) null);
-         testCaseRunner.run();
-      }
-      catch (Exception e_) {
-         LOG.error(null, e_);
-      }
-   }
-
    private static void runPlan(String planFilesString_, boolean errorOnDiff_)
       throws Exception {
       LOG.info("planFilesString_->{}", planFilesString_);
@@ -173,11 +150,12 @@ public class DKApplication {
       System.exit(0);
    }
 
+   private static void runTestCases() {
+      USER_LOG.info("running TestCases");
+      DKTestBridge.runTestCases();
+   }
+
    private static void runDemoDB() throws Exception {
-      USER_LOG.info("running H2 demo db...");
-      Server server = Server.createTcpServer("-tcp", "-tcpDaemon", "-web", "-webDaemon").start();
-      USER_LOG.info("press <return> to exit...");
-      LineNumberReader lineReader = new LineNumberReader(new InputStreamReader(System.in));
-      lineReader.readLine();
+      DKDemoDB.run();
    }
 }

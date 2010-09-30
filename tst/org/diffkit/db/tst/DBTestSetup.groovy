@@ -32,7 +32,6 @@ import org.diffkit.util.DKSqlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext 
-import org.springframework.context.support.ClassPathXmlApplicationContext 
 import org.springframework.context.support.FileSystemXmlApplicationContext 
 
 
@@ -49,9 +48,6 @@ public class DBTestSetup {
       setupDB( dbSetupFile_, lhsSourceFile, rhsSourceFile)
    }
    
-   /**
-    * dbSetupFile_ can be a FS file path, or a classpath resource path
-    */
    public static void setupDB(File dbSetupFile_, File lhsSourceFile_, File rhsSourceFile_) {
       if(!dbSetupFile_)
          return 
@@ -59,9 +55,8 @@ public class DBTestSetup {
       _log.debug("dbSetupFile_->{}",dbSetupFile_.canonicalPath)
       File dir = dbSetupFile_.parentFile
       File connectionInfoFile = [dir, 'dbConnectionInfo.xml']
-      if(dbSetupFile_.exists())
-         context = new FileSystemXmlApplicationContext((String[])['file:'+dbSetupFile_.absolutePath, 'file:'+connectionInfoFile.absolutePath], false)
-
+      context = new FileSystemXmlApplicationContext((String[])['file:'+dbSetupFile_.absolutePath, 'file:'+connectionInfoFile.absolutePath], false)
+      
       context.setClassLoader(DBTestSetup.class.getClassLoader())
       context.refresh()
       assert context

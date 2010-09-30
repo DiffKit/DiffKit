@@ -24,8 +24,6 @@ import java.util.regex.Pattern
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.support.AbstractXmlApplicationContext 
-import org.springframework.context.support.ClassPathXmlApplicationContext 
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
@@ -150,6 +148,17 @@ public class TestCaseRunner implements Runnable {
    
    private void setupDB(TestCase testCase_) {
       DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.lhsSourceFile, testCase_.rhsSourceFile)
+   }
+   
+   /**
+    * perform all of the dbSetup for all TestCases found in file_
+    */
+   public void setupDB(File file_) {
+      def testCases = this.fetchAllTestCases(file_)
+      _log.debug("testCases->{}", testCases)
+      if (!testCases)
+         return 
+      testCases.each { this.setupDB(it) }
    }
    
    private DKPlan getPlan(TestCase testCase_){
@@ -314,12 +323,7 @@ public class TestCaseRunner implements Runnable {
       println "class->${TestCaseRunner.class}"
       def testCasesResourcePath =  getDefaultDataPath() + TEST_CASE_FILE_NAME
       println "testCasesResourcePath->$testCasesResourcePath"
-      AbstractXmlApplicationContext context = new ClassPathXmlApplicationContext((String[]) [ testCasesResourcePath ], false)
-      context.setClassLoader(TestCaseRunner.class.getClassLoader())
-      context.refresh()
-      assert context
-      
-      def runner = context.getBean('runner')
+      def runner = DKSpringUtil.getBean( 'runner', (String[]) [ testCasesResourcePath ], TestCaseRunner.class.getClassLoader())
       println "runner->$runner"
       assert runner
       runner.run()
