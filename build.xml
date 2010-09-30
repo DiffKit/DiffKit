@@ -22,6 +22,9 @@
 		<include name="**/*.csv" />
 		<include name="**/*.diff" />
 		<include name="**/*.exception" />
+		<!--
+		<include name="**/*.h2.db" />
+      -->
 	</patternset>
 
 	<patternset id="executables">
@@ -305,6 +308,12 @@
 
 	<target name="eg-dist" depends="dist-properties">
 
+		<copy todir="${dist.dir}/eg" overwrite="true">
+			<fileset dir="${tst.dir}">
+				<include name="**/testcase/*.h2.db" />
+			</fileset>
+			<flattenmapper />
+		</copy>
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}">
 				<include name="**/testcase/dbConnectionInfo*" />
