@@ -14,21 +14,64 @@ Introduction
 What DiffKit is
 ~~~~~~~~~~~~~~~
 DiffKit is an application for comparing two tables of data, field-by-field.
-DiffKit is able to report the differences (diffs) at both the row and field
+DiffKit is able to report the differences (_Diff_ s) at both the row and field
 level, and allows the user to configure how to carry out the comparison (what to
 compare, what to ignore). DiffKit is highly configurable with respect to the
 sources of tabular data, the details of the comparison, and the characteristics
 of the diff report (output). For instance, DiffKit is able to diff CSV files,
 RDBMS tables, or custom data sources, in any combination. DiffKit is able to
-compare fields within a prescribed tolerance (e.g. numeric fields can be flagged
-as different only if the difference exceeds some threshold),
+compare fields within a prescribed tolerance (e.g. numeric field values will be
+flagged as different only if the difference exceeds some threshold), is able to
+diff text fields ignoring incidental formatting differences, and is able to
+output the diffs as a structured text report or as SQL insert statements. This
+is just a small sampling of the capabilities of DiffKit.
 
 
-What DiffKit is not
+DiffKit is also a framework. It is Free Open Source Software (FOSS). DiffKit is
+written in the Java programming language and is dependent on only the Java Runtime
+Environment (JRE) and a handful of third party FOSS libraries that are packaged
+as part of the DiffKit distribution. As an Open Source framework with few 
+dependencies, DiffKit can be easily and cleanly embedded in almost any Java
+application, or any application that can bind Java packages.
+
+DiffKit was designed to be easily extensible. That means it's not a huge effort
+to create custom row data providers (_Source_ s), custom field comparators
+(_Diffor_ s), and custom output formatters (_Sink_ s).
+
+
+DiffKit is a command-line application that is configured entirely by XML files.
+Because there is no GUI, and because it's file driven, and because it runs on
+Java, DiffKit is able to execute in a huge range of computing environments--
+Windows and Mac desktops, or Linux and Solaris servers. These characteristics
+also make DiffKit ideal for scripting or embedding into process chains. Also,
+DiffKit was designed with high-volume applications in mind. It uses a
+row-streaming mechanism to maintain a very low memory overhead during diff
+execution, so DiffKit is able to quickly and efficiently diff tables that have
+tens ofmillions of rows.
+
+
+What DiffKit is not 
 ~~~~~~~~~~~~~~~~~~~
+
+DiffKit is not a visual comparison tool; it does not have a GUI. DiffKit is not
+a code or unstructured text comparison tool-- it is designed to compare tables
+(data that is arranged in rows and columns). If you want to compare unstructured
+text, you should use Unix diffutils
+footnote:[http://www.gnu.org/software/diffutils/.]. DiffKit is not a
+synchronization tool. DiffKit has no capabilities to patch one side to make it
+look like the other side; i.e. it can only report differences, not act on them.
+Finally, DiffKit is not an RDBMS schema synchronization tool. There are many
+products on the market that already do this. While you *can* use DiffKit to diff
+RDBMS schemas, you will have to supply the configuration files yourself-- out of
+the box DiffKit does not know how to identify the schema or catalog tables for
+any particular vendor product.
+
 
 Why use DiffKit?
 ~~~~~~~~~~~~~~~~
+
+There are many uses for DiffKit, a few of which are explored in detail in 
+<<Motivations_and_Uses,Motivations and Uses>>.
 
 Quality control
 ~~~~~~~~~~~~~~~~
@@ -47,7 +90,7 @@ Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-
+[[Motivations_and_Uses]]
 Motivations and Uses
 --------------------
 
@@ -117,15 +160,23 @@ Extending Diffkit
 
 Custom Source -- ArchiveSource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Coming soon.
+
 
 Custom Diffor -- ?
 ~~~~~~~~~~~~~~~~~~~~
+Coming soon.
+
 
 Custom Sink -- XMLSink
 ~~~~~~~~~~~~~~~~~~~~~~
+Coming soon.
+
 
 Putting it together
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+Coming soon.
+
 
 [appendix]
 Example Appendix
@@ -136,20 +187,6 @@ AsciiDoc article appendices are just just article sections with
 Appendix Sub-section
 ~~~~~~~~~~~~~~~~~~~~
 Appendix sub-section at level 2.
-
-
-[bibliography]
-Example Bibliography
---------------------
-The bibliography list is a style of AsciiDoc bulleted list.
-
-[bibliography]
-- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix
-  Programming'. Addison-Wesley. ISBN 0-13-142901-9.
-- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.
-  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.
-  ISBN 1-56592-580-7.
-
 
 [glossary]
 Example Glossary
