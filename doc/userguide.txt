@@ -3,13 +3,175 @@ DiffKit User Guide
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+
 Prerequisites 
 -------------
 Ensure that you have first read the link:README.html[README file].
 
+Introduction
+------------
 
-Next Steps
-----------
-Read the link:faq.html[faq]. 
+What DiffKit is
+~~~~~~~~~~~~~~~
+DiffKit is an application for comparing two tables of data, field-by-field.
+DiffKit is able to report the differences (diffs) at both the row and field
+level, and allows the user to configure how to carry out the comparison (what to
+compare, what to ignore). DiffKit is highly configurable with respect to the
+sources of tabular data, the details of the comparison, and the characteristics
+of the diff report (output). For instance, DiffKit is able to diff CSV files,
+RDBMS tables, or custom data sources, in any combination. DiffKit is able to
+compare fields within a prescribed tolerance (e.g. numeric fields can be flagged
+as different only if the difference exceeds some threshold),
 
-Send questions to: diffkit-user@googlegroups.com.
+
+What DiffKit is not
+~~~~~~~~~~~~~~~~~~~
+
+Why use DiffKit?
+~~~~~~~~~~~~~~~~
+
+Quality control
+~~~~~~~~~~~~~~~~
+
+
+Tutorial
+--------
+
+Tutorial 1 -- Diff'ng file tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Tutorial 2 -- Diff'ng database tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Tutorial 3 -- PassthroughPlan
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+Motivations and Uses
+--------------------
+
+Regression testing
+~~~~~~~~~~~~~~~~~~
+
+DB schema comparison
+~~~~~~~~~~~~~~~~~~~~
+
+DB replication skew
+~~~~~~~~~~~~~~~~~~~
+
+
+Concepts
+--------
+
+Real world entities
+~~~~~~~~~~~~~~~~~~
+
+Modelling entities
+~~~~~~~~~~~~~~~~~~
+
+TableModel
+^^^^^^^^^^
+
+ColumnModel
+^^^^^^^^^^^
+
+Source
+~~~~~~
+
+Row Alignment
+~~~~~~~~~~~~~
+
+Sink
+~~~~
+
+Plan
+~~~~
+
+Map
+^^^
+
+Diffor
+^^^^^^
+
+MagicPlan
+^^^^^^^^^
+
+PassthroughPlan
+^^^^^^^^^^^^^^
+
+Diff
+~~~~
+
+ROW_DIFF
+^^^^^^^^^
+
+COLUMN_DIFF
+^^^^^^^^^^^
+
+Summary information
+^^^^^^^^^^^^^^^^^^^
+
+Extending Diffkit
+-----------------
+
+Custom Source -- ArchiveSource
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Custom Diffor -- ?
+~~~~~~~~~~~~~~~~~~~~
+
+Custom Sink -- XMLSink
+~~~~~~~~~~~~~~~~~~~~~~
+
+Putting it together
+~~~~~~~~~~~~~~~~~~~~~~
+
+[appendix]
+Example Appendix
+----------------
+AsciiDoc article appendices are just just article sections with
+'specialsection' titles.
+
+Appendix Sub-section
+~~~~~~~~~~~~~~~~~~~~
+Appendix sub-section at level 2.
+
+
+[bibliography]
+Example Bibliography
+--------------------
+The bibliography list is a style of AsciiDoc bulleted list.
+
+[bibliography]
+- [[[taoup]]] Eric Steven Raymond. 'The Art of Unix
+  Programming'. Addison-Wesley. ISBN 0-13-142901-9.
+- [[[walsh-muellner]]] Norman Walsh & Leonard Muellner.
+  'DocBook - The Definitive Guide'. O'Reilly & Associates. 1999.
+  ISBN 1-56592-580-7.
+
+
+[glossary]
+Example Glossary
+----------------
+Glossaries are optional. Glossaries entries are an example of a style
+of AsciiDoc labeled lists.
+
+[glossary]
+A glossary term::
+  The corresponding (indented) definition.
+
+A second glossary term::
+  The corresponding (indented) definition.
+
+
+ifdef::backend-docbook[]
+[index]
+Example Index
+-------------
+////////////////////////////////////////////////////////////////
+The index is normally left completely empty, it's contents being
+generated automatically by the DocBook toolchain.
+////////////////////////////////////////////////////////////////
+endif::backend-docbook[]
+

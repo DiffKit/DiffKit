@@ -1,4 +1,4 @@
-DiffKit QuickStart
+DiffKit Quick Start
 ====================
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
