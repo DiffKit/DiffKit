@@ -119,7 +119,34 @@ Tutorial
 
 Tutorial 1 -- Diff'ng file tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In this tutorial we will diff two CSV files. 
+In this tutorial we will diff two CSV files. Like most diff utilities, DiffKit
+arbitrarily names one of the tables (files) the Left Hand Side (_LHS_) and the
+other table (file) the Right Hand Side (_RHS_). In order to carry out the diff,
+DiffKit must be configured with the location of the LHS and RHS tables, the
+characteristics of the comparison, and a description of the desired output. All
+of this information is specified in a _Plan_ file. A Plan file is an XML
+configuration file (for enterprise Java programmers, it's a Spring bean
+configuration file). There are two kinds of plans: _MagicPlan_ and
+_PassthroughPlan_. In this example we will use a _MagicPlan_.
+
+This plan is called _Magic_ because it infers a lot of information, rather than
+requiring the user to fully specify every last detail of how the comparison
+should be carried out. The goal of the magic plan is to allow the user to
+specify the bare minimum amount of information required to accurately perform
+the diff.
+
+In this example, that bare minimum of information is: the LHS file name, the RHS
+file name, and the name of a file to send the output to. Information that is
+*not* specified here, which the MagicPlan will infer, includes: which columns
+should be diff'd, what _key_ should be used to match each row from the LHS to a
+row on the RHS, how to map columns on the left to columns on the right, and what
+type of comparison (which _Diffor_) to apply at each LHS-column-to-RHS-column
+mapping. In the case of the MagicPlan, the convenient default specifications
+that the MagicPlan provides are: all columns that appear on both the LHS and RHS
+will be diffed, other columns are ignored; the first column on each side is
+designated the _key_ (analogous to a SQL key), used to join the rows; each
+column on the LHS will be mapped to the column on the RHS having the same name;
+
 
 Tutorial 2 -- Diff'ng database tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
