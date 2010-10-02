@@ -121,7 +121,7 @@ Tutorial 1 -- Diff'ng file tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 In this tutorial we will diff two CSV files. Like most diff utilities, DiffKit
 arbitrarily names one of the tables (files) the Left Hand Side (_LHS_) and the
-other table (file) the Right Hand Side (_RHS_). In order to carry out the diff,
+other table (file) the Right Hand Side (_RHS_). In order to carry out a diff,
 DiffKit must be configured with the location of the LHS and RHS tables, the
 characteristics of the comparison, and a description of the desired output. All
 of this information is specified in a _Plan_ file. A Plan file is an XML
@@ -146,14 +146,44 @@ that the MagicPlan provides are: all columns that appear on both the LHS and RHS
 will be diffed, other columns are ignored; the first column on each side is
 designated the _key_ (analogous to a SQL key), used to join the rows; each
 column on the LHS will be mapped to the column on the RHS having the same name;
+an exact textual comparison will be performed (_DKEqualsDiffor_ will be
+applied).
+
+After you have unzipped the DiffKit distribution (diffkit-<version>.zip), you
+should see these files and directories:
+-----------------
+conf
+diffkit-app.jar
+doc
+eg
+-----------------
+diffkit-app.jar is the standalone java application. It is completely
+self-contained, and can be run this way:
+-----------------
+java -jar diffkit-app.jar
+-----------------
+
+All of the data and configuration files needed for this tutorial are in the eg/
+directory:
+-----------------
+cd eg/
+-----------------
+All of the files in this directory come from the DiffKit builtin 
+<<Test-Cases,Test Cases>>
+
 
 
 Tutorial 2 -- Diff'ng database tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NOTE: You should complete Tutorial 1 before embarking on this tutorial. Tutorial
+1 introduces terminology that is used here.
+
 In this tutorial we will diff two RDBMS database tables. 
 
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NOTE: You should complete Tutorial 2 before embarking on this tutorial. Tutorial
+2 introduces terminology that is used here.
 
 
 [[Motivations-and-Uses]]
@@ -240,6 +270,10 @@ Coming soon.
 Putting it together
 ~~~~~~~~~~~~~~~~~~~
 Coming soon.
+
+[[Test-Cases]]
+Test Cases
+----------
 
 
 [appendix]
