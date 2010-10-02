@@ -28,16 +28,15 @@ is just a small sampling of the capabilities of DiffKit.
 
 
 DiffKit is also a framework. It is Free Open Source Software (FOSS). DiffKit is
-written in the Java programming language and is dependent on only the Java Runtime
-Environment (JRE) and a handful of third party FOSS libraries that are packaged
-as part of the DiffKit distribution. As an Open Source framework with few 
-dependencies, DiffKit can be easily and cleanly embedded in almost any Java
+written in the Java programming language and is dependent on only the Java
+Runtime Environment (JRE) and a handful of third party FOSS libraries that are
+packaged as part of the DiffKit distribution. As an Open Source framework with
+few dependencies, DiffKit can be easily and cleanly embedded in almost any Java
 application, or any application that can bind Java packages.
 
-DiffKit was designed to be easily extensible. That means it's not a huge effort
-to create custom row data providers (_Source_ s), custom field comparators
-(_Diffor_ s), and custom output formatters (_Sink_ s).
-
+DiffKit was designed to be easily extensible. That means it requires only a very
+modest java programming effort to create custom row data providers (_Source_ s),
+custom field comparators (_Diffor_ s), and custom output formatters (_Sink_ s).
 
 DiffKit is a command-line application that is configured entirely by XML files.
 Because there is no GUI, and because it's file driven, and because it runs on
@@ -70,11 +69,49 @@ any particular vendor product.
 Why use DiffKit?
 ~~~~~~~~~~~~~~~~
 
-There are many uses for DiffKit, a few of which are explored in detail in 
-<<Motivations_and_Uses,Motivations and Uses>>.
+There are many uses for DiffKit, a couple of which are explored in detail in
+<<Motivations_and_Uses,Motivations and Uses>>. Briefly, DiffKit is an excellent
+application for enterprise data regression. It's quite common that enterprise
+systems have complex workflows that produce large or complex RDBMS data output.
+By diff'ng newly produced table values against expected table values, you can
+ensure that you do not experience unanticipated changes to output as a result of
+changes to the process. Likewise, most enterprise development environments rely
+on different databases for different stages in the SDLC. It can become difficult
+to keep the database objects in synch across these different environments.
+DiffKit can diff the schemas to report on differences amongst the same database
+objects across different environments.
+
+There are many reasons to use DiffKit rather than other products. DiffKit is
+free and open source. Also, as far as I know, there are no products on the
+market, commercial or free, that are designed for high-performance, high-volume,
+enterprise data diff'ng. Also, DiffKit is command-line driven, so it is
+conveniently scriptable and embeddable into workflows. DiffKit has a clean,
+simple, Object Oriented design that makes it simple for Java programmers to
+extend. Finally, DiffKit maintains high levels of quality through an extensive
+regression TestCase suite.
+
 
 Quality control
 ~~~~~~~~~~~~~~~~
+DiffKit maintains integrity through two levels of testing: unit testing, and
+high level functional regression testing. The DiffKit project contains roughly
+90 low-level unit tests. These tests are executed before each release. But more
+importantly, the DiffKit standalone application carries with it a complete,
+high-level functional regression suite. Not only is this test suite exercised
+before every release, but because it is embedded in the standalone application,
+end-users are able to execute this test suite at any time.
+
+The test suite comprises _TestCase_ s. Each TestCase tests a particular scenario
+which is specified in a configuration file. The TestCase includes inputs, both
+left hand side (LHS) and right hand side (RHS), comparison configuration, and
+expected output. The _TestCaseRunner_ will diff the LHS vs. the RHS and compare
+the actual results with the expected (known good) results. If the actual results
+do not match the expected results, the TestCase fails. DiffKit embeds a fully
+functional H2 database in order to carry out RDBMS based comparison. Each
+TestCase is fully documented. If you run the tests from the standalone
+application, you can inspect the resulting "tcr" directory and there you will
+find the input files, expected diff files and documentation (README) for each
+TestCase.
 
 
 Tutorial
@@ -100,8 +137,6 @@ Regression testing
 DB schema comparison
 ~~~~~~~~~~~~~~~~~~~~
 
-DB replication skew
-~~~~~~~~~~~~~~~~~~~
 
 
 Concepts
