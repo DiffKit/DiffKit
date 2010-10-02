@@ -152,10 +152,10 @@ applied).
 After you have unzipped the DiffKit distribution (diffkit-<version>.zip), you
 should see these files and directories:
 -----------------
-conf
+conf/
 diffkit-app.jar
-doc
-eg
+doc/
+eg/
 -----------------
 diffkit-app.jar is the standalone java application. It is completely
 self-contained, and can be run this way:
@@ -168,8 +168,134 @@ directory:
 -----------------
 cd eg/
 -----------------
-All of the files in this directory come from the DiffKit builtin 
-<<Test-Cases,Test Cases>>
+All of the files in this directory come from the DiffKit builtin
+<<Test-Cases,Test Case suite>>. In this tutorial, we will start by invoking the same
+diff that TestCase9 invokes. It utilizes these files:
+-----------------
+test9.lhs.csv
+test9.rhs.csv
+test9.plan.xml
+-----------------
+We want DiffKit to compare the data table in test9.lhs.csv with that in
+test9.rhs.csv. The plan for this is almost as simple as a plan can get:
+
+.test9.plan.xml
+-----------------
+<beans ...>
+	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
+		<property name="lhsFilePath" value="./test9.lhs.csv" />
+		<property name="rhsFilePath" value="./test9.rhs.csv" />
+		<property name="sinkFilePath" value="./test9.sink.diff" />
+	</bean>
+</beans>
+-----------------
+This file shows that we are using a _MagicPlan_ (instead of a
+_PassthroughPlan_) and where to find the LHS and RHS csv files. It also
+specifies where the _Sink_ should write its output file. A _Sink_ is where diffs
+are sent to for formatting. We can run the diff this way:
+-----------------
+java -jar ../diffkit-app.jar -planfiles test9.plan.xml
+-----------------
+DiffKit prints a summary of the results to the console:
+-----------------
+diff'd 8 rows in 0:00:00.009, found:
+!4 row diffs
+@2 column diffs
+-----------------
+The summary tells us that there were 4 row diffs; a row diff occurs when DiffKit
+finds a row on one side, but no corresponding row on the other side. Rows are
+uniquely identified by a _key_ (analogous to a primary key in relational DBs)
+which defaults to column1 if not otherwise specified. The summary states that
+there were also 2 column diffs, which means that DiffKit was able to join (align)
+the rows, but that values in some of the columns were different between the left
+and right hand side.
+
+Running test9.plan.xml above created an output (diff) file named test9.sink.diff.
+That file contains an entry for each diff discovered. The first entry in that file 
+describes a column diff:
+
+.test9.sink.diff
+-----------------
+@{column1=1111}
+column2
+<1111
+>xxxx
+-----------------
+It tells us that the row identified by the key value (column1=1111) has a column
+diff in column2. The lhs value for column2 is 1111 while the rhs value is xxxx.
+The next entry in the diff file describes a row diff:
+
+.test9.sink.diff cont.
+-----------------
+!{column1=2222}
+<
+-----------------
+This indicates that the row identified by column1=2222 is missing from the lhs.
+Or put another way, this row is present on the rhs and not present on the lhs. 
+You should open test9.lhs.csv side-by-side with test9.rhs.csv in order to verify
+that all entries in the diff file match your expectations.
+
+test11.plan.xml shows how to explicitly specify which columns constitute the _key_,
+used to align (join) the rows between lhs and rhs:
+
+.test11.plan.xml
+-----------------
+   ...
+   <property name="keyColumnNames">
+      <list>
+         <value>column3</value>
+   ...
+-----------------
+
+
+test13.plan.xml demonstrates how to instruct DiffKit to consider only certain
+columns during comparison, ignoring all other columns:
+
+.test13.plan.xml
+-----------------
+   ...
+   <property name="diffColumnNames">
+      <list>
+         <value>column2</value>
+   ...
+-----------------
+It also shows how to specify that rows should be identified in the output (diff)
+file by values other than the key values:
+
+.test13.plan.xml cont.
+-----------------
+   ...
+   <property name="displayColumnNames">
+      <list>
+         <value>column1</value>
+         <value>column3</value>
+   ...
+-----------------
+
+test14.plan.xml demonstrates how to tell DiffKit to consider all
+columns during comparison except for a specified list (blacklist).
+
+.test14.plan.xml
+-----------------
+   ...
+   <property name="ignoreColumnNames">
+      <list>
+         <value>column3</value>
+         <value>column4</value>
+   ...
+-----------------
+
+test21.plan.xml shows how to specify which _kinds_ of diffs should be considered: 
+ROW_DIFF, COLUMN_DIFF, or BOTH (default). It also shows how to tell DiffKit to 
+halt diffing after a certain number of diffs has been recorded:
+
+.test21.plan.xml
+-----------------
+   ...
+   <property name="diffKind" value="ROW_DIFF" />
+   <property name="maxDiffs" value="2" />
+   ...
+-----------------
 
 
 
