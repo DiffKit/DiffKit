@@ -14,7 +14,7 @@ Introduction
 What DiffKit is
 ~~~~~~~~~~~~~~~
 DiffKit is an application for comparing two tables of data, field-by-field.
-DiffKit is able to report the differences (_Diff_ s) at both the row and field
+DiffKit is able to report the differences (__Diff__s) at both the row and field
 level, and allows the user to configure how to carry out the comparison (what to
 compare, what to ignore). DiffKit is highly configurable with respect to the
 sources of tabular data, the details of the comparison, and the characteristics
@@ -35,8 +35,8 @@ few dependencies, DiffKit can be easily and cleanly embedded in almost any Java
 application, or any application that can bind Java packages.
 
 DiffKit was designed to be easily extensible. That means it requires only a very
-modest java programming effort to create custom row data providers (_Source_ s),
-custom field comparators (_Diffor_ s), and custom output formatters (_Sink_ s).
+modest java programming effort to create custom row data providers (__Source__s),
+custom field comparators (__Diffor__s), and custom output formatters (__Sink__s).
 
 DiffKit is a command-line application that is configured entirely by XML files.
 Because there is no GUI, and because it's file driven, and because it runs on
@@ -46,7 +46,7 @@ also make DiffKit ideal for scripting or embedding into process chains. Also,
 DiffKit was designed with high-volume applications in mind. It uses a
 row-streaming mechanism to maintain a very low memory overhead during diff
 execution, so DiffKit is able to quickly and efficiently diff tables that have
-tens ofmillions of rows.
+tens of millions of rows.
 
 
 What DiffKit is not 
@@ -59,18 +59,19 @@ text, you should use Unix diffutils
 footnote:[http://www.gnu.org/software/diffutils/.]. DiffKit is not a
 synchronization tool. DiffKit has no capabilities to patch one side to make it
 look like the other side; i.e. it can only report differences, not act on them.
-Finally, DiffKit is not an RDBMS schema synchronization tool. There are many
-products on the market that already do this. While you *can* use DiffKit to diff
-RDBMS schemas, you will have to supply the configuration files yourself-- out of
-the box DiffKit does not know how to identify the schema or catalog tables for
-any particular vendor product.
-
+DiffKit is not an RDBMS schema synchronization tool. There are many products on
+the market that already do this. While you *can* use DiffKit to diff RDBMS
+schemas, you will have to supply the configuration files yourself-- out of the
+box DiffKit does not know how to identify the schema or catalog tables for any
+particular vendor product. Finally, DiffKit is not very helpful for diff'ng
+binary files. The diff reporting mechanism is oriented towards data types that
+can be displayed as text.
 
 Why use DiffKit?
 ~~~~~~~~~~~~~~~~
 
 There are many uses for DiffKit, a couple of which are explored in detail in
-<<Motivations_and_Uses,Motivations and Uses>>. Briefly, DiffKit is an excellent
+<<Motivations-and-Uses,Motivations and Uses>>. Briefly, DiffKit is an excellent
 application for enterprise data regression. It's quite common that enterprise
 systems have complex workflows that produce large or complex RDBMS data output.
 By diff'ng newly produced table values against expected table values, you can
@@ -86,22 +87,21 @@ free and open source. Also, as far as I know, there are no products on the
 market, commercial or free, that are designed for high-performance, high-volume,
 enterprise data diff'ng. Also, DiffKit is command-line driven, so it is
 conveniently scriptable and embeddable into workflows. DiffKit has a clean,
-simple, Object Oriented design that makes it simple for Java programmers to
-extend. Finally, DiffKit maintains high levels of quality through an extensive
-regression TestCase suite.
-
+simple, Object Oriented Design that makes it easy for Java programmers to
+extend. Finally, DiffKit is a high quality product, undergoing continuous
+testing to ensure the accuracy of its results.
 
 Quality control
 ~~~~~~~~~~~~~~~~
-DiffKit maintains integrity through two levels of testing: unit testing, and
-high level functional regression testing. The DiffKit project contains roughly
-90 low-level unit tests. These tests are executed before each release. But more
-importantly, the DiffKit standalone application carries with it a complete,
-high-level functional regression suite. Not only is this test suite exercised
-before every release, but because it is embedded in the standalone application,
-end-users are able to execute this test suite at any time.
+The integrity of DiffKit is maintained via two levels of testing: unit testing,
+and high level functional regression testing. The DiffKit project contains
+roughly 90 low-level unit tests. These tests are executed before each release.
+But more importantly, the DiffKit standalone application carries with it a
+complete, high-level functional regression suite. Not only is this test suite
+exercised before every release but, because it is embedded in the standalone
+application, end-users are able to execute this test suite at any time.
 
-The test suite comprises _TestCase_ s. Each TestCase tests a particular scenario
+The test suite comprises __TestCase__s. Each TestCase tests a particular scenario
 which is specified in a configuration file. The TestCase includes inputs, both
 left hand side (LHS) and right hand side (RHS), comparison configuration, and
 expected output. The _TestCaseRunner_ will diff the LHS vs. the RHS and compare
@@ -119,15 +119,17 @@ Tutorial
 
 Tutorial 1 -- Diff'ng file tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In this tutorial we will diff two CSV files. 
 
 Tutorial 2 -- Diff'ng database tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In this tutorial we will diff two RDBMS database tables. 
 
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-[[Motivations_and_Uses]]
+[[Motivations-and-Uses]]
 Motivations and Uses
 --------------------
 
