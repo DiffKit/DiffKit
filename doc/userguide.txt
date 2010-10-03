@@ -301,14 +301,107 @@ halt diffing after a certain number of diffs has been recorded:
 
 Tutorial 2 -- Diff'ng database tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NOTE: You should complete Tutorial 1 before embarking on this tutorial. Tutorial
+NOTE: You should complete Tutorial 1 before starting on this tutorial. Tutorial
 1 introduces terminology that is used here.
 
-In this tutorial we will diff two RDBMS database tables. 
+In this tutorial we will diff two RDBMS database tables. Diff'ng DB tables uses
+plan files in the same fashion as diff'ng files. The only difference is that
+instead of file paths, you must provide table names, and you must also tell
+DiffKit how to connect to the LHS and RHS databases.
+
+The DiffKit standalone application (diffkit-app.jar) carries with it a fully
+functional embedded SQL database: H2 footnote:[http://www.h2database.com/.]. The
+storage for the tutorial H2 database is in a single file: eg/demo.h2.db.
+Appropriate database tables have been created in demo.h2.db and prepopulated
+with all of the data in files test10.lhs.csv and test10.rhs.csv. The CSV files
+are here simply as a convenience, to allow you to see the test data without
+having to open a database browser. If you would like to view the H2 tables and
+data, you need a DB browser that can use a type 4 JDBC driver to connect to
+a database. DiffKit can run the embedded H2 DB as a tcp server 
+from the eg/
+directory, allowing you to connect from an external DB browser:
+-----------------
+java -jar ../diffkit-app.jar -demoDB
+-----------------
+Then configure a connection to this demo database within your favorite JDBC
+enabled database browser:
+-----------------
+driver name: H2 JDBC Driver
+driver class name: org.h2.Driver
+driver jar: h2-1.2.135.jar (you can unzip diffkit-app.jar to get a copy)
+connection URL: jdbc:h2:<absolute path of eg/ directory>/demo
+database name: demo
+username: test
+password: test
+-----------------
+Your DB browser will show you 
+test10.plan.xml demonstrates how to specify the table names used in the
+comparison:
+
+.test10.plan.xml
+-----------------
+   ...
+   <property name="lhsDBTableName" value="TEST10_LHS_TABLE" />
+   <property name="rhsDBTableName" value="TEST10_RHS_TABLE" />
+   ...
+-----------------
+The two tables, TEST10_LHS_TABLE and TEST10_RHS_TABLE, both reside in the same
+database. That database is identified with these plan elements:
+
+
+.dbConnectionInfo.xml
+-----------------
+   ...
+   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
+     <property name="dbConnectionInfo" ref="connectionInfo" />
+   ...
+   <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     <constructor-arg index="0" value="test" />
+     <constructor-arg index="1" value="H2" />
+     <constructor-arg index="2" value="file:./demo" />
+     <constructor-arg index="3">
+			<null />
+     </constructor-arg>
+     <constructor-arg index="4">
+			<null />
+     </constructor-arg>
+     <constructor-arg index="5" value="test" />
+     <constructor-arg index="6" value="test" />
+  </bean>
+-----------------
+The connectionInfo points to an in-memory H2 database named "testcase". The 
+username is "test" and the password is "test". 
+
+DiffKit can compare tables across different physical and/or logical databases.
+test18.plan.xml demonstrates this:
+
+.test18.plan.xml
+-----------------
+   ...
+   <bean id="connectionInfo" class="org.diffkit.diff.conf.DKMagicPlan">
+     ...
+     <property name="lhsDBConnectionInfo" ref="lhsDBConnectionInfo" />
+     <property name="rhsDBConnectionInfo" ref="rhsDBConnectionInfo" />
+     ...
+   </bean>
+   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     ...
+     <constructor-arg index="2" value="mem:testcase18_lhs;DB_CLOSE_DELAY=-1" />
+     ...
+   </bean>
+   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+     ...
+     <constructor-arg index="2" value="mem:testcase18_rhs;DB_CLOSE_DELAY=-1" />
+     ...
+  </bean>
+-----------------
+In this case, table "LHS_TABLE" is located in a database named "testcase18_lhs",
+while table "RHS_TABLE" is located in a database named "testcase18_rhs".
+
 
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NOTE: You should complete Tutorial 2 before embarking on this tutorial. Tutorial
+NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial
 2 introduces terminology that is used here.
 
 
