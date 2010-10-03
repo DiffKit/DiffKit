@@ -52,17 +52,24 @@ public class DBTestSetup {
    /**
     * dbSetupFile_ can be a FS file path, or a classpath resource path
     */
-   public static void setupDB(File dbSetupFile_, File lhsSourceFile_, File rhsSourceFile_) {
+   public static void setupDB(File dbSetupFile_, File[] connectionInfoFiles_, 
+   File lhsSourceFile_, File rhsSourceFile_) {
+      
       if(!dbSetupFile_)
          return 
-      File dir = dbSetupFile_.parentFile
-      File connectionInfoFile = [dir, 'dbConnectionInfo.xml']
       ApplicationContext context = null
       _log.debug("dbSetupFile_->{}",dbSetupFile_.canonicalPath)
-      if(dbSetupFile_.exists())
-         context = new FileSystemXmlApplicationContext((String[])['file:'+dbSetupFile_.absolutePath,'file:'+connectionInfoFile.absolutePath], false)
-      else 
-         context = new ClassPathXmlApplicationContext((String[])[dbSetupFile_.path,connectionInfoFile.path],false)
+      def configFiles = [dbSetupFile_]
+      if(connectionInfoFiles_)
+         configFiles.addAll(connectionInfoFiles_)
+      if(dbSetupFile_.exists()) {
+         String[] paths = configFiles.collect { 'file:'+ it.absolutePath }
+         context = new FileSystemXmlApplicationContext(paths, false)
+      }
+      else {
+         String[] paths = configFiles.collect { it.path }
+         context = new ClassPathXmlApplicationContext(paths,false)
+      }
       context.setClassLoader(DBTestSetup.class.getClassLoader())
       context.refresh()
       assert context

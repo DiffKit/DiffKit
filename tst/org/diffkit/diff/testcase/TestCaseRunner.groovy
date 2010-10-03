@@ -147,7 +147,8 @@ public class TestCaseRunner implements Runnable {
    }
    
    private void setupDB(TestCase testCase_) {
-      DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.lhsSourceFile, testCase_.rhsSourceFile)
+      DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.getConnectionInfoFiles(), 
+            testCase_.lhsSourceFile, testCase_.rhsSourceFile)
    }
    
    /**
@@ -162,9 +163,12 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKPlan getPlan(TestCase testCase_){
-      File testCaseDir = testCase_.planFile.parentFile
-      File connectionInfoFile = [testCaseDir, 'dbConnectionInfo.xml']      
-      def plan = DKSpringUtil.getBean("plan", (String[])['file:'+testCase_.planFile.absolutePath, 'file:'+connectionInfoFile.absolutePath],this.class.getClassLoader())
+      //      File testCaseDir = testCase_.planFile.parentFile
+      //      File connectionInfoFile = [testCaseDir, 'dbConnectionInfo.xml'] 
+      def configFiles = [testCase_.planFile] 
+      configFiles.addAll(testCase_.connectionInfoFiles)
+      String[] configFilePaths = configFiles.collect { 'file:'+ it.absolutePath }
+      def plan = DKSpringUtil.getBean("plan", configFilePaths ,this.class.getClassLoader())
       _log.debug("plan->{}",plan)
       if(!plan)
          throw new RuntimeException("no 'plan' bean in planFile->${testCase_.planFile}")
@@ -305,12 +309,22 @@ public class TestCaseRunner implements Runnable {
       _log.debug("dbSetupFile->{}",dbSetupFile)
       if(!dbSetupFile.exists())
          dbSetupFile = null
+      def lhsConnectionInfoFile = new File(dir_, "test${numberString}.lhs.connectioninfo.xml")
+      _log.debug("lhsConnectionInfoFile->{}",lhsConnectionInfoFile)
+      if(!lhsConnectionInfoFile.exists())
+         lhsConnectionInfoFile = null
+      def rhsConnectionInfoFile = new File(dir_, "test${numberString}.rhs.connectioninfo.xml")
+      _log.debug("rhsConnectionInfoFile->{}",rhsConnectionInfoFile)
+      if(!rhsConnectionInfoFile.exists())
+         rhsConnectionInfoFile = null
       def name = "test$numberString"
       def lhsSourceFile = new File(dir_, "test${numberString}.lhs.csv")
       def rhsSourceFile = new File(dir_, "test${numberString}.rhs.csv")
       def expectedFile = new File(dir_, "test${numberString}.expected.diff")
       def exceptionFile = new File(dir_, "test${numberString}.exception")
-      def testCase= new TestCase(number,name,null, dbSetupFile, lhsSourceFile, rhsSourceFile, planFile_, expectedFile, exceptionFile)
+      def testCase= new TestCase(number,name, null, dbSetupFile, lhsSourceFile, 
+            rhsSourceFile, lhsConnectionInfoFile, rhsConnectionInfoFile, 
+            planFile_, expectedFile, exceptionFile)
       return testCase
    }
    

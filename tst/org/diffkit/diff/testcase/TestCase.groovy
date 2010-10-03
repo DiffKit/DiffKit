@@ -31,6 +31,7 @@ import org.diffkit.common.DKValidate;
  * @author jpanico
  */
 public class TestCase implements Comparable<TestCase>{
+   public static final String DEFAULT_CONNECTION_INFO_FILE_NAME = 'dbConnectionInfo.xml'
    
    public final Integer id
    public final String name
@@ -38,15 +39,20 @@ public class TestCase implements Comparable<TestCase>{
    public final File dbSetupFile
    public final File lhsSourceFile
    public final File rhsSourceFile
+   public final File lhsConnectionInfoFile
+   public final File rhsConnectionInfoFile
    public final File planFile
    public final File expectedFile
    public final File exceptionFile
    public final Class exceptionClass
    public final String exceptionMessage
    private Boolean _expectedDiff
+   private File _defaultConnectionInfoFile
    
-   public TestCase(Integer id_, String name_, String description_, File dbSetupFile_, File lhsSourceFile_, 
-   File rhsSourceFile_, File planFile_, File expectedFile_, File exceptionFile_){
+   public TestCase(Integer id_, String name_, String description_, 
+   File dbSetupFile_, File lhsSourceFile_, File rhsSourceFile_, 
+   File lhsConnectionInfoFile_, File rhsConnectionInfoFile_, File planFile_, 
+   File expectedFile_, File exceptionFile_){
       
       id = id_
       name = name_
@@ -55,6 +61,8 @@ public class TestCase implements Comparable<TestCase>{
       planFile = planFile_
       lhsSourceFile = lhsSourceFile_
       rhsSourceFile = rhsSourceFile_
+      lhsConnectionInfoFile = lhsConnectionInfoFile_
+      rhsConnectionInfoFile = rhsConnectionInfoFile_
       expectedFile = expectedFile_
       exceptionFile = exceptionFile_
       DKValidate.notNull(id, name)
@@ -68,6 +76,25 @@ public class TestCase implements Comparable<TestCase>{
          exceptionClass=null
          exceptionMessage=null
       }
+   }
+   
+   public File[] getConnectionInfoFiles(){
+      def connectionInfoFiles = []
+      if(lhsConnectionInfoFile)
+         connectionInfoFiles.add(lhsConnectionInfoFile)
+      if(rhsConnectionInfoFile)
+         connectionInfoFiles.add(rhsConnectionInfoFile)
+      if(!connectionInfoFiles)
+         connectionInfoFiles.add(this.getDefaultConnectionInfoFile())
+      return connectionInfoFiles
+   }
+   
+   private File getDefaultConnectionInfoFile(){
+      if(_defaultConnectionInfoFile)
+         return _defaultConnectionInfoFile
+      File dir = planFile.parentFile
+      _defaultConnectionInfoFile = [dir, DEFAULT_CONNECTION_INFO_FILE_NAME]
+      return _defaultConnectionInfoFile
    }
    
    public String toString() {

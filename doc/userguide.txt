@@ -334,7 +334,9 @@ database name: demo
 username: test
 password: test
 -----------------
-Your DB browser will show you 
+Your DB browser will show you the tables TEST10_LHS_TABLE and TEST10_RHS_TABLE 
+(amongst others) populated with the data values from the corresponding CSV files.
+
 test10.plan.xml demonstrates how to specify the table names used in the
 comparison:
 
@@ -343,17 +345,17 @@ comparison:
    ...
    <property name="lhsDBTableName" value="TEST10_LHS_TABLE" />
    <property name="rhsDBTableName" value="TEST10_RHS_TABLE" />
+   <property name="dbConnectionInfo" ref="connectionInfo" />
    ...
 -----------------
-The two tables, TEST10_LHS_TABLE and TEST10_RHS_TABLE, both reside in the same
-database. That database is identified with these plan elements:
-
+In this case, both tables reside in the same database, referenced by
+"connectionInfo". Of course we also have to provide values for connectionInfo.
+We could put the connectionInfo element for these tables in the test10.plan.xml
+file, and then all information needed for the diff would be in one config file.
+Instead, we isolate the database connectionInfo values into a separate file:
 
 .dbConnectionInfo.xml
 -----------------
-   ...
-   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-     <property name="dbConnectionInfo" ref="connectionInfo" />
    ...
    <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
      <constructor-arg index="0" value="test" />
@@ -369,8 +371,32 @@ database. That database is identified with these plan elements:
      <constructor-arg index="6" value="test" />
   </bean>
 -----------------
-The connectionInfo points to an in-memory H2 database named "testcase". The 
-username is "test" and the password is "test". 
+This allows us to reuse the connectionInfo in other plans as well. The
+connectionInfo points to an embedded H2 database named "test", which is stored
+in a file at "./demo" (i.e. eg/demo.h2.db). The username is "test" and the
+password is "test". An embedded H2 database will run in the same process as
+DiffKit itself-- you do not need to run the diffkit-app.jar demoDB. To run the
+test10 plan:
+-----------------
+java -jar ../diffkit-app.jar -planfiles test10.plan.xml,dbConnectionInfo.xml
+-----------------
+Test10 shows that DiffKit allows the user to specify what _key_ should be used
+to join (align) the rows, even if a different SQL primary key (PK) is already 
+defined within the database:
+
+.test10.plan.xml cont.
+-----------------
+   ...
+   <property name="keyColumnNames">
+      <list>
+         <value>COLUMN3</value>
+   ...
+-----------------
+
+In this particular case, the PK defined in the database for both tables is
+column1. If DiffKit had used column1 as its _key_, then all rows would have
+appeared as row diffs, because no rows join. Instead, we specified that the
+_key_ is column3, in which case all rows join and there are no row diffs.
 
 DiffKit can compare tables across different physical and/or logical databases.
 test18.plan.xml demonstrates this:
