@@ -59,6 +59,10 @@ public class TestCaseRunner implements Runnable {
    public static final String TEST_CASE_FILE_NAME = 'testcaserunner.xml'
    public static final String TARGET_DATABASE_TOKEN = "@TargetDatabase@"
    public static final String DEFAULT_TESTCASE_DATABASE = "mem:testcase;DB_CLOSE_DELAY=-1"
+   public static final String TEST18_LHS_TARGET_DATABASE_TOKEN = "@Test18LHSTargetDatabase@"
+   public static final String TEST18_LHS_TARGET_DATABASE = "mem:testcase18_lhs;DB_CLOSE_DELAY=-1"
+   public static final String TEST18_RHS_TARGET_DATABASE_TOKEN = "@Test18RHSTargetDatabase@"
+   public static final String TEST18_RHS_TARGET_DATABASE = "mem:testcase18_rhs;DB_CLOSE_DELAY=-1"
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
    private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt', 'exception']
@@ -127,6 +131,8 @@ public class TestCaseRunner implements Runnable {
       _log.info("dataPathUrl->{}",dataPathUrl)
       def substitutionMap = [:]
       substitutionMap.put(TARGET_DATABASE_TOKEN, DEFAULT_TESTCASE_DATABASE)
+      substitutionMap.put(TEST18_LHS_TARGET_DATABASE_TOKEN, TEST18_LHS_TARGET_DATABASE)
+      substitutionMap.put(TEST18_RHS_TARGET_DATABASE_TOKEN, TEST18_RHS_TARGET_DATABASE)
       if(dataPathUrl.toExternalForm().startsWith("jar:")){
          String testDataArchiveResourcePath = _dataPath + TEST_CASE_DATA_ARCHIVE_NAME
          _log.info("testDataArchiveResourcePath->{}",testDataArchiveResourcePath)
@@ -163,8 +169,6 @@ public class TestCaseRunner implements Runnable {
    }
    
    private DKPlan getPlan(TestCase testCase_){
-      //      File testCaseDir = testCase_.planFile.parentFile
-      //      File connectionInfoFile = [testCaseDir, 'dbConnectionInfo.xml'] 
       def configFiles = [testCase_.planFile] 
       configFiles.addAll(testCase_.connectionInfoFiles)
       String[] configFilePaths = configFiles.collect { 'file:'+ it.absolutePath }
@@ -309,11 +313,11 @@ public class TestCaseRunner implements Runnable {
       _log.debug("dbSetupFile->{}",dbSetupFile)
       if(!dbSetupFile.exists())
          dbSetupFile = null
-      def lhsConnectionInfoFile = new File(dir_, "test${numberString}.lhs.connectioninfo.xml")
+      def lhsConnectionInfoFile = new File(dir_, "test${numberString}.lhs.dbConnectioninfo.xml")
       _log.debug("lhsConnectionInfoFile->{}",lhsConnectionInfoFile)
       if(!lhsConnectionInfoFile.exists())
          lhsConnectionInfoFile = null
-      def rhsConnectionInfoFile = new File(dir_, "test${numberString}.rhs.connectioninfo.xml")
+      def rhsConnectionInfoFile = new File(dir_, "test${numberString}.rhs.dbConnectioninfo.xml")
       _log.debug("rhsConnectionInfoFile->{}",rhsConnectionInfoFile)
       if(!rhsConnectionInfoFile.exists())
          rhsConnectionInfoFile = null
@@ -341,10 +345,6 @@ public class TestCaseRunner implements Runnable {
       println "runner->$runner"
       assert runner
       runner.run()
-   }
-   
-   private void setupTestCase(TestCase testCase_){
-      _log.info("setting up testCase_->{}",testCase_)
    }
 }
 
