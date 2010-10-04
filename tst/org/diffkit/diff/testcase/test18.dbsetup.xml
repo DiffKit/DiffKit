@@ -110,41 +110,11 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhsConnectionSource" class="org.diffkit.db.DKDBConnectionSource">
-		<constructor-arg ref="lhsConnectionInfo" />
+		<constructor-arg ref="lhsDBConnectionInfo" />
 	</bean>
 
 	<bean id="rhsConnectionSource" class="org.diffkit.db.DKDBConnectionSource">
-		<constructor-arg ref="rhsConnectionInfo" />
-	</bean>
-
-	<bean id="lhsConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-		<constructor-arg index="0" value="test" />
-		<constructor-arg index="1" value="H2" />
-		<constructor-arg index="2"
-			value="mem:testcase18_lhs;DB_CLOSE_DELAY=-1" />
-		<constructor-arg index="3">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="4">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="5" value="test" />
-		<constructor-arg index="6" value="test" />
-	</bean>
-
-	<bean id="rhsConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-		<constructor-arg index="0" value="test" />
-		<constructor-arg index="1" value="H2" />
-		<constructor-arg index="2"
-			value="mem:testcase18_rhs;DB_CLOSE_DELAY=-1" />
-		<constructor-arg index="3">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="4">
-			<null />
-		</constructor-arg>
-		<constructor-arg index="5" value="test" />
-		<constructor-arg index="6" value="test" />
+		<constructor-arg ref="rhsDBConnectionInfo" />
 	</bean>
 
 </beans>

@@ -337,7 +337,9 @@
 				<include name="**/testcase/test21*" />
 			</fileset>
 			<filterset>
-				<filter token="TargetDatabase" value="${demodb.name}" />
+            <filter token="TargetDatabase" value="${demodb.name}" />
+            <filter token="Test18LHSTargetDatabase" value="file:./testcase18_lhs_demo" />
+            <filter token="Test18RHSTargetDatabase" value="file:./testcase18_rhs_demo" />
 			</filterset>
 			<flattenmapper />
 		</copy>
