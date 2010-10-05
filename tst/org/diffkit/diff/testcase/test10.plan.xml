@@ -8,12 +8,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
 		<property name="lhsDBTableName" value="TEST10_LHS_TABLE" />
 		<property name="rhsDBTableName" value="TEST10_RHS_TABLE" />
+      <property name="dbConnectionInfo" ref="connectionInfo" />
 		<property name="keyColumnNames">
 			<list>
 				<value>COLUMN3</value>
 			</list>
 		</property>
-		<property name="dbConnectionInfo" ref="connectionInfo" />
 		<property name="sinkFilePath" value="./test10.sink.diff" />
 	</bean>
 

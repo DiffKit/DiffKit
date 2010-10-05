@@ -26,7 +26,6 @@ diff text fields ignoring incidental formatting differences, and is able to
 output the diffs as a structured text report or as SQL insert statements. This
 is just a small sampling of the capabilities of DiffKit.
 
-
 DiffKit is also a framework. It is Free Open Source Software (FOSS). DiffKit is
 written in the Java programming language and is dependent on only the Java
 Runtime Environment (JRE) and a handful of third party FOSS libraries that are
@@ -35,8 +34,9 @@ few dependencies, DiffKit can be easily and cleanly embedded in almost any Java
 application, or any application that can bind Java packages.
 
 DiffKit was designed to be easily extensible. That means it requires only a very
-modest java programming effort to create custom row data providers (__Source__s),
-custom field comparators (__Diffor__s), and custom output formatters (__Sink__s).
+modest java programming effort to create custom row data providers
+(__Source__s), custom field comparators (__Diffor__s), and custom output
+formatters (__Sink__s).
 
 DiffKit is a command-line application that is configured entirely by XML files.
 Because there is no GUI, and because it's file driven, and because it runs on
@@ -47,7 +47,6 @@ DiffKit was designed with high-volume applications in mind. It uses a
 row-streaming mechanism to maintain a very low memory overhead during diff
 execution, so DiffKit is able to quickly and efficiently diff tables that have
 tens of millions of rows.
-
 
 What DiffKit is not 
 ~~~~~~~~~~~~~~~~~~~
@@ -100,18 +99,6 @@ But more importantly, the DiffKit standalone application carries with it a
 complete, high-level functional regression suite. Not only is this test suite
 exercised before every release but, because it is embedded in the standalone
 application, end-users are able to execute this test suite at any time.
-
-The test suite comprises __TestCase__s. Each TestCase tests a particular scenario
-which is specified in a configuration file. The TestCase includes inputs, both
-left hand side (LHS) and right hand side (RHS), comparison configuration, and
-expected output. The _TestCaseRunner_ will diff the LHS vs. the RHS and compare
-the actual results with the expected (known good) results. If the actual results
-do not match the expected results, the TestCase fails. DiffKit embeds a fully
-functional H2 database in order to carry out RDBMS based comparison. Each
-TestCase is fully documented. If you run the tests from the standalone
-application, you can inspect the resulting "tcr" directory and there you will
-find the input files, expected diff files and documentation (README) for each
-TestCase.
 
 
 Tutorial
@@ -169,8 +156,8 @@ directory:
 cd eg/
 -----------------
 All of the files in this directory come from the DiffKit builtin
-<<Test-Cases,Test Case suite>>. In this tutorial, we will start by invoking the same
-diff that TestCase9 invokes. It utilizes these files:
+<<Test-Cases,Test Case suite>>. In this tutorial, we will start by invoking the
+same diff that TestCase9 invokes. It utilizes these files:
 -----------------
 test9.lhs.csv
 test9.rhs.csv
@@ -206,13 +193,13 @@ The summary tells us that there were 4 row diffs; a row diff occurs when DiffKit
 finds a row on one side, but no corresponding row on the other side. Rows are
 uniquely identified by a _key_ (analogous to a primary key in relational DBs)
 which defaults to column1 if not otherwise specified. The summary states that
-there were also 2 column diffs, which means that DiffKit was able to join (align)
-the rows, but that values in some of the columns were different between the left
-and right hand side.
+there were also 2 column diffs, which means that DiffKit was able to join
+(align) the rows, but that values in some of the columns were different between
+the left and right hand side.
 
-Running test9.plan.xml above created an output (diff) file named test9.sink.diff.
-That file contains an entry for each diff discovered. The first entry in that file 
-describes a column diff:
+Running test9.plan.xml above created an output (diff) file named
+test9.sink.diff. That file contains an entry for each diff discovered. The first
+entry in that file describes a column diff:
 
 .test9.sink.diff
 -----------------
@@ -231,12 +218,12 @@ The next entry in the diff file describes a row diff:
 <
 -----------------
 This indicates that the row identified by column1=2222 is missing from the lhs.
-Or put another way, this row is present on the rhs and not present on the lhs. 
+Or put another way, this row is present on the rhs and not present on the lhs.
 You should open test9.lhs.csv side-by-side with test9.rhs.csv in order to verify
 that all entries in the diff file match your expectations.
 
-test11.plan.xml shows how to explicitly specify which columns constitute the _key_,
-used to align (join) the rows between lhs and rhs:
+test11.plan.xml shows how to explicitly specify which columns constitute the
+_key_, used to align (join) the rows between lhs and rhs:
 
 .test11.plan.xml
 -----------------
@@ -285,9 +272,9 @@ columns during comparison except for a specified list (blacklist).
    ...
 -----------------
 
-test21.plan.xml shows how to specify which _kinds_ of diffs should be considered: 
-ROW_DIFF, COLUMN_DIFF, or BOTH (default). It also shows how to tell DiffKit to 
-halt diffing after a certain number of diffs has been recorded:
+test21.plan.xml shows how to specify which _kinds_ of diffs should be
+considered: ROW_DIFF, COLUMN_DIFF, or BOTH (default). It also shows how to tell
+DiffKit to halt diffing after a certain number of diffs has been recorded:
 
 .test21.plan.xml
 -----------------
@@ -305,9 +292,9 @@ NOTE: You should complete Tutorial 1 before starting on this tutorial. Tutorial
 1 introduces terminology that is used here.
 
 In this tutorial we will diff two RDBMS database tables. Diff'ng DB tables uses
-plan files in the same fashion as diff'ng files. The only difference is that
-instead of file paths, you must provide table names, and you must also tell
-DiffKit how to connect to the LHS and RHS databases.
+plan files in the same fashion as diff'ng files. But instead of file paths, you
+must provide table names in the plan file, and you must also tell DiffKit how to
+connect to the LHS and RHS databases.
 
 The DiffKit standalone application (diffkit-app.jar) carries with it a fully
 functional embedded SQL database: H2 footnote:[http://www.h2database.com/.]. The
@@ -315,11 +302,10 @@ storage for the tutorial H2 database is in a single file: eg/demo.h2.db.
 Appropriate database tables have been created in demo.h2.db and prepopulated
 with all of the data in files test10.lhs.csv and test10.rhs.csv. The CSV files
 are here simply as a convenience, to allow you to see the test data without
-having to open a database browser. If you would like to view the H2 tables and
-data, you need a DB browser that can use a type 4 JDBC driver to connect to
-a database. DiffKit can run the embedded H2 DB as a tcp server 
-from the eg/
-directory, allowing you to connect from an external DB browser:
+having to open a database browser. If you would like to directly view the H2
+tables and data, you need a DB browser that can use a type 4 JDBC driver to
+connect to a database. DiffKit can run the embedded H2 DB as a tcp server from
+the eg/ directory, allowing you to connect from an external DB browser:
 -----------------
 java -jar ../diffkit-app.jar -demoDB
 -----------------
@@ -334,8 +320,9 @@ database name: demo
 username: test
 password: test
 -----------------
-Your DB browser will show you the tables TEST10_LHS_TABLE and TEST10_RHS_TABLE 
-(amongst others) populated with the data values from the corresponding CSV files.
+Your DB browser will show you the tables TEST10_LHS_TABLE and TEST10_RHS_TABLE
+(amongst others) populated with the data values from the corresponding CSV
+files.
 
 test10.plan.xml demonstrates how to specify the table names used in the
 comparison:
@@ -519,6 +506,18 @@ Coming soon.
 [[Test-Cases]]
 Test Cases
 ----------
+
+The test suite comprises __TestCase__s. Each TestCase tests a particular scenario
+which is specified in a configuration file. The TestCase includes inputs, both
+left hand side (LHS) and right hand side (RHS), comparison configuration, and
+expected output. The _TestCaseRunner_ will diff the LHS vs. the RHS and compare
+the actual results with the expected (known good) results. If the actual results
+do not match the expected results, the TestCase fails. DiffKit embeds a fully
+functional H2 database in order to carry out RDBMS based comparison. Each
+TestCase is fully documented. If you run the tests from the standalone
+application, you can inspect the resulting "tcr" directory and there you will
+find the input files, expected diff files and documentation (README) for each
+TestCase.
 
 
 [appendix]
