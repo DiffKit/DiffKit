@@ -335,11 +335,12 @@
 				<include name="**/testcase/test14*" />
 				<include name="**/testcase/test18*" />
 				<include name="**/testcase/test21*" />
+            <exclude name="**/testcase/*.h2.db" />
 			</fileset>
 			<filterset>
             <filter token="TargetDatabase" value="${demodb.name}" />
-            <filter token="Test18LHSTargetDatabase" value="file:./testcase18_lhs_demo" />
-            <filter token="Test18RHSTargetDatabase" value="file:./testcase18_rhs_demo" />
+            <filter token="Test18LHSTargetDatabase" value="file:./test18_lhs_demo" />
+            <filter token="Test18RHSTargetDatabase" value="file:./test18_rhs_demo" />
 			</filterset>
 			<flattenmapper />
 		</copy>

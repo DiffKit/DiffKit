@@ -392,25 +392,44 @@ test18.plan.xml demonstrates this:
 -----------------
    ...
    <bean id="connectionInfo" class="org.diffkit.diff.conf.DKMagicPlan">
-     ...
+     <property name="lhsDBTableName" value="TEST18_LHS_TABLE" />
+     <property name="rhsDBTableName" value="TEST18_RHS_TABLE" />
      <property name="lhsDBConnectionInfo" ref="lhsDBConnectionInfo" />
      <property name="rhsDBConnectionInfo" ref="rhsDBConnectionInfo" />
      ...
    </bean>
-   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-     ...
-     <constructor-arg index="2" value="mem:testcase18_lhs;DB_CLOSE_DELAY=-1" />
-     ...
-   </bean>
-   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-     ...
-     <constructor-arg index="2" value="mem:testcase18_rhs;DB_CLOSE_DELAY=-1" />
-     ...
-  </bean>
 -----------------
-In this case, table "LHS_TABLE" is located in a database named "testcase18_lhs",
-while table "RHS_TABLE" is located in a database named "testcase18_rhs".
+In this case, table "TEST18_LHS_TABLE" is located in a database named pointed to
+by ref="lhsDBConnectionInfo" while table "TEST18_RHS_TABLE" is located in a
+database pointed to by ref="lhsDBConnectionInfo". Again, as in test10, the
+values for the references to lhsDBConnectionInfo and rhsDBConnectionInfo are in
+a separate file. However, in this case, lhsDBConnectionInfo and
+rhsDBConnectionInfo are each in their own file: test18.rhs.dbConnectionInfo.xml
+and test18.lhs.dbConnectionInfo.xml respectively. Inside, we can see that each
+of these dbConnectionInfo.xml files specifies a connection to a different 
+database:
 
+.test18.lhs.dbConnectionInfo.xml
+---------------------------------
+   ...
+   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+      ...
+      <constructor-arg index="2" value="file:./test18_lhs_demo" />
+   ...
+---------------------------------
+
+.test18.rhs.dbConnectionInfo.xml
+---------------------------------
+   ...
+   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+      ...
+      <constructor-arg index="2" value="file:./test18_rhs_demo" />
+   ...
+---------------------------------
+Then the plan can be executed this way:
+-----------------
+java -jar ../diffkit-app.jar -planfiles test18.plan.xml,test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
+-----------------
 
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
