@@ -98,7 +98,8 @@ roughly 90 low-level unit tests. These tests are executed before each release.
 But more importantly, the DiffKit standalone application carries with it a
 complete, high-level functional regression suite. Not only is this test suite
 exercised before every release but, because it is embedded in the standalone
-application, end-users are able to execute this test suite at any time.
+application, end-users are able to execute this test suite at any time. For a
+detailed description of this test suite, read <<Test-Cases,Test Cases>>.
 
 
 Tutorial
@@ -436,6 +437,19 @@ Tutorial 3 -- PassthroughPlan
 NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial
 2 introduces terminology that is used here.
 
+Tutorials 1 and 2 used __MagicPlan__s. These plans are named "magic" because not 
+all of the information needed to carry out the diff is explicitly specified. Most
+of it is inferred, using reasonable default assumptions. However, sometimes you
+need finer control over the specification than is possible with MagicPlan. For
+those times when you need to explicitly specify all of the details of the plan,
+you use a _PassthroughPlan_.
+
+At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to 
+carry out a diff, it must be given a complete specification of how to compare
+the two tables. This specification is a software entity called the _TableComparison_ 
+(Fig. 2). For a more thorough understanding of TableComparisons, see 
+<<Concepts,Concepts>>.
+
 
 [[Motivations-and-Uses]]
 Motivations and Uses
@@ -448,7 +462,7 @@ DB schema comparison
 ~~~~~~~~~~~~~~~~~~~~
 
 
-
+[[Concepts]]
 Concepts
 --------
 
