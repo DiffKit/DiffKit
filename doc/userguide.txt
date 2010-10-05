@@ -14,12 +14,17 @@ Introduction
 What DiffKit is
 ~~~~~~~~~~~~~~~
 DiffKit is an application for comparing two tables of data, field-by-field.
-DiffKit is able to report the differences (__Diff__s) at both the row and field
-level, and allows the user to configure how to carry out the comparison (what to
-compare, what to ignore). DiffKit is highly configurable with respect to the
-sources of tabular data, the details of the comparison, and the characteristics
-of the diff report (output). For instance, DiffKit is able to diff CSV files,
-RDBMS tables, or custom data sources, in any combination. DiffKit is able to
+DiffKit is able to report the differences (<<Diff,__Diff__>>s) at both the row
+and field level, and allows the user to configure how to carry out the
+comparison (what to compare, what to ignore). DiffKit is highly configurable
+with respect to the sources of tabular data, the details of the comparison, and
+the characteristics of the diff report (output). For instance, DiffKit is able
+to diff CSV files, RDBMS tables, or custom data sources, in any combination.
+
+.high-level
+image::sources_hl.png[width=700]
+
+DiffKit is able to
 compare fields within a prescribed tolerance (e.g. numeric field values will be
 flagged as different only if the difference exceeds some threshold), is able to
 diff text fields ignoring incidental formatting differences, and is able to
@@ -429,37 +434,110 @@ database:
 ---------------------------------
 Then the plan can be executed this way:
 -----------------
-java -jar ../diffkit-app.jar -planfiles test18.plan.xml,test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
+java -jar ../diffkit-app.jar -planfiles test18.plan.xml, 
+     test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
 -----------------
 
+[[PassthroughPlan-Tutorial]]
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial
-2 introduces terminology that is used here.
+NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial 2
+introduces terminology that is used here.
 
-Tutorials 1 and 2 used __MagicPlan__s. These plans are named "magic" because not 
-all of the information needed to carry out the diff is explicitly specified. Most
-of it is inferred, using reasonable default assumptions. However, sometimes you
-need finer control over the specification than is possible with MagicPlan. For
-those times when you need to explicitly specify all of the details of the plan,
-you use a _PassthroughPlan_.
+Tutorials 1 and 2 used __MagicPlan__s. These plans are named "magic" because not
+all of the information needed to carry out the diff'ng is explicitly specified;
+most of it is inferred, using reasonable default assumptions. However, sometimes
+you need finer control over the specification than is possible with MagicPlan.
+In this case, you will need to use a _PassthroughPlan_.
 
-At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to 
+At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to
 carry out a diff, it must be given a complete specification of how to compare
-the two tables. This specification is a software entity called the _TableComparison_ 
-(Fig. 2). For a more thorough understanding of TableComparisons, see 
-<<Concepts,Concepts>>.
+the two tables. This specification is a software entity called the
+_TableComparison_ (Fig. 2). For an explanation of TableComparisons, see
+<<TableComparison,Concepts>>.
 
 
 [[Motivations-and-Uses]]
 Motivations and Uses
 --------------------
 
-Regression testing
-~~~~~~~~~~~~~~~~~~
+Data Regression testing
+~~~~~~~~~~~~~~~~~~~~~~~
+Today, complex software workflows that output large amounts of data into an RDBMS
+are fairly common. Most in-production enterprise software systems require
+continuous maintenance, upgrade, enhancement, refinement, and migration. But
+with each and every change to these systems, the maintainers must ensure that
+only their intended changes are realized, and that there are no unintended
+changes as side-effects. This concern is usually addressed through _regression_
+testing.
 
+In theory, regression testing processes that output data is fairly simple. 
+You start with a fixed, predefined, set of inputs, and run these inputs through
+the process before changes to the process are applied. You then apply your
+process changes and run the changed process with the same set of inputs as the 
+previous step. You then compare the outputs from the first step with the outputs
+from the second step. They should be identical, or reflect only intended changes
+to the process.
+
+In practice, performing data regression on large, complex, RDBMS data sets is
+quite challenging. Frequently, the exact same process run twice will not produce
+exactly the same output. There will be data values that are senstive to when the
+process was run (timestamps), and who ran the process (user ids). It's not
+uncommon for some processes to produce some data values that are somewhat
+non-deterministic (random). Also, if the data sets are large (millions of very
+wide rows), performance of the diff'ng tools can become a roadblock. Comparing
+large byte volumes requires tools that are very efficient in their use of
+resources.
+
+DiffKit is designed specifically for _enterprise_ diff'ng (although it is still
+quite suitable for smaller scale projects).
+
+.enterprise features:
+Performance::
+    DiffKit is designed to operate on large datasets-- tens of millions of rows.
+    The DiffEngine will only ever hold 2 rows in memory at the same time. It
+    does not require that whole datasets, or even chunks, be present in memory
+    (Java heap) concurrently. As a result, DiffKit maintains a very small memory
+    footprint at all times. Further, DiffKit is fairly fast.
+    
+Command line::
+    DiffKit is strictly command-line driven-- it has no GUI. As a result,
+    DiffKit can run on headless servers, as well as desktops. DiffKit is fully
+    configured from files passed on the command-line, and does not require any
+    complicated database backing for configuration. And DiffKit can send its
+    output (diffs) to file as well. So DiffKit can be called from shell scripts,
+    and easily embedded in process chains. DiffKit can be configured to exit
+    with an error status code if diffs are detected. And since DiffKit is an
+    open Java framework, it can be easily embedded into any Java application.
+    
+Customization::
+    DiffKit is highly customizable. Configuration allows the user to include or
+    ignore only certain rows/columns, to focus on only row or column type diffs,
+    and to stop diff'ng after some diff count has been reached. Also, DiffKit
+    can use a set of out-of-the-box __Diffor__s (comparators) to achieve
+    sophisticated diff'ng tolerance, where anticipated or non-erroneous diffs
+    can be ignored. Finally, with a little Java programming, you can plug in 
+    Diffors that you write yourself, allowing limitless expression of diff and
+    tolerance behavior.
+    
+    
 DB schema comparison
 ~~~~~~~~~~~~~~~~~~~~
+It's quite common in enterprise software development to maintain a chain of host
+environments (logically independent machines), each of which represents a
+different stage in the Sofware Development Life Cycle (SDLC). Typically, a
+development team will maintain, at a bare minimum: Dev->QA->Prod. It's not
+uncommon to see more elaborate chains, such as: Dev->Integration->QA->User
+Acceptance->Performance->Dev. If the target application uses a SQL database for
+storage, it's quite likely that the _schema_ (DDL) of that database is
+continually evolving as other components of the system change. Then, a vital
+issue becomes; how to ensure that the database objects (DDL) are "in synch" 
+across all of these different, and evolving, environments.
+
+All mainstream RDBMS databases maintain their schema (or catalog) in a special
+set of sytems tables, called the system catalog views. With the proper plan
+(configuration) files, DiffKit can detect and report differences between
+database object definitions across different physical databases.
 
 
 [[Concepts]]
@@ -468,65 +546,184 @@ Concepts
 
 Real world entities
 ~~~~~~~~~~~~~~~~~~
+DiffKit is designed to compare _tables_ of data. These could come from an RDBMS
+table, a CSV file, an Excel spreadsheet, or any other data that can be
+represented in a table. In this context, table presumes a rectangular array of
+values, where all of the values in the same column represent the same data
+element; that is, values in the same column have the same meaning and same data
+type. Rows represent different instances of the collection of column values.
+Conceptually, data table means the same thing as a SQL table, however it can
+come from any type of source.
 
 Modelling entities
 ~~~~~~~~~~~~~~~~~~
+In order to provide the most flexibility, DiffKit internally creates a _meta
+model_ of each entity involved in the diff operation (Figure 2). So DiffKit will
+create a meta model of both the LHS source and the RHS source; the
+centerpiece of those models are the __TableModel__s. It will also create meta
+classes to represent how each column on the LHS is mapped to a column on the
+RHS, and what _Diffor_ to use for determining whether values in that column
+are different or the same. All of the underlined entities in Figure 2 are Java
+classes, and are individually addressable and configurable through the use of a
+<<PassthroughPlan,PassthroughPlan>>
+
+.architecture
+image::architecture_hl.png[width=700]
 
 TableModel
 ^^^^^^^^^^
+The TableModel is a meta model describing all important aspects of a table
+involved in the DiffKit invocation. What are the characteristics and placements
+of each column, and what is the _Key_ used to align (join) its rows to another
+table. The TableModel contains a _ColumnModel_ for each column that it models.
+_TableModel is a Java class.
 
 ColumnModel
-^^^^^^^^^^^
+^^^^^^^^^^
+A ColumnModel is a meta model describing all important properties of a column
+involved in the diff. These properties include the name, datatype, and
+formatting defaults. _ColumnModel_ is a Java class.
 
 Source
 ~~~~~~
-
-Row Alignment
-~~~~~~~~~~~~~
+A Source is a place from which DiffKit will read data rows for diff'ng. Every
+DiffKit invocation must specify a LHS and a RHS Source. Each Source is fully
+meta modelled by a TableModel. DiffKit comes with built-in Sources for RDBMS 
+databases and CSV files. Java programmers can easily build their own Sources
+by implementing the java _Source_ interface (<<Custom-Source,Custom Source>>).
 
 Sink
 ~~~~
+A Sink is an output destination for Diffs. The _DiffEngine_ reads rows from the
+LHS and RHS __Source__s, detects Diffs, and sends the Diffs to a Sink. The Sink,
+depending on its type, will perform any of these tasks: format the Diffs, store
+the Diffs, display the Diffs, aggregate Diff statistics. Out-of-the-box DiffKit
+comes with a DBSink, which stores Diffs in a SQL DB, and a FileSink, which
+formats Diffs and writes the formatted strings to a specified text file. Java
+programmers can easily build their own Sources by implementing the java _Sink_
+interface (<<Custom-Sink,Custom Sink>>).
+
+Row Alignment
+~~~~~~~~~~~~~
+In order to compare rows from the LHS with those from the RHS, DiffKit must have
+a basis for joining the two. For that, it uses a _Key_ (Figure 3). A Key is a
+collection of RHS to LHS column associations. Conceptually, it's the same as SQL
+Primary and Foreign keys. In Figure 3, the key comprises: LHS col1 maps to RHS
+col1, and LHS col2 maps to RHS col2. DiffKit allows any number or type of
+columns to participate in the key.
 
 Plan
 ~~~~
+Every DiffKit invocation is carried out according to a Plan. This specifies
+everything that DiffKit needs in order to do its job: the identity of the LHS
+and RHS Sources, the identity and configuration of the Sink, and the
+_TableComparison_, which is a description of how to join the LHS to the RHS
+rows, and how to compare a column on the LHS with a column on the RHS (Figure
+3). There are two types of Plans: <<MagicPlan, MagicPlan>> and
+<<PassthroughPlan, PassthroughPlan>>. Plans are fed to DiffKit via a set of
+XML config files (Spring config files). Or Plans can be built programmatically,
+if you are using DiffKit as a framework. _Plan_ is a Java interface.
 
-Map
-^^^
+[[TableComparison]]
+TableComparison
+^^^^^^^^^^^^^^^
+The _TableComparison_ fully specifies how the DiffEngine can carry out the
+entire diff'ng operation. It maps LHS columns to RHS columns via
+__ColumnComparison__s. It describes how to join rows on the LHS with rows on the
+RHS. It can instruct the DiffEngine to stop diff'ng after a certain number of 
+Diffs have been detected, or to search for only one (ROW_DIFF) or the other 
+(COLUMN_DIFF) type of Diff. _TableComparison_ is a Java interface.
+
+
+ColumnComparison
+^^^^^^^^^^^^^^^
+_ColumnComparison_ fully specifies how to carry out the comparison of one column
+on the LHS to cone column on the RHS. It points to one _ColumnModel_ on each
+side and specifies which _Diffor_ should apply. ColumnComparison is a Java class.
 
 Diffor
 ^^^^^^
+A _Diffor_ is an operator that examines a single LHS column *value* against a
+single RHS column value to determine if they are different or the same. DiffKit
+comes with several built-in Diffors that provide great flexibility in what kinds
+of differences are ignored (tolerance). Java programmers can easily build their
+own Diffors by implementing the java _Diffor_ interface (<<Custom-Diffor,Custom
+Diffor>>).
 
+
+[[MagicPlan]]
 MagicPlan
 ^^^^^^^^^
+The _MagicPlan_ is one type of concrete plan that can be used to specify a plan.
+The goal of the MagicPlan is to minimize the amount of information the user must
+provide, as opposed to the _PassthroughPlan_, which requires the user to
+explicitly provide every detailed aspect of information that is needed to carry
+out the operation. MagicPlan will make reasonable assumptions about
+specification that was not provided by the user. For instance, MagicPlan will
+build ColumnComparisons by always matching a column on the LHS to the column on
+the RHS that has the same column name. If a column name only appears on one side
+or the other (can't be matched), then MagicPlan will not build a
+ColumnComparison for it and it will not participate in the diff'ng. _MagicPlan_
+is a Java class that implements the _Plan_ interface.
 
+[[PassthroughPlan]]
 PassthroughPlan
 ^^^^^^^^^^^^^^
+The _PassthroughPlan_ is one type of concrete plan that can be used to specify a
+plan. The goal of the _PassthroughPlan_ is to maximize the amount of control
+that the user has over the diff'ng specification. So the PassthroughPlan
+requires the user to explicitly build a ColumnComparison for every column
+pairing that should participate in the diff'ng. PassthroughPlan allows the user,
+for instance, to map columns on one side to columns on the other side that do
+not have the same name or data type. It also allows users to specify any
+arbitrary Diffor, including potentially a custom Diffor, for every
+ColumnComparison in the specification.
 
 Diff
 ~~~~
+A _Diff_ is a record of a difference between a LHS data value a RHS data value.
+Diffs come in two flavors: <<ROW_DIFF,ROW_DIFF>> and
+<<COLUMN_DIFF,COLUMN_DIFF>>. Figure 3 shows a default TableComparison between
+two sources of rows, and the resulting Diffs; there are 2 ROW_DIFFs and 3 
+COLUMN_DIFFs.
 
+.anatomy of a diff
+image::diff_anatomy.png[width=700]
+
+[[ROW_DIFF]]
 ROW_DIFF
 ^^^^^^^^^
+A _ROW_DIFF_ is a record that a row (as identified by the join Key) is present
+on one side, but not present on the other side. ROW_DIFFs are rows that could
+not be joined according to the join _Key_. In Figure 3, there are two ROW_DIFFs:
+the row identified by \{col1=B, col2=2} is missing from the RHS, and the row 
+identified by \{col1=C, col2=3} is missing from the LHS.
 
+[[COLUMN_DIFF]]
 COLUMN_DIFF
 ^^^^^^^^^^^
+A _COLUMN_DIFF_ is a record that a column value in a joined row is different
+(according to the _Diffor_ in use) between the LHS and the RHS. In Figure 3. 
+there are 3 COLUMN_DIFFs. The row identified by \{col1=D, col2=4} has a N on the
+LHS for col5, but a Y on the RHS.  The row identified by \{col1=F, col2=6} has
+2 COLUMN_DIFFs in it: one diff in col3 and one diff in col4.
 
-Summary information
-^^^^^^^^^^^^^^^^^^^
 
 Extending Diffkit
 -----------------
 
+[[Custom-Source]]
 Custom Source -- ArchiveSource
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Coming soon.
 
 
+[[Custom-Diffor]]
 Custom Diffor -- ?
 ~~~~~~~~~~~~~~~~~~~~
 Coming soon.
 
-
+[[Custom-Sink]]
 Custom Sink -- XMLSink
 ~~~~~~~~~~~~~~~~~~~~~~
 Coming soon.
@@ -551,30 +748,6 @@ TestCase is fully documented. If you run the tests from the standalone
 application, you can inspect the resulting "tcr" directory and there you will
 find the input files, expected diff files and documentation (README) for each
 TestCase.
-
-
-[appendix]
-Example Appendix
-----------------
-AsciiDoc article appendices are just just article sections with
-'specialsection' titles.
-
-Appendix Sub-section
-~~~~~~~~~~~~~~~~~~~~
-Appendix sub-section at level 2.
-
-[glossary]
-Example Glossary
-----------------
-Glossaries are optional. Glossaries entries are an example of a style
-of AsciiDoc labeled lists.
-
-[glossary]
-A glossary term::
-  The corresponding (indented) definition.
-
-A second glossary term::
-  The corresponding (indented) definition.
 
 
 ifdef::backend-docbook[]
