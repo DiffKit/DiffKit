@@ -405,7 +405,7 @@ test18.plan.xml demonstrates this:
      ...
    </bean>
 -----------------
-In this case, table "TEST18_LHS_TABLE" is located in a database named pointed to
+In this case, table "TEST18_LHS_TABLE" is located in a database pointed to
 by ref="lhsDBConnectionInfo" while table "TEST18_RHS_TABLE" is located in a
 database pointed to by ref="lhsDBConnectionInfo". Again, as in test10, the
 values for the references to lhsDBConnectionInfo and rhsDBConnectionInfo are in
@@ -444,17 +444,83 @@ Tutorial 3 -- PassthroughPlan
 NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial 2
 introduces terminology that is used here.
 
-Tutorials 1 and 2 used __MagicPlan__s. These plans are named "magic" because not
+Tutorials 1 and 2 used __MagicPlan__s. These plans are called "magic" because not
 all of the information needed to carry out the diff'ng is explicitly specified;
 most of it is inferred, using reasonable default assumptions. However, sometimes
 you need finer control over the specification than is possible with MagicPlan.
-In this case, you will need to use a _PassthroughPlan_.
+In that case, you will need to use a _PassthroughPlan_.
 
 At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to
 carry out a diff, it must be given a complete specification of how to compare
-the two tables. This specification is a software entity called the
-_TableComparison_ (Fig. 2). For an explanation of TableComparisons, see
+the two tables. This specification is an entity called the _TableComparison_
+(Fig. 2). For an explanation of TableComparisons, see
 <<TableComparison,Concepts>>.
+
+test7.plan.xml demonstrates how to build up a PassthroughPlan. You can see that,
+unlike the previous tutorials, the plan "class" is PassthroughPlan, not 
+MagicPlan:
+
+.test7.plan.xml
+--------------------
+   ...
+   <bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
+      ...
+      <property name="tableComparison" ref="table.comparison" />
+   ...
+--------------------
+And you also see above that a "tableComparison" is explicitly specified, unlike
+in the case of the MagicPlan. Next we see how the tableComparison is composed
+from primitive elements. First, each column must be explicitly modelled with
+a ColumnModel element:
+
+.test7.plan.xml cont.
+--------------------
+...
+   <bean id="lhs.column1" class="org.diffkit.diff.engine.DKColumnModel">
+      <constructor-arg index="0" value="0" />
+      <constructor-arg index="1" value="column1" />
+      <constructor-arg index="2" value="STRING" />
+   </bean>
+...
+--------------------
+Next, the ColumnModels are composed into TableModels:
+.test7.plan.xml cont.
+--------------------
+...
+   <bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+      <constructor-arg index="0">
+         <list>
+            <ref bean="lhs.column1" />
+            <ref bean="lhs.column2" />
+            <ref bean="lhs.column3" />
+         </list>
+      ...
+...
+--------------------
+The above TableModel specification includes not just the list of ColumnModels,
+but also the list of column indexes that make up the _Key_:
+
+.test7.plan.xml cont.
+--------------------
+      ...
+      <constructor-arg index="1">
+         <list>
+            <value>0</value>
+            <value>2</value>
+         </list>
+      ...
+--------------------
+Next, you have to include in the specification which _Diffor_ to use for each
+ColumnComparison. Here we are going to just use the same generic EqualsDiffor
+for all ColumnComparisons:
+
+.test7.plan.xml cont.
+--------------------
+      ...
+   <bean id="equalsDiffor" class="org.diffkit.diff.diffor.DKEqualsDiffor"
+      factory-method="getInstance" />
+      ...
+--------------------
 
 
 [[Motivations-and-Uses]]

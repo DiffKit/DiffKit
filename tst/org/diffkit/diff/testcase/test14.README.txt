@@ -3,7 +3,7 @@ test14 README
 
 Description
 ----------
-Demonstrate the use of ignorefColumnNames and displayColumnNames in MagicPlan.  There are diffs in 
+Demonstrate the use of ignoreColumnNames and displayColumnNames in MagicPlan.  There are diffs in 
 column3 and column4. The plan uses ignorefColumnNames to exclude column3 and column4 from diffing,
 ensuring that only row diffs are found (there are no column diffs in column2).  By default, only key columns
 are used for display in the diff report, but the plan specifies that column1 and column3 should be used 

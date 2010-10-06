@@ -22,9 +22,6 @@
 		<include name="**/*.csv" />
 		<include name="**/*.diff" />
 		<include name="**/*.exception" />
-		<!--
-		<include name="**/*.h2.db" />
-      -->
 	</patternset>
 
 	<patternset id="executables">
@@ -265,9 +262,9 @@
 		<copy todir="${dist.dir}/doc" overwrite="true">
 			<fileset dir="${doc.dir}">
 				<patternset>
-               <include name="**/*.txt" />
-               <include name="**/*.css" />
-               <include name="**/*.js" />
+					<include name="**/*.txt" />
+					<include name="**/*.css" />
+					<include name="**/*.js" />
 				</patternset>
 			</fileset>
 			<filterset>
@@ -292,25 +289,25 @@
 	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
 
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-         <arg line="-a linkcss" />
-         <arg line="-a theme=diffkit" />
-         <arg line="README.txt" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="README.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-         <arg line="-a linkcss" />
-         <arg line="-a theme=diffkit" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
 			<arg line="quickstart.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-         <arg line="-a linkcss" />
-         <arg line="-a theme=diffkit" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
 			<arg line="-a toc" />
 			<arg line="faq.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-         <arg line="-a linkcss" />
-         <arg line="-a theme=diffkit" />
-         <arg line="-a toc" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a toc" />
 			<arg line="userguide.txt" />
 		</exec>
 
@@ -327,6 +324,7 @@
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}">
 				<include name="**/testcase/dbConnectionInfo*" />
+            <include name="**/testcase/test7*" />
 				<include name="**/testcase/test9*" />
 				<include name="**/testcase/test10*" />
 				<include name="**/testcase/test11*" />
@@ -335,12 +333,12 @@
 				<include name="**/testcase/test14*" />
 				<include name="**/testcase/test18*" />
 				<include name="**/testcase/test21*" />
-            <exclude name="**/testcase/*.h2.db" />
+				<exclude name="**/testcase/*.h2.db" />
 			</fileset>
 			<filterset>
-            <filter token="TargetDatabase" value="${demodb.name}" />
-            <filter token="Test18LHSTargetDatabase" value="file:./test18_lhs_demo" />
-            <filter token="Test18RHSTargetDatabase" value="file:./test18_rhs_demo" />
+				<filter token="TargetDatabase" value="${demodb.name}" />
+				<filter token="Test18LHSTargetDatabase" value="file:./test18_lhs_demo" />
+				<filter token="Test18RHSTargetDatabase" value="file:./test18_rhs_demo" />
 			</filterset>
 			<flattenmapper />
 		</copy>
