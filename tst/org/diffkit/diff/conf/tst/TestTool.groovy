@@ -37,7 +37,7 @@ public class TestTool extends GroovyTestCase {
    private final Logger _log = LoggerFactory.getLogger(this.getClass())
    
    public void testPlan(){
-      DBTestSetup.setupDB(new File('org/diffkit/diff/conf/tst/test.dbsetup.xml'), 'org/diffkit/diff/conf/tst/test.lhs.csv', 'org/diffkit/diff/conf/tst/test.rhs.csv')
+      DBTestSetup.setupDB(new File('org/diffkit/diff/conf/tst/test.dbsetup.xml'), (File[])[new File('org/diffkit/diff/conf/tst/dbConnectionInfo.xml')], 'org/diffkit/diff/conf/tst/test.lhs.csv', 'org/diffkit/diff/conf/tst/test.rhs.csv')
       ApplicationContext context = new ClassPathXmlApplicationContext('org/diffkit/diff/conf/tst/testtool.xml');
       assert context
       

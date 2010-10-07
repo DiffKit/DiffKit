@@ -42,6 +42,24 @@
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
 
+	<target name="find-revision" description="Sets property 'svn.info.lastRev' to head svn revision">
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+			<!-- these came from svn​ant-1.3.0.zip, the only version that will work-->
+			<classpath>
+				<pathelement location="${lib.dir}/svnant.jar" />
+				<pathelement location="${lib.dir}/svnClientAdapter.jar" />
+				<pathelement location="${lib.dir}/svnjavahl.jar" />
+				<pathelement location="${lib.dir}/svnkit.jar" />
+			</classpath>
+		</taskdef>
+
+		<property name="svn.revision" value="HEAD" />
+		<svn>
+			<info target="${basedir}" />
+		</svn>
+		<echo>svn.revision-->${svn.info.lastRev}</echo>
+	</target>
+
 	<target name="dist-properties">
 
 		<propertyfile file="${dist.properties.file}">
@@ -189,7 +207,12 @@
 		</copy>
 
 		<copy todir="${dist.dir}/lib">
-			<fileset dir="${lib.dir}" />
+			<fileset dir="${lib.dir}">
+            <exclude name="svnant.jar" />
+            <exclude name="svnClientAdapter.jar" />
+            <exclude name="svnjavahl.jar" />
+            <exclude name="svnkit.jar" />
+			</fileset>
 		</copy>
 
 		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
@@ -257,7 +280,7 @@
 		<move file="${dist.dir}/${bin-distzip}.__hold__" tofile="${dist.dir}/${bin-distzip}" />
 	</target>
 
-	<target name="doc-dist" depends="dist-properties">
+	<target name="doc-dist" depends="find-revision,dist-properties">
 
 		<copy todir="${dist.dir}/doc" overwrite="true">
 			<fileset dir="${doc.dir}">
@@ -271,7 +294,7 @@
 				<filter token="AUTHOR" value="${author}" />
 				<filter token="VERSION" value="${version}" />
 				<filter token="BUILDDATE" value="${version.date}" />
-				<filter token="REVISION" value="${revision}" />
+				<filter token="REVISION" value="${svn.info.lastRev}" />
 			</filterset>
 		</copy>
 		<copy todir="${dist.dir}/doc" overwrite="true">
@@ -324,7 +347,7 @@
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}">
 				<include name="**/testcase/dbConnectionInfo*" />
-            <include name="**/testcase/test7*" />
+				<include name="**/testcase/test7*" />
 				<include name="**/testcase/test9*" />
 				<include name="**/testcase/test10*" />
 				<include name="**/testcase/test11*" />

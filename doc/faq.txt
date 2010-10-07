@@ -8,24 +8,21 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 No. DiffKit works only with Java 1.5+.
 
-
 == Does DiffKit have a GUI (Graphical User Interface)?
 
 No. DiffKit works strictly from the command line, and is configured with XML
 files.
-
 
 == Is there any documentation?
 
 Yes, DiffKit is documented extensively. Please read the QuickStart document and
 the User Guide.
 
-
 == How do I know that DiffKit is producing correct results?
 
-DiffKit is covered by an extensive functional TestSuite, which exercises all major
-features of the framework. All tests in this TestSuite are thoroughly documented.
-You can exercise this TestSuite at any time:
+DiffKit is covered by an extensive functional TestSuite, which exercises all
+major features of the framework. All tests in this TestSuite are thoroughly
+documented. You can exercise this TestSuite at any time:
 
 ---------
 java -jar diffkit-app.jar -test
@@ -36,8 +33,8 @@ java -jar diffkit-app.jar -test
 
 Yes.
 
-
-== Can DiffKit compare DB tables across different vendors (e.g. Oracle vs. MySQL)?
+== Can DiffKit compare DB tables across different vendors (e.g. Oracle vs.
+MySQL)?
 
 Yes.
 
@@ -48,20 +45,18 @@ Strictly type 4 JDBC drivers.
 
 == Can DiffKit help me diff programming code?
 
-Not really. DiffKit is designed to diff _tabular_ data, not tracts of textual data.
-
+Not really. DiffKit is designed to diff _tabular_ data, not tracts of textual
+data.
 
 == Can DiffKit diff database schemas?
 
-Yes! But you have to point it at the right catalog (or schema) tables, and provide
-appropriate where clauses, for your particular database.
-
+Yes! But you have to point it at the right catalog (or schema) tables, and
+provide appropriate where clauses, for your particular database.
 
 == Does DiffKit work with Java 1.7?
 
-Probably, but we haven't tested it. If you do test DK on Java 1.7, please send us
-a report.
-
+Probably, but we haven't tested it. If you do test DK on Java 1.7, please send
+us a report.
 
 == Will DiffKit be backported to Java 1.4?
 
@@ -70,7 +65,7 @@ Not currently planned.
 
 == Does DiffKit work with my particular JVM/OS/DB?
 
-Please check the compatibility matrix in the User Guider.
+Check the link:compatibility.html[Compatibility Matrix]. 
 
 
 == How much does DiffKit cost for commercial use?

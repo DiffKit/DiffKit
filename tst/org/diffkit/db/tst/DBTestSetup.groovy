@@ -43,10 +43,10 @@ public class DBTestSetup {
    
    private static final Logger _log = LoggerFactory.getLogger(DBTestSetup.class)
    
-   public static void setupDB(File dbSetupFile_, String lhsSourcePath_, String rhsSourcePath_) {
+   public static void setupDB(File dbSetupFile_, File[] connectionInfoFiles_, String lhsSourcePath_, String rhsSourcePath_) {
       File lhsSourceFile = DKResourceUtil.findResourceAsFile(lhsSourcePath_)
       File rhsSourceFile = DKResourceUtil.findResourceAsFile(rhsSourcePath_)
-      setupDB( dbSetupFile_, lhsSourceFile, rhsSourceFile)
+      setupDB( dbSetupFile_, connectionInfoFiles_, lhsSourceFile, rhsSourceFile)
    }
    
    /**

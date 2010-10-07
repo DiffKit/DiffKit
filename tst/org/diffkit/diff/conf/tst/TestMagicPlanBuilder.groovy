@@ -102,7 +102,7 @@ public class TestMagicPlanBuilder extends GroovyTestCase {
    }
    
    public void testFullyMagicDBBuild(){
-      DBTestSetup.setupDB(new File('org/diffkit/diff/conf/tst/test.dbsetup.xml'), 'org/diffkit/diff/conf/tst/test.lhs.csv', 'org/diffkit/diff/conf/tst/test.rhs.csv')
+      DBTestSetup.setupDB(new File('org/diffkit/diff/conf/tst/test.dbsetup.xml'), (File[])[new File('org/diffkit/diff/conf/tst/dbConnectionInfo.xml')], 'org/diffkit/diff/conf/tst/test.lhs.csv', 'org/diffkit/diff/conf/tst/test.rhs.csv')
       DKDBConnectionInfo dbConnectionInfo = ['test', DKDBConnectionInfo.Kind.H2, 'mem:conf.test;DB_CLOSE_DELAY=-1', null, null, 'test', 'test']
       
       DKMagicPlan magicPlan = []

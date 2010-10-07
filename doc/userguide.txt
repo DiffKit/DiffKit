@@ -13,13 +13,14 @@ Introduction
 
 What DiffKit is
 ~~~~~~~~~~~~~~~
-DiffKit is an application for comparing two tables of data, field-by-field.
-DiffKit is able to report the differences (<<Diff,__Diff__>>s) at both the row
-and field level, and allows the user to configure how to carry out the
-comparison (what to compare, what to ignore). DiffKit is highly configurable
-with respect to the sources of tabular data, the details of the comparison, and
-the characteristics of the diff report (output). For instance, DiffKit is able
-to diff CSV files, RDBMS tables, or custom data sources, in any combination.
+DiffKit is an application for comparing two <<Real-World-Entities,tables>> of
+data, field-by-field. DiffKit is able to report the differences
+(<<Diff,__Diff__>>s) at both the row and field level, and allows the user to
+configure how to carry out the comparison (what to compare, what to ignore).
+DiffKit is highly configurable with respect to the sources of tabular data, the
+details of the comparison, and the characteristics of the diff report (output).
+For instance, DiffKit is able to diff CSV files, RDBMS tables, or custom data
+sources, in any combination.
 
 .high-level
 image::sources_hl.png[width=700]
@@ -40,8 +41,8 @@ application, or any application that can bind Java packages.
 
 DiffKit was designed to be easily extensible. That means it requires only a very
 modest java programming effort to create custom row data providers
-(__Source__s), custom field comparators (__Diffor__s), and custom output
-formatters (__Sink__s).
+(<<Source,__Source__s>>), custom field comparators (<<Diffor,__Diffor__s>>), and
+custom output formatters (<<Sink,__Sink__s>>).
 
 DiffKit is a command-line application that is configured entirely by XML files.
 Because there is no GUI, and because it's file driven, and because it runs on
@@ -438,6 +439,26 @@ java -jar ../diffkit-app.jar -planfiles test18.plan.xml,
      test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
 -----------------
 
+DiffKit can also compare a file table with a DB table:
+
+.test12.plan.xml
+-----------------
+   ...
+   <property name="lhsDBTableName" value="TEST12_LHS_TABLE" />
+   <property name="rhsFilePath" value="./test12.rhs.csv" />
+   <property name="dbConnectionInfo" ref="connectionInfo" />
+   ...
+-----------------
+In this case, you should put the DB table on the LHS, if you want to ensure
+that DiffKit creates a TableModel from the DB table and applies that same 
+TableModel to the file table as well. 
+
+Test12 can be run this way:
+
+-----------------
+java -jar ../diffkit-app.jar -planfiles test12.plan.xml,dbConnectionInfo.xml
+-----------------
+
 [[PassthroughPlan-Tutorial]]
 Tutorial 3 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -451,10 +472,11 @@ you need finer control over the specification than is possible with MagicPlan.
 In that case, you will need to use a _PassthroughPlan_.
 
 At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to
-carry out a diff, it must be given a complete specification of how to compare
-the two tables. This specification is an entity called the _TableComparison_
-(Fig. 2). For an explanation of TableComparisons, see
-<<TableComparison,Concepts>>.
+carry out a diff'ng, it must be given a complete specification of how to compare
+the two tables. This specification is an element called the _TableComparison_
+(<<Anatomy-Of-A-Diff, Fig. 2>>). For an explanation of TableComparisons, see
+<<TableComparison,Concepts>>. Configuring a PassthroughPlan mostly concerns
+building a TableComparison in the config file.
 
 test7.plan.xml demonstrates how to build up a PassthroughPlan. You can see that,
 unlike the previous tutorials, the plan "class" is PassthroughPlan, not 
@@ -484,6 +506,7 @@ a ColumnModel element:
 ...
 --------------------
 Next, the ColumnModels are composed into TableModels:
+
 .test7.plan.xml cont.
 --------------------
 ...
@@ -497,7 +520,7 @@ Next, the ColumnModels are composed into TableModels:
       ...
 ...
 --------------------
-The above TableModel specification includes not just the list of ColumnModels,
+The TableModel specification includes not just the list of ColumnModels,
 but also the list of column indexes that make up the _Key_:
 
 .test7.plan.xml cont.
@@ -522,6 +545,72 @@ for all ColumnComparisons:
       ...
 --------------------
 
+For each column pair that we want diff'd, we need to create a ColumnComparison,
+which specifies the identity of the LHS column (ColumnModel), the RHS column,
+and the Diffor to apply to these column values:
+
+.test7.plan.xml cont.
+--------------------
+      ...
+   <bean id="column1.comparison" class="org.diffkit.diff.engine.DKColumnComparison">
+      <constructor-arg index="0" ref="lhs.column1" />
+      <constructor-arg index="1" ref="rhs.column1" />
+      <constructor-arg index="2" ref="equalsDiffor" />
+   </bean>
+      ...
+--------------------
+
+Finally, the above elements are composed into a TableComparison:
+
+.test7.plan.xml cont.
+--------------------
+      ...
+   <bean id="table.comparison" class="org.diffkit.diff.engine.DKStandardTableComparison">
+      <constructor-arg index="0" ref="lhs.table.model" />
+      <constructor-arg index="1" ref="rhs.table.model" />
+      <constructor-arg index="2" value="BOTH" />
+      <constructor-arg index="3">
+         <list>
+            <ref bean="column1.comparison" />
+            <ref bean="column2.comparison" />
+            <ref bean="column3.comparison" />
+         </list>
+      </constructor-arg>
+      <constructor-arg index="4">
+         <list>
+            <value>1</value>
+         </list>
+      </constructor-arg>
+      <constructor-arg index="5">
+         <list>
+            <list>
+               <value>0</value>
+               <value>2</value>
+            </list>
+            <list>
+               <value>0</value>
+               <value>2</value>
+            </list>
+         </list>
+      </constructor-arg>
+      <constructor-arg index="6" value="2" />
+   </bean>
+      ...
+--------------------
+The elements nested in the TableComparison specify: LHS and RHS TableModels
+(index=0,index=1); the _Kind_ of Diffs to looks for, ROW_DIFF, COLUMN_DIFF, or
+BOTH (index=2); a list of ColumnComparisons (index=3); a list of indexes (into
+the list of ColumnComparisons) of which ColumnComparisons should actually
+participate in the diff'ng (index=4); a list of indexes (into the respective
+TableModel column lists), one for the LHS and one for the RHS, of which columns
+to use for identifying rows in the output (index=5); and the maximum number of
+diffs to record before stopping (index=6).
+
+Test7 can be run with this command:
+
+-----------------
+java -jar ../diffkit-app.jar -planfiles test7.plan.xml
+-----------------
 
 [[Motivations-and-Uses]]
 Motivations and Uses
@@ -610,6 +699,7 @@ database object definitions across different physical databases.
 Concepts
 --------
 
+[[Real-World-Entities]]
 Real world entities
 ~~~~~~~~~~~~~~~~~~
 DiffKit is designed to compare _tables_ of data. These could come from an RDBMS
@@ -633,6 +723,7 @@ are different or the same. All of the underlined entities in Figure 2 are Java
 classes, and are individually addressable and configurable through the use of a
 <<PassthroughPlan,PassthroughPlan>>
 
+[[Architecture]]
 .architecture
 image::architecture_hl.png[width=700]
 
@@ -650,6 +741,7 @@ A ColumnModel is a meta model describing all important properties of a column
 involved in the diff. These properties include the name, datatype, and
 formatting defaults. _ColumnModel_ is a Java class.
 
+[[Source]]
 Source
 ~~~~~~
 A Source is a place from which DiffKit will read data rows for diff'ng. Every
@@ -658,6 +750,7 @@ meta modelled by a TableModel. DiffKit comes with built-in Sources for RDBMS
 databases and CSV files. Java programmers can easily build their own Sources
 by implementing the java _Source_ interface (<<Custom-Source,Custom Source>>).
 
+[[Sink]]
 Sink
 ~~~~
 A Sink is an output destination for Diffs. The _DiffEngine_ reads rows from the
@@ -707,6 +800,7 @@ _ColumnComparison_ fully specifies how to carry out the comparison of one column
 on the LHS to cone column on the RHS. It points to one _ColumnModel_ on each
 side and specifies which _Diffor_ should apply. ColumnComparison is a Java class.
 
+[[Diffor]]
 Diffor
 ^^^^^^
 A _Diffor_ is an operator that examines a single LHS column *value* against a
@@ -745,6 +839,7 @@ not have the same name or data type. It also allows users to specify any
 arbitrary Diffor, including potentially a custom Diffor, for every
 ColumnComparison in the specification.
 
+[[Diff]]
 Diff
 ~~~~
 A _Diff_ is a record of a difference between a LHS data value a RHS data value.
@@ -753,6 +848,7 @@ Diffs come in two flavors: <<ROW_DIFF,ROW_DIFF>> and
 two sources of rows, and the resulting Diffs; there are 2 ROW_DIFFs and 3 
 COLUMN_DIFFs.
 
+[[Anatomy-Of-A-Diff]]
 .anatomy of a diff
 image::diff_anatomy.png[width=700]
 

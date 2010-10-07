@@ -25,11 +25,11 @@ and don't use DiffKit.
 Diff'ng
 -------
 DiffKit allows you to select two _Sources_ (a Left Hand Source and a Right Hand
-Source) of tabular data for comparison on a value-by-value basis, and to send
+Source) of tabular data for comparison on a field-by-field basis, and to send
 the results of the comparison (diffs) to a _Sink_ (typically a structured file).
 You must specify the _Sources_ and _Sink_ to DiffKit via an XML configuration
-file, called a _plan_ file. The "eg/" directory in the DiffKit distribution
-(zip) contains many examples of such plan files.
+file, called a _Plan_ file. The "eg/" directory in the DiffKit distribution
+(zip) contains many examples of plan files.
 
 
 Diff'ng File tables
@@ -149,30 +149,32 @@ Diff'ng DB tables
 -----------------
 Diff'ng DB tables uses plan files in the same fashion as diff'ng files. The only
 difference is that instead of file paths, you must provide table names, and you 
-must also tell DiffKit how to connect to the lhs and rhs databases.
+must also tell DiffKit how to connect to the LHS and RHS databases.
 
-test10.plan.xml demonstrates how to specify the table names used in the comparison:
+test10.plan.xml demonstrates how to specify the table names used in the
+comparison:
 
 .test10.plan.xml
 -----------------
    ...
-   <property name="lhsDBTableName" value="LHS_TABLE" />
-   <property name="rhsDBTableName" value="RHS_TABLE" />
+   <property name="lhsDBTableName" value="TEST10_LHS_TABLE" />
+   <property name="rhsDBTableName" value="TEST10_RHS_TABLE" />
+   <property name="dbConnectionInfo" ref="connectionInfo" />
    ...
 -----------------
-The two tables, LHS_TABLE and RHS_TABLE, both reside in the same database. That
-database is identified with these plan elements:
+In this case, both tables reside in the same database, referenced by
+"connectionInfo". Of course we also have to provide values for connectionInfo.
+We could put the connectionInfo element for these tables in the test10.plan.xml
+file, and then all information needed for the diff would be in one config file.
+Instead, we isolate the database connectionInfo values into a separate file:
 
-.test10.plan.xml cont.
+.dbConnectionInfo.xml
 -----------------
-   ...
-   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-     <property name="dbConnectionInfo" ref="connectionInfo" />
    ...
    <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
      <constructor-arg index="0" value="test" />
      <constructor-arg index="1" value="H2" />
-     <constructor-arg index="2" value="mem:testcase;DB_CLOSE_DELAY=-1" />
+     <constructor-arg index="2" value="file:./demo" />
      <constructor-arg index="3">
 			<null />
      </constructor-arg>
@@ -183,17 +185,16 @@ database is identified with these plan elements:
      <constructor-arg index="6" value="test" />
   </bean>
 -----------------
-The connectionInfo points to an in-memory H2 database named "testcase". The 
-username is "test" and the password is "test". 
+This allows us to reuse the connectionInfo in other plans as well. The
+connectionInfo points to an embedded H2 database named "test", which is stored
+in a file at "./demo" (i.e. eg/demo.h2.db). The username is "test" and the
+password is "test". An embedded H2 database will run in the same process as
+DiffKit itself-- you do not need a separate process to serve the database. To
+run the test10 plan:
 
-WARNING: If you run this plan file it will
-fail with the following error:
-...
-+Caused by: java.lang.RuntimeException: couldn't find table named->LHS_TABLE
-	at org.diffkit.diff.sns.DKDBSource.<init>(DKDBSource.java:)+
-...
-That's because the tables do not exist. If you want to successfully run this plan
-file you must create and populate the target tables yourself.
+-----------------
+java -jar ../diffkit-app.jar -planfiles test10.plan.xml,dbConnectionInfo.xml
+-----------------
 
 The connectionInfo to a similar IBM DB2 database:
 -----------------
@@ -218,98 +219,63 @@ test18.plan.xml demonstrates this:
 -----------------
    ...
    <bean id="connectionInfo" class="org.diffkit.diff.conf.DKMagicPlan">
-     ...
+     <property name="lhsDBTableName" value="TEST18_LHS_TABLE" />
+     <property name="rhsDBTableName" value="TEST18_RHS_TABLE" />
      <property name="lhsDBConnectionInfo" ref="lhsDBConnectionInfo" />
      <property name="rhsDBConnectionInfo" ref="rhsDBConnectionInfo" />
      ...
    </bean>
-   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-     ...
-     <constructor-arg index="2" value="mem:testcase18_lhs;DB_CLOSE_DELAY=-1" />
-     ...
-   </bean>
-   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-     ...
-     <constructor-arg index="2" value="mem:testcase18_rhs;DB_CLOSE_DELAY=-1" />
-     ...
-  </bean>
 -----------------
-In this case, table "LHS_TABLE" is located in a database named "testcase18_lhs",
-while table "RHS_TABLE" is located in a database named "testcase18_rhs".
+In this case, table "TEST18_LHS_TABLE" is located in a database pointed to
+by ref="lhsDBConnectionInfo" while table "TEST18_RHS_TABLE" is located in a
+database pointed to by ref="lhsDBConnectionInfo". Again, as in test10, the
+values for the references to lhsDBConnectionInfo and rhsDBConnectionInfo are in
+a separate file. However, in this case, lhsDBConnectionInfo and
+rhsDBConnectionInfo are each in their own file: test18.rhs.dbConnectionInfo.xml
+and test18.lhs.dbConnectionInfo.xml respectively. Inside, we can see that each
+of these dbConnectionInfo.xml files specifies a connection to a different 
+database:
+
+.test18.lhs.dbConnectionInfo.xml
+---------------------------------
+   ...
+   <bean id="lhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+      ...
+      <constructor-arg index="2" value="file:./test18_lhs_demo" />
+   ...
+---------------------------------
+
+.test18.rhs.dbConnectionInfo.xml
+---------------------------------
+   ...
+   <bean id="rhsDBConnectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
+      ...
+      <constructor-arg index="2" value="file:./test18_rhs_demo" />
+   ...
+---------------------------------
+Then the plan can be executed this way:
+-----------------
+java -jar ../diffkit-app.jar -planfiles test18.plan.xml, 
+     test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
+-----------------
 
 
 Diff'ng different kinds of Sources
 ----------------------------------
-Any _kind_ of source can appear on either the lhs or the rhs. That means you can
-mix source _kinds_ in the same comparison. test12.plan.xml demonstrates this:
+Any _Kind_ of source can appear on either the LHS or the RHS. That means you can
+mix source _Kinds_ in the same comparison. test12.plan.xml demonstrates this:
 
 .test12.plan.xml
 -----------------
-   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-     <property name="lhsDBTableName" value="LHS_TABLE" />
-     <property name="rhsFilePath" value="./test12.rhs.csv" />
-     <property name="dbConnectionInfo" ref="connectionInfo" />
-  ...
-   <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
    ...
-     <constructor-arg index="2" value="mem:testcase12;DB_CLOSE_DELAY=-1" />
+   <property name="lhsDBTableName" value="TEST12_LHS_TABLE" />
+   <property name="rhsFilePath" value="./test12.rhs.csv" />
+   <property name="dbConnectionInfo" ref="connectionInfo" />
    ...
 -----------------
-This plan specifies that the lhs _source_ is a DB table named LHS_TABLE, which
-resides in the database named "testcase12". The rhs _source_ is a csv file named
+This plan specifies that the lhs _Source_ is a DB table named LHS_TABLE, which
+resides in the database named "testcase12". The rhs _Source_ is a csv file named
 test12.rhs.csv.
-
-
-Modularizing the config files
------------------------------
-Frequently you would like to apply different comparisons (different table pairs)
-within or across the same logical/physical databases. Likewise, it's not
-uncommon to want to compare the same table pairs, but within different
-environments at different times. For example, you might want to diff two tables
-in your development environment early in the SDLC, and then later, during the QA
-phase, diff those same tables in your QA environment. To support both of the
-above cases, DiffKit allows you to reuse plan file elements via composition. For
-instance, test10.plan.xml could be broken up into two pieces. The first piece
-describes the target table names and other characteristics of the comparison;
-test10.scheme.xml:
-
-.test10.scheme.xml
------------------
-   <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-     <property name="lhsDBTableName" value="LHS_TABLE" />
-     <property name="rhsDBTableName" value="RHS_TABLE" />
-     <property name="keyColumnNames">
-        <list>
-           <value>COLUMN3</value>
-        </list>
-     </property>
-     <property name="dbConnectionInfo" ref="connectionInfo" />
-     <property name="sinkFilePath" value="./test10.sink.diff" />
-   </bean>
------------------
-
-The other piece just describes which database(s) to point to; test10.connection.xml:
-
-.test10.connection.xml
------------------
-   <bean id="connectionInfo" class="org.diffkit.db.DKDBConnectionInfo">
-     <constructor-arg index="0" value="test" />
-     <constructor-arg index="1" value="H2" />
-     <constructor-arg index="2" value="mem:testcase;DB_CLOSE_DELAY=-1" />
-     <constructor-arg index="3">
-			<null />
-     </constructor-arg>
-     <constructor-arg index="4">
-			<null />
-     </constructor-arg>
-     <constructor-arg index="5" value="test" />
-     <constructor-arg index="6" value="test" />
-  </bean>
------------------
-Then the two specifications are composed at runtime this way:
------------------
-java -jar ../diffkit-app.jar -planfiles test10.scheme.xml,test10.connection.xml
------------------
 
 
 Next Steps
