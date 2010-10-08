@@ -313,11 +313,11 @@ public class TestCaseRunner implements Runnable {
       _log.debug("dbSetupFile->{}",dbSetupFile)
       if(!dbSetupFile.exists())
          dbSetupFile = null
-      def lhsConnectionInfoFile = new File(dir_, "test${numberString}.lhs.dbConnectioninfo.xml")
+      def lhsConnectionInfoFile = new File(dir_, "test${numberString}.lhs.dbConnectionInfo.xml")
       _log.debug("lhsConnectionInfoFile->{}",lhsConnectionInfoFile)
       if(!lhsConnectionInfoFile.exists())
          lhsConnectionInfoFile = null
-      def rhsConnectionInfoFile = new File(dir_, "test${numberString}.rhs.dbConnectioninfo.xml")
+      def rhsConnectionInfoFile = new File(dir_, "test${numberString}.rhs.dbConnectionInfo.xml")
       _log.debug("rhsConnectionInfoFile->{}",rhsConnectionInfoFile)
       if(!rhsConnectionInfoFile.exists())
          rhsConnectionInfoFile = null
