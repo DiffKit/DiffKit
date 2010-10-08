@@ -333,6 +333,11 @@
 			<arg line="-a toc" />
 			<arg line="userguide.txt" />
 		</exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="compatibility.txt" />
+      </exec>
 
 	</target>
 
