@@ -15,4 +15,4 @@ MySQL,          X,              X,              X,                      X,      
 SQL Server,     X,              X,              X,                      X,              X,                      X,          X
 Sybase,         X,              X,              X,                      X,              X,                      X,          X
 |===========================
-Y=tested successfully, ?=not tested, X=not supported
+Y=tested successfully; ?=not tested, probably works; X=not supported

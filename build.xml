@@ -314,28 +314,43 @@
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
 			<arg line="README.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
 			<arg line="quickstart.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
 			<arg line="-a toc" />
 			<arg line="faq.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
 			<arg line="-a toc" />
 			<arg line="userguide.txt" />
 		</exec>
       <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
          <arg line="-a linkcss" />
          <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
          <arg line="compatibility.txt" />
       </exec>
 
