@@ -368,7 +368,7 @@
 		<echo>SCP target is ${ssh.server}</echo>
 		<property name="ssh.path" value="${ssh.user}@${ssh.server}:${ssh.dir}" />
 		<scp remoteToDir="${ssh.path}" password="${ssh.password}" verbose="${ssh.verbose}">
-			<fileset dir="${web-dist.dir}"/>
+			<fileset dir="${web-dist.dir}" />
 		</scp>
 	</target>
 
@@ -478,6 +478,16 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="compatibility.txt" />
 		</exec>
+		
+      <exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="--conf-file=web_template.conf" />
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
+         <arg line="support.txt" />
+      </exec>
 
 	</target>
 

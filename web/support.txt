@@ -1,0 +1,15 @@
+
+.*Getting Help*
+If you need help using DiffKit, please go to the
+http://groups.google.com/group/diffkit-user[DiffKit User Group] and post a
+question.
+
+.*Bug Reports*
+If you have found a bug or other defficiency in DiffKit, please create a new
+issue on the http://code.google.com/p/diffkit/issues/list[DiffKit Issue
+Tracker].
+
+.*Feature Requests* 
+If you would like to request a new feature or enhancement
+for DiffKit, please create a new issue on the
+http://code.google.com/p/diffkit/issues/list[DiffKit Issue Tracker].
