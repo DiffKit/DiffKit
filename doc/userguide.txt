@@ -733,7 +733,7 @@ The TableModel is a meta model describing all important aspects of a table
 involved in the DiffKit invocation. What are the characteristics and placements
 of each column, and what is the _Key_ used to align (join) its rows to another
 table. The TableModel contains a _ColumnModel_ for each column that it models.
-_TableModel is a Java class.
+_TableModel_ is a Java class.
 
 ColumnModel
 ^^^^^^^^^^

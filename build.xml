@@ -409,6 +409,7 @@
 			<arg line="-a imagesdir=img" />
 			<arg line="-a scriptsdir=resources" />
 			<arg line="-a stylesdir=resources" />
+			<arg line="-a index-only" />
 			<arg line="index.txt" />
 		</exec>
 
