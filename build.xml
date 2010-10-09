@@ -9,11 +9,13 @@
 	<property name="lib.dir" location="${root.dir}/lib" />
 	<property name="conf.dir" location="${root.dir}/conf" />
 	<property name="doc.dir" location="${root.dir}/doc" />
+	<property name="web.dir" location="${root.dir}/web" />
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="unit.build.dir" location="${root.dir}/unit.build" />
 	<property name="run.dir" location="${root.dir}/run" />
 	<property name="tstscratch.dir" location="${root.dir}/tstscratch" />
 	<property name="dist.dir" location="${root.dir}/dist" />
+	<property name="web-dist.dir" location="${root.dir}/web_dist" />
 	<property name="dist.properties.file" location="${conf.dir}/dist.properties" />
 
 	<patternset id="build.resources">
@@ -208,10 +210,10 @@
 
 		<copy todir="${dist.dir}/lib">
 			<fileset dir="${lib.dir}">
-            <exclude name="svnant.jar" />
-            <exclude name="svnClientAdapter.jar" />
-            <exclude name="svnjavahl.jar" />
-            <exclude name="svnkit.jar" />
+				<exclude name="svnant.jar" />
+				<exclude name="svnClientAdapter.jar" />
+				<exclude name="svnjavahl.jar" />
+				<exclude name="svnkit.jar" />
 			</fileset>
 		</copy>
 
@@ -314,45 +316,136 @@
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
-         <arg line="-a imagesdir=img" />
-         <arg line="-a scriptsdir=resources" />
-         <arg line="-a stylesdir=resources" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
 			<arg line="README.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
-         <arg line="-a imagesdir=img" />
-         <arg line="-a scriptsdir=resources" />
-         <arg line="-a stylesdir=resources" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
 			<arg line="quickstart.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
-         <arg line="-a imagesdir=img" />
-         <arg line="-a scriptsdir=resources" />
-         <arg line="-a stylesdir=resources" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
 			<arg line="-a toc" />
 			<arg line="faq.txt" />
 		</exec>
 		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
-         <arg line="-a imagesdir=img" />
-         <arg line="-a scriptsdir=resources" />
-         <arg line="-a stylesdir=resources" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
 			<arg line="-a toc" />
 			<arg line="userguide.txt" />
 		</exec>
-      <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-         <arg line="-a linkcss" />
-         <arg line="-a theme=diffkit" />
-         <arg line="-a imagesdir=img" />
-         <arg line="-a scriptsdir=resources" />
-         <arg line="-a stylesdir=resources" />
-         <arg line="compatibility.txt" />
-      </exec>
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="compatibility.txt" />
+		</exec>
+
+	</target>
+
+	<target name="web-dist" depends="find-revision,dist-properties">
+
+		<copy todir="${web-dist.dir}" overwrite="true">
+			<fileset dir="${web.dir}">
+				<patternset>
+					<include name="**/*.txt" />
+					<include name="**/*.conf" />
+				</patternset>
+			</fileset>
+			<fileset dir="${doc.dir}">
+				<patternset>
+					<include name="**/*.txt" />
+					<include name="**/*.css" />
+					<include name="**/*.js" />
+				</patternset>
+			</fileset>
+			<filterset>
+				<filter token="AUTHOR" value="${author}" />
+				<filter token="VERSION" value="${version}" />
+				<filter token="BUILDDATE" value="${version.date}" />
+				<filter token="REVISION" value="${svn.info.lastRev}" />
+			</filterset>
+		</copy>
+		<copy todir="${web-dist.dir}" overwrite="true">
+			<fileset dir="${doc.dir}">
+				<patternset>
+					<include name="**/*.png" />
+				</patternset>
+			</fileset>
+		</copy>
+
+		<antcall target="html-web-dist" />
+
+	</target>
+
+	<target name="html-web-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="index.txt" />
+		</exec>
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="README.txt" />
+		</exec>
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="quickstart.txt" />
+		</exec>
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="-a toc" />
+			<arg line="userguide.txt" />
+		</exec>
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="-a toc" />
+			<arg line="faq.txt" />
+		</exec>
 
 	</target>
 
@@ -407,6 +500,7 @@
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
 			<exclude name="*.__hold__" />
 		</delete>
+		<delete dir="${web-dist.dir}" includeEmptyDirs="true" failonerror="false" />
 		<!-- clean up scratch files created by Unit tests and TCR -->
 		<delete>
 			<fileset dir="${root.dir}">

@@ -32,7 +32,7 @@ DiffKit has been tested on the following environments:
 - Sun JRE/JDK 1.6
 - Mac OS X.6
 - RH Linux
-- Windows 95
+- Windows XP
 - H2 Database 1.2
 - DB2 9.5
 
