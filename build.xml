@@ -75,6 +75,12 @@
 		<property name="src-distzip" value="${ant.project.name}-src-${version}.zip" />
 	</target>
 
+	<target name="ssh-init">
+		<fail unless="server">Set the "server" property!</fail>
+		<property name="ssh.propfile" location="${root.dir}/../${server}.ssh.properties" />
+		<loadproperties srcfile="${ssh.propfile}" />
+	</target>
+
 	<target name="info">
 		<echo>basedir--> ${basedir}</echo>
 		<echo>ant.file--> ${ant.file}</echo>
@@ -358,6 +364,14 @@
 
 	</target>
 
+	<target name="web-publish" depends="web-dist,ssh-init">
+		<echo>SCP target is ${ssh.server}</echo>
+		<property name="ssh.path" value="${ssh.user}@${ssh.server}:${ssh.dir}" />
+		<scp remoteToDir="${ssh.path}" password="${ssh.password}" verbose="${ssh.verbose}">
+			<fileset dir="${web-dist.dir}"/>
+		</scp>
+	</target>
+
 	<target name="web-dist" depends="find-revision,dist-properties">
 
 		<copy todir="${web-dist.dir}" overwrite="true">
@@ -453,6 +467,16 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="-a toc" />
 			<arg line="faq.txt" />
+		</exec>
+
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+			<arg line="--conf-file=web_template.conf" />
+			<arg line="-a linkcss" />
+			<arg line="-a theme=diffkit" />
+			<arg line="-a imagesdir=img" />
+			<arg line="-a scriptsdir=resources" />
+			<arg line="-a stylesdir=resources" />
+			<arg line="compatibility.txt" />
 		</exec>
 
 	</target>

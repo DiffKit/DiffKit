@@ -45,8 +45,7 @@ Strictly type 4 JDBC drivers.
 
 == Can DiffKit help me diff programming code?
 
-Not really. DiffKit is designed to diff _tabular_ data, not tracts of textual
-data.
+DiffKit is designed to diff _tabular_ data, not tracts of textual data.
 
 == Can DiffKit diff database schemas?
 
