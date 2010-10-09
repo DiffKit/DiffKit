@@ -1,2 +1,13 @@
 
-Hello
+DiffKit is an application, and a framework, for comparing two
+tables of data, field-by-field. It is Free Open Source Software (FOSS).
+
+DiffKit is able to report the differences (__Diff__s)
+at both the row and field level, and allows the user to configure how to carry
+out the comparison (what to compare, what to ignore). DiffKit is highly
+customizable with respect to the sources of tabular data, the details of the
+comparison, and the characteristics of the diff report (output). For instance,
+DiffKit is able to diff CSV files, RDBMS tables, or custom data sources, in any
+combination.
+
+DiffKit was written in Java by *Joe Panico*.

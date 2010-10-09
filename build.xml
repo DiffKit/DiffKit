@@ -391,6 +391,13 @@
 
 		<antcall target="html-web-dist" />
 
+		<delete>
+			<fileset dir="${web-dist.dir}">
+				<include name="*.txt" />
+				<include name="*.conf" />
+			</fileset>
+		</delete>
+
 	</target>
 
 	<target name="html-web-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
