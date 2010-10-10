@@ -12,6 +12,14 @@ body {
 	color:#333;
 }
 
+#att-box table {
+  border: 2px solid black;
+  margin: 20px;
+  cell-padding: 20px;
+  background-color: lightgrey;
+  font-size: 1.2em;
+}
+
 #layout-banner {
   background-color: white  ;
   border: 3px solid DarkGray;

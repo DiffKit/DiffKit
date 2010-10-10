@@ -16,6 +16,12 @@ what to ignore). DiffKit is highly customizable with respect to the sources of
 tabular data, the details of the comparison, and the characteristics of the
 output (diff report).
 
+[id="att-box",grid="cols",options="header",cols="^,^" ]
+|=================
+|*DOWNLOAD*|*SUPPORT*      
+|http://diffkit.googlecode.com/files/diffkit-@VERSION@.zip[release @VERSION@ (@BUILDDATE@)]   |http://groups.google.com/group/diffkit-user[Google Group]     
+|================
+
 Why
 ---
 
