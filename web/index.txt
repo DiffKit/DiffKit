@@ -46,14 +46,24 @@ table data. It is not uncommon in an enterprise development shop to have many
 different copies of, what is presumably, the same database. In this cases, it is
 critically important to either keep the DDL in synch across all of these copies,
 or to at least understand how they differ. DiffKit is able to give you perfect
-visibility into the differences between table structures.
+visibility into the differences between the definition of database objects.
 
 
 Features
 --------
 
-lorit ipsum
-
+- High performance, for large datasets (+10MM rows).
+- Very low memory overhead, even on very large datasets.
+- High quality-- comprehensive embedded regression test suite for the
+application/framework.
+- Java run everywhere (tm) -- Linux, Solaris, OS X, Windows, etc.
+- Cross database-- Oracle, MySQL, DB2, and any JDBC datasource.
+- Command-line driven; no GUI needed; can run in headless environments.
+- XML configuration file driven.
+- Free Open Source Software.
+- Apache License, Version 2.0.
+- Clean Object Oriented Design make extension easy.
+- Easily embeddable as a Java library (jar).
 
 Credits
 -------
