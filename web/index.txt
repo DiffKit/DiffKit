@@ -1,13 +1,61 @@
 
+What
+----
 DiffKit is an application, and a framework, for comparing two
-tables of data, field-by-field. It is Free Open Source Software (FOSS).
+tables of data, field-by-field. The tables can come from any of a number of
+sources, such as an RDBMS or CSV file, and DiffKit is able to mix different
+kinds of sources in the same diff operation. DiffKit is like the Unix _diff_
+utility, but for tables instead of lines of text.
 
-DiffKit is able to report the differences (__Diff__s)
-at both the row and field level, and allows the user to configure how to carry
-out the comparison (what to compare, what to ignore). DiffKit is highly
-customizable with respect to the sources of tabular data, the details of the
-comparison, and the characteristics of the diff report (output). For instance,
-DiffKit is able to diff CSV files, RDBMS tables, or custom data sources, in any
-combination.
+.DiffKit
+image::diffkit.png[width=500]
 
-DiffKit was written in Java by *Joe Panico*.
+DiffKit is able to report the _diffs_ at both the row and field level, and
+allows the user to configure the comparison (what to compare, how to compare it,
+what to ignore). DiffKit is highly customizable with respect to the sources of
+tabular data, the details of the comparison, and the characteristics of the
+output (diff report).
+
+Why
+---
+
+DiffKit is Free Open Source Software (FOSS), licensed under the Apache License,
+Version 2.0. DiffKit was designed specifically with _Enterprise Diff'ng_ in
+mind. It supports very high data volume operations (tens of millions of rows).
+It is a command line utility, driven by text configuration files, and as such is
+very well suited to scripting, automated operation, and embedding into Unix
+workflows.
+
+The principal use of DiffKit is for regression testing processes that create or
+manipulate persistent table data:
+
+[quote, , 'http://www.agiledata.org/essays/databaseTesting.html[Database Testing: How to Regression Test a Relational Database]' ]
+____
+Relational database management systems (RDBMSs) often persist mission-critical
+data which is updated by many applications and potentially thousands if not
+millions of end users. Furthermore, they implement important functionality in
+the form of database methods (stored procedures, stored functions, and/or
+triggers) and database objects (e.g. Java or C# instances). The best way to
+ensure the continuing quality of these assets, at least from a technical point
+of view, you should have a full regression test suite which you can run on a
+regular basis.
+____
+
+DiffKit is also well suited for comparing SQL table *structures*, not just SQL
+table data. It is not uncommon in an enterprise development shop to have many
+different copies of, what is presumably, the same database. In this cases, it is
+critically important to either keep the DDL in synch across all of these copies,
+or to at least understand how they differ. DiffKit is able to give you perfect
+visibility into the differences between table structures.
+
+
+Features
+--------
+
+lorit ipsum
+
+
+Credits
+-------
+
+DiffKit was created by *Joe Panico*.

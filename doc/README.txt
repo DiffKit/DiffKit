@@ -5,9 +5,10 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
 Prerequisites 
 -------------
-DiffKit is written in Java so you need a Java Runtime Environment (JRE) (version
-1.5 or later) to execute the DiffKit standalone application. You can download a
-J2SE JRE from the official http://www.java.com/getjava/index.jsp[Java website].
+DiffKit is written in Java, so you need a Java Runtime Environment (JRE)
+(version 1.5 or later) to execute the DiffKit standalone application. You can
+download a J2SE JRE from the official http://www.java.com/getjava/index.jsp[Java
+website].
 
 
 Obtaining DiffKit
