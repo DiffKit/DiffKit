@@ -34,7 +34,6 @@ public class DKComparatorChain extends ComparatorChain {
       super();
    }
 
-   @SuppressWarnings("unchecked")
    public DKComparatorChain(Comparator... comparators_) {
       super(Arrays.asList(comparators_));
    }
