@@ -26,7 +26,7 @@ public class DKNumberUtil {
    /**
     * null-safe, solves some problems related to autoboxing
     */
-   public static int getInt(Integer target_, int defalt_) {
+   public static int getInt(Number target_, int defalt_) {
       if (target_ == null)
          return defalt_;
       return target_.intValue();

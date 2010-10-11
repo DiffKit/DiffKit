@@ -157,6 +157,9 @@ public class DKSqlUtil {
             LOG.error(null, e_);
          }
       }
+      // for Oracle
+      map.put(new Integer(Types.VARCHAR), "VARCHAR2");
+      map.put(new Integer(Types.NUMERIC), "NUMBER");
       return map;
    }
 

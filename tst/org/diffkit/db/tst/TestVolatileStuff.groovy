@@ -16,10 +16,11 @@
 package org.diffkit.db.tst
 
 
-import java.sql.DriverManager;
-import java.util.Properties;
-import org.h2.tools.Server 
 
+
+import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBTableDataAccess 
 
 import groovy.util.GroovyTestCase;
 
@@ -27,7 +28,25 @@ import groovy.util.GroovyTestCase;
 /**
  * @author jpanico
  */
-public class TestH2Embedded extends GroovyTestCase {
+public class TestVolatileStuff extends GroovyTestCase {
+   
+   public void testOracleConnection(){
+      DKDBConnectionInfo connectionInfo = ['oracle', DKDBConnectionInfo.Kind.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
+      println "connectionInfo->$connectionInfo"
+      DKDBConnectionSource connectionSource = [connectionInfo]
+      def connection = connectionSource.connection
+      println "connection->$connection"
+      
+      assert connection
+      def meta = connection.metaData
+      println "meta->$meta"
+      assert meta
+      DKDBTableDataAccess tableDataAccess = [connectionSource]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, 'SYS', 'USER_TABLES')
+      println "tables->$tables"
+      println "USER_TABLES->${tables[0].description}"
+   }
    
    public void testH2(){
       

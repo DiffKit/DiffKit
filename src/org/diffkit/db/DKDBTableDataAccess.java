@@ -117,7 +117,6 @@ public class DKDBTableDataAccess {
       return tables;
    }
 
-   @SuppressWarnings("unchecked")
    private DKDBTable constructTable(Map<String, ?> tableMap_,
                                     List<Map<String, ?>> columnMaps_,
                                     List<Map<String, ?>> pkMaps_) {
@@ -145,9 +144,9 @@ public class DKDBTableDataAccess {
    private DKDBColumn constructColumn(Map<String, ?> columnMap_) {
       _log.debug("columnMap_->{}", columnMap_);
       String tableName = (String) columnMap_.get("COLUMN_NAME");
-      Integer ordinalPosition = (Integer) columnMap_.get("ORDINAL_POSITION");
+      Number ordinalPosition = (Number) columnMap_.get("ORDINAL_POSITION");
       String dataTypeName = (String) columnMap_.get("TYPE_NAME");
-      Integer columnSize = (Integer) columnMap_.get("COLUMN_SIZE");
+      Number columnSize = (Number) columnMap_.get("COLUMN_SIZE");
       Boolean isNullable = DKStringUtil.parseBoolean((String) columnMap_.get("IS_NULLABLE"));
 
       return new DKDBColumn(tableName, DKNumberUtil.getInt(ordinalPosition, -1),

@@ -17,6 +17,7 @@ package org.diffkit.db;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
+
 import org.diffkit.common.DKValidate;
 
 /**
@@ -24,8 +25,8 @@ import org.diffkit.common.DKValidate;
  */
 public class DKDBConnectionInfo {
    public enum Kind {
-      H2("org.h2.Driver"), MYSQL(""), ORACLE(""), DB2("com.ibm.db2.jcc.DB2Driver"), SYBASE(
-         "");
+      H2("org.h2.Driver"), MYSQL(""), ORACLE("oracle.jdbc.driver.OracleDriver"), DB2(
+         "com.ibm.db2.jcc.DB2Driver"), SYBASE("");
 
       public final String _driverName;
 
@@ -62,6 +63,8 @@ public class DKDBConnectionInfo {
          return this.getH2Url();
       case DB2:
          return this.getDB2Url();
+      case ORACLE:
+         return this.getOracleUrl();
 
       default:
          throw new NotImplementedException();
@@ -74,6 +77,11 @@ public class DKDBConnectionInfo {
 
    private String getH2Url() {
       return "jdbc:h2:" + _database;
+   }
+
+   // jdbc:oracle:thin:[username/password]@[//]host_name[:port][/XE]
+   private String getOracleUrl() {
+      return String.format("jdbc:oracle:thin:@//%s:%s/%s", _host, _port, _database);
    }
 
    // jdbc:db2://<host>[:<port>]/<database_name>
