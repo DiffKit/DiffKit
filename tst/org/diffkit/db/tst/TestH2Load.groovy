@@ -17,7 +17,8 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor 
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTableDataAccess;
 import org.diffkit.util.DKResourceUtil;
@@ -32,9 +33,9 @@ import groovy.util.GroovyTestCase;
 public class TestH2Load extends GroovyTestCase {
 	
 	public void testLoader(){
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def connection = connectionSource.connection
 		println "connection->$connection"
 		
@@ -66,9 +67,9 @@ public class TestH2Load extends GroovyTestCase {
 	
 	public void testLoad(){
 		
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def connection = connectionSource.connection
 		println "connection->$connection"
 		
@@ -96,9 +97,9 @@ public class TestH2Load extends GroovyTestCase {
 		def selectSql =  "SELECT * FROM CSVREAD('${csvFile.getAbsolutePath()}');"
 		println "selectSql->$selectSql"
 		
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def connection = connectionSource.connection
 		println "connection->$connection"
 		

@@ -24,7 +24,7 @@ import org.apache.commons.lang.time.DateUtils;
 
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBDatabase 
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable 
 import org.diffkit.db.DKDBTableDataAccess;
@@ -45,7 +45,7 @@ public class TestDBTable extends GroovyTestCase {
 	public void testH2MemTable(){
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=2", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		DKDBTableDataAccess tableDataAccess = [connectionSource]
 		DKDBTable table = this.createCustomerMetaTable()
 		def connection = connectionSource.connection
@@ -62,7 +62,7 @@ public class TestDBTable extends GroovyTestCase {
 	public void testInsert(){
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def table = this.createContextMetaTable()
 		
 		DKDBTableDataAccess tableDataAccess = [connectionSource]
@@ -105,7 +105,7 @@ public class TestDBTable extends GroovyTestCase {
 	public void testCreateDropTable(){
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		DKDBTableDataAccess tableDataAccess = [connectionSource]
 		DKDBTable table = this.createCustomerMetaTable()
 		def connection = connectionSource.connection

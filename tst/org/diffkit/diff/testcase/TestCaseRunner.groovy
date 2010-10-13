@@ -32,7 +32,7 @@ import org.diffkit.common.DKRegexFilenameFilter;
 import org.diffkit.common.DKUnjar;
 import org.diffkit.common.DKValidate;
 
-import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBDatabase 
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTableLoader 
 import org.diffkit.db.tst.DBTestSetup 
@@ -248,7 +248,7 @@ public class TestCaseRunner implements Runnable {
       return new DKFileSink(newSinkPath.absolutePath, sink_)
    }
    
-   private DKDBTableLoader getLoaderForSource(DKDBConnectionSource source_){
+   private DKDBTableLoader getLoaderForSource(DKDBDatabase source_){
       return new DKDBH2Loader(source_)
    }
    

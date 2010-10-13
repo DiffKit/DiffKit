@@ -17,6 +17,8 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBColumn 
+import org.diffkit.db.DKDBType;
+import org.diffkit.db.DKDBTypeInfo;
 
 import groovy.util.GroovyTestCase;
 
@@ -25,19 +27,18 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestDBColumn extends GroovyTestCase {
-	
-	public void testCompareTo(){
-		DKDBColumn[] columns = new DKDBColumn[4]
-		columns[0] = new DKDBColumn('col4',4,"VARCHAR",-1,false)
-		columns[1] = new DKDBColumn('col1',1,"VARCHAR",-1,false)
-		columns[2] = new DKDBColumn('col3',3,"VARCHAR",-1,false)
-		columns[3] = new DKDBColumn('col2',2,"VARCHAR",-1,false)
-		
-		Arrays.sort(columns)
-		assert columns[0].ordinalPosition == 1 
-		assert columns[1].ordinalPosition == 2 
-		assert columns[2].ordinalPosition == 3 
-		assert columns[3].ordinalPosition == 4 
-	}
-	
+   
+   public void testCompareTo(){
+      DKDBColumn[] columns = new DKDBColumn[4]
+      columns[0] = new DKDBColumn('col4',4,DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR),-1,false)
+      columns[1] = new DKDBColumn('col1',1,DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR),-1,false)
+      columns[2] = new DKDBColumn('col3',3,DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR),-1,false)
+      columns[3] = new DKDBColumn('col2',2,DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR),-1,false)
+      
+      Arrays.sort(columns)
+      assert columns[0].ordinalPosition == 1 
+      assert columns[1].ordinalPosition == 2 
+      assert columns[2].ordinalPosition == 3 
+      assert columns[3].ordinalPosition == 4
+   }
 }

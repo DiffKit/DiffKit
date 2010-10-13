@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
@@ -49,7 +49,7 @@ public class DKDBSource implements DKSource {
    private final String _whereClause;
    private final DKTableModel _model;
    private final String[] _keyColumnNames;
-   private final DKDBConnectionSource _connectionSource;
+   private final DKDBDatabase _database;
    private String[] _readColumnNames;
    private ReadType[] _readTypes;
    private final DKDBTable _table;
@@ -64,12 +64,12 @@ public class DKDBSource implements DKSource {
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebug = _log.isDebugEnabled();
 
-   public DKDBSource(String tableName_, String whereClause_,
-                     DKDBConnectionSource connectionSource_, DKTableModel model_,
-                     String[] keyColumnNames_, int[] readColumnIdxs_) throws SQLException {
+   public DKDBSource(String tableName_, String whereClause_, DKDBDatabase database_,
+                     DKTableModel model_, String[] keyColumnNames_, int[] readColumnIdxs_)
+      throws SQLException {
       _log.info("tableName_->{}", tableName_);
       _log.info("whereClause_->{}", whereClause_);
-      _log.info("connectionSource_->{}", connectionSource_);
+      _log.info("database_->{}", database_);
       _log.info("model_->{}", model_);
       _log.info("keyColumnNames_->{}", keyColumnNames_);
       _log.info("readColumnIdxs_->{}", readColumnIdxs_);
@@ -81,10 +81,10 @@ public class DKDBSource implements DKSource {
             "model_", "keyColumnNames_"));
       _tableName = tableName_;
       _whereClause = whereClause_;
-      _connectionSource = connectionSource_;
-      _table = this.getTable(_tableName, _connectionSource);
+      _database = database_;
+      _table = this.getTable(_tableName, _database);
       _log.info("table->{}", _table);
-      DKValidate.notNull(_tableName, _connectionSource);
+      DKValidate.notNull(_tableName, _database);
       if (_table == null)
          throw new RuntimeException(String.format("couldn't find table named->%s",
             _tableName));
@@ -115,8 +115,8 @@ public class DKDBSource implements DKSource {
       this.ensureNotOpen();
       try {
          _readColumnNames = _model.getColumnNames();
-         _readTypes = _table.getReadTypes(_readColumnNames);
-         _connection = _connectionSource.getConnection();
+         _readTypes = _table.getReadTypes(_readColumnNames, _database);
+         _connection = _database.getConnection();
          _resultSet = this.createResultSet();
          if (_isDebug)
             _log.debug("_resultSet->{}", _resultSet);
@@ -141,8 +141,8 @@ public class DKDBSource implements DKSource {
       return _model;
    }
 
-   public DKDBConnectionSource getConnectionSource() {
-      return _connectionSource;
+   public DKDBDatabase getDatabase() {
+      return _database;
    }
 
    public Object[] getNextRow() throws IOException {
@@ -175,7 +175,7 @@ public class DKDBSource implements DKSource {
    // @Override
    public URI getURI() throws IOException {
       try {
-         return new URI(_connectionSource.getConnectionInfo().getJDBCUrl());
+         return new URI(_database.getConnectionInfo().getJDBCUrl());
       }
       catch (URISyntaxException e_) {
          throw new RuntimeException(e_);
@@ -186,7 +186,7 @@ public class DKDBSource implements DKSource {
       return DKSqlUtil.executeQuery(this.generateSelectString(), _connection);
    }
 
-   private DKDBTable getTable(String tableName_, DKDBConnectionSource connectionSource_)
+   private DKDBTable getTable(String tableName_, DKDBDatabase connectionSource_)
       throws SQLException {
       _log.debug("tableName_->{}", tableName_);
       if ((tableName_ == null) || (connectionSource_ == null))

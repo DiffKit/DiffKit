@@ -17,7 +17,7 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBDatabase 
 import org.diffkit.util.DKSqlUtil;
 
 import groovy.util.GroovyTestCase;
@@ -32,7 +32,7 @@ public class TestDBConnectionSource extends GroovyTestCase {
 		
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def connection = connectionSource.connection
 		println "connection->$connection"
 		
@@ -55,7 +55,7 @@ public class TestDBConnectionSource extends GroovyTestCase {
 		
 		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
+		DKDBDatabase connectionSource = [connectionInfo]
 		def connection = connectionSource.connection
 		
 		assert DKSqlUtil.executeUpdate(createTableSql, connection)

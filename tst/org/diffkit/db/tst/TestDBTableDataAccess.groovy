@@ -17,7 +17,8 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource 
+import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor 
 import org.diffkit.db.DKDBTableDataAccess;
 
 import groovy.util.GroovyTestCase;
@@ -27,58 +28,56 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestDBTableDataAccess extends GroovyTestCase {
-	
-	public void testGetTables(){
-		
+   
+   public void testGetTables(){
+      
       println "startsWith->" + 'TABLE_SCHEMA'.startsWith('TABLE_SCHEM')
       
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
-		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
-		def connection = connectionSource.connection
-		println "connection->$connection"
-		def dbMeta = connection.metaData
-		DKDBTableDataAccess tableDataAccess = [connectionSource]
-		println "tableDataAccess->$tableDataAccess"
-		def tables = tableDataAccess.getTables(null, null, 'TABLES')
-		println "tables->$tables"
-		
-		assert tables
-		assert tables.size() == 1
-		println "tables[0]->${tables[0].description}"
-		
-		assert tables[0].tableName == 'TABLES'
-		assert tables[0].catalog == 'TEST'
-		assert tables[0].schema == 'INFORMATION_SCHEMA'
-		assert tables[0].columns 
-		assert tables[0].columns.length == 11 
-		
-		tables[0].columns.each { println "column->${it.description}" } 
-		assert tables[0].columns[0].name == 'TABLE_CATALOG'
-		assert tables[0].columns[0].ordinalPosition == 1
-		assert tables[0].columns[0].dataTypeName == 'VARCHAR'
-		assert tables[0].columns[0].size == -1
-		assert tables[0].columns[0].nullable == true
-		
-	}
-	
-	public void testTableMaps(){
-		
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
-		println "connectionInfo->$connectionInfo"
-		DKDBConnectionSource connectionSource = [connectionInfo]
-		def connection = connectionSource.connection
-		println "connection->$connection"
-		def dbMeta = connection.metaData
-		DKDBTableDataAccess tableDataAccess = [connectionSource]
-		println "tableDataAccess->$tableDataAccess"
-		def tableMaps = tableDataAccess.getTableMaps(null, null, null, dbMeta)
-		println "tableMaps->$tableMaps"
-		
-		assert tableMaps
-		assert tableMaps.find { it['TABLE_NAME'] == 'CATALOGS'}
-		assert tableMaps.find { it['TABLE_NAME'] == 'COLUMNS'}
-		assert tableMaps.find { it['TABLE_NAME'] == 'TABLES'}    
-	}
-	
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase connectionSource = [connectionInfo]
+      def connection = connectionSource.connection
+      println "connection->$connection"
+      def dbMeta = connection.metaData
+      DKDBTableDataAccess tableDataAccess = [connectionSource]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, null, 'TABLES')
+      println "tables->$tables"
+      
+      assert tables
+      assert tables.size() == 1
+      println "tables[0]->${tables[0].description}"
+      
+      assert tables[0].tableName == 'TABLES'
+      assert tables[0].catalog == 'TEST'
+      assert tables[0].schema == 'INFORMATION_SCHEMA'
+      assert tables[0].columns 
+      assert tables[0].columns.length == 11 
+      
+      tables[0].columns.each { println "column->${it.description}" } 
+      assert tables[0].columns[0].name == 'TABLE_CATALOG'
+      assert tables[0].columns[0].ordinalPosition == 1
+      assert tables[0].columns[0].DBTypeName == 'VARCHAR'
+      assert tables[0].columns[0].size == -1
+      assert tables[0].columns[0].nullable == true
+   }
+   
+   public void testTableMaps(){
+      
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase connectionSource = [connectionInfo]
+      def connection = connectionSource.connection
+      println "connection->$connection"
+      def dbMeta = connection.metaData
+      DKDBTableDataAccess tableDataAccess = [connectionSource]
+      println "tableDataAccess->$tableDataAccess"
+      def tableMaps = tableDataAccess.getTableMaps(null, null, null, dbMeta)
+      println "tableMaps->$tableMaps"
+      
+      assert tableMaps
+      assert tableMaps.find { it['TABLE_NAME'] == 'CATALOGS'}
+      assert tableMaps.find { it['TABLE_NAME'] == 'COLUMNS'}
+      assert tableMaps.find { it['TABLE_NAME'] == 'TABLES'}
+   }
 }

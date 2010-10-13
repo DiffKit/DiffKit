@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDBFlavor;
 
 public class TestDBConnection {
 
@@ -13,7 +14,7 @@ public class TestDBConnection {
          // DKDBConnectionInfo connectionInfo = new DKDBConnectionInfo("test",
          // DKDBConnectionInfo.Kind.H2, "mem:test", null, null, "test", "test");
          DKDBConnectionInfo connectionInfo = new DKDBConnectionInfo("db204",
-            DKDBConnectionInfo.Kind.DB2, "LRMDB", "db204.95g.jec.us.ml.com",
+            DKDBFlavor.DB2, "LRMDB", "db204.95g.jec.us.ml.com",
             (Long) 50000L, "analytic", "merrill");
          // 'jdbc:db2://unit_host:unit_port/unit_server'
          testConnectionInfo(connectionInfo);
@@ -29,7 +30,7 @@ public class TestDBConnection {
       System.out.println("JDBCUrl->" + connectionInfo_.getJDBCUrl());
       System.out.println("driverName->" + connectionInfo_.getDriverName());
       System.out.println("connectionInfo->" + connectionInfo_);
-      DKDBConnectionSource connectionSource = new DKDBConnectionSource(connectionInfo_);
+      DKDBDatabase connectionSource = new DKDBDatabase(connectionInfo_);
       Connection connection = connectionSource.getConnection();
       System.out.println("connection->" + connection);
       DatabaseMetaData meta = connection.getMetaData();

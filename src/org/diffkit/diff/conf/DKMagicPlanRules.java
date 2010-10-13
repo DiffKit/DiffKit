@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
 
 import org.diffkit.common.kvc.DKKeyValueCoder;
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 import org.diffkit.diff.conf.DKMagicPlanRule.RuleImplementation;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKSink;
@@ -74,12 +74,12 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule LHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "lhsDBConnectionInfo",
       "if lhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the lhs DBSource",
-      DKDBConnectionSource.class, "lhsSource_.connectionSource_.connectionInfo_",
+      DKDBDatabase.class, "lhsSource_.connectionSource_.connectionInfo_",
       "lhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule RHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "rhsDBConnectionInfo",
       "if rhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the rhs DBSource",
-      DKDBConnectionSource.class, "rhsSource_.connectionSource_.connectionInfo_",
+      DKDBDatabase.class, "rhsSource_.connectionSource_.connectionInfo_",
       "rhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule MODEL_DEFAULT_RULE = new DKMagicPlanRule(
       "modelDefault",

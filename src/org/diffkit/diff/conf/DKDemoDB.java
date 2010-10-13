@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
 import org.diffkit.util.DKSpringUtil;
@@ -63,7 +63,7 @@ public class DKDemoDB {
             "cannot find connectionInfo in Spring config file->%s",
             CONNECTION_INFO_CONFIG_FILE_PATH));
       LOG.info("connectionInfo->{}", connectionInfo);
-      DKDBConnectionSource connectionSource = new DKDBConnectionSource(connectionInfo);
+      DKDBDatabase connectionSource = new DKDBDatabase(connectionInfo);
       DKDBTableDataAccess tableDataAccess = new DKDBTableDataAccess(connectionSource);
       DKDBTable table = tableDataAccess.getTable(PROBE_TABLE_NAME);
       LOG.info("table->{}", table);

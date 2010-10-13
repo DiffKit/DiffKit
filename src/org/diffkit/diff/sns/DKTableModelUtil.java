@@ -15,15 +15,17 @@
  */
 package org.diffkit.diff.sns;
 
-import java.sql.Types;
+import java.sql.SQLException;
 
 import org.diffkit.common.DKUserException;
+import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
+import org.diffkit.db.DKDBType;
+import org.diffkit.db.DKDBTypeInfoDataAccess;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKTableModel;
-import org.diffkit.util.DKSqlUtil;
 
 /**
  * @author jpanico
@@ -33,8 +35,11 @@ public class DKTableModelUtil {
    private DKTableModelUtil() {
    }
 
-   public static DKDBTable createDefaultDBTable(String tableName_,
-                                                DKTableModel tableModel_) {
+   public static DKDBTable createDefaultDBTable(DKDBTypeInfoDataAccess typeInfoDataAccess_,
+                                                String tableName_,
+                                                DKTableModel tableModel_)
+      throws SQLException {
+      DKValidate.notNull(typeInfoDataAccess_);
       if (tableModel_ == null)
          return null;
       DKColumnModel[] columnsModels = tableModel_.getColumns();
@@ -45,11 +50,12 @@ public class DKTableModelUtil {
       return new DKDBTable(null, null, tableName_, columns, primaryKey);
    }
 
-   public static DKDBColumn createDefaultDBColumn(DKColumnModel columnModel_) {
+   public static DKDBColumn createDefaultDBColumn(DKColumnModel columnModel_)
+      throws SQLException {
       if (columnModel_ == null)
          return null;
-      return new DKDBColumn(columnModel_._name, columnModel_._index + 1,
-         DKSqlUtil.getNameForSqlType(getSqlType(columnModel_._type)), 128, true);
+      return new DKDBColumn(columnModel_._name, columnModel_._index + 1, getSqlType(
+         columnModel_._type).toString(), 128, true);
    }
 
    public static DKDBPrimaryKey createDefaultPrimaryKey(String tableName_,
@@ -86,63 +92,63 @@ public class DKTableModelUtil {
       if (column_ == null)
          return null;
       return new DKColumnModel(column_.getOrdinalPosition() - 1, column_.getName(),
-         getModelType(DKSqlUtil.getSqlTypeForName(column_.getDataTypeName())));
+         getModelType(DKDBType.forName(column_.getDBTypeName())));
    }
 
-   public static DKColumnModel.Type getModelType(int sqlType_) {
-      switch (sqlType_) {
-      case Types.INTEGER:
+   public static DKColumnModel.Type getModelType(DKDBType dbType_) {
+      switch (dbType_) {
+      case INTEGER:
          return DKColumnModel.Type.NUMBER;
-      case Types.BIGINT:
+      case BIGINT:
          return DKColumnModel.Type.NUMBER;
-      case Types.REAL:
+      case REAL:
          return DKColumnModel.Type.NUMBER;
-      case Types.FLOAT:
+      case FLOAT:
          return DKColumnModel.Type.NUMBER;
-      case Types.DOUBLE:
+      case DOUBLE:
          return DKColumnModel.Type.NUMBER;
-      case Types.NUMERIC:
+      case NUMERIC:
          return DKColumnModel.Type.NUMBER;
-      case Types.DECIMAL:
+      case DECIMAL:
          return DKColumnModel.Type.NUMBER;
-      case Types.TINYINT:
+      case TINYINT:
          return DKColumnModel.Type.NUMBER;
-      case Types.SMALLINT:
+      case SMALLINT:
          return DKColumnModel.Type.NUMBER;
-      case Types.CHAR:
+      case CHAR:
          return DKColumnModel.Type.STRING;
-      case Types.VARCHAR:
+      case VARCHAR:
          return DKColumnModel.Type.STRING;
-      case Types.LONGVARCHAR:
+      case LONGVARCHAR:
          return DKColumnModel.Type.STRING;
-      case Types.DATE:
+      case DATE:
          return DKColumnModel.Type.DATE;
-      case Types.TIME:
+      case TIME:
          return DKColumnModel.Type.TIME;
-      case Types.TIMESTAMP:
+      case TIMESTAMP:
          return DKColumnModel.Type.TIMESTAMP;
-      case Types.BOOLEAN:
+      case BOOLEAN:
          return DKColumnModel.Type.BOOLEAN;
-      case Types.CLOB:
+      case CLOB:
          return DKColumnModel.Type.TEXT;
 
       default:
-         throw new RuntimeException(String.format("unrecognized sqlType_->%s", sqlType_));
+         throw new RuntimeException(String.format("unrecognized dbType_->%s", dbType_));
       }
    }
 
-   public static int getSqlType(DKColumnModel.Type modelType_) {
+   public static DKDBType getSqlType(DKColumnModel.Type modelType_) {
       switch (modelType_) {
       case NUMBER:
-         return Types.BIGINT;
+         return DKDBType.BIGINT;
       case STRING:
-         return Types.VARCHAR;
+         return DKDBType.VARCHAR;
       case DATE:
-         return Types.DATE;
+         return DKDBType.DATE;
       case TIME:
-         return Types.TIME;
+         return DKDBType.TIME;
       case TIMESTAMP:
-         return Types.TIMESTAMP;
+         return DKDBType.TIMESTAMP;
 
       default:
          throw new RuntimeException(String.format("unrecognized modelType_->%s",

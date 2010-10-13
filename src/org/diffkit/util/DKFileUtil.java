@@ -141,6 +141,9 @@ public class DKFileUtil {
       FileUtils.writeStringToFile(destFile_, contents);
    }
 
+   /**
+    * will not recurse
+    */
    public static void copyDirectory(File srcDir_, File destDir_, FileFilter filter_,
                                     Map<String, String> substitutions_)
       throws IOException {
@@ -154,6 +157,8 @@ public class DKFileUtil {
          return;
       for (int i = 0; i < files.length; i++) {
          File destFile = new File(destDir_, files[i].getName());
+         if (files[i].isDirectory())
+            continue;
          copyFile(files[i], destFile, substitutions_);
       }
    }

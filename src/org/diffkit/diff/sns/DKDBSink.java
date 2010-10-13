@@ -27,10 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
+import org.diffkit.db.DKDBTypeInfoDataAccess;
 import org.diffkit.diff.engine.DKColumnDiff;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
@@ -44,20 +45,20 @@ import org.diffkit.util.DKSqlUtil;
  */
 public class DKDBSink extends DKAbstractSink {
 
-   private final DKDBConnectionSource _connectionSource;
+   private final DKDBDatabase _database;
    private final DKDBTableDataAccess _tableDataAccess;
    private final DKDBTable _diffContextTable;
    private final DKDBTable _diffTable;
    private transient Connection _connection;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBSink(DKDBConnectionSource connectionSource_) {
+   public DKDBSink(DKDBDatabase connectionSource_) throws SQLException {
       super(null);
-      _connectionSource = connectionSource_;
-      _tableDataAccess = new DKDBTableDataAccess(_connectionSource);
+      _database = connectionSource_;
+      _tableDataAccess = new DKDBTableDataAccess(_database);
       _diffContextTable = this.generateDiffContextTable();
       _diffTable = this.generateDiffTable();
-      DKValidate.notNull(_connectionSource, _diffContextTable, _diffTable);
+      DKValidate.notNull(_database, _diffContextTable, _diffTable);
    }
 
    // @Override
@@ -68,7 +69,7 @@ public class DKDBSink extends DKAbstractSink {
    public void open(DKContext context_) throws IOException {
       super.open(context_);
       try {
-         _connection = _connectionSource.getConnection();
+         _connection = _database.getConnection();
          this.ensureTables();
          this.saveContext(context_);
       }
@@ -103,14 +104,14 @@ public class DKDBSink extends DKAbstractSink {
       return _diffTable;
    }
 
-   private void saveContext(DKContext context_) {
+   private void saveContext(DKContext context_) throws SQLException {
       Map<String, ?> row = this.createRow(context_);
-      DKDBTable.insertRow(_diffContextTable, row, _connection);
+      _database.insertRow(row, _diffContextTable);
    }
 
    private void saveDiff(DKDiff diff_, DKContext context_) throws SQLException {
       Map<String, ?> row = this.createRow(diff_, context_);
-      DKDBTable.insertRow(_diffTable, row, _connection);
+      _database.insertRow(row, _diffTable);
    }
 
    // check that diff_context and diff tables exist; if not, create them
@@ -122,7 +123,7 @@ public class DKDBSink extends DKAbstractSink {
    private void ensureDiffContextTable() throws SQLException {
       if (_tableDataAccess.getTable(_diffContextTable.getCatalog(),
          _diffContextTable.getSchema(), _diffContextTable.getTableName()) == null) {
-         if (!DKDBTable.createTable(_diffContextTable, _connection))
+         if (!_database.createTable(_diffContextTable))
             throw new RuntimeException(String.format(
                "couldn't create _diffContextTable->%s", _diffContextTable));
       }
@@ -131,13 +132,14 @@ public class DKDBSink extends DKAbstractSink {
    private void ensureDiffTable() throws SQLException {
       if (_tableDataAccess.getTable(_diffTable.getCatalog(), _diffTable.getSchema(),
          _diffTable.getTableName()) == null) {
-         if (!DKDBTable.createTable(_diffTable, _connection))
+         if (!_database.createTable(_diffTable))
             throw new RuntimeException(String.format("couldn't create _diffTable->%s",
                _diffTable));
       }
    }
 
-   private DKDBTable generateDiffContextTable() {
+   private DKDBTable generateDiffContextTable() throws SQLException {
+      DKDBTypeInfoDataAccess typeInfoDataAccess = _database.getTypeInfoDataAccess();
       DKDBColumn idColumn = new DKDBColumn("ID", 1, "BIGINT", -1, false);
       DKDBColumn lhsColumn = new DKDBColumn("LHS", 2, "VARCHAR", 128, true);
       DKDBColumn rhsColumn = new DKDBColumn("RHS", 3, "VARCHAR", 128, true);
@@ -151,7 +153,8 @@ public class DKDBSink extends DKAbstractSink {
       return new DKDBTable(null, null, "DIFF_CONTEXT", columns, pk);
    }
 
-   private DKDBTable generateDiffTable() {
+   private DKDBTable generateDiffTable() throws SQLException {
+      DKDBTypeInfoDataAccess typeInfoDataAccess = _database.getTypeInfoDataAccess();
       DKDBColumn contextIdColumn = new DKDBColumn("CONTEXT_ID", 1, "BIGINT", -1, true);
       DKDBColumn rowStepColumn = new DKDBColumn("ROW_STEP", 2, "INTEGER", -1, true);
       DKDBColumn columnStepColumn = new DKDBColumn("COLUMN_STEP", 3, "INTEGER", -1, true);

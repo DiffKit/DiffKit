@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 
 /**
  * @author jpanico
@@ -38,7 +38,7 @@ import org.diffkit.db.DKDBConnectionSource;
 public class DKMagicPlanBuilder {
 
    private static final Class<?>[] NON_CACHEABLE_CLASSES = { DKDBConnectionInfo.class,
-      DKDBConnectionSource.class };
+      DKDBDatabase.class };
 
    private final DKMagicPlan _providedPlan;
    private final Map<String, Object> _resolutionCache = new HashMap<String, Object>();

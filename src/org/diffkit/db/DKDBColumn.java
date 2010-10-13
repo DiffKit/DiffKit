@@ -19,8 +19,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import org.diffkit.common.DKValidate;
-import org.diffkit.util.DKSqlUtil;
-import org.diffkit.util.DKSqlUtil.ReadType;
 
 /**
  * @author jpanico
@@ -31,31 +29,26 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
     * index of column in table (starting at 1)
     */
    private final int _ordinalPosition;
-   /**
-    * from java.sql.Types
-    */
-   private final String _dataTypeName;
    private final int _size;
    private final int _scale;
    private final boolean _nullable;
-   private final ReadType _readType;
+   private final String _dbTypeName;
    private DKDBTable _table;
 
-   public DKDBColumn(String name_, int ordinalPosition_, String dataTypeName_, int size_,
+   public DKDBColumn(String name_, int ordinalPosition_, String dbTypeName_, int size_,
                      boolean nullable_) {
-      this(name_, ordinalPosition_, dataTypeName_, size_, 0, nullable_);
+      this(name_, ordinalPosition_, dbTypeName_, size_, 0, nullable_);
    }
 
-   public DKDBColumn(String name_, int ordinalPosition_, String dataTypeName_, int size_,
+   public DKDBColumn(String name_, int ordinalPosition_, String dbTypeName_, int size_,
                      int scale_, boolean nullable_) {
       _name = name_;
       _ordinalPosition = ordinalPosition_;
-      _dataTypeName = dataTypeName_;
       _size = size_;
       _scale = scale_;
       _nullable = nullable_;
-      _readType = DKSqlUtil.getReadTypeForSqlType(dataTypeName_);
-      DKValidate.notNull(_name);
+      _dbTypeName = dbTypeName_;
+      DKValidate.notNull(_name, _dbTypeName);
    }
 
    public void setTable(DKDBTable table_) {
@@ -66,16 +59,16 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
       return _table;
    }
 
+   public String getDBTypeName() {
+      return _dbTypeName;
+   }
+
    public String getName() {
       return _name;
    }
 
    public int getOrdinalPosition() {
       return _ordinalPosition;
-   }
-
-   public String getDataTypeName() {
-      return _dataTypeName;
    }
 
    public int getSize() {
@@ -90,32 +83,9 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
       return _nullable;
    }
 
-   public ReadType getReadType() {
-      return _readType;
-   }
-
-   public String generateCreateDDL() {
-      StringBuilder builder = new StringBuilder();
-      builder.append(String.format("%s\t\t%s%s", _name, _dataTypeName,
-         this.generateSizeSpecifier()));
-      return builder.toString();
-   }
-
-   public String generateSizeSpecifier() {
-      if (_size <= 0)
-         return "";
-      if (_scale <= 0)
-         return String.format("(%s)", _size);
-      return String.format("(%s,%s)", _size, _scale);
-   }
-
-   public String formatForSql(Object value_) {
-      return DKSqlUtil.formatForSql(value_, DKSqlUtil.getSqlTypeForName(_dataTypeName));
-   }
-
    public String toString() {
       return String.format("%s[%s:%s,%s]", ClassUtils.getShortClassName(this.getClass()),
-         _ordinalPosition, _name, _dataTypeName);
+         _ordinalPosition, _name, _dbTypeName);
    }
 
    public String getDescription() {

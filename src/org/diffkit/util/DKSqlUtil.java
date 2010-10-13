@@ -15,20 +15,17 @@
  */
 package org.diffkit.util;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,126 +38,40 @@ public class DKSqlUtil {
       OBJECT, STRING, TEXT;
    }
 
+   public static enum WriteType {
+      NUMBER, STRING, DATE, TIME;
+   }
+
    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
       DEFAULT_DATE_PATTERN);
    private static final String DEFAULT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
    private static final SimpleDateFormat DEFAULT_TIME_FORMAT = new SimpleDateFormat(
       DEFAULT_TIME_PATTERN);
-   private static final Map<Integer, String> _sqlTypeToNameMap;
-   private static final Logger LOG = LoggerFactory.getLogger(DKSqlUtil.class);
 
-   static {
-      _sqlTypeToNameMap = constructSqlTypeToNameMap();
-   }
+   private static final Logger LOG = LoggerFactory.getLogger(DKSqlUtil.class);
 
    private DKSqlUtil() {
    }
 
-   public static String formatForSql(Object value_, int dataType_) {
+   public static String formatForSql(Object value_, WriteType type_) {
       if (value_ == null)
          return "NULL";
-      switch (dataType_) {
-      case Types.BIGINT:
+      switch (type_) {
+      case NUMBER:
          return value_.toString();
-      case Types.INTEGER:
-         return value_.toString();
-      case Types.TINYINT:
-         return value_.toString();
-      case Types.SMALLINT:
-         return value_.toString();
-      case Types.DECIMAL:
-         return value_.toString();
-      case Types.NUMERIC:
-         return value_.toString();
-      case Types.FLOAT:
-         return value_.toString();
-      case Types.DOUBLE:
-         return value_.toString();
-
-      case Types.CHAR:
+      case STRING:
          return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
-      case Types.VARCHAR:
-         return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
-      case Types.LONGVARCHAR:
-         return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
-
-      case Types.DATE:
+      case DATE:
          return DKStringUtil.quote(DEFAULT_DATE_FORMAT.format(value_),
             DKStringUtil.Quote.SINGLE);
-      case Types.TIME:
-         return DKStringUtil.quote(DEFAULT_TIME_FORMAT.format(value_),
-            DKStringUtil.Quote.SINGLE);
-      case Types.TIMESTAMP:
+      case TIME:
          return DKStringUtil.quote(DEFAULT_TIME_FORMAT.format(value_),
             DKStringUtil.Quote.SINGLE);
 
       default:
-         throw new RuntimeException(String.format(
-            "unrecognized java.sql.Types field->%s", dataType_));
+         throw new RuntimeException(String.format("unrecognized type_->%s", type_));
       }
-   }
-
-   public static ReadType getReadTypeForSqlType(int dataType_) {
-      switch (dataType_) {
-      case Types.CLOB:
-         return ReadType.TEXT;
-      case Types.CHAR:
-         return ReadType.STRING;
-      case Types.VARCHAR:
-         return ReadType.STRING;
-      case Types.LONGVARCHAR:
-         return ReadType.STRING;
-      default:
-         return ReadType.OBJECT;
-      }
-   }
-
-   public static ReadType getReadTypeForSqlType(String sqlTypeName_) {
-      if (sqlTypeName_ == null)
-         return null;
-      Integer sqlType = getSqlTypeForName(sqlTypeName_);
-      if (sqlType == null)
-         throw new RuntimeException(String.format(
-            "couldn't find sqlType for sqlTypeName_ [%s]", sqlTypeName_));
-      return getReadTypeForSqlType(sqlType);
-   }
-
-   public static String getNameForSqlType(Integer sqlType_) {
-      if (sqlType_ == null)
-         return null;
-      return _sqlTypeToNameMap.get(sqlType_);
-   }
-
-   public static Integer getSqlTypeForName(String sqlTypeName_) {
-      if (sqlTypeName_ == null)
-         return null;
-      Set<Map.Entry<Integer, String>> entries = _sqlTypeToNameMap.entrySet();
-      for (Map.Entry<Integer, String> entry : entries) {
-         if (entry.getValue().equals(sqlTypeName_))
-            return entry.getKey();
-      }
-      return null;
-   }
-
-   private static Map<Integer, String> constructSqlTypeToNameMap() {
-      // Get all field in java.sql.Types
-      Field[] fields = java.sql.Types.class.getFields();
-      Map<Integer, String> map = new HashMap<Integer, String>(fields.length);
-      for (int i = 0; i < fields.length; i++) {
-         try {
-            String name = fields[i].getName();
-            Integer value = (Integer) fields[i].get(null);
-            map.put(value, name);
-         }
-         catch (IllegalAccessException e_) {
-            LOG.error(null, e_);
-         }
-      }
-      // for Oracle
-      map.put(new Integer(Types.VARCHAR), "VARCHAR2");
-      map.put(new Integer(Types.NUMERIC), "NUMBER");
-      return map;
    }
 
    /**

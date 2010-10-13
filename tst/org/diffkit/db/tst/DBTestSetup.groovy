@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 import java.io.File;
 import java.sql.Connection 
 
-import org.diffkit.db.DKDBConnectionSource;
+import org.diffkit.db.DKDBDatabase;
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableLoader 
@@ -106,7 +106,7 @@ public class DBTestSetup {
       }
    }
    
-   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBConnectionSource connectionSource_){
+   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBDatabase connectionSource_){
       if(!table_)
          return
       

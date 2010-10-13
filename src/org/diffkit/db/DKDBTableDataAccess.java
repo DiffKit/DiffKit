@@ -46,10 +46,11 @@ public class DKDBTableDataAccess {
    private static final String TABLE_SCHEMA_KEY = "TABLE_SCHEM";
    private static final String TABLE_NAME_KEY = "TABLE_NAME";
 
-   private final DKDBConnectionSource _connectionSource;
+   private final DKDBDatabase _connectionSource;
+
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBTableDataAccess(DKDBConnectionSource connectionSource_) {
+   public DKDBTableDataAccess(DKDBDatabase connectionSource_) {
       _connectionSource = connectionSource_;
       DKValidate.notNull(_connectionSource);
    }
@@ -119,7 +120,7 @@ public class DKDBTableDataAccess {
 
    private DKDBTable constructTable(Map<String, ?> tableMap_,
                                     List<Map<String, ?>> columnMaps_,
-                                    List<Map<String, ?>> pkMaps_) {
+                                    List<Map<String, ?>> pkMaps_) throws SQLException {
       String catalogName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
          TABLE_CATALOG_KEY);
       String schemaName = (String) DKMapUtil.getValueForKeyPrefix(tableMap_,
@@ -141,14 +142,13 @@ public class DKDBTableDataAccess {
       return new DKDBTable(catalogName, schemaName, tableName, columns, primaryKey);
    }
 
-   private DKDBColumn constructColumn(Map<String, ?> columnMap_) {
+   private DKDBColumn constructColumn(Map<String, ?> columnMap_) throws SQLException {
       _log.debug("columnMap_->{}", columnMap_);
       String tableName = (String) columnMap_.get("COLUMN_NAME");
       Number ordinalPosition = (Number) columnMap_.get("ORDINAL_POSITION");
       String dataTypeName = (String) columnMap_.get("TYPE_NAME");
       Number columnSize = (Number) columnMap_.get("COLUMN_SIZE");
       Boolean isNullable = DKStringUtil.parseBoolean((String) columnMap_.get("IS_NULLABLE"));
-
       return new DKDBColumn(tableName, DKNumberUtil.getInt(ordinalPosition, -1),
          dataTypeName, DKNumberUtil.getInt(columnSize, -1), isNullable);
    }

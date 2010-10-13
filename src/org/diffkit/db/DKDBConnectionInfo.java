@@ -24,41 +24,33 @@ import org.diffkit.common.DKValidate;
  * @author jpanico
  */
 public class DKDBConnectionInfo {
-   public enum Kind {
-      H2("org.h2.Driver"), MYSQL(""), ORACLE("oracle.jdbc.driver.OracleDriver"), DB2(
-         "com.ibm.db2.jcc.DB2Driver"), SYBASE("");
-
-      public final String _driverName;
-
-      private Kind(String driverName_) {
-         _driverName = driverName_;
-         DKValidate.notNull(_driverName);
-      }
-   }
-
    private final String _name;
-   private final Kind _kind;
+   private final DKDBFlavor _flavor;
    private final String _database;
    private final String _host;
    private final Long _port;
    private final String _username;
    private final String _password;
 
-   public DKDBConnectionInfo(String name_, Kind kind_, String database_, String host_,
-                             Long port_, String username_, String password_) {
+   public DKDBConnectionInfo(String name_, DKDBFlavor kind_, String database_,
+                             String host_, Long port_, String username_, String password_) {
       _name = name_;
-      _kind = kind_;
+      _flavor = kind_;
       _database = database_;
       _host = host_;
       _port = port_;
       _username = username_;
       _password = password_;
 
-      DKValidate.notNull(_name, _kind, _database, _username, _password);
+      DKValidate.notNull(_name, _flavor, _database, _username, _password);
+   }
+
+   public DKDBFlavor getFlavor() {
+      return _flavor;
    }
 
    public String getJDBCUrl() {
-      switch (_kind) {
+      switch (_flavor) {
       case H2:
          return this.getH2Url();
       case DB2:
@@ -72,7 +64,7 @@ public class DKDBConnectionInfo {
    }
 
    public String getDriverName() {
-      return _kind._driverName;
+      return _flavor._driverName;
    }
 
    private String getH2Url() {
