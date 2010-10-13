@@ -108,7 +108,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 
-	<bean id="connectionSource" class="org.diffkit.db.DKDBConnectionSource">
+	<bean id="connectionSource" class="org.diffkit.db.DKDBDatabase">
 		<constructor-arg ref="connectionInfo" />
 	</bean>
 

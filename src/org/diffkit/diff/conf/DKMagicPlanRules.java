@@ -74,12 +74,12 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule LHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "lhsDBConnectionInfo",
       "if lhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the lhs DBSource",
-      DKDBDatabase.class, "lhsSource_.connectionSource_.connectionInfo_",
+      DKDBDatabase.class, "lhsSource_.database_.connectionInfo_",
       "lhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule RHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "rhsDBConnectionInfo",
       "if rhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the rhs DBSource",
-      DKDBDatabase.class, "rhsSource_.connectionSource_.connectionInfo_",
+      DKDBDatabase.class, "rhsSource_.database_.connectionInfo_",
       "rhsDBConnectionInfo", true, new PlanValue(true));
    private static final DKMagicPlanRule MODEL_DEFAULT_RULE = new DKMagicPlanRule(
       "modelDefault",
