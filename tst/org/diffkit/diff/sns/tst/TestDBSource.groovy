@@ -27,8 +27,6 @@ import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable
 import org.diffkit.db.DKDBH2Loader
 import org.diffkit.db.DKDBTableDataAccess;
-import org.diffkit.db.DKDBType 
-import org.diffkit.db.DKDBTypeInfo 
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.sns.DKDBSource 
 import org.diffkit.diff.sns.DKTableModelUtil;
@@ -45,27 +43,27 @@ public class TestDBSource extends GroovyTestCase {
    public void testKeyColumnNames() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase connectionSource = [connectionInfo]
-      def connection = connectionSource.connection
+      DKDBDatabase database = [connectionInfo]
+      def connection = database.connection
       def dbTable = this.createCustomerMetaTable()
-      assert DKDBTable.createTable( dbTable, connection)
+      assert database.createTable( dbTable)
       
-      DKDBSource source = new DKDBSource(dbTable.tableName, null, connectionSource, null, (String[])['first_name'], null)
+      DKDBSource source = new DKDBSource(dbTable.tableName, null, database, null, (String[])['first_name'], null)
       def model = source.model
       assert model
       assert model.key == [0]
-      assert DKDBTable.dropTable( dbTable, connection)
+      assert database.dropTable( dbTable)
    }
    
    public void testRead(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase connectionSource = [connectionInfo]
-      def connection = connectionSource.connection
+      DKDBDatabase database = [connectionInfo]
+      def connection = database.connection
       def dbTable = this.createCustomerMetaTable()
-      assert DKDBTable.createTable( dbTable, connection)
-      DKDBH2Loader loader = [connectionSource]
-      def DKDBTableDataAccess tableDataAccess = [connectionSource]
+      assert database.createTable( dbTable)
+      DKDBH2Loader loader = [database]
+      def DKDBTableDataAccess tableDataAccess = [database]
       def fetchedTable = tableDataAccess.getTable(dbTable.tableName)
       def csvFile = this.getCsvFile()
       assert loader.load(dbTable, csvFile)
@@ -75,11 +73,11 @@ public class TestDBSource extends GroovyTestCase {
       // goof up the model to force a fail
       tableModel.columns[0] = new DKColumnModel(0, 'fist_name', DKColumnModel.Type.STRING)
       shouldFail(IllegalArgumentException){
-         DKDBSource source = new DKDBSource(dbTable.tableName, null, connectionSource, tableModel, null, null)
+         DKDBSource source = new DKDBSource(dbTable.tableName, null, database, tableModel, null, null)
       }
       
       tableModel.columns[0] = new DKColumnModel(0, 'first_name', DKColumnModel.Type.STRING)
-      DKDBSource source = new DKDBSource(dbTable.tableName, null, connectionSource, tableModel, null, null)
+      DKDBSource source = new DKDBSource(dbTable.tableName, null, database, tableModel, null, null)
       source.open(null)
       
       def row = source.nextRow
@@ -99,7 +97,7 @@ public class TestDBSource extends GroovyTestCase {
       
       shouldFail() { row = source.nextRow }
       
-      assert DKDBTable.dropTable( dbTable, connection)
+      assert database.dropTable( dbTable)
    }
    
    private File getCsvFile(){
@@ -110,16 +108,16 @@ public class TestDBSource extends GroovyTestCase {
    }
    
    private DKDBTable createCustomerMetaTable(){
-      DKDBColumn column1 = ['first_name', 1, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), 20, true]
-      DKDBColumn column2 = ['last_name', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column3 = ['address', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column4 = ['city', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column5 = ['country', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column6 = ['age', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.INTEGER), -1, true]
+      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
+      DKDBColumn column3 = ['address', 2, 'VARCHAR', -1, true]
+      DKDBColumn column4 = ['city', 2, 'VARCHAR', -1, true]
+      DKDBColumn column5 = ['country', 2, 'VARCHAR', -1, true]
+      DKDBColumn column6 = ['age', 2, 'INTEGER', -1, true]
       DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
       String[] pkColNames = ['first_name', 'last_name']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
-      DKDBTable table = [DKDBFlavor.H2, null, null, 'CUSTOMER', columns, pk]
+      DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
       return table
    }
 }

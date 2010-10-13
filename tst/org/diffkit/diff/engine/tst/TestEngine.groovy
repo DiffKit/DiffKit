@@ -32,8 +32,6 @@ import org.diffkit.db.DKDBPrimaryKey
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess 
 import org.diffkit.db.DKDBTableLoader 
-import org.diffkit.db.DKDBType 
-import org.diffkit.db.DKDBTypeInfo 
 import org.diffkit.diff.diffor.DKEqualsDiffor;
 import org.diffkit.diff.engine.DKColumnComparison 
 import org.diffkit.diff.engine.DKColumnDiff 
@@ -67,18 +65,18 @@ public class TestEngine extends GroovyTestCase {
     * both sides use the same TableModel, but there are diffs of each sort; uses DBSources
     */
    public void testSameModelFromDBToDB(){
-      def connectionSource = this.getConnectionSource()
-      def connection = connectionSource.connection
+      def database = this.getDatabase()
+      def connection = database.connection
       def lhsName = 'lhs2'
       def rhsName = 'rhs2'
       def lhsDBTable = this.createSimpleDBTableModel(lhsName)
       def rhsDBTable = this.createSimpleDBTableModel(rhsName)
       
-      assert DKDBTable.createTable( lhsDBTable, connection)
-      assert DKDBTable.createTable( rhsDBTable, connection)
+      assert database.createTable( lhsDBTable)
+      assert database.createTable( rhsDBTable)
       
-      DKDBTableDataAccess tableDataAccess = [connectionSource]
-      DKDBH2Loader loader = [connectionSource]
+      DKDBTableDataAccess tableDataAccess = [database]
+      DKDBH2Loader loader = [database]
       
       lhsDBTable = tableDataAccess.getTable(lhsName.toUpperCase())
       rhsDBTable = tableDataAccess.getTable(rhsName.toUpperCase())
@@ -88,28 +86,28 @@ public class TestEngine extends GroovyTestCase {
       assert this.load(lhsName, lhsDBTable, loader)
       assert this.load(rhsName, rhsDBTable, loader)
       
-      def lhsSource = this.createDBSource(lhsDBTable, connectionSource)
-      def rhsSource = this.createDBSource(rhsDBTable, connectionSource)
+      def lhsSource = this.createDBSource(lhsDBTable, database)
+      def rhsSource = this.createDBSource(rhsDBTable, database)
       def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable)
-      DKDBSink sink = new DKDBSink(connectionSource)
+      DKDBSink sink = new DKDBSink(database)
       DKDiffEngine engine = new DKDiffEngine()
       
       engine.diff(lhsSource, rhsSource, sink, tableComparison)
       
       assert lhsSource.lastIndex == 5
       assert rhsSource.lastIndex == 5
-      assert DKDBTable.dropTable( lhsDBTable, connection)
-      assert DKDBTable.dropTable( rhsDBTable, connection)
+      assert database.dropTable( lhsDBTable)
+      assert database.dropTable( rhsDBTable)
       
       def diffContextTable = sink.diffContextTable
       def diffTable = sink.diffTable
       assert diffContextTable
       assert diffTable
-      def contexts = DKDBTable.readAllRows( diffContextTable, connection)
+      def contexts = database.readAllRows( diffContextTable)
       assert contexts
       assert contexts.size() == 1
       println "context->${contexts[0]}"
-      def diffs =  DKDBTable.readAllRows( diffTable, connection)
+      def diffs =  database.readAllRows( diffTable)
       assert diffs
       assert diffs.size() == 4
       def rowStepComparator = new DKMapKeyValueComparator("ROW_STEP")
@@ -132,26 +130,26 @@ public class TestEngine extends GroovyTestCase {
       assert diffs[3]["LHS"] == '6666'
       assert diffs[3]["RHS"] == 'xxxx'
       
-      assert DKDBTable.dropTable( diffContextTable, connection)
-      assert DKDBTable.dropTable( diffTable, connection)
+      assert database.dropTable( diffContextTable)
+      assert database.dropTable( diffTable)
    }
    
    /**
     * both sides use the same TableModel, but there are diffs of each sort; uses DBSources
     */
    public void testSameModelFromDB(){
-      def connectionSource = this.getConnectionSource()
-      def connection = connectionSource.connection
+      def database = this.getDatabase()
+      def connection = database.connection
       def lhsName = 'lhs2'
       def rhsName = 'rhs2'
       def lhsDBTable = this.createSimpleDBTableModel(lhsName)
       def rhsDBTable = this.createSimpleDBTableModel(rhsName)
       
-      assert DKDBTable.createTable( lhsDBTable, connection)
-      assert DKDBTable.createTable( rhsDBTable, connection)
+      assert database.createTable( lhsDBTable )
+      assert database.createTable( rhsDBTable)
       
-      DKDBTableDataAccess tableDataAccess = [connectionSource]
-      DKDBH2Loader loader = [connectionSource]
+      DKDBTableDataAccess tableDataAccess = [database]
+      DKDBH2Loader loader = [database]
       
       lhsDBTable = tableDataAccess.getTable(lhsName.toUpperCase())
       rhsDBTable = tableDataAccess.getTable(rhsName.toUpperCase())
@@ -161,8 +159,8 @@ public class TestEngine extends GroovyTestCase {
       assert this.load(lhsName, lhsDBTable, loader)
       assert this.load(rhsName, rhsDBTable, loader)
       
-      def lhsSource = this.createDBSource(lhsDBTable, connectionSource)
-      def rhsSource = this.createDBSource(rhsDBTable, connectionSource)
+      def lhsSource = this.createDBSource(lhsDBTable, database)
+      def rhsSource = this.createDBSource(rhsDBTable, database)
       def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable)
       def diffFileName = 'testSameModelFromDB.diff'
       DKFileSink sink = this.createSink2( diffFileName)
@@ -172,8 +170,8 @@ public class TestEngine extends GroovyTestCase {
       
       assert lhsSource.lastIndex == 5
       assert rhsSource.lastIndex == 5
-      assert DKDBTable.dropTable( lhsDBTable, connection)
-      assert DKDBTable.dropTable( rhsDBTable, connection)
+      assert database.dropTable( lhsDBTable)
+      assert database.dropTable( rhsDBTable)
       
       def expectedFile = this.getExpectedFile(diffFileName)
       def actualFile = sink.file
@@ -207,11 +205,11 @@ public class TestEngine extends GroovyTestCase {
       return comparison
    }
    
-   private DKDBSource createDBSource(DKDBTable table_, DKDBDatabase connectionSource_) {
+   private DKDBSource createDBSource(DKDBTable table_, DKDBDatabase database_) {
       def tableModel = DKTableModelUtil.createDefaultTableModel(table_, null)
       assert tableModel
       
-      return new DKDBSource(table_.tableName, null, connectionSource_, tableModel, null, null)
+      return new DKDBSource(table_.tableName, null, database_, tableModel, null, null)
    }
    
    private boolean load(String name_, DKDBTable table_, DKDBTableLoader loader_){
@@ -219,7 +217,7 @@ public class TestEngine extends GroovyTestCase {
       return loader_.load(table_, csvFile)
    }
    
-   private DKDBDatabase getConnectionSource(){
+   private DKDBDatabase getDatabase(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       return  new DKDBDatabase(connectionInfo)
@@ -233,13 +231,13 @@ public class TestEngine extends GroovyTestCase {
    }
    
    private DKDBTable createSimpleDBTableModel(String tablename_){
-      DKDBColumn column1 = ['column1', 1, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), 20, true]
-      DKDBColumn column2 = ['column2', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column3 = ['column3', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
+      DKDBColumn column1 = ['column1', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['column2', 2, 'VARCHAR', -1, true]
+      DKDBColumn column3 = ['column3', 2, 'VARCHAR', -1, true]
       DKDBColumn[] columns = [column1, column2, column3]
       String[] pkColNames = ['column1']
       DKDBPrimaryKey pk = ['pk_' + tablename_, pkColNames]
-      DKDBTable table = [DKDBFlavor.H2, null, null, tablename_, columns, pk]
+      DKDBTable table = [null, null, tablename_, columns, pk]
       return table
    }
    

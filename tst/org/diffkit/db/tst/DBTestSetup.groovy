@@ -106,15 +106,15 @@ public class DBTestSetup {
       }
    }
    
-   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBDatabase connectionSource_){
+   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBDatabase database_){
       if(!table_)
          return
       
-      Connection connection = connectionSource_.connection
+      Connection connection = database_.connection
       _log.debug("connection->{}",connection)
-      DKDBTable.createTable( table_, connection)
+      database_.createTable( table_)
       DKSqlUtil.close(connection)
-      DKDBTableLoader loader = new DKDBH2Loader(connectionSource_)
+      DKDBTableLoader loader = new DKDBH2Loader(database_)
       _log.debug("loader->{}",loader)
       loader.load(table_, dataFile_)
    }

@@ -17,6 +17,7 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBFlavor;
 
 import groovy.util.GroovyTestCase;
 
@@ -28,7 +29,7 @@ public class TestDBConnectionInfobleComparator extends GroovyTestCase {
    
    public void testH2(){
       
-      DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       
       assert connectionInfo.JDBCUrl

@@ -25,9 +25,11 @@ import org.apache.commons.lang.time.DateUtils;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBConnectionInfo 
 import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable 
 import org.diffkit.db.DKDBTableDataAccess;
+import org.diffkit.db.DKSqlGenerator;
 import org.diffkit.util.DKSqlUtil;
 
 import groovy.util.GroovyTestCase;
@@ -43,39 +45,39 @@ public class TestDBTable extends GroovyTestCase {
 	 * or are they visible across connections?
 	 */
 	public void testH2MemTable(){
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=2", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test',DKDBFlavor.H2,"mem:test;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=2", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBDatabase connectionSource = [connectionInfo]
-		DKDBTableDataAccess tableDataAccess = [connectionSource]
+		DKDBDatabase database = [connectionInfo]
+		DKDBTableDataAccess tableDataAccess = [database]
 		DKDBTable table = this.createCustomerMetaTable()
-		def connection = connectionSource.connection
-		assert DKDBTable.createTable( table, connection)
+		def connection = database.connection
+		assert database.createTable( table)
 		DKSqlUtil.close(connection)
 		def fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert fetchedTable
 		
-		assert DKDBTable.dropTable( fetchedTable, connectionSource.connection)
+		assert database.dropTable( fetchedTable)
 		fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert !fetchedTable
 	}
 	
 	public void testInsert(){
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBDatabase connectionSource = [connectionInfo]
+		DKDBDatabase database = [connectionInfo]
 		def table = this.createContextMetaTable()
 		
-		DKDBTableDataAccess tableDataAccess = [connectionSource]
-		def connection = connectionSource.connection
-		assert DKDBTable.createTable( table, connection)
+		DKDBTableDataAccess tableDataAccess = [database]
+		def connection = database.connection
+		assert database.createTable( table)
 		def fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert fetchedTable
 		
 		def date = DateUtils.round(new Date(10000), Calendar.DAY_OF_MONTH)
 		def row = [ID:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: date, RUN_DATE: date ]
-		assert DKDBTable.insertRow(fetchedTable, row, connection)
+		assert database.insertRow(row, fetchedTable)
 		
-		def fetchedRows = DKDBTable.readAllRows( fetchedTable, connection)
+		def fetchedRows = database.readAllRows( fetchedTable)
 		println "fetchedRows->$fetchedRows"
 		assert fetchedRows
 		assert fetchedRows.size() == 1
@@ -84,7 +86,7 @@ public class TestDBTable extends GroovyTestCase {
 		assert fetchedRows[0]['WHEN'] == row['WHEN']
 		assert fetchedRows[0]['RUN_DATE'] == row['RUN_DATE']
 		
-		assert DKDBTable.dropTable( table, connection)
+		assert database.dropTable( table)
 		fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert !fetchedTable
 	}
@@ -92,8 +94,11 @@ public class TestDBTable extends GroovyTestCase {
 	public void testGenerateInsert(){
 		def table = this.createContextMetaTable()
 		def row = [id:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: new Date(10000), RUN_DATE: new Date(10000) ]
-		
-		def insert = table.generateInsertDML(row)
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBDatabase database = [connectionInfo]
+      DKSqlGenerator sqlGenerator = [database]
+      
+		def insert = sqlGenerator.generateInsertDML(row, table)
 		println "insert->$insert"
 		assert  StringUtils.deleteWhitespace(insert) == StringUtils.deleteWhitespace(
 		"""INSERT INTO DIFF_CONTEXT (id, LHS_SOURCE, RHS_SOURCE, WHEN, RUN_DATE)
@@ -103,13 +108,13 @@ public class TestDBTable extends GroovyTestCase {
 	}
 	
 	public void testCreateDropTable(){
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBDatabase connectionSource = [connectionInfo]
-		DKDBTableDataAccess tableDataAccess = [connectionSource]
+		DKDBDatabase database = [connectionInfo]
+		DKDBTableDataAccess tableDataAccess = [database]
 		DKDBTable table = this.createCustomerMetaTable()
-		def connection = connectionSource.connection
-		assert DKDBTable.createTable( table, connection)
+		def connection = database.connection
+		assert database.createTable( table)
 		
 		def fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert fetchedTable
@@ -117,14 +122,18 @@ public class TestDBTable extends GroovyTestCase {
 		assert fetchedPK
 		assert fetchedTable.primaryKeyColumnIndices == (int[])[0,1]
 		
-		assert DKDBTable.dropTable( table, connection)
+		assert database.dropTable( table)
 		fetchedTable = tableDataAccess.getTable(null, null, table.tableName)
 		assert !fetchedTable
 	}
 	
 	public void testGenerateDDL(){
 		DKDBTable table = this.createCustomerMetaTable()
-		String ddl = table.generateCreateDDL()
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBDatabase database = [connectionInfo]
+      DKSqlGenerator sqlGenerator = [database]
+      
+		String ddl = sqlGenerator.generateCreateDDL(table)
 		println "ddl->$ddl"
 		
 		assert ddl

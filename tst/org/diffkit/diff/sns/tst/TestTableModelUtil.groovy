@@ -67,16 +67,16 @@ public class TestTableModelUtil extends GroovyTestCase {
    }
    
    private DKDBTable createCustomerMetaTable(){
-      DKDBColumn column1 = ['first_name', 1, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), 20, true]
-      DKDBColumn column2 = ['last_name', 2, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column3 = ['address', 3, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column4 = ['city', 4, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column5 = ['country', 5, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.VARCHAR), -1, true]
-      DKDBColumn column6 = ['age', 6, DKDBTypeInfo.getDefaultTypeInfo(DKDBType.INTEGER), -1, true]
+      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
+      DKDBColumn column3 = ['address', 3, 'VARCHAR', -1, true]
+      DKDBColumn column4 = ['city', 4, 'VARCHAR', -1, true]
+      DKDBColumn column5 = ['country', 5, 'VARCHAR', -1, true]
+      DKDBColumn column6 = ['age', 6, 'INTEGER', -1, true]
       DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
       String[] pkColNames = ['first_name', 'last_name']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
-      DKDBTable table = [DKDBFlavor.H2, null, null, 'CUSTOMER', columns, pk]
+      DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
       return table
    }
 }

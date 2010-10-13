@@ -21,6 +21,7 @@ import java.sql.Types;
 
 import org.diffkit.db.DKDBConnectionInfo 
 import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.util.DKSqlUtil;
 
 import groovy.util.GroovyTestCase;
@@ -32,10 +33,10 @@ import groovy.util.GroovyTestCase;
 public class TestSqlUtil extends GroovyTestCase {
 	
 	public void testReadRowsFromSelect(){
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBDatabase connectionSource = [connectionInfo]
-		def connection = connectionSource.connection
+		DKDBDatabase database = [connectionInfo]
+		def connection = database.connection
 		println "connection->$connection"
 		
 		assert connection
@@ -45,19 +46,13 @@ public class TestSqlUtil extends GroovyTestCase {
 		assert rows.find { it['TABLE_NAME'] == 'TABLES'}
 		
 	}
-	
-	public void testNameForSqlType(){
-		assert DKSqlUtil.getNameForSqlType(Types.VARCHAR) == 'VARCHAR'
-		assert DKSqlUtil.getNameForSqlType(Types.BIGINT) == 'BIGINT'
-		assert DKSqlUtil.getNameForSqlType(Types.TIMESTAMP) == 'TIMESTAMP'
-	}
-	
+		
 	public void testReadRowsFromResultSet(){
 		
-		DKDBConnectionInfo connectionInfo = ['test', DKDBConnectionInfo.Kind.H2,"mem:test", null, null, 'test', 'test']
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
-		DKDBDatabase connectionSource = [connectionInfo]
-		def connection = connectionSource.connection
+		DKDBDatabase database = [connectionInfo]
+		def connection = database.connection
 		println "connection->$connection"
 		
 		assert connection
