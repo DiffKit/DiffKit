@@ -31,6 +31,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
 
 import org.diffkit.common.DKRegexFilenameFilter;
+import org.diffkit.common.DKRuntime 
 import org.diffkit.common.DKUnjar;
 import org.diffkit.common.DKValidate;
 
@@ -345,6 +346,7 @@ public class TestCaseRunner implements Runnable {
    public static void main(String[] args_){
       println "now->${new Date()}"
       println "class->${TestCaseRunner.class}"
+      println "DiffKit home->${DKRuntime.instance.diffKitHome}"
       def testCasesResourcePath =  getDefaultDataPath() + TEST_CASE_FILE_NAME
       println "testCasesResourcePath->$testCasesResourcePath"
       def runner = DKSpringUtil.getBean( 'runner', (String[]) [ testCasesResourcePath ], TestCaseRunner.class.getClassLoader())

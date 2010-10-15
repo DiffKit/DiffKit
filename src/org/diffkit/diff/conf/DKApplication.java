@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKDistProperties;
+import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKUserException;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffEngine;
@@ -43,6 +44,7 @@ import org.diffkit.util.DKSpringUtil;
  * @author jpanico
  */
 public class DKApplication {
+   private static final String APPLICATION_NAME = "diffkit-app";
    private static final String VERSION_OPTION_KEY = "version";
    private static final String HELP_OPTION_KEY = "help";
    private static final String TEST_OPTION_KEY = "test";
@@ -72,6 +74,9 @@ public class DKApplication {
 
    public static void main(String[] args_) {
       LOG.debug("args_->{}", Arrays.toString(args_));
+      DKRuntime.getInstance().setApplicationName(APPLICATION_NAME);
+      USER_LOG.info("DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
+
       try {
          CommandLineParser parser = new PosixParser();
          CommandLine line = parser.parse(OPTIONS, args_);
