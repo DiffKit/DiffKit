@@ -46,6 +46,7 @@ import org.diffkit.util.DKSpringUtil;
  */
 public class DKApplication {
    private static final String APPLICATION_NAME = "diffkit-app";
+
    private static final String VERSION_OPTION_KEY = "version";
    private static final String HELP_OPTION_KEY = "help";
    private static final String TEST_OPTION_KEY = "test";
@@ -57,6 +58,7 @@ public class DKApplication {
    private static final String CONF_DIR_NAME = "conf";
    private static final String LOGBACK_FILE_NAME = "logback.xml";
    private static final String LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY = "logback.configurationFile";
+
    private static Logger _systemLog;
    private static Logger _userLog;
    private static File _confDir;
@@ -182,13 +184,18 @@ public class DKApplication {
 
    private static void configureLogging() {
       File logbackConfFile = new File(getConfDir(), LOGBACK_FILE_NAME);
-      if (!logbackConfFile.canRead())
-         System.out.printf(
-            "WARNING: logging configuration file '%s' does not exist or can not be read! will stagger on as best as can.",
-            logbackConfFile);
+      String logConfPath = null;
+      if (!logbackConfFile.canRead()) {
+         System.out.printf("no logging configuration file->%s.\n", logbackConfFile);
+         // there is a default conf file in the jar that should get picked up
+         // with this entry
+         logConfPath = "conf/" + LOGBACK_FILE_NAME;
+      }
+      else {
+         logConfPath = logbackConfFile.getAbsolutePath();
+      }
       if (System.getProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY) == null)
-         System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY,
-            logbackConfFile.getAbsolutePath());
+         System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY, logConfPath);
    }
 
    private static File getConfDir() {
@@ -197,9 +204,7 @@ public class DKApplication {
       File home = DKRuntime.getInstance().getDiffKitHome();
       _confDir = new File(home, CONF_DIR_NAME);
       if (!_confDir.isDirectory())
-         System.out.printf(
-            "WARNING: configuration directory '%s' does not exist! will stagger on as best as can.",
-            _confDir);
+         System.out.printf("no conf dir->%s.\n", _confDir);
       return _confDir;
    }
 
