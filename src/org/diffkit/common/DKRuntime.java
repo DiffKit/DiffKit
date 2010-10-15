@@ -63,6 +63,9 @@ public class DKRuntime {
     * jar matches (contains) the .applicationName, then use the dir that
     * (application) jar is in. <br/>
     * 3) CWD (user.dir).
+    * 
+    * @return always guaranteed to return a non-null value that is at least
+    *         fairly credible
     */
    private File findDiffKitHome() {
       String propertyValue = System.getProperty(DIFFKIT_HOME_PROPERTY);

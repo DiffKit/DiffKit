@@ -19,13 +19,8 @@ import com.jdotsoft.jarloader.JarClassLoader;
 
 public class DKLauncher {
    private static final String TOOL_CLASS_NAME = "org.diffkit.diff.conf.DKApplication";
-   private static final String LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY = "logback.configurationFile";
-   private static final String DEFAULT_LOGBACK_CONFIGURATION_FILE_PATH = "conf/logback.xml";
 
    public static void main(String[] args_) {
-      if (System.getProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY) == null)
-         System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY,
-            DEFAULT_LOGBACK_CONFIGURATION_FILE_PATH);
       JarClassLoader jcl = new JarClassLoader();
       try {
          jcl.invokeMain(TOOL_CLASS_NAME, args_);

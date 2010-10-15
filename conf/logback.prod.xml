@@ -14,6 +14,10 @@
          <Pattern>%message%n</Pattern>
       </layout>
    </appender>
+
+   <logger name="org.diffkit">
+      <level value="warn" />
+   </logger>
    
    <logger name="user" additivity="false">
       <level value="info" />

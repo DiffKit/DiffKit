@@ -15,6 +15,7 @@
  */
 package org.diffkit.diff.conf;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
@@ -53,8 +54,12 @@ public class DKApplication {
    private static final String DEMO_DB_OPTION_KEY = "demoDB";
    private static final Options OPTIONS = new Options();
 
-   private static final Logger LOG = LoggerFactory.getLogger(DKApplication.class);
-   private static final Logger USER_LOG = LoggerFactory.getLogger("user");
+   private static final String CONF_DIR_NAME = "conf";
+   private static final String LOGBACK_FILE_NAME = "logback.xml";
+   private static final String LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY = "logback.configurationFile";
+   private static Logger _systemLog;
+   private static Logger _userLog;
+   private static File _confDir;
 
    static {
       OPTIONS.addOption(new Option(VERSION_OPTION_KEY,
@@ -73,9 +78,10 @@ public class DKApplication {
    }
 
    public static void main(String[] args_) {
-      LOG.debug("args_->{}", Arrays.toString(args_));
-      DKRuntime.getInstance().setApplicationName(APPLICATION_NAME);
-      USER_LOG.info("DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
+      initialize();
+      Logger systemLog = getSystemLog();
+      Logger userLog = getUserLog();
+      systemLog.debug("args_->{}", Arrays.toString(args_));
 
       try {
          CommandLineParser parser = new PosixParser();
@@ -103,22 +109,23 @@ public class DKApplication {
             rootCause = e_;
          if ((rootCause instanceof DKUserException)
             || (rootCause instanceof FileNotFoundException)) {
-            LOG.info(null, e_);
-            USER_LOG.info("error->{}", rootCause.getMessage());
+            systemLog.info(null, e_);
+            userLog.info("error->{}", rootCause.getMessage());
          }
          else
-            LOG.error(null, e_);
+            systemLog.error(null, e_);
       }
    }
 
    private static void printVersion() {
-      USER_LOG.info("version->" + DKDistProperties.getPublicVersionString());
+      Logger userLog = getUserLog();
+      userLog.info("version->" + DKDistProperties.getPublicVersionString());
       System.exit(0);
    }
 
    private static void printInvalidArguments(String[] args_) {
-      USER_LOG.info(String.format("Invalid command line arguments: %s",
-         Arrays.toString(args_)));
+      getUserLog().info(
+         String.format("Invalid command line arguments: %s", Arrays.toString(args_)));
       printHelp();
    }
 
@@ -130,24 +137,26 @@ public class DKApplication {
 
    private static void runPlan(String planFilesString_, boolean errorOnDiff_)
       throws Exception {
-      LOG.info("planFilesString_->{}", planFilesString_);
+      Logger systemLog = getSystemLog();
+      Logger userLog = getUserLog();
+      systemLog.info("planFilesString_->{}", planFilesString_);
       String[] planFiles = planFilesString_.split("\\,");
-      USER_LOG.info("planfile(s)->{}", planFiles);
+      userLog.info("planfile(s)->{}", planFiles);
       DKPlan plan = (DKPlan) DKSpringUtil.getBean("plan", planFiles,
          DKApplication.class.getClassLoader());
-      LOG.info("plan->{}", plan);
+      systemLog.info("plan->{}", plan);
       DKDiffEngine engine = new DKDiffEngine();
-      LOG.info("engine->{}", engine);
+      systemLog.info("engine->{}", engine);
       DKSource lhsSource = plan.getLhsSource();
       DKSource rhsSource = plan.getRhsSource();
       DKSink sink = plan.getSink();
       DKTableComparison tableComparison = plan.getTableComparison();
-      USER_LOG.info("lhsSource->{}", lhsSource);
-      USER_LOG.info("rhsSource->{}", rhsSource);
-      USER_LOG.info("sink->{}", sink);
-      USER_LOG.info("tableComparison->{}", tableComparison);
+      userLog.info("lhsSource->{}", lhsSource);
+      userLog.info("rhsSource->{}", rhsSource);
+      userLog.info("sink->{}", sink);
+      userLog.info("tableComparison->{}", tableComparison);
       DKContext diffContext = engine.diff(lhsSource, rhsSource, sink, tableComparison);
-      USER_LOG.info(sink.generateSummary(diffContext));
+      userLog.info(sink.generateSummary(diffContext));
       if (plan.getSink().getDiffCount() == 0)
          System.exit(0);
       if (errorOnDiff_)
@@ -155,12 +164,56 @@ public class DKApplication {
       System.exit(0);
    }
 
+   private static void runDemoDB() throws Exception {
+      DKDemoDB.run();
+   }
+
    private static void runTestCases() {
-      USER_LOG.info("running TestCases");
+      Logger userLog = getUserLog();
+      userLog.info("running TestCases");
       DKTestBridge.runTestCases();
    }
 
-   private static void runDemoDB() throws Exception {
-      DKDemoDB.run();
+   private static void initialize() {
+      DKRuntime.getInstance().setApplicationName(APPLICATION_NAME);
+      configureLogging();
+      getUserLog().info("DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
+   }
+
+   private static void configureLogging() {
+      File logbackConfFile = new File(getConfDir(), LOGBACK_FILE_NAME);
+      if (!logbackConfFile.canRead())
+         System.out.printf(
+            "WARNING: logging configuration file '%s' does not exist or can not be read! will stagger on as best as can.",
+            logbackConfFile);
+      if (System.getProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY) == null)
+         System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY,
+            logbackConfFile.getAbsolutePath());
+   }
+
+   private static File getConfDir() {
+      if (_confDir != null)
+         return _confDir;
+      File home = DKRuntime.getInstance().getDiffKitHome();
+      _confDir = new File(home, CONF_DIR_NAME);
+      if (!_confDir.isDirectory())
+         System.out.printf(
+            "WARNING: configuration directory '%s' does not exist! will stagger on as best as can.",
+            _confDir);
+      return _confDir;
+   }
+
+   private static Logger getSystemLog() {
+      if (_systemLog != null)
+         return _systemLog;
+      _systemLog = LoggerFactory.getLogger(DKApplication.class);
+      return _systemLog;
+   }
+
+   private static Logger getUserLog() {
+      if (_userLog != null)
+         return _userLog;
+      _userLog = LoggerFactory.getLogger("user");
+      return _userLog;
    }
 }
