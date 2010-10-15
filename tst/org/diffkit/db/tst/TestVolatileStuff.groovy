@@ -20,6 +20,7 @@ package org.diffkit.db.tst
 
 import org.diffkit.db.DKDBConnectionInfo;
 import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBTableDataAccess 
 
 import groovy.util.GroovyTestCase;
@@ -30,22 +31,36 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testOracleConnection(){
-//      DKDBConnectionInfo connectionInfo = ['oracle', DKDBConnectionInfo.Kind.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
-//      println "connectionInfo->$connectionInfo"
-//      DKDBConnectionSource connectionSource = [connectionInfo]
-//      def connection = connectionSource.connection
-//      println "connection->$connection"
-//      
-//      assert connection
-//      def meta = connection.metaData
-//      println "meta->$meta"
-//      assert meta
-//      DKDBTableDataAccess tableDataAccess = [connectionSource]
-//      println "tableDataAccess->$tableDataAccess"
-//      def tables = tableDataAccess.getTables(null, 'SYS', 'USER_TABLES')
-//      println "tables->$tables"
-//      println "USER_TABLES->${tables[0].description}"
+   public void testDB2(){
+      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      assert connection
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, 'SYSCAT', 'TABLES')
+      println "tables->$tables"
+      println "TABLES->${tables[0].description}"
+   }
+   
+   public void testOracle(){
+      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      
+      assert connection
+      def meta = connection.metaData
+      println "meta->$meta"
+      assert meta
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, 'SYS', 'USER_TABLES')
+      println "tables->$tables"
+      println "USER_TABLES->${tables[0].description}"
    }
    
    public void testH2(){

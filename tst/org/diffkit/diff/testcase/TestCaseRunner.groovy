@@ -19,6 +19,8 @@ package org.diffkit.diff.testcase
 
 
 import java.net.URL;
+import java.security.CodeSource 
+import java.security.ProtectionDomain 
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern 
 
@@ -123,8 +125,11 @@ public class TestCaseRunner implements Runnable {
     * copy the data files into the TestCaseRunnerRun working directory
     */
    private TestCaseRunnerRun setupRunnerRun(){
+      ProtectionDomain pDomain = this.class.protectionDomain
+      CodeSource codeSource = pDomain.codeSource
+      URL loc = codeSource.location
+      System.out.println("loc->"+loc)
       TestCaseRunnerRun runnerRun = [new File('./')]
-      DKResourceUtil.addResourceDir(runnerRun.dir)
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
       URL dataPathUrl = classLoader.getResource(_dataPath)
@@ -149,6 +154,7 @@ public class TestCaseRunner implements Runnable {
          File dataDir = [dataPathUrl.toURI()]
          DKFileUtil.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER, substitutionMap)
       }
+      DKResourceUtil.addResourceDir(runnerRun.dir)
       return runnerRun
    }
    

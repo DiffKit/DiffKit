@@ -22,7 +22,7 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.diffkit.common.DKProperties;
+import org.diffkit.common.DKRuntime;
 import org.diffkit.util.DKClassUtil;
 
 /**
@@ -35,7 +35,7 @@ public class DKTestBridge {
    private static final Logger LOG = LoggerFactory.getLogger(DKTestBridge.class);
 
    public static void runTestCases() {
-      System.setProperty(DKProperties.IS_TEST_PROPERTY, "true");
+      System.setProperty(DKRuntime.IS_TEST_PROPERTY, "true");
       try {
          Runnable testCaseRunner = (Runnable) getTestCaseRunner();
          testCaseRunner.run();

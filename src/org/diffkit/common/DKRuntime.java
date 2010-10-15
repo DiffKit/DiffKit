@@ -20,7 +20,7 @@ import org.apache.commons.lang.BooleanUtils;
 /**
  * @author jpanico
  */
-public class DKProperties {
+public class DKRuntime {
    public static final String IS_TEST_PROPERTY = "isTest";
    public static final Boolean IS_TEST;
 
