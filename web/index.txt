@@ -32,7 +32,7 @@ It is a command line utility, driven by text configuration files, and as such is
 very well suited to scripting, automated operation, and embedding into Unix
 workflows.
 
-The principal use of DiffKit is for regression testing processes that create or
+The principal use of DiffKit is for regression testing of processes that create or
 manipulate persistent table data:
 
 [quote, , 'http://www.agiledata.org/essays/databaseTesting.html[Database Testing: How to Regression Test a Relational Database]' ]

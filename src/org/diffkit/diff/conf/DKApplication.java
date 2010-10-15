@@ -24,6 +24,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -64,19 +65,22 @@ public class DKApplication {
    private static File _confDir;
 
    static {
-      OPTIONS.addOption(new Option(VERSION_OPTION_KEY,
+      OptionGroup optionGroup = new OptionGroup();
+      optionGroup.addOption(new Option(VERSION_OPTION_KEY,
          "print the version information and exit"));
-      OPTIONS.addOption(new Option(HELP_OPTION_KEY, "print this message"));
-      OPTIONS.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
+      optionGroup.addOption(new Option(HELP_OPTION_KEY, "print this message"));
+      optionGroup.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
 
       OptionBuilder.withArgName("file1[,file2...]");
       OptionBuilder.hasArg();
       OptionBuilder.withDescription("perform diff using given file(s) for plan");
-      OPTIONS.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
-      OPTIONS.addOption(new Option(
+      optionGroup.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
+      optionGroup.addOption(new Option(
          ERROR_ON_DIFF_OPTION_KEY,
          "exit with error status code (-1) if diffs are detected. otherwise will always exit with 0 unless an operating Exception was encountered"));
-      OPTIONS.addOption(new Option(DEMO_DB_OPTION_KEY, "run embedded demo H2 database"));
+      optionGroup.addOption(new Option(DEMO_DB_OPTION_KEY,
+         "run embedded demo H2 database"));
+      OPTIONS.addOptionGroup(optionGroup);
    }
 
    public static void main(String[] args_) {
