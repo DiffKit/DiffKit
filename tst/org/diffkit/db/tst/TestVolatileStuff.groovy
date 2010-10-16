@@ -31,7 +31,7 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testDB2(){
+   public void tXstDB2(){
       DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]
@@ -45,7 +45,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       println "TABLES->${tables[0].description}"
    }
    
-   public void testOracle(){
+   public void tXstOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]
