@@ -68,6 +68,16 @@ public class DKDBTypeInfoDataAccess {
       return typeInfoMap.get(type_);
    }
 
+   /**
+    * convenience method built on getTypeInfo(String)
+    */
+   public DKDBType getType(String dbTypeName_) throws SQLException {
+      DKDBTypeInfo typeInfo = this.getTypeInfo(dbTypeName_);
+      if (typeInfo == null)
+         return null;
+      return typeInfo.getType();
+   }
+
    public DKDBTypeInfo getTypeInfo(String dbTypeName_) throws SQLException {
       if (dbTypeName_ == null)
          return null;

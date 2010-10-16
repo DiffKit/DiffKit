@@ -92,7 +92,17 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
       return ReflectionToStringBuilder.toString(this);
    }
 
-   // @Override
+   public boolean isPartOfPrimaryKey() {
+      DKDBTable table = this.getTable();
+      if (table == null)
+         return false;
+      DKDBPrimaryKey pk = table.getPrimaryKey();
+      if (pk == null)
+         return false;
+      return pk.containsColumnName(this.getName());
+   }
+
+   @Override
    public int compareTo(DKDBColumn target_) {
       if (_ordinalPosition < target_._ordinalPosition)
          return -1;

@@ -15,6 +15,8 @@
  */
 package org.diffkit.db;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import org.diffkit.common.DKValidate;
 
 /**
@@ -38,15 +40,9 @@ public class DKDBPrimaryKey {
       return _columnNames;
    }
 
-   public String generateCreateDDL() {
-      StringBuilder builder = new StringBuilder();
-      builder.append(String.format("CONSTRAINT %s PRIMARY KEY (", _name));
-      for (int i = 0; i < _columnNames.length; i++) {
-         builder.append(_columnNames[i]);
-         if (i < (_columnNames.length - 1))
-            builder.append(",");
-      }
-      builder.append(")");
-      return builder.toString();
+   public boolean containsColumnName(String columnName_) {
+      if (columnName_ == null)
+         return false;
+      return ArrayUtils.contains(_columnNames, columnName_);
    }
 }

@@ -23,7 +23,24 @@ import org.diffkit.util.DKSqlUtil.WriteType;
  * @author jpanico
  */
 public enum DKDBType {
-   ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR, CLOB, DATALINK, DATE, DECIMAL, DISTINCT, DOUBLE, FLOAT, INTEGER, JAVA_OBJECT, LONGNVARCHAR, LONGVARBINARY, LONGVARCHAR, NCHAR, NCLOB, NULL, NUMERIC, NVARCHAR, OTHER, REAL, REF, ROWID, SMALLINT, SQLXML, STRUCT, TIME, TIMESTAMP, TINYINT, VARBINARY, VARCHAR, _H2_IDENTITY, _H2_UUID, _H2_VARCHAR_IGNORECASE;
+   ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR(false), CLOB(false), DATALINK, DATE, DECIMAL(
+      false), DISTINCT, DOUBLE, FLOAT(false), INTEGER, JAVA_OBJECT, LONGNVARCHAR, LONGVARBINARY, LONGVARCHAR, NCHAR, NCLOB, NULL, NUMERIC(
+      false), NVARCHAR, OTHER, REAL, REF, ROWID, SMALLINT, SQLXML, STRUCT, TIME, TIMESTAMP, TINYINT, VARBINARY, VARCHAR(
+      false), _H2_IDENTITY, _H2_UUID, _H2_VARCHAR_IGNORECASE(false);
+
+   private boolean _ignoresLengthSpecifier;
+
+   private DKDBType() {
+      this(true);
+   }
+
+   private DKDBType(boolean ignoresLengthSpecifier_) {
+      _ignoresLengthSpecifier = ignoresLengthSpecifier_;
+   }
+
+   public boolean ignoresLengthSpecifier() {
+      return _ignoresLengthSpecifier;
+   }
 
    public DKSqlUtil.ReadType getReadType() {
       return getReadType(this);

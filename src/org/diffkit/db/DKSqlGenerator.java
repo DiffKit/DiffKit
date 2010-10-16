@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.diffkit.common.DKValidate;
 import org.diffkit.util.DKSqlUtil;
 import org.diffkit.util.DKStringUtil;
@@ -30,20 +33,30 @@ import org.diffkit.util.DKStringUtil;
 public class DKSqlGenerator {
 
    private final DKDBDatabase _database;
+   private final Logger _log = LoggerFactory.getLogger(DKDBTable.class);
 
    public DKSqlGenerator(DKDBDatabase database_) {
       _database = database_;
       DKValidate.notNull(database_);
    }
 
-   public String generateCreateDDL(DKDBColumn column_) {
+   public String generateCreateDDL(DKDBColumn column_) throws SQLException {
       StringBuilder builder = new StringBuilder();
-      builder.append(String.format("%s\t\t%s%s", column_.getName(),
-         column_.getDBTypeName(), this.generateSizeSpecifier(column_)));
+      String notNullSpecifier = column_.isPartOfPrimaryKey() ? " NOT NULL" : "";
+      builder.append(String.format("%s\t\t%s%s%s", column_.getName(),
+         column_.getDBTypeName(), this.generateSizeSpecifier(column_), notNullSpecifier));
       return builder.toString();
    }
 
-   public String generateSizeSpecifier(DKDBColumn column_) {
+   public String generateSizeSpecifier(DKDBColumn column_) throws SQLException {
+      if (column_ == null)
+         return null;
+      DKDBType colType = _database.getType(column_.getDBTypeName());
+      if (colType == null)
+         _log.warn("no colType for column_->{}", column_);
+      else if (colType.ignoresLengthSpecifier()) {
+         return "";
+      }
       int size = column_.getSize();
       int scale = column_.getScale();
       if (size <= 0)
@@ -57,7 +70,7 @@ public class DKSqlGenerator {
       return String.format("DROP TABLE %s", table_.getSchemaQualifiedTableName());
    }
 
-   public String generateCreateDDL(DKDBTable table_) {
+   public String generateCreateDDL(DKDBTable table_) throws SQLException {
       StringBuilder builder = new StringBuilder();
       builder.append(String.format("CREATE TABLE %s\n(\n",
          table_.getSchemaQualifiedTableName()));
@@ -70,9 +83,24 @@ public class DKSqlGenerator {
          builder.append("\n");
       }
       if (primaryKey != null)
-         builder.append(String.format("\t\t%s", primaryKey.generateCreateDDL()));
+         builder.append(String.format("\t\t%s", this.generateCreateDDL(primaryKey)));
 
       builder.append(")\n");
+      return builder.toString();
+   }
+
+   public String generateCreateDDL(DKDBPrimaryKey primaryKey_) {
+      if (primaryKey_ == null)
+         return "";
+      StringBuilder builder = new StringBuilder();
+      builder.append(String.format("CONSTRAINT %s PRIMARY KEY (", primaryKey_.getName()));
+      String[] columnNames = primaryKey_.getColumnNames();
+      for (int i = 0; i < columnNames.length; i++) {
+         builder.append(columnNames[i]);
+         if (i < (columnNames.length - 1))
+            builder.append(",");
+      }
+      builder.append(")");
       return builder.toString();
    }
 

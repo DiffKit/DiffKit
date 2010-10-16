@@ -21,8 +21,6 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.util.DKSqlUtil.ReadType;
@@ -31,9 +29,6 @@ import org.diffkit.util.DKSqlUtil.ReadType;
  * @author jpanico
  */
 public class DKDBTable {
-
-   private static final Logger LOG = LoggerFactory.getLogger(DKDBTable.class);
-
    private final String _catalog;
    private final String _schema;
    private final String _tableName;

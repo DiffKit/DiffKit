@@ -81,6 +81,13 @@ public class DKDBDatabase {
       return _connectionInfo.getFlavor();
    }
 
+   /**
+    * convenience that passes through to TypeInfoDataAccess
+    */
+   public DKDBType getType(String dbTypeName_) throws SQLException {
+      return _typeInfoDataAccess.getType(dbTypeName_);
+   }
+
    public boolean canConnect() {
       try {
          Connection connection = this.getConnection();
