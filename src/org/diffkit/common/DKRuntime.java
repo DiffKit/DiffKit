@@ -28,7 +28,6 @@ import org.apache.commons.lang.BooleanUtils;
  */
 public class DKRuntime {
    public static final String IS_TEST_PROPERTY = "isTest";
-   public static final Boolean IS_TEST;
    public static final String DIFFKIT_HOME_PROPERTY = "DIFFKIT_HOME";
    private static final String NULL_STRING = new String();
 
@@ -36,10 +35,7 @@ public class DKRuntime {
 
    private String _applicationName;
    private File _diffKitHome;
-
-   static {
-      IS_TEST = BooleanUtils.toBoolean(System.getProperty(IS_TEST_PROPERTY));
-   }
+   private Boolean _isTest;
 
    private DKRuntime() {
    }
@@ -53,6 +49,17 @@ public class DKRuntime {
          return _diffKitHome;
       _diffKitHome = this.findDiffKitHome();
       return _diffKitHome;
+   }
+
+   public Boolean getIsTest() {
+      if (_isTest != null)
+         return _isTest;
+      _isTest = BooleanUtils.toBoolean(System.getProperty(IS_TEST_PROPERTY));
+      return _isTest;
+   }
+
+   public void setIsTest(Boolean isTest_) {
+      _isTest = isTest_;
    }
 
    /**

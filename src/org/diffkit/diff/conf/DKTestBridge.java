@@ -39,7 +39,7 @@ public class DKTestBridge {
    public static void runTestCases(List<Integer> cases_, List<DKDBFlavor> flavors_) {
       LOG.info("cases_->{}", cases_);
       LOG.info("flavors_->{}", flavors_);
-      System.setProperty(DKRuntime.IS_TEST_PROPERTY, "true");
+      DKRuntime.getInstance().setIsTest(Boolean.TRUE);
       try {
          Runnable testCaseRunner = (Runnable) getTestCaseRunner(cases_, flavors_);
          testCaseRunner.run();
@@ -50,7 +50,7 @@ public class DKTestBridge {
    }
 
    public static void loadTestCaseData(File testcaseDir_) throws Exception {
-      Object testCaseRunner = getTestCaseRunner(null,null);
+      Object testCaseRunner = getTestCaseRunner(null, null);
       MethodUtils.invokeExactMethod(testCaseRunner, "setupDB", testcaseDir_);
    }
 

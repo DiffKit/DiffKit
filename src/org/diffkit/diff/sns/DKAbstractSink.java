@@ -354,9 +354,10 @@ public abstract class DKAbstractSink implements DKSink {
    public String generateVeryHighLevelSummary(DKContext context_) {
       StringBuilder builder = new StringBuilder();
       builder.append("--- vhl summary ---\n");
-      String timeString = (DKRuntime.IS_TEST ? "xxx" : context_.getElapsedTimeString());
-      builder.append(String.format("diff'd %s rows in %s, found:\n", (context_._rowStep-1),
-         timeString));
+      String timeString = (DKRuntime.getInstance().getIsTest() ? "xxx"
+         : context_.getElapsedTimeString());
+      builder.append(String.format("diff'd %s rows in %s, found:\n",
+         (context_._rowStep - 1), timeString));
       if (this.getDiffCount() == 0)
          builder.append("(no diffs)\n");
       else
