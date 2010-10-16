@@ -204,23 +204,23 @@ public class DKApplication {
          if (arg.startsWith("cases=")) {
             String[] elements = arg.split("=");
             if (elements.length != 2)
-               throw new IllegalArgumentException(String.format(
-                  "unrecognized argument value->%s", arg));
+               throw new DKUserException(String.format("unrecognized argument value->%s",
+                  arg));
             List<Integer> caseNumbers = DKStringUtil.parseIntegerList(elements[1]);
             parms.put(elements[0], caseNumbers);
          }
          else if (arg.startsWith("flavors=")) {
             String[] elements = arg.split("=");
             if (elements.length != 2)
-               throw new IllegalArgumentException(String.format(
-                  "unrecognized argument value->%s", arg));
+               throw new DKUserException(String.format("unrecognized argument value->%s",
+                  arg));
             List<DKDBFlavor> flavors = (List<DKDBFlavor>) DKStringUtil.parseEnumList(
                elements[1], DKDBFlavor.class);
             parms.put(elements[0], flavors);
          }
          else
-            throw new IllegalArgumentException(String.format(
-               "unrecognized argument value->%s", arg));
+            throw new DKUserException(String.format("unrecognized argument value->%s",
+               arg));
       }
       return parms;
    }

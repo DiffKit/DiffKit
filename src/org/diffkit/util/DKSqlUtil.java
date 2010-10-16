@@ -16,6 +16,7 @@
 package org.diffkit.util;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -34,6 +35,11 @@ import org.slf4j.LoggerFactory;
  * @author jpanico
  */
 public class DKSqlUtil {
+   public static final String DATABASE_MAJOR_VERSION_KEY = "DatabaseMajorVersion";
+   public static final String DATABASE_MINOR_VERSION_KEY = "DatabaseMinorVersion";
+   public static final String DATABASE_PRODUCT_NAME_KEY = "DatabaseProductName";
+   public static final String DATABASE_PRODUCT_VERSION_KEY = "DatabaseProductVersion";
+
    public static enum ReadType {
       OBJECT, STRING, TEXT;
    }
@@ -52,6 +58,21 @@ public class DKSqlUtil {
    private static final Logger LOG = LoggerFactory.getLogger(DKSqlUtil.class);
 
    private DKSqlUtil() {
+   }
+
+   public static Map<String, ?> getDatabaseInfo(Connection connection_)
+      throws SQLException {
+      if (connection_ == null)
+         return null;
+      DatabaseMetaData dbMeta = connection_.getMetaData();
+      if (dbMeta == null)
+         return null;
+      Map<String, Object> info = new HashMap<String, Object>();
+      info.put(DATABASE_MAJOR_VERSION_KEY, new Integer(dbMeta.getDatabaseMajorVersion()));
+      info.put(DATABASE_MINOR_VERSION_KEY, new Integer(dbMeta.getDatabaseMinorVersion()));
+      info.put(DATABASE_PRODUCT_NAME_KEY, dbMeta.getDatabaseProductName());
+      info.put(DATABASE_PRODUCT_VERSION_KEY, dbMeta.getDatabaseProductVersion());
+      return info;
    }
 
    public static String formatForSql(Object value_, WriteType type_) {

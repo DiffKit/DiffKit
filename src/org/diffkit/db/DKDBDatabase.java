@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +39,16 @@ public class DKDBDatabase {
    private final DKDBConnectionInfo _connectionInfo;
    private final DKDBTypeInfoDataAccess _typeInfoDataAccess;
    private final DKSqlGenerator _sqlGenerator;
+   private final DKDBTableDataAccess _tableDataAccess;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKDBDatabase(DKDBConnectionInfo connectionInfo_) {
       _connectionInfo = connectionInfo_;
       _typeInfoDataAccess = new DKDBTypeInfoDataAccess(this);
       _sqlGenerator = new DKSqlGenerator(this);
-      DKValidate.notNull(_connectionInfo, _typeInfoDataAccess, _sqlGenerator);
+      _tableDataAccess = new DKDBTableDataAccess(this);
+      DKValidate.notNull(_connectionInfo, _typeInfoDataAccess, _sqlGenerator,
+         _tableDataAccess);
    }
 
    public DKDBTypeInfoDataAccess getTypeInfoDataAccess() {
@@ -77,6 +81,24 @@ public class DKDBDatabase {
       return _connectionInfo.getFlavor();
    }
 
+   public boolean canConnect() {
+      try {
+         Connection connection = this.getConnection();
+         if (connection == null)
+            return false;
+         Map<String, ?> dbInfo = DKSqlUtil.getDatabaseInfo(connection);
+         if (MapUtils.isEmpty(dbInfo))
+            return false;
+         if (dbInfo.get(DKSqlUtil.DATABASE_PRODUCT_VERSION_KEY) == null)
+            return false;
+         return true;
+      }
+      catch (Exception e_) {
+         _log.debug(null, e_);
+         return false;
+      }
+   }
+
    /**
     * convenience method
     * 
@@ -103,6 +125,17 @@ public class DKDBDatabase {
       String dropSql = _sqlGenerator.generateDropDDL(table_);
       _log.debug("dropSql->{}", dropSql);
       return DKSqlUtil.executeUpdate(dropSql, this.getConnection());
+   }
+
+   public boolean tableExists(DKDBTable table_) throws SQLException {
+      _log.debug("table_->{}", table_);
+      if (table_ == null)
+         return false;
+      DKDBTable fetchedTable = _tableDataAccess.getTable(table_.getCatalog(),
+         table_.getSchema(), table_.getTableName());
+      if (fetchedTable == null)
+         return false;
+      return true;
    }
 
    public boolean insertRow(Map<String, ?> row_, DKDBTable table_) throws SQLException {

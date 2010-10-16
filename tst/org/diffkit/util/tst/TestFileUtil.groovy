@@ -29,6 +29,13 @@ import org.diffkit.util.DKResourceUtil
  */
 public class TestFileUtil extends GroovyTestCase {
    
+   /**
+    * does it work from relative paths, or just absolute?
+    */
+   public void testCanRead() {
+      assert DKFileUtil.canReadFilePaths((String[]) ['conf/logback.xml'])
+   }
+   
    public void testPrepend() {
       File sourceTarget = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/prepend_target.txt")
       assert sourceTarget

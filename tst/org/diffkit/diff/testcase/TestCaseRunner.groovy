@@ -25,6 +25,7 @@ import java.util.regex.Pattern
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
 
@@ -136,6 +137,10 @@ public class TestCaseRunner implements Runnable {
     */
    private TestCaseRunnerRun setupRunnerRun(DKDBFlavor flavor_){
       _log.debug("flavor_->{}",flavor_)
+      if(!validateFlavor(flavor_)) {
+         DKRuntime.getInstance().getUserLog().info("couldn't validate flavor->{}, skipping.",flavor_)
+         return
+      }
       TestCaseRunnerRun runnerRun = [new File('./')]
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
@@ -161,8 +166,21 @@ public class TestCaseRunner implements Runnable {
          File dataDir = [dataPathUrl.toURI()]
          DKFileUtil.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER, substitutionMap)
       }
+      this.installDBConfFiles( flavor_, runnerRun)
       DKResourceUtil.appendResourceDir(runnerRun.dir)
       return runnerRun
+   }
+   
+   private void installDBConfFiles(DKDBFlavor flavor_, TestCaseRunnerRun runnerRun_){
+      if(!flavor_ || (flavor_==DKDBFlavor.H2))
+         return
+      def confFiles = this.getConfFiles(flavor_)
+      if(!confFiles) 
+         throw new RuntimeException(String.format("couldn't get conf files for flavor_->%s",flavor_))
+      confFiles.each {
+         String destinationFileName = it.name.replace( '.'+flavor_.toString().toLowerCase(), '' ); 
+         FileUtils.copyFile(it, new File(runnerRun_.dir, destinationFileName))
+      }
    }
    
    private boolean validateFlavor(DKDBFlavor flavor_) {
@@ -170,16 +188,48 @@ public class TestCaseRunner implements Runnable {
          return false
       if(flavor_==DKDBFlavor.H2)
          return true
+      def actualConfFiles = this.getConfFiles(flavor_)
+      if(!actualConfFiles)
+         return false;
+      //N.B. actualConfFiles are absolute filePaths, which require a 'file:' prefix in Spring land
+      def confFilePaths = actualConfFiles.collect { 'file:'+ it.absolutePath }
+      _log.debug("confFilePaths->{}",confFilePaths)
+      def connectionInfo = DKSpringUtil.getBean("connectionInfo", (String[])confFilePaths, this.class.classLoader)
+      _log.debug("connectionInfo->{}",connectionInfo)
+      if(!connectionInfo){
+         DKRuntime.getInstance().getUserLog().error("could not get connectionInfo from bean conf files->{}, skipping.",confFilePaths)
+         return false
+      }
+      DKDBDatabase database = [connectionInfo]
+      boolean canConnect = database.canConnect()
+      if(!canConnect){
+         DKRuntime.getInstance().getUserLog().error("can't connect to database for connectionInfo->{}, skipping.",connectionInfo)
+         return false
+      }
+      return true
+   }
+   
+   private File[] getConfFiles(DKDBFlavor flavor_){
+      if(!flavor_)
+         return null
+      if(flavor_==DKDBFlavor.H2)
+         return null
+      Logger _userLog = DKRuntime.getInstance().getUserLog()
       def expectedConfFileNames = this.getExpectedConfFileNames(flavor_)
-      _log.debug("expectedConfFileNames->{}",expectedConfFileNames)
+      _log.debug("expectedConfFileNames->{}", Arrays.toString(expectedConfFileNames))
       if(!expectedConfFileNames) {
-         _log.warn("no expectedConfFileNames for flavor->{}",flavor_)
+         DKRuntime.getInstance().getUserLog().error("no expectedConfFileNames for flavor->{}, skipping.",flavor_)
          return null
       }
       def actualConfFiles = DKResourceUtil.findResourcesAsFiles(expectedConfFileNames)
       _log.debug("actualConfFiles->{}",actualConfFiles)
-      if(!actualConfFiles || (actualConfFiles.length < expectedConfFileNames.length))
-         _log.warn("could->{}",flavor_)
+      if(!actualConfFiles || (actualConfFiles.length < expectedConfFileNames.length)) {
+         DKRuntime.getInstance().getUserLog().error("could not find all expected conf files for flavor->{}, check your confDirctory->{}.",
+               Arrays.toString(expectedConfFileNames),
+               DKRuntime.getInstance().getConfDir())
+         return null
+      }
+      return actualConfFiles
    }
    
    /**
@@ -190,12 +240,6 @@ public class TestCaseRunner implements Runnable {
       return (String[]) expectedFileTemplates.collect { it.replace('{flavor}',flavor_.toString().toLowerCase())}
    }
    
-   private File[] getConfFiles(DKDBFlavor flavor_){
-      if(!flavor_)
-         return null
-      if(flavor_==DKDBFlavor.H2)
-         return null
-   }
    
    private void setupDB(TestCase testCase_) {
       DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.getConnectionInfoFiles(), 
