@@ -22,6 +22,8 @@ import java.security.ProtectionDomain;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jpanico
@@ -29,13 +31,17 @@ import org.apache.commons.lang.BooleanUtils;
 public class DKRuntime {
    public static final String IS_TEST_PROPERTY = "isTest";
    public static final String DIFFKIT_HOME_PROPERTY = "DIFFKIT_HOME";
+   private static final String CONF_DIR_NAME = "conf";
+   private static final String USER_LOG_CATEGORY_KEY = "user";
    private static final String NULL_STRING = new String();
 
    private static final DKRuntime _instance = new DKRuntime();
 
    private String _applicationName;
    private File _diffKitHome;
+   private File _confDir;
    private Boolean _isTest;
+   private Logger _userLog;
 
    private DKRuntime() {
    }
@@ -49,6 +55,16 @@ public class DKRuntime {
          return _diffKitHome;
       _diffKitHome = this.findDiffKitHome();
       return _diffKitHome;
+   }
+
+   public File getConfDir() {
+      if (_confDir != null)
+         return _confDir;
+      File home = DKRuntime.getInstance().getDiffKitHome();
+      _confDir = new File(home, CONF_DIR_NAME);
+      if (!_confDir.isDirectory())
+         System.out.printf("no conf dir->%s.\n", _confDir);
+      return _confDir;
    }
 
    public Boolean getIsTest() {
@@ -118,5 +134,12 @@ public class DKRuntime {
          _applicationName = NULL_STRING;
       else
          _applicationName = applicationName_;
+   }
+
+   public Logger getUserLog() {
+      if (_userLog != null)
+         return _userLog;
+      _userLog = LoggerFactory.getLogger("user");
+      return _userLog;
    }
 }

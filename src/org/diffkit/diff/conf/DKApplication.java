@@ -62,21 +62,16 @@ public class DKApplication {
    private static final String DEMO_DB_OPTION_KEY = "demoDB";
    private static final Options OPTIONS = new Options();
 
-   private static final String CONF_DIR_NAME = "conf";
    private static final String LOGBACK_FILE_NAME = "logback.xml";
    private static final String LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY = "logback.configurationFile";
 
    private static Logger _systemLog;
-   private static Logger _userLog;
-   private static File _confDir;
 
    static {
       OptionGroup optionGroup = new OptionGroup();
       optionGroup.addOption(new Option(VERSION_OPTION_KEY,
          "print the version information and exit"));
       optionGroup.addOption(new Option(HELP_OPTION_KEY, "print this message"));
-      // optionGroup.addOption(new Option(TEST_OPTION_KEY,
-      // "run embedded TestCase suite"));
 
       OptionBuilder.hasOptionalArgs(2);
       OptionBuilder.withArgName("[cases=?,] [dbs=?,]");
@@ -98,7 +93,6 @@ public class DKApplication {
    public static void main(String[] args_) {
       initialize();
       Logger systemLog = getSystemLog();
-      Logger userLog = getUserLog();
       systemLog.debug("args_->{}", Arrays.toString(args_));
 
       try {
@@ -128,7 +122,7 @@ public class DKApplication {
          if ((rootCause instanceof DKUserException)
             || (rootCause instanceof FileNotFoundException)) {
             systemLog.info(null, e_);
-            userLog.info("error->{}", rootCause.getMessage());
+            DKRuntime.getInstance().getUserLog().info("error->{}", rootCause.getMessage());
          }
          else
             systemLog.error(null, e_);
@@ -136,13 +130,13 @@ public class DKApplication {
    }
 
    private static void printVersion() {
-      Logger userLog = getUserLog();
-      userLog.info("version->" + DKDistProperties.getPublicVersionString());
+      DKRuntime.getInstance().getUserLog().info(
+         "version->" + DKDistProperties.getPublicVersionString());
       System.exit(0);
    }
 
    private static void printInvalidArguments(String[] args_) {
-      getUserLog().info(
+      DKRuntime.getInstance().getUserLog().info(
          String.format("Invalid command line arguments: %s", Arrays.toString(args_)));
       printHelp();
    }
@@ -156,7 +150,7 @@ public class DKApplication {
    private static void runPlan(String planFilesString_, boolean errorOnDiff_)
       throws Exception {
       Logger systemLog = getSystemLog();
-      Logger userLog = getUserLog();
+      Logger userLog = DKRuntime.getInstance().getUserLog();
       systemLog.info("planFilesString_->{}", planFilesString_);
       String[] planFiles = planFilesString_.split("\\,");
       userLog.info("planfile(s)->{}", planFiles);
@@ -190,8 +184,7 @@ public class DKApplication {
    private static void runTestCases(String[] args_) {
       Logger systemLog = getSystemLog();
       systemLog.info("args_->{}", Arrays.toString(args_));
-      Logger userLog = getUserLog();
-      userLog.info("running TestCases");
+      DKRuntime.getInstance().getUserLog().info("running TestCases");
       Map<String, ?> testCaseParams = parseTestCaseArgs(args_);
       systemLog.debug("testCaseParams->{}", testCaseParams);
       DKTestBridge.runTestCases((List<Integer>) testCaseParams.get("cases"),
@@ -235,11 +228,13 @@ public class DKApplication {
    private static void initialize() {
       DKRuntime.getInstance().setApplicationName(APPLICATION_NAME);
       configureLogging();
-      getUserLog().info("DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
+      DKRuntime.getInstance().getUserLog().info(
+         "DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
    }
 
    private static void configureLogging() {
-      File logbackConfFile = new File(getConfDir(), LOGBACK_FILE_NAME);
+      File logbackConfFile = new File(DKRuntime.getInstance().getConfDir(),
+         LOGBACK_FILE_NAME);
       String logConfPath = null;
       if (!logbackConfFile.canRead()) {
          System.out.printf("no logging configuration file->%s.\n", logbackConfFile);
@@ -254,27 +249,10 @@ public class DKApplication {
          System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY, logConfPath);
    }
 
-   private static File getConfDir() {
-      if (_confDir != null)
-         return _confDir;
-      File home = DKRuntime.getInstance().getDiffKitHome();
-      _confDir = new File(home, CONF_DIR_NAME);
-      if (!_confDir.isDirectory())
-         System.out.printf("no conf dir->%s.\n", _confDir);
-      return _confDir;
-   }
-
    private static Logger getSystemLog() {
       if (_systemLog != null)
          return _systemLog;
       _systemLog = LoggerFactory.getLogger(DKApplication.class);
       return _systemLog;
-   }
-
-   private static Logger getUserLog() {
-      if (_userLog != null)
-         return _userLog;
-      _userLog = LoggerFactory.getLogger("user");
-      return _userLog;
    }
 }

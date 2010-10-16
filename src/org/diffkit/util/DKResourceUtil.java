@@ -10,7 +10,9 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
@@ -24,10 +26,16 @@ public class DKResourceUtil {
 
    private static File[] _resourceDirs;
 
-   public static synchronized void addResourceDir(File dir_) {
+   public static synchronized void appendResourceDir(File dir_) {
       if (dir_ == null)
          return;
       _resourceDirs = (File[]) ArrayUtils.add(_resourceDirs, dir_);
+   }
+
+   public static synchronized void prependResourceDir(File dir_) {
+      if (dir_ == null)
+         return;
+      _resourceDirs = (File[]) ArrayUtils.add(_resourceDirs, 0, dir_);
    }
 
    public static synchronized File[] getResourceDirs() {
@@ -90,6 +98,23 @@ public class DKResourceUtil {
     */
    public static boolean resourceExists(String resource_) {
       return (findResource(resource_) != null);
+   }
+
+   /**
+    * convenience that just calls findResourceAsFile(String)
+    */
+   public static File[] findResourcesAsFiles(String[] resources_)
+      throws URISyntaxException {
+      if (ArrayUtils.isEmpty(resources_))
+         return null;
+      List<File> found = new ArrayList<File>(resources_.length);
+      for (String resource : resources_) {
+         File resourceFile = findResourceAsFile(resource);
+         if (resourceFile == null)
+            continue;
+         found.add(resourceFile);
+      }
+      return found.toArray(new File[found.size()]);
    }
 
    /**

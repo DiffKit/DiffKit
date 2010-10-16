@@ -19,8 +19,6 @@ package org.diffkit.diff.testcase
 
 
 import java.net.URL;
-import java.security.CodeSource 
-import java.security.ProtectionDomain 
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern 
 
@@ -89,11 +87,18 @@ public class TestCaseRunner implements Runnable {
       _testCaseNumbers = testCaseNumbers_
       _flavors = flavors_
       _dataPath =  getDefaultDataPath()
+      DKResourceUtil.prependResourceDir(DKRuntime.getInstance().getConfDir());
       DKValidate.notNull(_dataPath)
    }
    
    public void run(){
-      def runnerRun = this.setupRunnerRun()
+      if(!_flavors)
+         _flavors = [DKDBFlavor.H2]
+      _flavors.each { this.run(it) }
+   }
+   
+   public void run(DKDBFlavor flavor_){
+      def runnerRun = this.setupRunnerRun(flavor_)
       if(!runnerRun) {
          _log.info("can't setup runnerRun; exiting.")
          return
@@ -129,7 +134,8 @@ public class TestCaseRunner implements Runnable {
    /**
     * copy the data files into the TestCaseRunnerRun working directory
     */
-   private TestCaseRunnerRun setupRunnerRun(){
+   private TestCaseRunnerRun setupRunnerRun(DKDBFlavor flavor_){
+      _log.debug("flavor_->{}",flavor_)
       TestCaseRunnerRun runnerRun = [new File('./')]
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
@@ -155,8 +161,40 @@ public class TestCaseRunner implements Runnable {
          File dataDir = [dataPathUrl.toURI()]
          DKFileUtil.copyDirectory( dataDir, runnerRun.dir, TEST_CASE_DATA_FILTER, substitutionMap)
       }
-      DKResourceUtil.addResourceDir(runnerRun.dir)
+      DKResourceUtil.appendResourceDir(runnerRun.dir)
       return runnerRun
+   }
+   
+   private boolean validateFlavor(DKDBFlavor flavor_) {
+      if(!flavor_)
+         return false
+      if(flavor_==DKDBFlavor.H2)
+         return true
+      def expectedConfFileNames = this.getExpectedConfFileNames(flavor_)
+      _log.debug("expectedConfFileNames->{}",expectedConfFileNames)
+      if(!expectedConfFileNames) {
+         _log.warn("no expectedConfFileNames for flavor->{}",flavor_)
+         return null
+      }
+      def actualConfFiles = DKResourceUtil.findResourcesAsFiles(expectedConfFileNames)
+      _log.debug("actualConfFiles->{}",actualConfFiles)
+      if(!actualConfFiles || (actualConfFiles.length < expectedConfFileNames.length))
+         _log.warn("could->{}",flavor_)
+   }
+   
+   /**
+    * this is the minimum set-- if there are more, that's ok
+    */
+   private String[] getExpectedConfFileNames(DKDBFlavor flavor_){
+      def expectedFileTemplates = ["dbConnectionInfo.{flavor}.xml", "test18.lhs.dbConnectionInfo.{flavor}.xml", "test18.rhs.dbConnectionInfo.{flavor}.xml"]
+      return (String[]) expectedFileTemplates.collect { it.replace('{flavor}',flavor_.toString().toLowerCase())}
+   }
+   
+   private File[] getConfFiles(DKDBFlavor flavor_){
+      if(!flavor_)
+         return null
+      if(flavor_==DKDBFlavor.H2)
+         return null
    }
    
    private void setupDB(TestCase testCase_) {
