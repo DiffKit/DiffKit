@@ -18,6 +18,9 @@ package org.diffkit.diff.conf;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,6 +31,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +39,14 @@ import org.slf4j.LoggerFactory;
 import org.diffkit.common.DKDistProperties;
 import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKUserException;
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffEngine;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.util.DKSpringUtil;
+import org.diffkit.util.DKStringUtil;
 
 /**
  * @author jpanico
@@ -69,7 +75,13 @@ public class DKApplication {
       optionGroup.addOption(new Option(VERSION_OPTION_KEY,
          "print the version information and exit"));
       optionGroup.addOption(new Option(HELP_OPTION_KEY, "print this message"));
-      optionGroup.addOption(new Option(TEST_OPTION_KEY, "run embedded TestCase suite"));
+      // optionGroup.addOption(new Option(TEST_OPTION_KEY,
+      // "run embedded TestCase suite"));
+
+      OptionBuilder.hasOptionalArgs(2);
+      OptionBuilder.withArgName("[cases=?,] [dbs=?,]");
+      OptionBuilder.withDescription("run TestCases");
+      OPTIONS.addOption(OptionBuilder.create(TEST_OPTION_KEY));
 
       OptionBuilder.withArgName("file1[,file2...]");
       OptionBuilder.hasArg();
@@ -97,7 +109,7 @@ public class DKApplication {
          else if (line.hasOption(HELP_OPTION_KEY))
             printHelp();
          else if (line.hasOption(TEST_OPTION_KEY))
-            runTestCases();
+            runTestCases(line.getOptionValues(TEST_OPTION_KEY));
          else if (line.hasOption(PLAN_FILE_OPTION_KEY))
             runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
                line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
@@ -174,10 +186,50 @@ public class DKApplication {
       DKDemoDB.run();
    }
 
-   private static void runTestCases() {
+   @SuppressWarnings("unchecked")
+   private static void runTestCases(String[] args_) {
+      Logger systemLog = getSystemLog();
+      systemLog.info("args_->{}", Arrays.toString(args_));
       Logger userLog = getUserLog();
       userLog.info("running TestCases");
-      DKTestBridge.runTestCases();
+      Map<String, ?> testCaseParams = parseTestCaseArgs(args_);
+      systemLog.debug("testCaseParams->{}", testCaseParams);
+      DKTestBridge.runTestCases((List<Integer>) testCaseParams.get("cases"),
+         (List<DKDBFlavor>) testCaseParams.get("flavors"));
+   }
+
+   /**
+    * @return guaranteed to be non-null. <br/>
+    *         keys: cases, flavors
+    */
+   @SuppressWarnings("unchecked")
+   private static Map<String, ?> parseTestCaseArgs(String[] args_) {
+      if (ArrayUtils.isEmpty(args_))
+         return new HashMap<String, Object>();
+      HashMap<String, Object> parms = new HashMap<String, Object>();
+      for (String arg : args_) {
+         if (arg.startsWith("cases=")) {
+            String[] elements = arg.split("=");
+            if (elements.length != 2)
+               throw new IllegalArgumentException(String.format(
+                  "unrecognized argument value->%s", arg));
+            List<Integer> caseNumbers = DKStringUtil.parseIntegerList(elements[1]);
+            parms.put(elements[0], caseNumbers);
+         }
+         else if (arg.startsWith("flavors=")) {
+            String[] elements = arg.split("=");
+            if (elements.length != 2)
+               throw new IllegalArgumentException(String.format(
+                  "unrecognized argument value->%s", arg));
+            List<DKDBFlavor> flavors = (List<DKDBFlavor>) DKStringUtil.parseEnumList(
+               elements[1], DKDBFlavor.class);
+            parms.put(elements[0], flavors);
+         }
+         else
+            throw new IllegalArgumentException(String.format(
+               "unrecognized argument value->%s", arg));
+      }
+      return parms;
    }
 
    private static void initialize() {

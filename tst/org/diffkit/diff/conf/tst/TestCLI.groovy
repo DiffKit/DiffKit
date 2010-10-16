@@ -17,15 +17,13 @@
 package org.diffkit.diff.conf.tst
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
 
-import org.diffkit.db.tst.DBTestSetup;
-import org.diffkit.diff.engine.DKColumnModel;
-import org.diffkit.diff.sns.DKDBSource 
-import org.diffkit.diff.sns.DKWriterSink 
 
 import groovy.util.GroovyTestCase;
 
@@ -34,48 +32,32 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestCLI extends GroovyTestCase {
-   private final Logger _log = LoggerFactory.getLogger(this.getClass())
    
-   public void testPlan(){
-      DBTestSetup.setupDB(new File('org/diffkit/diff/conf/tst/test.dbsetup.xml'), (File[])[new File('org/diffkit/diff/conf/tst/dbConnectionInfo.xml')], 'org/diffkit/diff/conf/tst/test.lhs.csv', 'org/diffkit/diff/conf/tst/test.rhs.csv')
-      ApplicationContext context = new ClassPathXmlApplicationContext('org/diffkit/diff/conf/tst/testtool.xml');
-      assert context
+   public void testParse(){
+      Options OPTIONS = []
+      OptionBuilder.hasOptionalArgs(2)
+      OptionBuilder.withArgName("cases,database")
+//      OptionBuilder.withValueSeparator((char)';')
+      OptionBuilder.withDescription('hello')
+      OPTIONS.addOption(OptionBuilder.create('option'))
       
-      def plan = context.getBean('plan')
-      println "plan->$plan"
-      assert plan
-      def lhsColumn1 = context.getBean('lhs.column1')
-      assert lhsColumn1
-      assert lhsColumn1._index == 0
-      assert lhsColumn1._name == 'column1'
-      assert lhsColumn1._type == DKColumnModel.Type.STRING
+      CommandLineParser parser = new PosixParser()
+      CommandLine line = parser.parse(OPTIONS, (String[])['-option','arg1'])
+      println "line->$line"
+      assert line.hasOption('option')
+      assert line.getOptionValue('option') == 'arg1'
       
-      def tableModel = context.getBean('lhs.table.model')
-      assert tableModel
-      assert tableModel.columns.length == 3
-      assert tableModel.columns[0].index == 0
-      assert tableModel.columns[0].name == 'column1'
-      assert tableModel.columns[0].type == DKColumnModel.Type.STRING
-      assert tableModel.columns[2].name == 'column3'
-      assert tableModel.columns[2].type == DKColumnModel.Type.NUMBER
+      line = parser.parse(OPTIONS, (String[])['-option'])
+      println "line->$line"
+      assert line.hasOption('option')
+      assert !line.getOptionValue('option')
       
-      def lhsSource = plan.lhsSource
-      assert lhsSource
-      assert lhsSource instanceof DKDBSource
-      assert lhsSource.tableName == 'LHS_TABLE'
+      line = parser.parse(OPTIONS, (String[])['-option','cases=1,2,3','databases=oracle,h2'])
+      println "line->$line"
+      assert line.hasOption('option')
+      assert line.getOptionValues('option') == (String[])['cases=1,2,3','databases=oracle,h2']
       
-      def rhsSource = plan.rhsSource
-      assert rhsSource
-      assert rhsSource instanceof DKDBSource
-      assert rhsSource.tableName == 'RHS_TABLE'
       
-      def sink = plan.sink
-      assert sink
-      assert sink instanceof DKWriterSink
-      
-      def tableComparison = plan.tableComparison
-      assert tableComparison
-      assert tableComparison.diffIndexes== [1,2]
    }
 }
 

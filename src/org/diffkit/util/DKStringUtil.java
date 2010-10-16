@@ -16,12 +16,15 @@
 package org.diffkit.util;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +57,41 @@ public class DKStringUtil {
       if ((target_.equalsIgnoreCase("false")) || (target_.equalsIgnoreCase("no")))
          return Boolean.FALSE;
       return null;
+   }
+
+   /**
+    * assumes comma separator
+    */
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public static List<?> parseEnumList(String target_, Class enumClass_) {
+      if (target_ == null)
+         return null;
+      String[] elements = target_.split(",");
+      if (ArrayUtils.isEmpty(elements))
+         return null;
+      List<Enum> values = new ArrayList<Enum>(elements.length);
+      for (String element : elements) {
+         element = StringUtils.trimToNull(element);
+         if (element == null)
+            continue;
+         values.add(Enum.valueOf(enumClass_, element));
+      }
+      return values;
+   }
+
+   /**
+    * assumes comma separator
+    */
+   public static List<Integer> parseIntegerList(String target_) {
+      if (target_ == null)
+         return null;
+      String[] elements = target_.split(",");
+      if (ArrayUtils.isEmpty(elements))
+         return null;
+      List<Integer> values = new ArrayList<Integer>(elements.length);
+      for (String element : elements)
+         values.add(NumberUtils.createInteger(element));
+      return values;
    }
 
    /**

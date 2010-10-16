@@ -30,4 +30,19 @@ public enum DKDBFlavor {
       _driverName = driverName_;
       DKValidate.notNull(_driverName);
    }
+
+   /**
+    * will simply return null if argument is not recognized, instead of throwing
+    */
+   public static DKDBFlavor forName(String name_) {
+      if (name_ == null)
+         return null;
+
+      try {
+         return Enum.valueOf(DKDBFlavor.class, name_);
+      }
+      catch (Exception e_) {
+         return null;
+      }
+   }
 }

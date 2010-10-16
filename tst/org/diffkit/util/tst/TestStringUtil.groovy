@@ -17,6 +17,8 @@ package org.diffkit.util.tst
  */
 
 import groovy.util.GroovyTestCase;
+
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.diff.testcase.TestCaseRunner;
 import org.diffkit.util.DKStringUtil;
 
@@ -25,6 +27,21 @@ import org.diffkit.util.DKStringUtil;
  * @author jpanico
  */
 public class TestStringUtil extends GroovyTestCase {
+   
+   public void testParseEnumList() {
+      def enumList = DKStringUtil.parseEnumList('ORACLE,DB2,H2', DKDBFlavor)
+      assert enumList
+      assert enumList.size() == 3
+      assert enumList[1] == DKDBFlavor.DB2
+   }
+   
+   public void testParseIntegerList() {
+      def integerList = DKStringUtil.parseIntegerList('1,2,3,4')
+      assert integerList
+      assert integerList.size() == 4
+      assert integerList[2] == 3
+      assert integerList[2] instanceof Integer
+   }
    
    public void testToSetString(){
       assert DKStringUtil.toSetString(['a','b']) == '(a, b)'

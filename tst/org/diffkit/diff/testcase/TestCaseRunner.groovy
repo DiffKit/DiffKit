@@ -36,6 +36,7 @@ import org.diffkit.common.DKUnjar;
 import org.diffkit.common.DKValidate;
 
 import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTableLoader 
 import org.diffkit.db.tst.DBTestSetup 
@@ -73,6 +74,7 @@ public class TestCaseRunner implements Runnable {
    private static final String TEST_CASE_DATA_ARCHIVE_NAME = "testcasedata.jar"
    
    private List<Integer> _testCaseNumbers
+   private List<DKDBFlavor> _flavors
    private String _dataPath
    private List<TestCase> _allTestCases
    private final Logger _log = LoggerFactory.getLogger(this.getClass())
@@ -81,9 +83,11 @@ public class TestCaseRunner implements Runnable {
    /**
     * @param dataPath_ expressed as a classpath resource
     */
-   public TestCaseRunner(List<Integer> testCaseNumbers_){
+   public TestCaseRunner(List<Integer> testCaseNumbers_, List<DKDBFlavor> flavors_){
       _log.debug("testCaseNumbers_->{}",testCaseNumbers_)
+      _log.debug("flavors_->{}",flavors_)
       _testCaseNumbers = testCaseNumbers_
+      _flavors = flavors_
       _dataPath =  getDefaultDataPath()
       DKValidate.notNull(_dataPath)
    }
@@ -126,10 +130,6 @@ public class TestCaseRunner implements Runnable {
     * copy the data files into the TestCaseRunnerRun working directory
     */
    private TestCaseRunnerRun setupRunnerRun(){
-      ProtectionDomain pDomain = this.class.protectionDomain
-      CodeSource codeSource = pDomain.codeSource
-      URL loc = codeSource.location
-      System.out.println("loc->"+loc)
       TestCaseRunnerRun runnerRun = [new File('./')]
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)

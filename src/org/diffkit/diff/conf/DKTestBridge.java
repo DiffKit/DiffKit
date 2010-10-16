@@ -17,12 +17,14 @@ package org.diffkit.diff.conf;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKRuntime;
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.util.DKClassUtil;
 
 /**
@@ -34,10 +36,12 @@ public class DKTestBridge {
    private static final String TESTCASERUNNER_CLASS_NAME = "org.diffkit.diff.testcase.TestCaseRunner";
    private static final Logger LOG = LoggerFactory.getLogger(DKTestBridge.class);
 
-   public static void runTestCases() {
+   public static void runTestCases(List<Integer> cases_, List<DKDBFlavor> flavors_) {
+      LOG.info("cases_->{}", cases_);
+      LOG.info("flavors_->{}", flavors_);
       System.setProperty(DKRuntime.IS_TEST_PROPERTY, "true");
       try {
-         Runnable testCaseRunner = (Runnable) getTestCaseRunner();
+         Runnable testCaseRunner = (Runnable) getTestCaseRunner(cases_, flavors_);
          testCaseRunner.run();
       }
       catch (Exception e_) {
@@ -46,15 +50,16 @@ public class DKTestBridge {
    }
 
    public static void loadTestCaseData(File testcaseDir_) throws Exception {
-      Object testCaseRunner = getTestCaseRunner();
+      Object testCaseRunner = getTestCaseRunner(null,null);
       MethodUtils.invokeExactMethod(testCaseRunner, "setupDB", testcaseDir_);
    }
 
-   private static Object getTestCaseRunner() throws Exception {
+   private static Object getTestCaseRunner(List<Integer> cases_, List<DKDBFlavor> flavors_)
+      throws Exception {
       Class<?> testCaseRunnerClass = Class.forName(TESTCASERUNNER_CLASS_NAME);
       LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
       Constructor<?> constructor = DKClassUtil.findLongestConstructor(testCaseRunnerClass);
       LOG.debug("constructor->{}", constructor);
-      return constructor.newInstance((Object) null);
+      return constructor.newInstance(cases_, flavors_);
    }
 }
