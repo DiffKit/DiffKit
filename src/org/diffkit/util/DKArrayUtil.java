@@ -27,4 +27,15 @@ public class DKArrayUtil {
          return null;
       return ArrayUtils.subarray(target_, 0, i);
    }
+
+   public static long sum(int[] ints_) {
+      if (ints_ == null)
+         return 0;
+
+      long sum = 0;
+      for (int value : ints_)
+         sum += value;
+
+      return sum;
+   }
 }

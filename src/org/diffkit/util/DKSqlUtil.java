@@ -28,8 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.diffkit.common.DKValidate;
 
 /**
  * @author jpanico
@@ -242,6 +245,19 @@ public class DKSqlUtil {
       }
    }
 
+   public static void rollback(Connection connection_) {
+      if (connection_ == null)
+         return;
+
+      try {
+         LOG.debug("rolling back");
+         connection_.rollback();
+      }
+      catch (Exception e_) {
+         LOG.warn(null, e_);
+      }
+   }
+
    /**
     * null and Exception safe
     */
@@ -262,6 +278,49 @@ public class DKSqlUtil {
          LOG.error(null, e_);
          return false;
       }
+   }
+
+   public static long executeBatchUpdate(List<String> sqlUpdateStrings_,
+                                         Connection connection_) {
+      if (LOG.isDebugEnabled()) {
+         LOG.debug("sqlUpdateStrings_: " + sqlUpdateStrings_.size());
+         LOG.debug("connection_: " + connection_);
+      }
+      DKValidate.notNull(connection_);
+      if ((sqlUpdateStrings_ == null) || (sqlUpdateStrings_.size() == 0))
+         return 0;
+
+      Statement statement = null;
+      int[] rowCounts = null;
+      try {
+         statement = connection_.createStatement();
+         for (String sqlUpdate : sqlUpdateStrings_)
+            statement.addBatch(sqlUpdate);
+
+         rowCounts = statement.executeBatch();
+         if (LOG.isDebugEnabled())
+            LOG.debug("effectedRowCount: " + ArrayUtils.toString(rowCounts));
+
+      }
+      catch (Exception e_) {
+         LOG.warn(null, e_);
+         if (DKObjectUtil.respondsTo(e_, "getNextException", null)) {
+            try {
+               Exception nextException = (Exception) DKObjectUtil.invoke(e_,
+                  "getNextException", null);
+               LOG.warn(null, nextException);
+            }
+            catch (Exception f_) {
+               LOG.error(null, f_);
+            }
+         }
+         rollback(connection_);
+      }
+      finally {
+         close(statement);
+      }
+
+      return DKArrayUtil.sum(rowCounts);
    }
 
    /**

@@ -18,10 +18,12 @@ package org.diffkit.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +108,10 @@ public class DKDBDatabase {
       }
    }
 
+   public DKSqlGenerator getSqlGenerator() {
+      return _sqlGenerator;
+   }
+
    /**
     * convenience method
     * 
@@ -143,6 +149,33 @@ public class DKDBDatabase {
       if (fetchedTable == null)
          return false;
       return true;
+   }
+
+   /**
+    * convenience that delegates to underlying SqlGenerator
+    */
+   public String generateInsertDML(Map<String, ?> row_, DKDBTable table_)
+      throws SQLException {
+      if ((table_ == null) || (row_ == null))
+         return null;
+      return _sqlGenerator.generateInsertDML(row_, table_);
+   }
+
+   /**
+    * convenience that delegates to underlying SqlGenerator
+    */
+   public List<String> generateInsertDML(List<Map<String, ?>> rows_, DKDBTable table_)
+      throws SQLException {
+      if ((table_ == null) || (CollectionUtils.isEmpty(rows_)))
+         return null;
+      List<String> dmls = new ArrayList<String>(rows_.size());
+      for (Map<String, ?> row : rows_) {
+         String dml = this.generateInsertDML(row, table_);
+         if (dml == null)
+            continue;
+         dmls.add(dml);
+      }
+      return dmls;
    }
 
    public boolean insertRow(Map<String, ?> row_, DKDBTable table_) throws SQLException {

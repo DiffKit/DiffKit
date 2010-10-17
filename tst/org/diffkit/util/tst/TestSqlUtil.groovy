@@ -18,9 +18,12 @@ package org.diffkit.util.tst
 
 
 
+import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo 
 import org.diffkit.db.DKDBDatabase 
 import org.diffkit.db.DKDBFlavor;
+import org.diffkit.db.DKDBPrimaryKey 
+import org.diffkit.db.DKDBTable;
 import org.diffkit.util.DKSqlUtil;
 
 import groovy.util.GroovyTestCase;
@@ -30,6 +33,45 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestSqlUtil extends GroovyTestCase {
+   
+   public void testBatchUpdate() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      DKDBTable table = this.createTestTable()
+      assert table
+      database.createTable(table)
+      assert database.tableExists(table)
+      
+      def row0 = ['FIRST_NAME':'0.first_name', 'LAST_NAME': '0.last_name' ]
+      def row1 = ['FIRST_NAME':'1.first_name', 'LAST_NAME': '1.last_name' ]
+      def rows = [row0,row1]
+      def insertStrings = database.generateInsertDML( rows, table)
+      println "insertStrings->$insertStrings"
+      assert insertStrings
+      assert insertStrings.size() == 2
+      
+      def connection = database.connection
+      println "connection->$connection"
+      assert connection
+      
+      assert DKSqlUtil.executeBatchUpdate(insertStrings, connection) == 2
+      def readRows = database.readAllRows(table)
+      assert readRows
+      assert readRows.size() == 2
+      assert readRows.contains(row0)
+      assert readRows.contains(row1)
+   }
+   
+   private DKDBTable createTestTable(){
+      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
+      DKDBColumn[] columns = [column1, column2]
+      String[] pkColNames = [ 'last_name']
+      DKDBPrimaryKey pk = ['pk_customer', pkColNames]
+      DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
+      return table
+   }
    
    public void testDatabaseInfo() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
@@ -44,6 +86,26 @@ public class TestSqlUtil extends GroovyTestCase {
       assert dbInfo[DKSqlUtil.DATABASE_PRODUCT_NAME_KEY] == 'H2'
    }
    
+   public void testUpdate() {
+      def createTableSql =
+            """CREATE TABLE customer
+            (  first_name    varchar(50),
+               last_name     varchar(50),
+               address       varchar(50),
+               city          varchar(50),
+               country       varchar(25),
+               birth_date    date)
+      """
+      
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      def connection = database.connection
+      
+      assert DKSqlUtil.executeUpdate(createTableSql, connection)
+      assert DKSqlUtil.executeUpdate('DROP TABLE customer', connection)
+   }
+   
    public void testReadRowsFromSelect(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
@@ -55,7 +117,7 @@ public class TestSqlUtil extends GroovyTestCase {
       def rows = DKSqlUtil.readRows('select * from INFORMATION_SCHEMA.TABLES', connection)
       assert rows
       println "rows->$rows"
-      assert rows.find { it['TABLE_NAME'] == 'TABLES'}
+      assert rows.find { it['TABLE_NAME'] == 'TABLES' }
    }
    
    public void testReadRowsFromResultSet(){
@@ -82,9 +144,9 @@ public class TestSqlUtil extends GroovyTestCase {
       assert firstType.containsKey('DATA_TYPE')
       assert firstType.containsKey('PRECISION')
       
-      assert typeRows.find { it['TYPE_NAME'] == 'BIGINT'}
-      assert typeRows.find { it['TYPE_NAME'] == 'CLOB'}
-      assert typeRows.find { it['TYPE_NAME'] == 'VARCHAR'}
+      assert typeRows.find { it['TYPE_NAME'] == 'BIGINT' }
+      assert typeRows.find { it['TYPE_NAME'] == 'CLOB' }
+      assert typeRows.find { it['TYPE_NAME'] == 'VARCHAR' }
       
       DKSqlUtil.close(typeInfo)
       DKSqlUtil.close(connection)

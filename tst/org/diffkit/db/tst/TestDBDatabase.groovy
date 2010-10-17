@@ -65,26 +65,6 @@ public class TestDBDatabase extends GroovyTestCase {
       assert meta
    }
    
-   public void testSqlUtil() {
-      def createTableSql = 
-            """CREATE TABLE customer
-	         (  first_name    varchar(50),
-	            last_name     varchar(50),
-	            address       varchar(50),
-	            city          varchar(50),
-	            country       varchar(25),
-	            birth_date    date)
-	   """         
-      
-      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
-      println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
-      def connection = database.connection
-      
-      assert DKSqlUtil.executeUpdate(createTableSql, connection)
-      assert DKSqlUtil.executeUpdate('DROP TABLE customer', connection)
-   }
-   
    private DKDBTable createCustomerMetaTable(){
       DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
       DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
