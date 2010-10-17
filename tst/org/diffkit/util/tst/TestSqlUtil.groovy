@@ -61,6 +61,9 @@ public class TestSqlUtil extends GroovyTestCase {
       assert readRows.size() == 2
       assert readRows.contains(row0)
       assert readRows.contains(row1)
+      
+      assert database.dropTable(table)
+      assert !database.tableExists(table)
    }
    
    private DKDBTable createTestTable(){
@@ -101,6 +104,7 @@ public class TestSqlUtil extends GroovyTestCase {
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]
       def connection = database.connection
+      
       
       assert DKSqlUtil.executeUpdate(createTableSql, connection)
       assert DKSqlUtil.executeUpdate('DROP TABLE customer', connection)

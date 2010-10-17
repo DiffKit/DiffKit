@@ -39,6 +39,9 @@ public class TestInsertTableLoader extends GroovyTestCase {
       database.createTable(table)
       assert database.tableExists(table)
       def row = [id:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: new Date(10000), RUN_DATE: new Date(10000) ]
+      
+      assert database.dropTable(table)
+      assert !database.tableExists(table)
    }
    
    private DKDBTable createTestTable(){

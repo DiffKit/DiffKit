@@ -74,7 +74,7 @@ public class DKApplication {
       optionGroup.addOption(new Option(HELP_OPTION_KEY, "print this message"));
 
       OptionBuilder.hasOptionalArgs(2);
-      OptionBuilder.withArgName("[cases=?,] [dbs=?,]");
+      OptionBuilder.withArgName("[cases=?,] [flavors=?,]");
       OptionBuilder.withDescription("run TestCases");
       OPTIONS.addOption(OptionBuilder.create(TEST_OPTION_KEY));
 
