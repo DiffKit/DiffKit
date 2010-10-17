@@ -15,6 +15,8 @@
  */
 package org.diffkit.db;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.diffkit.util.DKSqlUtil;
 import org.diffkit.util.DKSqlUtil.ReadType;
 import org.diffkit.util.DKSqlUtil.WriteType;
@@ -26,7 +28,7 @@ public enum DKDBType {
    ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR(false), CLOB(false), DATALINK, DATE, DECIMAL(
       false), DISTINCT, DOUBLE, FLOAT(false), INTEGER, JAVA_OBJECT, LONGNVARCHAR, LONGVARBINARY, LONGVARCHAR, NCHAR, NCLOB, NULL, NUMERIC(
       false), NVARCHAR, OTHER, REAL, REF, ROWID, SMALLINT, SQLXML, STRUCT, TIME, TIMESTAMP, TINYINT, VARBINARY, VARCHAR(
-      false), _H2_IDENTITY, _H2_UUID, _H2_VARCHAR_IGNORECASE(false);
+      false), _H2_IDENTITY, _H2_UUID, _H2_VARCHAR_IGNORECASE(false), _DB2_LONG_VARCHAR_FOR_BIT_DATA, _DB2_VARCHAR_00_FOR_BIT_DATA, _DB2_CHAR_00_FOR_BIT_DATA, _DB2_LONG_VARCHAR, _DB2_LONG_VARGRAPHIC, _DB2_GRAPHIC, _DB2_VARGRAPHIC, _DB2_DECFLOAT, _DB2_XML, _DB2_DBCLOB;
 
    private boolean _ignoresLengthSpecifier;
 
@@ -106,21 +108,37 @@ public enum DKDBType {
       }
    }
 
-   public static DKDBType getType(DKDBFlavor flavor_, String typeName_) {
-      if (typeName_ == null)
+   /**
+    * @param sqlTypeName_
+    *           the JDBC SQL type name
+    */
+   public static DKDBType getType(DKDBFlavor flavor_, String sqlTypeName_) {
+      if (sqlTypeName_ == null)
          return null;
-      DKDBType type = forName(typeName_);
+      DKDBType type = forName(sqlTypeName_);
       if (type != null)
          return type;
       if (flavor_ == null)
          throw new IllegalArgumentException(String.format("unrecognized typeName_->%s",
-            typeName_));
-      String qualifiedTypeName = "_" + flavor_.toString() + "_" + typeName_;
-      type = forName(qualifiedTypeName);
+            sqlTypeName_));
+      String dbTypeName = convertSqlTypeNameToDBTypeName(flavor_, sqlTypeName_);
+      type = forName(dbTypeName);
       if (type != null)
          return type;
       throw new IllegalArgumentException(String.format(
-         "unrecognized qualifiedTypeName->%s", qualifiedTypeName));
+         "unrecognized qualifiedTypeName->%s", dbTypeName));
+   }
+
+   private static String convertSqlTypeNameToDBTypeName(DKDBFlavor flavor_,
+                                                        String sqlTypeName_) {
+      if (sqlTypeName_ == null)
+         return null;
+      String mangledName = sqlTypeName_;
+      mangledName = StringUtils.replace(mangledName, " ", "_");
+      mangledName = StringUtils.replace(mangledName, "(", "0");
+      mangledName = StringUtils.replace(mangledName, ")", "0");
+      mangledName = "_" + flavor_.toString() + "_" + mangledName;
+      return mangledName;
    }
 
    /**

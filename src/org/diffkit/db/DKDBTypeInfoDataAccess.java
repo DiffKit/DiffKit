@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.util.DKBooleanUtil;
 import org.diffkit.util.DKNumberUtil;
 import org.diffkit.util.DKSqlUtil;
 
@@ -159,13 +159,13 @@ public class DKDBTypeInfoDataAccess {
       String typeName = (String) typeInfoMap_.get("TYPE_NAME");
       Number dataType = (Number) typeInfoMap_.get("DATA_TYPE");
       Number maxPrecision = (Number) typeInfoMap_.get("PRECISION");
-      Boolean isCaseSensitive = (Boolean) typeInfoMap_.get("CASE_SENSITIVE");
+      Object isCaseSensitive = typeInfoMap_.get("CASE_SENSITIVE");
       DKDBType type = DKDBType.getType(_connectionSource.getFlavor(), typeName);
       if (type == null)
          throw new RuntimeException(String.format("couldn't find type for typeName->%s",
             typeName));
       return new DKDBTypeInfo(type, DKNumberUtil.getInt(dataType, -1),
-         DKNumberUtil.getInt(maxPrecision, -1), BooleanUtils.toBoolean(isCaseSensitive));
+         DKNumberUtil.getInt(maxPrecision, -1), DKBooleanUtil.toBoolean(isCaseSensitive));
    }
 
    private List<Map<String, ?>> getTypeInfoMaps(DatabaseMetaData dbMeta_)

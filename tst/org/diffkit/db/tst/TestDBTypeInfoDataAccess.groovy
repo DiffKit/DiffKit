@@ -31,7 +31,8 @@ public class TestDBTypeInfoDataAccess extends GroovyTestCase {
    
    public void testMap(){
       
-      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
+//      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]
       DKDBTypeInfoDataAccess typeInfoDataAccess = [database]
