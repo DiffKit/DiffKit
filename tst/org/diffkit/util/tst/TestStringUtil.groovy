@@ -46,6 +46,9 @@ public class TestStringUtil extends GroovyTestCase {
    public void testToSetString(){
       assert DKStringUtil.toSetString(['a','b']) == '(a, b)'
       assert DKStringUtil.toSetString([]) == '()'
+      String[] target = ['a','b']
+      assert DKStringUtil.toSetString(target) == '(a, b)'
+      assert DKStringUtil.toSetString(null) == '()'
    }
    
    public void testQuote(){

@@ -88,6 +88,19 @@ public class DKDBTable {
    }
 
    /**
+    * convenience that just extracts names from underlying columns
+    */
+   public String[] getColumnNames() {
+      DKDBColumn[] columns = this.getColumns();
+      if (ArrayUtils.isEmpty(columns))
+         return null;
+      String[] columnNames = new String[columns.length];
+      for (int i = 0; i < columns.length; i++)
+         columnNames[i] = columns[i].getName();
+      return columnNames;
+   }
+
+   /**
     * case insensitive
     */
    public DKDBColumn getColumn(String name_) {

@@ -15,6 +15,9 @@
  */
 package org.diffkit.util;
 
+import java.sql.Time;
+import java.util.Date;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -87,11 +90,17 @@ public class DKSqlUtil {
       case STRING:
          return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
       case DATE:
-         return DKStringUtil.quote(DEFAULT_DATE_FORMAT.format(value_),
-            DKStringUtil.Quote.SINGLE);
+         if (value_ instanceof Date)
+            return DKStringUtil.quote(DEFAULT_DATE_FORMAT.format(value_),
+               DKStringUtil.Quote.SINGLE);
+         else
+            return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
       case TIME:
-         return DKStringUtil.quote(DEFAULT_TIME_FORMAT.format(value_),
-            DKStringUtil.Quote.SINGLE);
+         if (value_ instanceof Time)
+            return DKStringUtil.quote(DEFAULT_TIME_FORMAT.format(value_),
+               DKStringUtil.Quote.SINGLE);
+         else
+            return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
 
       default:
          throw new RuntimeException(String.format("unrecognized type_->%s", type_));

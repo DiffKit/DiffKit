@@ -23,69 +23,86 @@ import java.io.LineNumberReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.util.DKSqlUtil;
 
 /**
  * @author jpanico
  */
 public class DKDBInsertTableLoader implements DKDBTableLoader {
-
-   private final DKDBDatabase _connectionSource;
+   private static final int LOAD_BATCH_SIZE = 1000;
+   private final DKDBDatabase _database;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private final boolean _debugEnabled = _log.isDebugEnabled();
 
-   public DKDBInsertTableLoader(DKDBDatabase connectionSource_) {
-      _connectionSource = connectionSource_;
-      DKValidate.notNull(_connectionSource);
+   public DKDBInsertTableLoader(DKDBDatabase database_) {
+      _database = database_;
+      DKValidate.notNull(_database);
    }
 
    /**
     * @return true if the load succeeded
     * @throws IOException
     */
-   public boolean load(DKDBTable target_, File csvFile_) throws IOException, SQLException {
-      _log.debug("target_->{}", target_);
+   public boolean load(DKDBTable table_, File csvFile_) throws IOException, SQLException {
+      _log.debug("target_->{}", table_);
       _log.debug("csvFile_->{}", csvFile_);
-      DKValidate.notNull(target_, csvFile_);
+      DKValidate.notNull(table_, csvFile_);
       if (!csvFile_.canRead())
          throw new IOException(String.format("can't read csvFile_->%s", csvFile_));
-
-      LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(
-         csvFile_)));
-      Connection connection = _connectionSource.getConnection();
+      if (!_database.tableExists(table_))
+         throw new IOException(String.format("table_->%s does not exist in database->",
+            table_, _database));
+      Connection connection = _database.getConnection();
       _log.debug("connection->{}", connection);
       if (connection == null)
+         throw new SQLException(String.format("can't get connection from database->",
+            _database));
 
-         connection.setAutoCommit(true);
-
+      connection.setAutoCommit(true);
+      LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(
+         csvFile_)));
+      String[] columnNames = table_.getColumnNames();
+      DKDBTypeInfo[] typeInfos = _database.getColumnTypeInfos(table_);
+      String qualifiedTableName = table_.getSchemaQualifiedTableName();
+      if (_debugEnabled) {
+         _log.debug("columnNames->{}", Arrays.toString(columnNames));
+         _log.debug("typeInfos->{}", Arrays.toString(typeInfos));
+         _log.debug("qualifiedTableName->{}", qualifiedTableName);
+      }
       String line = null;
-      throw new NotImplementedException();
-      // List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
-      // for (long i = 1; (line = reader.readLine()) != null; i++) {
-      // if (debugEnabled) {
-      // _log.debug("line: " + line);
-      // }
-      // String[] values = line.split(fieldSeparator_, -1);
-      // String insertStatementString =
-      // MLSqlFormatter.formatInsertStatement(tableInfo_,
-      // values, ignoreColumns_);
-      // updateStatements.add(insertStatementString);
-      // _log.debug("insertStatementString: " + insertStatementString);
-      // if (i % LOAD_BATCH_SIZE == 0) {
-      // MLSqlUtil.executeBatchUpdate(updateStatements, connection_);
-      // _log.debug("inserted " + i + " rows");
-      // updateStatements.clear();
-      // }
-      // }
-      // long updates = MLSqlUtil.executeBatchUpdate(updateStatements,
-      // connection_);
-      // _log.debug("updates: " + updates);
-      // reader.close();
-      // return success;
+      List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
+      // assume first line is header, throw away
+      reader.readLine();
+      for (long i = 1; (line = reader.readLine()) != null; i++) {
+         String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+         if (_debugEnabled) {
+            _log.debug("line: " + line);
+            _log.debug("values: " + Arrays.toString(values));
+         }
+         if (!(values.length == columnNames.length))
+            throw new RuntimeException(String.format(
+               "number of values->%s does not match number of columns->%s",
+               values.length, columnNames.length));
+         String insertStatementString = _database.generateInsertDML(values, typeInfos,
+            columnNames, qualifiedTableName);
+         updateStatements.add(insertStatementString);
+         _log.debug("insertStatementString: " + insertStatementString);
+         if (i % LOAD_BATCH_SIZE == 0) {
+            DKSqlUtil.executeBatchUpdate(updateStatements, connection);
+            _log.debug("inserted " + i + " rows");
+            updateStatements.clear();
+         }
+      }
+      long updates = DKSqlUtil.executeBatchUpdate(updateStatements, connection);
+      _log.debug("updates: " + updates);
+      reader.close();
+      return true;
    }
 }

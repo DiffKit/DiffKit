@@ -52,9 +52,9 @@ public class DKDBSink extends DKAbstractSink {
    private transient Connection _connection;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBSink(DKDBDatabase connectionSource_) throws SQLException {
+   public DKDBSink(DKDBDatabase database_) throws SQLException {
       super(null);
-      _database = connectionSource_;
+      _database = database_;
       _tableDataAccess = new DKDBTableDataAccess(_database);
       _diffContextTable = this.generateDiffContextTable();
       _diffTable = this.generateDiffTable();

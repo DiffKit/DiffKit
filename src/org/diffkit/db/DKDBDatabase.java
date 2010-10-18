@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,6 +89,26 @@ public class DKDBDatabase {
     */
    public DKDBType getType(String dbTypeName_) throws SQLException {
       return _typeInfoDataAccess.getType(dbTypeName_);
+   }
+
+   /**
+    * convenience that passes through to TypeInfoDataAccess
+    */
+   public DKDBTypeInfo getTypeInfo(String dbTypeName_) throws SQLException {
+      return _typeInfoDataAccess.getTypeInfo(dbTypeName_);
+   }
+
+   /**
+    * convenience that just extracts typeInfos from underlying columns
+    */
+   public DKDBTypeInfo[] getColumnTypeInfos(DKDBTable table_) throws SQLException {
+      DKDBColumn[] columns = table_.getColumns();
+      if (ArrayUtils.isEmpty(columns))
+         return null;
+      DKDBTypeInfo[] typeInfos = new DKDBTypeInfo[columns.length];
+      for (int i = 0; i < columns.length; i++)
+         typeInfos[i] = this.getTypeInfo(columns[i].getDBTypeName());
+      return typeInfos;
    }
 
    public boolean canConnect() {
@@ -159,6 +180,15 @@ public class DKDBDatabase {
       if ((table_ == null) || (row_ == null))
          return null;
       return _sqlGenerator.generateInsertDML(row_, table_);
+   }
+
+   /**
+    * convenience that delegates to underlying SqlGenerator
+    */
+   public String generateInsertDML(Object[] values_, DKDBTypeInfo[] typeInfos_,
+                                   String[] columnNames_, String qualifiedTableName_) {
+      return _sqlGenerator.generateInsertDML(values_, typeInfos_, columnNames_,
+         qualifiedTableName_);
    }
 
    /**

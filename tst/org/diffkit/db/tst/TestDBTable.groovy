@@ -17,6 +17,8 @@
  */
 package org.diffkit.db.tst
 
+import java.sql.Time 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -72,7 +74,7 @@ public class TestDBTable extends GroovyTestCase {
       assert fetchedTable
       
       def date = DateUtils.round(new Date(10000), Calendar.DAY_OF_MONTH)
-      def row = [ID:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: date, RUN_DATE: date ]
+      def row = [ID:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: new Timestamp(date.time), RUN_DATE: date ]
       assert database.insertRow(row, fetchedTable)
       
       def fetchedRows = database.readAllRows( fetchedTable)

@@ -17,9 +17,12 @@ package org.diffkit.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +36,7 @@ import org.diffkit.util.DKStringUtil;
 public class DKSqlGenerator {
 
    private final DKDBDatabase _database;
-   private final Logger _log = LoggerFactory.getLogger(DKDBTable.class);
+   private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKSqlGenerator(DKDBDatabase database_) {
       _database = database_;
@@ -106,26 +109,53 @@ public class DKSqlGenerator {
 
    public String generateInsertDML(Map<String, ?> row_, DKDBTable table_)
       throws SQLException {
-      if (row_ == null)
+      DKValidate.notNull(table_);
+      if (MapUtils.isEmpty(row_))
          return null;
-      List<String> columnNames = new ArrayList<String>();
-      List<String> valueStrings = new ArrayList<String>();
-      DKDBTypeInfoDataAccess typeInfoDataAccess = _database.getTypeInfoDataAccess();
-      for (Map.Entry<String, ?> entry : row_.entrySet()) {
-         String columnName = entry.getKey();
-         columnNames.add(columnName);
-         DKDBColumn column = table_.getColumn(columnName);
-         if (column == null)
-            throw new RuntimeException(String.format(
-               "columnName->%s from row_->%s is not part of this table->%s", columnName,
-               row_, this));
-         DKDBTypeInfo typeInfo = typeInfoDataAccess.getTypeInfo(column.getDBTypeName());
-         valueStrings.add(DKSqlUtil.formatForSql(entry.getValue(),
-            typeInfo.getWriteType()));
+      List<Object> values = new ArrayList<Object>(row_.size());
+      List<DKDBTypeInfo> typeInfos = new ArrayList<DKDBTypeInfo>(row_.size());
+      List<String> columnNames = new ArrayList<String>(row_.size());
+      String qualifiedTableName = table_.getSchemaQualifiedTableName();
+      DKDBColumn[] columns = table_.getColumns();
+      for (DKDBColumn column : columns) {
+         if (!row_.containsKey(column.getName()))
+            continue;
+         values.add(row_.get(column.getName()));
+         typeInfos.add(_database.getTypeInfo(column.getDBTypeName()));
+         columnNames.add(column.getName());
       }
-      return String.format("INSERT INTO %s %s\nVALUES %s",
-         table_.getSchemaQualifiedTableName(), DKStringUtil.toSetString(columnNames),
+      return generateInsertDML(values.toArray(),
+         typeInfos.toArray(new DKDBTypeInfo[typeInfos.size()]),
+         columnNames.toArray(new String[columnNames.size()]), qualifiedTableName);
+   }
+
+   public String generateInsertDML(Object[] values_, DKDBTypeInfo[] typeInfos_,
+                                   String[] columnNames_, String qualifiedTableName_) {
+      if (_log.isDebugEnabled()) {
+         _log.debug("values_->{}", Arrays.toString(values_));
+         _log.debug("typeInfos_->{}", Arrays.toString(typeInfos_));
+         _log.debug("columnNames_->{}", Arrays.toString(columnNames_));
+         _log.debug("qualifiedTableName_->{}", qualifiedTableName_);
+      }
+      if (ArrayUtils.isEmpty(values_) || ArrayUtils.isEmpty(typeInfos_)
+         || ArrayUtils.isEmpty(columnNames_) || (qualifiedTableName_ == null))
+         throw new IllegalArgumentException("null or empty value not allowed here");
+      if (!((values_.length == typeInfos_.length) && (typeInfos_.length == columnNames_.length)))
+         throw new IllegalArgumentException(
+            String.format(
+               "values_ must be same size as typeInfos_ must be the same size as columnNames_; values_->%s, typeInfos_->%s, columnNames_->%s",
+               values_, typeInfos_, columnNames_));
+
+      String[] valueStrings = new String[values_.length];
+      for (int i = 0; i < values_.length; i++)
+         valueStrings[i] = DKSqlUtil.formatForSql(values_[i],
+            typeInfos_[i].getWriteType());
+
+      String insertDML = String.format("INSERT INTO %s %s\nVALUES %s",
+         qualifiedTableName_, DKStringUtil.toSetString(columnNames_),
          DKStringUtil.toSetString(valueStrings));
+      _log.debug("insertDML->{}", insertDML);
+      return insertDML;
    }
 
    public String generateSelectDML(DKDBTable table_) {

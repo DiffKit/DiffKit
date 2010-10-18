@@ -17,7 +17,6 @@ package org.diffkit.util;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -127,16 +126,24 @@ public class DKStringUtil {
    /**
     * parenthesis bracketed, comma separated
     */
-   public static String toSetString(List<String> target_) {
+   public static <T> String toSetString(List<T> target_) {
       if (target_ == null)
+         return toSetString((Object[]) null);
+      return toSetString(target_.toArray());
+   }
+
+   /**
+    * parenthesis bracketed, comma separated
+    */
+   public static <T> String toSetString(T[] target_) {
+      if (ArrayUtils.isEmpty(target_))
          return "()";
 
       StringBuilder builder = new StringBuilder();
       builder.append("(");
-      Iterator<String> iterator = target_.iterator();
-      while (iterator.hasNext()) {
-         builder.append(iterator.next());
-         if (iterator.hasNext())
+      for (int i = 0; i < target_.length; i++) {
+         builder.append(target_[i].toString());
+         if (i < (target_.length - 1))
             builder.append(", ");
       }
       builder.append(")");

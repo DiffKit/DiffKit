@@ -15,8 +15,8 @@
       </layout>
    </appender>
 
-	<logger name="org.diffkit">
-		<level value="warn" />
+	<logger name="org.diffkit.db.DKDBInsertTableLoader">
+		<level value="debug" />
 	</logger>
    
    <logger name="user" additivity="false">

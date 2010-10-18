@@ -67,10 +67,10 @@ public class TestSqlUtil extends GroovyTestCase {
    }
    
    private DKDBTable createTestTable(){
-      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
-      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
+      DKDBColumn column1 = ['FIRST_NAME', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['LAST_NAME', 2, 'VARCHAR', -1, true]
       DKDBColumn[] columns = [column1, column2]
-      String[] pkColNames = [ 'last_name']
+      String[] pkColNames = [ 'LAST_NAME']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
       DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
       return table
