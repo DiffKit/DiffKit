@@ -70,14 +70,14 @@ public class TestInsertTableLoader extends GroovyTestCase {
    }
    
    private DKDBTable createCustomerMetaTable(){
-      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 50, true]
-      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', 50, true]
-      DKDBColumn column3 = ['address', 3, 'VARCHAR', 50, true]
-      DKDBColumn column4 = ['city', 4, 'VARCHAR', 50, true]
-      DKDBColumn column5 = ['country', 5, 'VARCHAR', 25, true]
-      DKDBColumn column6 = ['age', 6, 'INTEGER', -1, true]
+      DKDBColumn column1 = ['FIRST_NAME', 1, 'VARCHAR', 50, true]
+      DKDBColumn column2 = ['LAST_NAME', 2, 'VARCHAR', 50, true]
+      DKDBColumn column3 = ['ADDRESS', 3, 'VARCHAR', 50, true]
+      DKDBColumn column4 = ['CITY', 4, 'VARCHAR', 50, true]
+      DKDBColumn column5 = ['COUNTRY', 5, 'VARCHAR', 25, true]
+      DKDBColumn column6 = ['AGE', 6, 'INTEGER', -1, true]
       DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
-      String[] pkColNames = ['first_name', 'last_name']
+      String[] pkColNames = ['FIRST_NAME', 'LAST_NAME']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
       DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
       return table

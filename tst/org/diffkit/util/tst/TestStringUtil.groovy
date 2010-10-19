@@ -58,6 +58,14 @@ public class TestStringUtil extends GroovyTestCase {
       assert DKStringUtil.quote("'string'",DKStringUtil.Quote.SINGLE) == "'string'"
    }
    
+   public void testUnquote() {
+      assert ! DKStringUtil.unquote(null,DKStringUtil.Quote.DOUBLE)
+      assert DKStringUtil.unquote('hello',DKStringUtil.Quote.DOUBLE) == 'hello'
+      assert DKStringUtil.unquote('"hello',DKStringUtil.Quote.DOUBLE) == '"hello'
+      assert DKStringUtil.unquote('"hello"',DKStringUtil.Quote.DOUBLE) == 'hello'
+      assert DKStringUtil.unquote('""',DKStringUtil.Quote.DOUBLE) == ''
+   }
+   
    public void testReplaceEach(){
       def source =   '''Beware the Jabberwock, my son!
                         The jaws that bite, the claws that catch!

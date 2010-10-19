@@ -1,5 +1,4 @@
-column1,column2,column3
-aaaa,"my clobby 
-text",aaaa
+COLUMN1,COLUMN2,COLUMN3
+aaaa,"my clobby text",aaaa
 bbbb,"my clobby  text",bbbb
 cccc,more clobby text,cccc

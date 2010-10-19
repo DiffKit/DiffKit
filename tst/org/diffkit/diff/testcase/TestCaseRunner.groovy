@@ -104,7 +104,7 @@ public class TestCaseRunner implements Runnable {
          _log.info("can't setup runnerRun; exiting.")
          return
       }
-      _allTestCases = this.fetchAllTestCases(runnerRun.dir)
+      _allTestCases = this.fetchAllTestCases(runnerRun.dir, flavor_)
       _log.debug("_allTestCases->{}",_allTestCases)
       def List<TestCase> testCases = null
       if( !_testCaseNumbers) {
@@ -379,20 +379,20 @@ public class TestCaseRunner implements Runnable {
          throw new RuntimeException("sinkPath '$sinkFile' must be relative path!")
    }
    
-   public  List<TestCase> fetchAllTestCases(File dir_){
+   public  List<TestCase> fetchAllTestCases(File dir_, DKDBFlavor flavor_){
       File[] planFiles = dir_.listFiles(TEST_CASE_PLAN_FILTER)
       if(!planFiles)
          return null
       def testCases = new ArrayList(planFiles.length)
       planFiles.each {
-         def testCase = this.createTestCase(it, dir_)
+         def testCase = this.createTestCase(it, dir_, flavor_)
          if(testCase)
             testCases.add(testCase)
       }
       return testCases
    }
    
-   private TestCase createTestCase(File planFile_, File dir_){
+   private TestCase createTestCase(File planFile_, File dir_, DKDBFlavor flavor_){
       def matcher = Pattern.compile(TEST_CASE_PLAN_FILE_PATTERN).matcher(planFile_.name)
       matcher.matches()
       def numberString = matcher.group(1)
@@ -410,10 +410,16 @@ public class TestCaseRunner implements Runnable {
       _log.debug("rhsConnectionInfoFile->{}",rhsConnectionInfoFile)
       if(!rhsConnectionInfoFile.exists())
          rhsConnectionInfoFile = null
+      def flavorString = flavor_.toString().toLowerCase()
+      def expectedFile = new File(dir_, "test${numberString}.expected.${flavorString}.diff")
+      _log.debug("expectedFile->{}",expectedFile)
+      if(!expectedFile.exists())
+         expectedFile = new File(dir_, "test${numberString}.expected.diff")
+      
       def name = "test$numberString"
       def lhsSourceFile = new File(dir_, "test${numberString}.lhs.csv")
       def rhsSourceFile = new File(dir_, "test${numberString}.rhs.csv")
-      def expectedFile = new File(dir_, "test${numberString}.expected.diff")
+      //      def expectedFile = new File(dir_, "test${numberString}.expected.diff")
       def exceptionFile = new File(dir_, "test${numberString}.exception")
       def testCase= new TestCase(number,name, null, dbSetupFile, lhsSourceFile, 
             rhsSourceFile, lhsConnectionInfoFile, rhsConnectionInfoFile, 

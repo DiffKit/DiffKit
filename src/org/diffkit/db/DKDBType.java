@@ -97,12 +97,14 @@ public enum DKDBType {
          return WriteType.STRING;
       case LONGVARCHAR:
          return WriteType.STRING;
+      case CLOB:
+         return WriteType.STRING;
       case DATE:
          return WriteType.DATE;
       case TIME:
          return WriteType.TIME;
       case TIMESTAMP:
-         return WriteType.TIME;
+         return WriteType.TIMESTAMP;
 
       default:
          throw new RuntimeException(String.format(

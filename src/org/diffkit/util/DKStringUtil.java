@@ -124,6 +124,31 @@ public class DKStringUtil {
    }
 
    /**
+    * convenience that calls unquote(String, Quote) for each element <br/>
+    * 
+    * N.B. actually modifies target_
+    */
+   public static void unquote(String[] target_, Quote kind_) {
+      DKValidate.notNull(kind_);
+      if (ArrayUtils.isEmpty(target_))
+         return;
+      for (int i = 0; i < target_.length; i++)
+         target_[i] = unquote(target_[i], kind_);
+   }
+
+   public static String unquote(String target_, Quote kind_) {
+      DKValidate.notNull(kind_);
+      if (target_ == null)
+         return null;
+      if (target_.length() < 2)
+         return target_;
+      char[] chars = target_.toCharArray();
+      if (!((chars[0] == kind_._character) && (chars[chars.length - 1] == kind_._character)))
+         return target_;
+      return new String(ArrayUtils.subarray(chars, 1, chars.length - 1));
+   }
+
+   /**
     * parenthesis bracketed, comma separated
     */
    public static <T> String toSetString(List<T> target_) {

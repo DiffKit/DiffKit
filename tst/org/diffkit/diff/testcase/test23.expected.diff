@@ -8,68 +8,68 @@ diff'd 8 rows in xxx, found:
 3 row diffs >
 ------------------------
 --- column diff summary ---
-columns having diffs->(column3, column4, column2)
-column3 has 4 diffs
-column4 has 2 diffs
-column2 has 1 diffs
+columns having diffs->(COLUMN3, COLUMN4, COLUMN2)
+COLUMN3 has 4 diffs
+COLUMN4 has 2 diffs
+COLUMN2 has 1 diffs
 ---------------------------
 --- column diffs clustered ---
-columnClusters having diffs->(column3, column2.column3.column4, column3.column4)
-column3 has 2 diffs
-column2.column3.column4 has 1 diffs
-column3.column4 has 1 diffs
+columnClusters having diffs->(COLUMN3, COLUMN2.COLUMN3.COLUMN4, COLUMN3.COLUMN4)
+COLUMN3 has 2 diffs
+COLUMN2.COLUMN3.COLUMN4 has 1 diffs
+COLUMN3.COLUMN4 has 1 diffs
 ---------------------------
 --- row diff groups ---
 1 groups <
 2 groups >
 - <
-column2=0000,column3=x has 1 diffs
+COLUMN2=0000,COLUMN3=x has 1 diffs
 - >
-column2=1111,column3=x has 2 diffs
-column2=0000,column3=v has 1 diffs
+COLUMN2=1111,COLUMN3=x has 2 diffs
+COLUMN2=0000,COLUMN3=v has 1 diffs
 ------------------------
 --- column diff groups ---
-column3=z:x has 2 diffs
-column2=0000:3333 has 1 diffs
-column3=u:x has 1 diffs
-column3=y:x has 1 diffs
+COLUMN3=z:x has 2 diffs
+COLUMN2=0000:3333 has 1 diffs
+COLUMN3=u:x has 1 diffs
+COLUMN3=y:x has 1 diffs
 ------------------------
 --- column diff cluster groups ---
-column2.column3.column4/column2=0000:3333,column3=z:x has 1 diffs
-column3.column4/column2=4444,column3=z:x has 1 diffs
-column3/column2=2222,column3=y:x has 1 diffs
-column3/column2=5555,column3=u:x has 1 diffs
+COLUMN2.COLUMN3.COLUMN4/COLUMN2=0000:3333,COLUMN3=z:x has 1 diffs
+COLUMN3.COLUMN4/COLUMN2=4444,COLUMN3=z:x has 1 diffs
+COLUMN3/COLUMN2=2222,COLUMN3=y:x has 1 diffs
+COLUMN3/COLUMN2=5555,COLUMN3=u:x has 1 diffs
 ------------------------
-!{column1=1, column2=0000, column3=x}
+!{COLUMN1=1, COLUMN2=0000, COLUMN3=x}
 <
-!{column1=2, column2=1111, column3=x}
+!{COLUMN1=2, COLUMN2=1111, COLUMN3=x}
 >
-@{column1=3, column2=2222, column3=y:x}
-column3
+@{COLUMN1=3, COLUMN2=2222, COLUMN3=y:x}
+COLUMN3
 <y
 >x
-@{column1=4, column2=0000:3333, column3=z:x}
-column2
+@{COLUMN1=4, COLUMN2=0000:3333, COLUMN3=z:x}
+COLUMN2
 <0000
 >3333
-column3
+COLUMN3
 <z
 >x
-column4
+COLUMN4
 <bbbb
 >aaaa
-@{column1=5, column2=4444, column3=z:x}
-column3
+@{COLUMN1=5, COLUMN2=4444, COLUMN3=z:x}
+COLUMN3
 <z
 >x
-column4
+COLUMN4
 <bbbb
 >aaaa
-@{column1=6, column2=5555, column3=u:x}
-column3
+@{COLUMN1=6, COLUMN2=5555, COLUMN3=u:x}
+COLUMN3
 <u
 >x
-!{column1=7, column2=0000, column3=v}
+!{COLUMN1=7, COLUMN2=0000, COLUMN3=v}
 >
-!{column1=8, column2=1111, column3=x}
+!{COLUMN1=8, COLUMN2=1111, COLUMN3=x}
 >

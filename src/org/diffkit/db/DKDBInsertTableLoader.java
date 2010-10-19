@@ -31,7 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.util.DKArrayUtil;
 import org.diffkit.util.DKSqlUtil;
+import org.diffkit.util.DKStringUtil;
+import org.diffkit.util.DKStringUtil.Quote;
 
 /**
  * @author jpanico
@@ -69,11 +72,11 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       connection.setAutoCommit(true);
       LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(
          csvFile_)));
-      String[] columnNames = table_.getColumnNames();
+      String[] tableColumnNames = table_.getColumnNames();
       DKDBTypeInfo[] typeInfos = _database.getColumnTypeInfos(table_);
       String qualifiedTableName = table_.getSchemaQualifiedTableName();
       if (_debugEnabled) {
-         _log.debug("columnNames->{}", Arrays.toString(columnNames));
+         _log.debug("tableColumnNames->{}", Arrays.toString(tableColumnNames));
          _log.debug("typeInfos->{}", Arrays.toString(typeInfos));
          _log.debug("qualifiedTableName->{}", qualifiedTableName);
       }
@@ -81,19 +84,30 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
       // assume first line is header, use column names to drive the line parse
       line = StringUtils.trimToNull(reader.readLine());
-      //      String[] columnNames = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+      String[] headerColumnNames = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+      int[] loadIndices = DKArrayUtil.getIndicesOfIntersection(headerColumnNames,
+         tableColumnNames);
+      if (_debugEnabled) {
+         _log.debug("headerColumnNames->{}", Arrays.toString(headerColumnNames));
+         _log.debug("loadIndices->{}", Arrays.toString(loadIndices));
+      }
       for (long i = 1; (line = StringUtils.trimToNull(reader.readLine())) != null; i++) {
          String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
          if (_debugEnabled) {
             _log.debug("line: " + line);
             _log.debug("values: " + Arrays.toString(values));
          }
-         if (!(values.length == columnNames.length))
+         DKStringUtil.unquote(values, Quote.DOUBLE);
+         values = DKArrayUtil.retainElementsAtIndices(values, loadIndices);
+         if (_debugEnabled) {
+            _log.debug("values: " + Arrays.toString(values));
+         }
+         if (!(values.length == tableColumnNames.length))
             throw new RuntimeException(String.format(
                "number of values->%s does not match number of columns->%s",
-               values.length, columnNames.length));
+               values.length, tableColumnNames.length));
          String insertStatementString = _database.generateInsertDML(values, typeInfos,
-            columnNames, qualifiedTableName);
+            tableColumnNames, qualifiedTableName);
          updateStatements.add(insertStatementString);
          _log.debug("insertStatementString: " + insertStatementString);
          if (i % LOAD_BATCH_SIZE == 0) {

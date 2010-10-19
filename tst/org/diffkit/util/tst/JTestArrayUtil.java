@@ -25,6 +25,61 @@ import org.diffkit.util.DKArrayUtil;
  */
 public class JTestArrayUtil extends GroovyTestCase {
 
+   public void testIndicesOfIntersection() {
+      String[] source = new String[] { "beware", "the", "jabberwocky" };
+      String[] target = null;
+      Assert.assertNull(DKArrayUtil.getIndicesOfIntersection(source, target));
+      Assert.assertNull(DKArrayUtil.getIndicesOfIntersection(target, source));
+
+      target = new String[0];
+      GroovyTestCase.assertEquals(null,
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+      GroovyTestCase.assertEquals(null,
+         DKArrayUtil.getIndicesOfIntersection(target, source));
+
+      target = new String[] { "ack", "awk", "hack" };
+      GroovyTestCase.assertEquals(null,
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+      GroovyTestCase.assertEquals(null,
+         DKArrayUtil.getIndicesOfIntersection(target, source));
+
+      target = new String[] { "beware", "the", "jabberwocky" };
+      GroovyTestCase.assertEquals(new int[] { 0, 1, 2 },
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+      GroovyTestCase.assertEquals(new int[] { 0, 1, 2 },
+         DKArrayUtil.getIndicesOfIntersection(target, source));
+
+      target = new String[] { "jabberwocky", "the", "beware" };
+      GroovyTestCase.assertEquals(new int[] { 0, 1, 2 },
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+      GroovyTestCase.assertEquals(new int[] { 0, 1, 2 },
+         DKArrayUtil.getIndicesOfIntersection(target, source));
+
+      target = new String[] { "jabberwocky" };
+      GroovyTestCase.assertEquals(new int[] { 2 },
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+
+      target = new String[] { "jabberwocky", "ack" };
+      GroovyTestCase.assertEquals(new int[] { 2 },
+         DKArrayUtil.getIndicesOfIntersection(source, target));
+
+   }
+
+   public void testRetain() {
+      String[] target = new String[] { "beware", "the", "jabberwocky" };
+
+      Assert.assertNull(DKArrayUtil.retainElementsAtIndices(null, null));
+      Assert.assertNull(DKArrayUtil.retainElementsAtIndices(target, null));
+      Assert.assertNull(DKArrayUtil.retainElementsAtIndices(null, new int[] { 2 }));
+      Assert.assertNull(DKArrayUtil.retainElementsAtIndices(null, new int[0]));
+      Assert.assertNull(DKArrayUtil.retainElementsAtIndices(target, new int[0]));
+      GroovyTestCase.assertEquals(target,
+         DKArrayUtil.retainElementsAtIndices(target, new int[] { 0, 1, 2 }));
+      GroovyTestCase.assertEquals(new String[] { "the" },
+         DKArrayUtil.retainElementsAtIndices(target, new int[] { 1 }));
+
+   }
+
    public void testIntersection() {
       String[] source = new String[] { "beware", "the", "jabberwocky" };
       String[] target = null;

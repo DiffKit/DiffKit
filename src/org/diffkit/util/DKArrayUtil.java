@@ -55,6 +55,36 @@ public class DKArrayUtil {
       return subarray(intersection, 0, j);
    }
 
+   /**
+    * @return indices into source_
+    */
+   public static int[] getIndicesOfIntersection(Object[] source_, Object[] target_) {
+      boolean sourceIsNull = (source_ == null);
+      boolean targetIsNull = (target_ == null);
+      if (sourceIsNull || targetIsNull)
+         return null;
+      int[] result = new int[source_.length];
+      Arrays.fill(result, -1);
+      for (int i = 0, j = 0; i < source_.length; i++) {
+         if (ArrayUtils.contains(target_, source_[i]))
+            result[j++] = i;
+      }
+      return compactFill(result, -1);
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <T> T[] retainElementsAtIndices(T[] target_, int[] retainIndices_) {
+      if (ArrayUtils.isEmpty(target_))
+         return target_;
+      if (ArrayUtils.isEmpty(retainIndices_))
+         return null;
+      T[] results = (T[]) createArray(target_.getClass().getComponentType(),
+         retainIndices_.length);
+      for (int i = 0; i < retainIndices_.length; i++)
+         results[i] = target_[retainIndices_[i]];
+      return results;
+   }
+
    public static <T> T[] removeElementsAtIndices(T[] target_, int[] removeIndices_) {
       if (ArrayUtils.isEmpty(target_))
          return target_;

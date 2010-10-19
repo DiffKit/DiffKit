@@ -10,13 +10,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
       <property name="rhsFilePath" value="./test13.rhs.csv" />
       <property name="diffColumnNames">
          <list>
-            <value>column2</value>
+            <value>COLUMN2</value>
          </list>
       </property>
       <property name="displayColumnNames">
          <list>
-            <value>column1</value>
-            <value>column3</value>
+            <value>COLUMN1</value>
+            <value>COLUMN3</value>
          </list>
       </property>
 		<property name="sinkFilePath" value="./test13.sink.diff" />
