@@ -99,6 +99,13 @@ public class DKDBDatabase {
    }
 
    /**
+    * convenience that calls getTypeInfo(String)
+    */
+   public boolean supportsType(String dbTypeName_) throws SQLException {
+      return (this.getTypeInfo(dbTypeName_) != null);
+   }
+
+   /**
     * convenience that just extracts typeInfos from underlying columns
     */
    public DKDBTypeInfo[] getColumnTypeInfos(DKDBTable table_) throws SQLException {
@@ -136,15 +143,31 @@ public class DKDBDatabase {
    /**
     * convenience method
     * 
+    * @return the newly created table, which might be different from the
+    *         requested table, depending on the DB support. For examples,
+    *         columns of Type not supported by particular flavor will be quietly
+    *         filterd out
     * @throws SQLException
     */
-   public boolean createTable(DKDBTable table_) throws SQLException {
+   public DKDBTable createTable(DKDBTable table_) throws SQLException {
       _log.debug("table_->{}", table_);
       if (table_ == null)
-         return false;
+         return null;
       String createSql = _sqlGenerator.generateCreateDDL(table_);
       _log.debug("createSql->{}", createSql);
-      return DKSqlUtil.executeUpdate(createSql, this.getConnection());
+      if (!DKSqlUtil.executeUpdate(createSql, this.getConnection()))
+         throw new SQLException("execute was not successful");
+      return this.getTable(table_.getCatalog(), table_.getSchema(), table_.getTableName());
+   }
+
+   /**
+    * convenience method that delegates to underlying TableDataAccess
+    * 
+    * @throws SQLException
+    */
+   public DKDBTable getTable(String catalog_, String schema_, String tableName_)
+      throws SQLException {
+      return _tableDataAccess.getTable(catalog_, schema_, tableName_);
    }
 
    /**

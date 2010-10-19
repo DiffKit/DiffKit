@@ -79,8 +79,9 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       }
       String line = null;
       List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
-      // assume first line is header, throw away
-      reader.readLine();
+      // assume first line is header, use column names to drive the line parse
+      line = StringUtils.trimToNull(reader.readLine());
+      //      String[] columnNames = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
       for (long i = 1; (line = StringUtils.trimToNull(reader.readLine())) != null; i++) {
          String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
          if (_debugEnabled) {

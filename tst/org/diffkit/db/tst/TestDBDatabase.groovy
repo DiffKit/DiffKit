@@ -22,7 +22,6 @@ import org.diffkit.db.DKDBDatabase
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable;
-import org.diffkit.util.DKSqlUtil;
 
 import groovy.util.GroovyTestCase;
 
@@ -31,6 +30,15 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestDBDatabase extends GroovyTestCase {
+   
+   public void testSupportsType() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      assert database.canConnect()
+      assert database.supportsType('VARCHAR')
+      assert database.supportsType('BOOLEAN')
+   }
    
    public void testCanConnect(){
       

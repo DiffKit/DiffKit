@@ -44,6 +44,8 @@ public class DKSqlGenerator {
    }
 
    public String generateCreateDDL(DKDBColumn column_) throws SQLException {
+      if (!_database.supportsType(column_.getDBTypeName()))
+         return null;
       StringBuilder builder = new StringBuilder();
       String notNullSpecifier = column_.isPartOfPrimaryKey() ? " NOT NULL" : "";
       builder.append(String.format("%s\t\t%s%s%s", column_.getName(),
@@ -80,7 +82,10 @@ public class DKSqlGenerator {
       DKDBColumn[] columns = table_.getColumns();
       DKDBPrimaryKey primaryKey = table_.getPrimaryKey();
       for (int i = 0; i < columns.length; i++) {
-         builder.append(String.format("\t\t%s", this.generateCreateDDL(columns[i])));
+         String columnDDL = this.generateCreateDDL(columns[i]);
+         if (columnDDL == null)
+            continue;
+         builder.append(String.format("\t\t%s", columnDDL));
          if ((i < (columns.length - 1)) || (primaryKey != null))
             builder.append(",");
          builder.append("\n");

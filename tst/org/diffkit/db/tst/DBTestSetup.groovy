@@ -112,9 +112,13 @@ public class DBTestSetup {
       if(!table_)
          return
       
+      if(database_.tableExists(table_))
+         database_.dropTable(table_)
       Connection connection = database_.connection
       _log.debug("connection->{}",connection)
-      database_.createTable( table_)
+      // table might not be created exactly as requested; in particular, columns
+      // of types not supported by particular flavor will be silently dropped
+      table_ =database_.createTable( table_)
       DKSqlUtil.close(connection)
       DKDBTableLoader loader = getLoader(database_)
       _log.debug("loader->{}",loader)

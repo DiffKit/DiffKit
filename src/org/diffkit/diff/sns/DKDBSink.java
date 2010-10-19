@@ -123,7 +123,7 @@ public class DKDBSink extends DKAbstractSink {
    private void ensureDiffContextTable() throws SQLException {
       if (_tableDataAccess.getTable(_diffContextTable.getCatalog(),
          _diffContextTable.getSchema(), _diffContextTable.getTableName()) == null) {
-         if (!_database.createTable(_diffContextTable))
+         if (_database.createTable(_diffContextTable) == null)
             throw new RuntimeException(String.format(
                "couldn't create _diffContextTable->%s", _diffContextTable));
       }
@@ -132,7 +132,7 @@ public class DKDBSink extends DKAbstractSink {
    private void ensureDiffTable() throws SQLException {
       if (_tableDataAccess.getTable(_diffTable.getCatalog(), _diffTable.getSchema(),
          _diffTable.getTableName()) == null) {
-         if (!_database.createTable(_diffTable))
+         if (_database.createTable(_diffTable) == null)
             throw new RuntimeException(String.format("couldn't create _diffTable->%s",
                _diffTable));
       }

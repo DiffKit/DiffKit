@@ -67,8 +67,8 @@ public class TestEngine extends GroovyTestCase {
    public void testSameModelFromDBToDB(){
       def database = this.getDatabase()
       def connection = database.connection
-      def lhsName = 'lhs2'
-      def rhsName = 'rhs2'
+      def lhsName = 'LHS2'
+      def rhsName = 'RHS2'
       def lhsDBTable = this.createSimpleDBTableModel(lhsName)
       def rhsDBTable = this.createSimpleDBTableModel(rhsName)
       
@@ -140,8 +140,8 @@ public class TestEngine extends GroovyTestCase {
    public void testSameModelFromDB(){
       def database = this.getDatabase()
       def connection = database.connection
-      def lhsName = 'lhs2'
-      def rhsName = 'rhs2'
+      def lhsName = 'LHS2'
+      def rhsName = 'RHS2'
       def lhsDBTable = this.createSimpleDBTableModel(lhsName)
       def rhsDBTable = this.createSimpleDBTableModel(rhsName)
       

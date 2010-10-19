@@ -31,7 +31,16 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void tXstDB2(){
+   public void tXstSupportsType() {
+      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
+      println "connectionInfo->$connectionInfo"
+      DKDBDatabase database = [connectionInfo]
+      assert database.canConnect()
+      assert database.supportsType('VARCHAR')
+//      assert database.supportsType('BOOLEAN')
+   }
+
+      public void tXstDB2(){
       DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]

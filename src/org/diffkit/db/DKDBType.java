@@ -89,6 +89,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case DOUBLE:
          return WriteType.NUMBER;
+      case REAL:
+         return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
       case VARCHAR:
