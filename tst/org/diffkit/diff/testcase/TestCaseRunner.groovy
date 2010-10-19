@@ -249,8 +249,8 @@ public class TestCaseRunner implements Runnable {
    /**
     * perform all of the dbSetup for all TestCases found in file_
     */
-   public void setupDB(File file_) {
-      def testCases = this.fetchAllTestCases(file_)
+   public void setupDB(File dir_) {
+      def testCases = this.fetchAllTestCases(dir_)
       _log.debug("testCases->{}", testCases)
       if (!testCases)
          return 

@@ -23,7 +23,9 @@ import java.io.File;
 import java.sql.Connection 
 
 import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBH2Loader 
+import org.diffkit.db.DKDBInsertTableLoader;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableLoader 
 import org.diffkit.util.DKResourceUtil;
@@ -114,8 +116,14 @@ public class DBTestSetup {
       _log.debug("connection->{}",connection)
       database_.createTable( table_)
       DKSqlUtil.close(connection)
-      DKDBTableLoader loader = new DKDBH2Loader(database_)
+      DKDBTableLoader loader = getLoader(database_)
       _log.debug("loader->{}",loader)
       loader.load(table_, dataFile_)
+   }
+   
+   private static DKDBTableLoader getLoader(DKDBDatabase database_){
+      if(database_.getFlavor()==DKDBFlavor.H2)
+         return new DKDBH2Loader(database_)
+      return new DKDBInsertTableLoader(database_)
    }
 }

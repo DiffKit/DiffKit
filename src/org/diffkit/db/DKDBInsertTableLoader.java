@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
       // assume first line is header, throw away
       reader.readLine();
-      for (long i = 1; (line = reader.readLine()) != null; i++) {
+      for (long i = 1; (line = StringUtils.trimToNull(reader.readLine())) != null; i++) {
          String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
          if (_debugEnabled) {
             _log.debug("line: " + line);
