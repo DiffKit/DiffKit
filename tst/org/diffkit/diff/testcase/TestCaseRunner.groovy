@@ -93,12 +93,14 @@ public class TestCaseRunner implements Runnable {
    }
    
    public void run(){
+      _log.debug("_flavors->{}",_flavors)
       if(!_flavors)
          _flavors = [DKDBFlavor.H2]
       _flavors.each { this.run(it) }
    }
    
    public void run(DKDBFlavor flavor_){
+      _log.info("flavor_->{}",flavor_)
       def runnerRun = this.setupRunnerRun(flavor_)
       if(!runnerRun) {
          _log.info("can't setup runnerRun; exiting.")
@@ -419,7 +421,6 @@ public class TestCaseRunner implements Runnable {
       def name = "test$numberString"
       def lhsSourceFile = new File(dir_, "test${numberString}.lhs.csv")
       def rhsSourceFile = new File(dir_, "test${numberString}.rhs.csv")
-      //      def expectedFile = new File(dir_, "test${numberString}.expected.diff")
       def exceptionFile = new File(dir_, "test${numberString}.exception")
       def testCase= new TestCase(number,name, null, dbSetupFile, lhsSourceFile, 
             rhsSourceFile, lhsConnectionInfoFile, rhsConnectionInfoFile, 

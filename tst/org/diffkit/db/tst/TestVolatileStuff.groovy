@@ -54,7 +54,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       println "TABLES->${tables[0].description}"
    }
    
-   public void tXstOracle(){
+   public void testOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDBDatabase database = [connectionInfo]
@@ -70,6 +70,9 @@ public class TestVolatileStuff extends GroovyTestCase {
       def tables = tableDataAccess.getTables(null, 'SYS', 'USER_TABLES')
       println "tables->$tables"
       println "USER_TABLES->${tables[0].description}"
+      assert database.supportsType('_ORACLE_VARCHAR2')
+      println "map->${database.typeInfoDataAccess.nameToTypeInfoMap}"
+      assert database.supportsType('_ORACLE_NUMBER')
    }
    
    public void testH2(){

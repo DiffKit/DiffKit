@@ -16,6 +16,7 @@
 package org.diffkit.db;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import org.diffkit.common.DKValidate;
@@ -49,6 +50,17 @@ public class DKDBColumn implements Comparable<DKDBColumn> {
       _nullable = nullable_;
       _dbTypeName = dbTypeName_;
       DKValidate.notNull(_name, _dbTypeName);
+   }
+
+   /**
+    * create a copy of the receiver, but use dbTypeName_ instead of value from
+    * receiver
+    */
+   public DKDBColumn copy(String dbTypeName_) {
+      if (StringUtils.equals(_dbTypeName, dbTypeName_))
+         return this;
+      return new DKDBColumn(this.getName(), this.getOrdinalPosition(), dbTypeName_,
+         this.getSize(), this.isNullable());
    }
 
    public void setTable(DKDBTable table_) {

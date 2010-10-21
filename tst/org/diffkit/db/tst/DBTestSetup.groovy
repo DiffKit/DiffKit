@@ -116,13 +116,37 @@ public class DBTestSetup {
          database_.dropTable(table_)
       Connection connection = database_.connection
       _log.debug("connection->{}",connection)
+      def typeSubstitutions = this.getTypeSubstitutionMap(database_.flavor)
+      if(typeSubstitutions)
+         table_ = table_.copy(typeSubstitutions)
       // table might not be created exactly as requested; in particular, columns
       // of types not supported by particular flavor will be silently dropped
+      _log.debug("table_->{}",table_.description)
       table_ =database_.createTable( table_)
       DKSqlUtil.close(connection)
       DKDBTableLoader loader = getLoader(database_)
       _log.debug("loader->{}",loader)
       loader.load(table_, dataFile_)
+   }
+   
+   private static Map<String,String> getTypeSubstitutionMap(DKDBFlavor flavor_){
+      if(!flavor_) 
+         return null
+      switch (flavor_) {
+         case DKDBFlavor.H2:
+            return null
+         case DKDBFlavor.DB2:
+            return null
+         case DKDBFlavor.ORACLE:
+            return this.createOracleTypeSubstitutionMap()
+         
+         default:
+            return null
+      }
+   }
+   
+   private static Map<String,String> createOracleTypeSubstitutionMap(){
+      return ['VARCHAR':'_ORACLE_VARCHAR2', 'BIGINT':'_ORACLE_NUMBER']
    }
    
    private static DKDBTableLoader getLoader(DKDBDatabase database_){

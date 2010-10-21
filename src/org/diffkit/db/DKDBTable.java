@@ -17,7 +17,9 @@ package org.diffkit.db;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
@@ -51,6 +53,31 @@ public class DKDBTable {
       DKValidate.notNull(_tableName);
       this.validatePrimaryKey(_primaryKey, _columns);
       this.ensureRelationships(_columns);
+   }
+
+   public DKDBTable copy(Map<String, String> typeNameSubstitutionMap_) {
+      if (MapUtils.isEmpty(typeNameSubstitutionMap_))
+         return this;
+      DKDBColumn[] copyColumns = this.copyColumns(typeNameSubstitutionMap_);
+      return new DKDBTable(this.getCatalog(), this.getSchema(), this.getTableName(),
+         copyColumns);
+   }
+
+   private DKDBColumn[] copyColumns(Map<String, String> typeNameSubstitutionMap_) {
+      if (MapUtils.isEmpty(typeNameSubstitutionMap_))
+         return this.getColumns();
+      DKDBColumn[] columns = this.getColumns();
+      if (ArrayUtils.isEmpty(columns))
+         return columns;
+      DKDBColumn[] copyColumns = new DKDBColumn[columns.length];
+      for (int i = 0; i < columns.length; i++) {
+         String newTypeName = typeNameSubstitutionMap_.get(columns[i].getDBTypeName());
+         if (newTypeName == null)
+            copyColumns[i] = columns[i];
+         else
+            copyColumns[i] = columns[i].copy(newTypeName);
+      }
+      return copyColumns;
    }
 
    private void ensureRelationships(DKDBColumn[] columns_) {

@@ -4,6 +4,8 @@
  */
 package org.diffkit.util;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -23,8 +25,10 @@ public class DKBooleanUtil {
          return BooleanUtils.toBoolean(((Integer) target_).intValue());
       else if (target_ instanceof String)
          return BooleanUtils.toBoolean((String) target_);
+      else if (target_ instanceof BigDecimal)
+         return BooleanUtils.toBoolean(((BigDecimal) target_).intValue());
       else
-         throw new IllegalArgumentException(String.format("unrecognized type->",
+         throw new IllegalArgumentException(String.format("unrecognized type->%s",
             target_.getClass()));
    }
 }
