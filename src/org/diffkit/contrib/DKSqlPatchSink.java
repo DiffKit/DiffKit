@@ -77,6 +77,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
       }
    }
 
+   @SuppressWarnings("unchecked")
    private void printRowDiff(DKRowDiff rowDiff_) throws SQLException {
       DKDBTable table = rowDiff_.getSide() == DKSide.LEFT ? _lhsTable : _rhsTable;
       String insertSql = _database.generateInsertDML(rowDiff_.getRowDisplayValues(),

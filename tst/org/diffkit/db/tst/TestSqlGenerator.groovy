@@ -50,7 +50,7 @@ public class TestSqlGenerator extends GroovyTestCase {
       println "insert->$insert"
       assert  StringUtils.deleteWhitespace(insert) == StringUtils.deleteWhitespace(
       """INSERT INTO DIFF_CONTEXT (ID, LHS_SOURCE, RHS_SOURCE, WHEN, RUN_DATE)
-		   VALUES (1000, 'lhs source', 'rhs source', '1969-12-31 19:00:10.0', '1969-12-31')"""
+      VALUES (1000, 'lhs source', 'rhs source', {ts '1969-12-31 19:00:10'}, '1969-12-31')"""
       )
    }
    

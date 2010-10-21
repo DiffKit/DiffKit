@@ -59,7 +59,7 @@ public class TestStringUtil extends GroovyTestCase {
    }
    
    public void testUnquote() {
-      assert ! DKStringUtil.unquote(null,DKStringUtil.Quote.DOUBLE)
+      assert ! DKStringUtil.unquote((String)null,DKStringUtil.Quote.DOUBLE)
       assert DKStringUtil.unquote('hello',DKStringUtil.Quote.DOUBLE) == 'hello'
       assert DKStringUtil.unquote('"hello',DKStringUtil.Quote.DOUBLE) == '"hello'
       assert DKStringUtil.unquote('"hello"',DKStringUtil.Quote.DOUBLE) == 'hello'
