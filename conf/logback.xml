@@ -15,7 +15,7 @@
       </layout>
    </appender>
 
-   <logger name="org.diffkit.db.tst.DBTestSetup">
+   <logger name="org.diffkit.db.DKSqlGenerator">
       <level value="warn" />
    </logger>
    <logger name="org.diffkit.util.DKSqlUtil">

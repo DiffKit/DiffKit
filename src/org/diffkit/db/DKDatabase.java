@@ -35,7 +35,7 @@ import org.diffkit.util.DKSqlUtil;
 /**
  * @author jpanico
  */
-public class DKDBDatabase {
+public class DKDatabase {
 
    private static final String USERNAME_KEY = "user";
    private static final String PASSWORD_KEY = "password";
@@ -45,7 +45,7 @@ public class DKDBDatabase {
    private final DKDBTableDataAccess _tableDataAccess;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBDatabase(DKDBConnectionInfo connectionInfo_) {
+   public DKDatabase(DKDBConnectionInfo connectionInfo_) {
       _connectionInfo = connectionInfo_;
       _typeInfoDataAccess = new DKDBTypeInfoDataAccess(this);
       _sqlGenerator = new DKSqlGenerator(this);
@@ -99,10 +99,24 @@ public class DKDBDatabase {
    }
 
    /**
+    * convenience that passes through to TypeInfoDataAccess
+    */
+   public DKDBTypeInfo getTypeInfo(DKDBType dbType_) throws SQLException {
+      return _typeInfoDataAccess.getTypeInfo(dbType_);
+   }
+
+   /**
     * convenience that calls getTypeInfo(String)
     */
    public boolean supportsType(String dbTypeName_) throws SQLException {
       return (this.getTypeInfo(dbTypeName_) != null);
+   }
+
+   /**
+    * convenience that calls getTypeInfo(String)
+    */
+   public boolean supportsType(DKDBType dbType_) throws SQLException {
+      return (this.getTypeInfo(dbType_) != null);
    }
 
    /**

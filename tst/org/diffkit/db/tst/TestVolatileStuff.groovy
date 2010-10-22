@@ -19,7 +19,8 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDBType;
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBTableDataAccess 
 
@@ -34,16 +35,16 @@ public class TestVolatileStuff extends GroovyTestCase {
    public void tXstSupportsType() {
       DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       assert database.canConnect()
       assert database.supportsType('VARCHAR')
-//      assert database.supportsType('BOOLEAN')
+      //      assert database.supportsType('BOOLEAN')
    }
-
-      public void tXstDB2(){
+   
+   public void tXstDB2(){
       DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       assert connection
@@ -57,7 +58,7 @@ public class TestVolatileStuff extends GroovyTestCase {
    public void testOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       
@@ -73,6 +74,8 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert database.supportsType('_ORACLE_VARCHAR2')
       println "map->${database.typeInfoDataAccess.nameToTypeInfoMap}"
       assert database.supportsType('_ORACLE_NUMBER')
+      assert database.supportsType(DKDBType._ORACLE_VARCHAR2)
+      assert database.supportsType(DKDBType._ORACLE_NUMBER)
    }
    
    public void testH2(){

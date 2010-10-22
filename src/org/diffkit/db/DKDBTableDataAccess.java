@@ -46,11 +46,11 @@ public class DKDBTableDataAccess {
    private static final String TABLE_SCHEMA_KEY = "TABLE_SCHEM";
    private static final String TABLE_NAME_KEY = "TABLE_NAME";
 
-   private final DKDBDatabase _connectionSource;
+   private final DKDatabase _connectionSource;
 
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBTableDataAccess(DKDBDatabase connectionSource_) {
+   public DKDBTableDataAccess(DKDatabase connectionSource_) {
       _connectionSource = connectionSource_;
       DKValidate.notNull(_connectionSource);
    }

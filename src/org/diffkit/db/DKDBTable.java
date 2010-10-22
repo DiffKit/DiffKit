@@ -167,7 +167,7 @@ public class DKDBTable {
    /**
     * convenience method
     */
-   public ReadType[] getReadTypes(String[] columnNames_, DKDBDatabase connectionSource_)
+   public ReadType[] getReadTypes(String[] columnNames_, DKDatabase connectionSource_)
       throws SQLException {
       if ((columnNames_ == null) || (columnNames_.length == 0))
          return null;

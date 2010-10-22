@@ -35,21 +35,24 @@ import org.diffkit.util.DKStringUtil;
  */
 public class DKSqlGenerator {
 
-   private final DKDBDatabase _database;
+   private final DKDatabase _database;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKSqlGenerator(DKDBDatabase database_) {
+   public DKSqlGenerator(DKDatabase database_) {
       _database = database_;
       DKValidate.notNull(database_);
    }
 
    public String generateCreateDDL(DKDBColumn column_) throws SQLException {
-      if (!_database.supportsType(column_.getDBTypeName()))
+      DKDBType concreteType = this.getConcreteType(column_);
+      _log.debug("concreteType->{}", concreteType);
+      if (!_database.supportsType(concreteType))
          return null;
       StringBuilder builder = new StringBuilder();
       String notNullSpecifier = column_.isPartOfPrimaryKey() ? " NOT NULL" : "";
       builder.append(String.format("%s\t\t%s%s%s", column_.getName(),
-         column_.getDBTypeName(), this.generateSizeSpecifier(column_), notNullSpecifier));
+         concreteType.getSqlTypeName(), this.generateSizeSpecifier(column_),
+         notNullSpecifier));
       return builder.toString();
    }
 
@@ -165,5 +168,11 @@ public class DKSqlGenerator {
 
    public String generateSelectDML(DKDBTable table_) {
       return String.format("SELECT * FROM %s", table_.getSchemaQualifiedTableName());
+   }
+
+   private DKDBType getConcreteType(DKDBColumn column_) {
+      if (column_ == null)
+         return null;
+      return DKDBType.getConcreteType(_database.getFlavor(), column_.getDBTypeName());
    }
 }

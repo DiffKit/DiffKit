@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
-import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
@@ -49,7 +49,7 @@ public class DKDBSource implements DKSource {
    private final String _whereClause;
    private final DKTableModel _model;
    private final String[] _keyColumnNames;
-   private final DKDBDatabase _database;
+   private final DKDatabase _database;
    private String[] _readColumnNames;
    private ReadType[] _readTypes;
    private final DKDBTable _table;
@@ -64,7 +64,7 @@ public class DKDBSource implements DKSource {
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebug = _log.isDebugEnabled();
 
-   public DKDBSource(String tableName_, String whereClause_, DKDBDatabase database_,
+   public DKDBSource(String tableName_, String whereClause_, DKDatabase database_,
                      DKTableModel model_, String[] keyColumnNames_, int[] readColumnIdxs_)
       throws SQLException {
       _log.info("tableName_->{}", tableName_);
@@ -141,7 +141,7 @@ public class DKDBSource implements DKSource {
       return _model;
    }
 
-   public DKDBDatabase getDatabase() {
+   public DKDatabase getDatabase() {
       return _database;
    }
 
@@ -186,7 +186,7 @@ public class DKDBSource implements DKSource {
       return DKSqlUtil.executeQuery(this.generateSelectString(), _connection);
    }
 
-   private DKDBTable getTable(String tableName_, DKDBDatabase connectionSource_)
+   private DKDBTable getTable(String tableName_, DKDatabase connectionSource_)
       throws SQLException {
       _log.debug("tableName_->{}", tableName_);
       if ((tableName_ == null) || (connectionSource_ == null))

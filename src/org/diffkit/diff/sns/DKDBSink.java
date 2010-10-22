@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
-import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
@@ -45,14 +45,14 @@ import org.diffkit.util.DKSqlUtil;
  */
 public class DKDBSink extends DKAbstractSink {
 
-   private final DKDBDatabase _database;
+   private final DKDatabase _database;
    private final DKDBTableDataAccess _tableDataAccess;
    private final DKDBTable _diffContextTable;
    private final DKDBTable _diffTable;
    private transient Connection _connection;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBSink(DKDBDatabase database_) throws SQLException {
+   public DKDBSink(DKDatabase database_) throws SQLException {
       super(null);
       _database = database_;
       _tableDataAccess = new DKDBTableDataAccess(_database);

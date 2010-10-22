@@ -17,7 +17,7 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBTypeInfoDataAccess 
 
@@ -31,10 +31,10 @@ public class TestDBTypeInfoDataAccess extends GroovyTestCase {
    
    public void testMap(){
       
-      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
-//      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      //      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       DKDBTypeInfoDataAccess typeInfoDataAccess = [database]
       
       def typeName = typeInfoDataAccess.getNameForSqlType(4)

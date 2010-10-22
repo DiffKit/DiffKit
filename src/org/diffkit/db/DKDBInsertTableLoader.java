@@ -41,11 +41,11 @@ import org.diffkit.util.DKStringUtil.Quote;
  */
 public class DKDBInsertTableLoader implements DKDBTableLoader {
    private static final int LOAD_BATCH_SIZE = 1000;
-   private final DKDBDatabase _database;
+   private final DKDatabase _database;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _debugEnabled = _log.isDebugEnabled();
 
-   public DKDBInsertTableLoader(DKDBDatabase database_) {
+   public DKDBInsertTableLoader(DKDatabase database_) {
       _database = database_;
       DKValidate.notNull(_database);
    }

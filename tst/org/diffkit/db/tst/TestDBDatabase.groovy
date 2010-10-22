@@ -18,7 +18,7 @@ package org.diffkit.db.tst
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable;
@@ -34,7 +34,7 @@ public class TestDBDatabase extends GroovyTestCase {
    public void testSupportsType() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       assert database.canConnect()
       assert database.supportsType('VARCHAR')
       assert database.supportsType('BOOLEAN')
@@ -44,13 +44,13 @@ public class TestDBDatabase extends GroovyTestCase {
       
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       assert database.canConnect()
    }
    
    public void testTableExists(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def table = this.createCustomerMetaTable()
       assert table
       assert !database.tableExists(table)
@@ -63,7 +63,7 @@ public class TestDBDatabase extends GroovyTestCase {
    public void testH2(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       

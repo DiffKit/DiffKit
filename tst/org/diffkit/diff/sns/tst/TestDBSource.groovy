@@ -21,7 +21,7 @@ import java.io.File;
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable
@@ -43,7 +43,7 @@ public class TestDBSource extends GroovyTestCase {
    public void testKeyColumnNames() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       def dbTable = this.createCustomerMetaTable()
       assert database.createTable( dbTable)
@@ -58,7 +58,7 @@ public class TestDBSource extends GroovyTestCase {
    public void testRead(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       def dbTable = this.createCustomerMetaTable()
       assert database.createTable( dbTable)

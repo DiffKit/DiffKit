@@ -25,7 +25,7 @@ import org.diffkit.common.DKComparatorChain;
 import org.diffkit.common.DKMapKeyValueComparator;
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor 
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBPrimaryKey 
@@ -205,7 +205,7 @@ public class TestEngine extends GroovyTestCase {
       return comparison
    }
    
-   private DKDBSource createDBSource(DKDBTable table_, DKDBDatabase database_) {
+   private DKDBSource createDBSource(DKDBTable table_, DKDatabase database_) {
       def tableModel = DKTableModelUtil.createDefaultTableModel(table_, null)
       assert tableModel
       
@@ -217,10 +217,10 @@ public class TestEngine extends GroovyTestCase {
       return loader_.load(table_, csvFile)
    }
    
-   private DKDBDatabase getDatabase(){
+   private DKDatabase getDatabase(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      return  new DKDBDatabase(connectionInfo)
+      return  new DKDatabase(connectionInfo)
    }
    
    private File getCsvFile(String name_){

@@ -31,10 +31,10 @@ import org.diffkit.util.DKSqlUtil;
  */
 public class DKDBH2Loader implements DKDBTableLoader {
 
-   private final DKDBDatabase _connectionSource;
+   private final DKDatabase _connectionSource;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBH2Loader(DKDBDatabase connectionSource_) {
+   public DKDBH2Loader(DKDatabase connectionSource_) {
       _connectionSource = connectionSource_;
       DKValidate.notNull(_connectionSource);
    }

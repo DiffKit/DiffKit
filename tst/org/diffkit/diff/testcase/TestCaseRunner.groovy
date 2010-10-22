@@ -34,7 +34,7 @@ import org.diffkit.common.DKRuntime
 import org.diffkit.common.DKUnjar;
 import org.diffkit.common.DKValidate;
 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBTableLoader 
@@ -202,7 +202,7 @@ public class TestCaseRunner implements Runnable {
          DKRuntime.getInstance().getUserLog().error("could not get connectionInfo from bean conf files->{}, skipping.",confFilePaths)
          return false
       }
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       boolean canConnect = database.canConnect()
       if(!canConnect){
          DKRuntime.getInstance().getUserLog().error("can't connect to database for connectionInfo->{}, skipping.",connectionInfo)
@@ -339,7 +339,7 @@ public class TestCaseRunner implements Runnable {
       return new DKFileSink(newSinkPath.absolutePath, sink_)
    }
    
-   private DKDBTableLoader getLoaderForSource(DKDBDatabase source_){
+   private DKDBTableLoader getLoaderForSource(DKDatabase source_){
       return new DKDBH2Loader(source_)
    }
    

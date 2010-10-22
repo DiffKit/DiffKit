@@ -17,7 +17,7 @@ package org.diffkit.db.tst
 
 
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor 
 import org.diffkit.db.DKDBTableDataAccess;
 
@@ -35,7 +35,7 @@ public class TestDBTableDataAccess extends GroovyTestCase {
       
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase connectionSource = [connectionInfo]
+      DKDatabase connectionSource = [connectionInfo]
       def connection = connectionSource.connection
       println "connection->$connection"
       def dbMeta = connection.metaData
@@ -66,7 +66,7 @@ public class TestDBTableDataAccess extends GroovyTestCase {
       
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase connectionSource = [connectionInfo]
+      DKDatabase connectionSource = [connectionInfo]
       def connection = connectionSource.connection
       println "connection->$connection"
       def dbMeta = connection.metaData

@@ -36,13 +36,13 @@ import org.diffkit.util.DKSqlUtil;
  */
 public class DKDBTypeInfoDataAccess {
 
-   private final DKDBDatabase _connectionSource;
+   private final DKDatabase _connectionSource;
    private Map<DKDBType, DKDBTypeInfo> _typeToTypeInfoMap;
    private Map<String, DKDBTypeInfo> _nameToTypeInfoMap;
    private Map<Integer, DKDBTypeInfo> _javaSqlTypeToTypeInfoMap;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBTypeInfoDataAccess(DKDBDatabase connectionSource_) {
+   public DKDBTypeInfoDataAccess(DKDatabase connectionSource_) {
       _connectionSource = connectionSource_;
       DKValidate.notNull(_connectionSource);
    }

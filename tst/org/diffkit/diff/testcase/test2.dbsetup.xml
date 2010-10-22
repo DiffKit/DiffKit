@@ -109,7 +109,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
       <constructor-arg index="4" value="true" />
 	</bean>
 
-	<bean id="connectionSource" class="org.diffkit.db.DKDBDatabase">
+	<bean id="connectionSource" class="org.diffkit.db.DKDatabase">
 		<constructor-arg ref="connectionInfo" />
 	</bean>
 

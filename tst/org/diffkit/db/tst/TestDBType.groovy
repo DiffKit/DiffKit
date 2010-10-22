@@ -18,10 +18,9 @@ package org.diffkit.db.tst
 
 import java.util.regex.Pattern;
 
-import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase 
 import org.diffkit.db.DKDBFlavor;
-import org.diffkit.db.DKDBTypeInfoDataAccess 
+import org.diffkit.db.DKDBType;
+
 
 import groovy.util.GroovyTestCase;
 
@@ -31,7 +30,43 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBType extends GroovyTestCase {
    
-   public void testMap(){
+   public void testGetConcreteType() {
+      assert !DKDBType.getConcreteType(null, null)
+      assert !DKDBType.getConcreteType(DKDBFlavor.H2, null)
+      assert DKDBType.getConcreteType(null, 'VARCHAR') == DKDBType.VARCHAR
+      assert DKDBType.getConcreteType(null, '_H2_IDENTITY') == DKDBType._H2_IDENTITY
+      assert DKDBType.getConcreteType(DKDBFlavor.H2, '_H2_IDENTITY') == DKDBType._H2_IDENTITY
+      assert DKDBType.getConcreteType(DKDBFlavor.ORACLE, 'VARCHAR') == DKDBType._ORACLE_VARCHAR2
+      assert DKDBType.getConcreteType(DKDBFlavor.ORACLE, 'BIGINT') == DKDBType._ORACLE_NUMBER
+   }
+   
+   public void testSqlTypeName(){
+      assert DKDBType.VARCHAR.sqlTypeName == 'VARCHAR'
+      assert DKDBType._ORACLE_VARCHAR2.sqlTypeName == 'VARCHAR2'
+      assert DKDBType._ORACLE_NUMBER.sqlTypeName == 'NUMBER'
+   }
+   
+   public void testConcreteForAbstract(){
+      assert !DKDBType.getConcreteTypeForAbstractType(null, null)
+      assert !DKDBType.getConcreteTypeForAbstractType(DKDBFlavor.H2 , null)
+      
+      assert DKDBType.getConcreteTypeForAbstractType(null, DKDBType.VARCHAR) ==DKDBType.VARCHAR
+      assert DKDBType.getConcreteTypeForAbstractType(DKDBFlavor.H2, DKDBType.VARCHAR) ==DKDBType.VARCHAR
+      assert DKDBType.getConcreteTypeForAbstractType(DKDBFlavor.H2, DKDBType.VARCHAR) ==DKDBType.VARCHAR
+      assert DKDBType.getConcreteTypeForAbstractType(DKDBFlavor.ORACLE, DKDBType.VARCHAR) ==DKDBType._ORACLE_VARCHAR2
+   }
+   
+   public void testGetType(){
+      assert !DKDBType.getType(null, null)
+      assert !DKDBType.getType(DKDBFlavor.H2 , null)
+      assert DKDBType.getType(null , 'VARCHAR') == DKDBType.VARCHAR
+      shouldFail(RuntimeException) {
+         assert !DKDBType.getType(null , 'VARCHAR2')
+      }
+      assert DKDBType.getType(DKDBFlavor.ORACLE , 'VARCHAR2') == DKDBType._ORACLE_VARCHAR2
+   }
+   
+   public void testFlavorDemangler(){
       def prefixPattern = Pattern.compile('^(_.*_)') 
       def matcher = prefixPattern.matcher('_ORACLE_VARCHAR2')
       assert matcher.find()

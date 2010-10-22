@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 import java.io.File;
 import java.sql.Connection 
 
-import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBH2Loader 
 import org.diffkit.db.DKDBInsertTableLoader;
@@ -108,7 +108,7 @@ public class DBTestSetup {
       }
    }
    
-   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDBDatabase database_){
+   private static void setupDBTable(DKDBTable table_, File dataFile_, DKDatabase database_){
       if(!table_)
          return
       
@@ -149,7 +149,7 @@ public class DBTestSetup {
       return ['VARCHAR':'_ORACLE_VARCHAR2', 'BIGINT':'_ORACLE_NUMBER']
    }
    
-   private static DKDBTableLoader getLoader(DKDBDatabase database_){
+   private static DKDBTableLoader getLoader(DKDatabase database_){
       if(database_.getFlavor()==DKDBFlavor.H2)
          return new DKDBH2Loader(database_)
       return new DKDBInsertTableLoader(database_)

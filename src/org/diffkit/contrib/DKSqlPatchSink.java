@@ -25,7 +25,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.ThreadSafe;
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDBDatabase;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
@@ -43,7 +43,7 @@ import org.diffkit.util.DKStringUtil;
 public class DKSqlPatchSink extends DKAbstractSink {
 
    private List<DKDiff> _diffs;
-   private final DKDBDatabase _database;
+   private final DKDatabase _database;
    private final DKDBTable _lhsTable;
    private final DKDBTable _rhsTable;
 
@@ -51,7 +51,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
                          String rhsTableName_) throws SQLException {
       super(null);
       DKValidate.notNull(connectionInfo_, lhsTableName_, rhsTableName_);
-      _database = new DKDBDatabase(connectionInfo_);
+      _database = new DKDatabase(connectionInfo_);
       _lhsTable = _database.getTable(null, null, lhsTableName_);
       _rhsTable = _database.getTable(null, null, rhsTableName_);
       DKValidate.notNull(_lhsTable, _rhsTable);

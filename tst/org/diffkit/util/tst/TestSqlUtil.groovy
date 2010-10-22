@@ -20,7 +20,7 @@ package org.diffkit.util.tst
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable;
@@ -37,7 +37,7 @@ public class TestSqlUtil extends GroovyTestCase {
    public void testBatchUpdate() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       DKDBTable table = this.createTestTable()
       assert table
       database.createTable(table)
@@ -79,7 +79,7 @@ public class TestSqlUtil extends GroovyTestCase {
    public void testDatabaseInfo() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       assert connection
@@ -102,7 +102,7 @@ public class TestSqlUtil extends GroovyTestCase {
       
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       
       
@@ -113,7 +113,7 @@ public class TestSqlUtil extends GroovyTestCase {
    public void testReadRowsFromSelect(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       
@@ -128,7 +128,7 @@ public class TestSqlUtil extends GroovyTestCase {
       
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
       

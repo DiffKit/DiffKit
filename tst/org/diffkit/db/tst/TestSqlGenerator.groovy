@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable 
@@ -43,7 +43,7 @@ public class TestSqlGenerator extends GroovyTestCase {
       def table = this.createContextMetaTable()
       def row = [ID:1000, LHS_SOURCE: 'lhs source', RHS_SOURCE: 'rhs source', WHEN: new Timestamp(10000), RUN_DATE: new Date(10000) ]
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       DKSqlGenerator sqlGenerator = [database]
       
       def insert = sqlGenerator.generateInsertDML(row, table)
@@ -57,7 +57,7 @@ public class TestSqlGenerator extends GroovyTestCase {
    public void testCreateDropTable(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       DKDBTableDataAccess tableDataAccess = [database]
       DKDBTable table = this.createCustomerMetaTable()
       def connection = database.connection
@@ -77,7 +77,7 @@ public class TestSqlGenerator extends GroovyTestCase {
    public void testGenerateDDL(){
       DKDBTable table = this.createCustomerMetaTable()
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       DKSqlGenerator sqlGenerator = [database]
       
       String ddl = sqlGenerator.generateCreateDDL(table)
@@ -95,6 +95,19 @@ public class TestSqlGenerator extends GroovyTestCase {
 		      age      INTEGER,
             CONSTRAINT pk_customer PRIMARY KEY (first_name,last_name)
 		)""")
+   }
+   
+   public void testGenerateDDLOracle(){
+      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      DKSqlGenerator sqlGenerator = [database]
+      
+      DKDBTable table = this.createCustomerMetaTable()
+      String ddl = sqlGenerator.generateCreateDDL(table)
+      println "ddl->$ddl"
    }
    
    private DKDBTable createContextMetaTable() {

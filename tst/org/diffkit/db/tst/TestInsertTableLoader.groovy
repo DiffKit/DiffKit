@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo 
-import org.diffkit.db.DKDBDatabase 
+import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor 
 import org.diffkit.db.DKDBInsertTableLoader;
 import org.diffkit.db.DKDBPrimaryKey 
@@ -38,7 +38,7 @@ public class TestInsertTableLoader extends GroovyTestCase {
    public void testLoader(){
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
-      DKDBDatabase database = [connectionInfo]
+      DKDatabase database = [connectionInfo]
       def metaTable = this.createCustomerMetaTable()
       assert metaTable
       if(database.tableExists(metaTable))
