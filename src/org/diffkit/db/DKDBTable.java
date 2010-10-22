@@ -167,18 +167,17 @@ public class DKDBTable {
    /**
     * convenience method
     */
-   public ReadType[] getReadTypes(String[] columnNames_, DKDatabase connectionSource_)
+   public ReadType[] getReadTypes(String[] columnNames_, DKDatabase database_)
       throws SQLException {
       if ((columnNames_ == null) || (columnNames_.length == 0))
          return null;
       ReadType[] readTypes = new ReadType[columnNames_.length];
-      DKDBTypeInfoDataAccess typeInfoDataAccess = connectionSource_.getTypeInfoDataAccess();
       for (int i = 0; i < columnNames_.length; i++) {
          DKDBColumn column = this.getColumn(columnNames_[i]);
          if (column == null)
             throw new RuntimeException(String.format(
                "could not find column for columnName [%s]", columnNames_[i]));
-         readTypes[i] = typeInfoDataAccess.getTypeInfo(column.getDBTypeName()).getReadType();
+         readTypes[i] = database_.getConcreteTypeInfo(column.getDBTypeName()).getReadType();
       }
       return readTypes;
    }
