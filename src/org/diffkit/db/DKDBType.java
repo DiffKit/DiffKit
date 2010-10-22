@@ -159,6 +159,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case NUMERIC:
          return WriteType.NUMBER;
+      case _ORACLE_NUMBER:
+         return WriteType.NUMBER;
       case FLOAT:
          return WriteType.NUMBER;
       case DOUBLE:
@@ -168,6 +170,8 @@ public enum DKDBType {
       case CHAR:
          return WriteType.STRING;
       case VARCHAR:
+         return WriteType.STRING;
+      case _ORACLE_VARCHAR2:
          return WriteType.STRING;
       case LONGVARCHAR:
          return WriteType.STRING;

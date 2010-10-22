@@ -98,6 +98,11 @@ public class DKDatabase {
       return _typeInfoDataAccess.getTypeInfo(dbTypeName_);
    }
 
+   public DKDBTypeInfo getConcreteTypeInfo(String dbTypeName_) throws SQLException {
+      DKDBType concreteType = DKDBType.getConcreteType(this.getFlavor(), dbTypeName_);
+      return _typeInfoDataAccess.getTypeInfo(concreteType);
+   }
+
    /**
     * convenience that passes through to TypeInfoDataAccess
     */
@@ -119,9 +124,6 @@ public class DKDatabase {
       return (this.getTypeInfo(dbType_) != null);
    }
 
-   /**
-    * convenience that just extracts typeInfos from underlying columns
-    */
    public DKDBTypeInfo[] getColumnTypeInfos(DKDBTable table_) throws SQLException {
       DKDBColumn[] columns = table_.getColumns();
       if (ArrayUtils.isEmpty(columns))
@@ -129,6 +131,17 @@ public class DKDatabase {
       DKDBTypeInfo[] typeInfos = new DKDBTypeInfo[columns.length];
       for (int i = 0; i < columns.length; i++)
          typeInfos[i] = this.getTypeInfo(columns[i].getDBTypeName());
+      return typeInfos;
+   }
+
+   public DKDBTypeInfo[] getColumnConcreteTypeInfos(DKDBTable table_) throws SQLException {
+      DKDBColumn[] columns = table_.getColumns();
+      if (ArrayUtils.isEmpty(columns))
+         return null;
+      DKDBTypeInfo[] typeInfos = new DKDBTypeInfo[columns.length];
+      for (int i = 0; i < columns.length; i++)
+         // typeInfos[i] = this.getTypeInfo(columns[i].getDBTypeName());
+         typeInfos[i] = this.getConcreteTypeInfo(columns[i].getDBTypeName());
       return typeInfos;
    }
 

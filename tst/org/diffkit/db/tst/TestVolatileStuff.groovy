@@ -55,7 +55,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       println "TABLES->${tables[0].description}"
    }
    
-   public void testOracle(){
+   public void tXstOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]

@@ -73,7 +73,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(
          csvFile_)));
       String[] tableColumnNames = table_.getColumnNames();
-      DKDBTypeInfo[] typeInfos = _database.getColumnTypeInfos(table_);
+      DKDBTypeInfo[] typeInfos = _database.getColumnConcreteTypeInfos(table_);
       String qualifiedTableName = table_.getSchemaQualifiedTableName();
       if (_debugEnabled) {
          _log.debug("tableColumnNames->{}", Arrays.toString(tableColumnNames));

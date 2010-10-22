@@ -108,6 +108,16 @@ public class TestSqlGenerator extends GroovyTestCase {
       DKDBTable table = this.createCustomerMetaTable()
       String ddl = sqlGenerator.generateCreateDDL(table)
       println "ddl->$ddl"
+      assert StringUtils.deleteWhitespace(ddl) == StringUtils.deleteWhitespace(
+      """CREATE TABLE CUSTOMER
+      (
+      first_name     VARCHAR2(20) NOT NULL,
+      last_name      VARCHAR2(20) NOT NULL,
+      address     VARCHAR2(20),
+      code     NUMBER(20),
+      country     VARCHAR2(10),
+      CONSTRAINT pk_customer PRIMARY KEY (first_name,last_name))
+      """)
    }
    
    private DKDBTable createContextMetaTable() {
@@ -123,11 +133,11 @@ public class TestSqlGenerator extends GroovyTestCase {
    
    private DKDBTable createCustomerMetaTable(){
       DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
-      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
-      DKDBColumn column3 = ['address', 2, 'VARCHAR', -1, true]
+      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', 20, true]
+      DKDBColumn column3 = ['address', 2, 'VARCHAR', 20, true]
       DKDBColumn column4 = ['code', 2, 'BIGINT', 20, true]
-      DKDBColumn column5 = ['country', 2, 'VARCHAR', -1, true]
-      DKDBColumn column6 = ['age', 2, 'INTEGER', -1, true]
+      DKDBColumn column5 = ['country', 2, 'VARCHAR', 10, true]
+      DKDBColumn column6 = ['age', 2, 'INTEGER', 20, true]
       DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
       String[] pkColNames = ['first_name', 'last_name']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
