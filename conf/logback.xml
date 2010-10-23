@@ -15,11 +15,14 @@
       </layout>
    </appender>
 
+   <logger name="org.diffkit.db.DKDBType">
+      <level value="warn" />
+   </logger>
    <logger name="org.diffkit.db.DKDBInsertTableLoader">
-      <level value="debug" />
+      <level value="warn" />
    </logger>
    <logger name="org.diffkit.db.DKSqlGenerator">
-      <level value="debug" />
+      <level value="warn" />
    </logger>
    <logger name="org.diffkit.util.DKSqlUtil">
       <level value="warn" />

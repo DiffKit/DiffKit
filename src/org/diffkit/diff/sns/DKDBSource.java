@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
-import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
@@ -238,7 +238,8 @@ public class DKDBSource implements DKSource {
       if (model_ != null)
          return model_;
       try {
-         return DKTableModelUtil.createDefaultTableModel(dbTable_, keyColumnNames_);
+         return DKTableModelUtil.createDefaultTableModel(_database.getFlavor(), dbTable_,
+            keyColumnNames_);
       }
       catch (Exception e_) {
          throw new RuntimeException(e_);

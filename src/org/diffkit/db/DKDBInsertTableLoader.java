@@ -117,6 +117,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
          }
       }
       long updates = DKSqlUtil.executeBatchUpdate(updateStatements, connection);
+      DKSqlUtil.close(connection);
       _log.debug("updates: " + updates);
       reader.close();
       return true;

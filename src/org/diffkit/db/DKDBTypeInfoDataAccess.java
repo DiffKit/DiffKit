@@ -151,6 +151,7 @@ public class DKDBTypeInfoDataAccess {
          _nameToTypeInfoMap.put(typeInfo.getName(), typeInfo);
          _javaSqlTypeToTypeInfoMap.put(new Integer(typeInfo.getJavaSqlType()), typeInfo);
       }
+      this.returnConnection(connection);
    }
 
    private DKDBTypeInfo constructTypeInfo(Map<String, ?> typeInfoMap_) {
@@ -182,5 +183,9 @@ public class DKDBTypeInfoDataAccess {
 
    private Connection getConnection() throws SQLException {
       return _connectionSource.getConnection();
+   }
+
+   private void returnConnection(Connection connection_) throws SQLException {
+      DKSqlUtil.close(connection_);
    }
 }

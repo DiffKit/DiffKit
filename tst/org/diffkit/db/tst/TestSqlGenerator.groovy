@@ -88,10 +88,10 @@ public class TestSqlGenerator extends GroovyTestCase {
       """CREATE TABLE CUSTOMER
 		(
 		      first_name     VARCHAR(20) NOT NULL,
-		      last_name      VARCHAR NOT NULL,
-		      address     VARCHAR,
+		      last_name      VARCHAR(20) NOT NULL,
+		      address     VARCHAR(20),
 		      code     BIGINT,
-		      country     VARCHAR,
+		      country     VARCHAR(10),
 		      age      INTEGER,
             CONSTRAINT pk_customer PRIMARY KEY (first_name,last_name)
 		)""")

@@ -46,13 +46,13 @@ public class DKDBTableDataAccess {
    private static final String TABLE_SCHEMA_KEY = "TABLE_SCHEM";
    private static final String TABLE_NAME_KEY = "TABLE_NAME";
 
-   private final DKDatabase _connectionSource;
+   private final DKDatabase _database;
 
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKDBTableDataAccess(DKDatabase connectionSource_) {
-      _connectionSource = connectionSource_;
-      DKValidate.notNull(_connectionSource);
+      _database = connectionSource_;
+      DKValidate.notNull(_database);
    }
 
    /**
@@ -114,7 +114,7 @@ public class DKDBTableDataAccess {
          _log.debug("table->{}", table);
          tables.add(table);
       }
-      DKSqlUtil.close(connection);
+      this.returnConnection(connection);
       return tables;
    }
 
@@ -235,6 +235,10 @@ public class DKDBTableDataAccess {
    }
 
    private Connection getConnection() throws SQLException {
-      return _connectionSource.getConnection();
+      return _database.getConnection();
+   }
+
+   private void returnConnection(Connection connection_) throws SQLException {
+      DKSqlUtil.close(connection_);
    }
 }

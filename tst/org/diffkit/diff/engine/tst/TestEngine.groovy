@@ -88,7 +88,7 @@ public class TestEngine extends GroovyTestCase {
       
       def lhsSource = this.createDBSource(lhsDBTable, database)
       def rhsSource = this.createDBSource(rhsDBTable, database)
-      def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable)
+      def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable, database)
       DKDBSink sink = new DKDBSink(database)
       DKDiffEngine engine = new DKDiffEngine()
       
@@ -161,7 +161,7 @@ public class TestEngine extends GroovyTestCase {
       
       def lhsSource = this.createDBSource(lhsDBTable, database)
       def rhsSource = this.createDBSource(rhsDBTable, database)
-      def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable)
+      def tableComparison = this.createComparison2( lhsDBTable, rhsDBTable, database)
       def diffFileName = 'testSameModelFromDB.diff'
       DKFileSink sink = this.createSink2( diffFileName)
       DKDiffEngine engine = new DKDiffEngine()
@@ -194,9 +194,9 @@ public class TestEngine extends GroovyTestCase {
       return new DKFileSink(sinkFile, false)
    }
    
-   private DKStandardTableComparison createComparison2(DKDBTable lhsDBTable_, DKDBTable rhsDBTable_) {
-      DKTableModel lhsTableModel = DKTableModelUtil.createDefaultTableModel(lhsDBTable_, null)
-      DKTableModel rhsTableModel = DKTableModelUtil.createDefaultTableModel(rhsDBTable_, null)
+   private DKStandardTableComparison createComparison2(DKDBTable lhsDBTable_, DKDBTable rhsDBTable_, DKDatabase database_) {
+      DKTableModel lhsTableModel = DKTableModelUtil.createDefaultTableModel(database_.flavor,lhsDBTable_, null)
+      DKTableModel rhsTableModel = DKTableModelUtil.createDefaultTableModel(database_.flavor,rhsDBTable_, null)
       
       DKColumnComparison[] map = DKColumnComparison.createColumnPlans( lhsTableModel, rhsTableModel, (int[]) [1,2], DKEqualsDiffor.instance)
       //    println "map->$map"
@@ -206,7 +206,7 @@ public class TestEngine extends GroovyTestCase {
    }
    
    private DKDBSource createDBSource(DKDBTable table_, DKDatabase database_) {
-      def tableModel = DKTableModelUtil.createDefaultTableModel(table_, null)
+      def tableModel = DKTableModelUtil.createDefaultTableModel(database.flavor,table_, null)
       assert tableModel
       
       return new DKDBSource(table_.tableName, null, database_, tableModel, null, null)

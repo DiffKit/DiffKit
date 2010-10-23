@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBType;
@@ -65,7 +66,8 @@ public class DKTableModelUtil {
       return new DKDBPrimaryKey("pk_" + tableName_, tableModel_.getKeyColumnNames());
    }
 
-   public static DKTableModel createDefaultTableModel(DKDBTable table_,
+   public static DKTableModel createDefaultTableModel(DKDBFlavor flavor_,
+                                                      DKDBTable table_,
                                                       String[] keyColumnNames_) {
       if (table_ == null)
          return null;
@@ -73,7 +75,7 @@ public class DKTableModelUtil {
       DKDBColumn[] columns = table_.getColumns();
       DKColumnModel[] columnModels = new DKColumnModel[columns.length];
       for (int i = 0; i < columns.length; i++)
-         columnModels[i] = createDefaultColumnModel(columns[i]);
+         columnModels[i] = createDefaultColumnModel(flavor_, columns[i]);
       int[] keyIndices = null;
       if (keyColumnNames_ != null)
          keyIndices = table_.getIndicesOfColumns(keyColumnNames_);
@@ -88,11 +90,12 @@ public class DKTableModelUtil {
       return new DKTableModel(tableName, columnModels, keyIndices);
    }
 
-   public static DKColumnModel createDefaultColumnModel(DKDBColumn column_) {
+   public static DKColumnModel createDefaultColumnModel(DKDBFlavor flavor_,
+                                                        DKDBColumn column_) {
       if (column_ == null)
          return null;
       return new DKColumnModel(column_.getOrdinalPosition() - 1, column_.getName(),
-         getModelType(DKDBType.forName(column_.getDBTypeName())));
+         getModelType(DKDBType.getType(flavor_, column_.getDBTypeName())));
    }
 
    public static DKColumnModel.Type getModelType(DKDBType dbType_) {
@@ -115,11 +118,15 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.NUMBER;
       case SMALLINT:
          return DKColumnModel.Type.NUMBER;
+      case _ORACLE_NUMBER:
+         return DKColumnModel.Type.NUMBER;
       case CHAR:
          return DKColumnModel.Type.STRING;
       case VARCHAR:
          return DKColumnModel.Type.STRING;
       case LONGVARCHAR:
+         return DKColumnModel.Type.STRING;
+      case _ORACLE_VARCHAR2:
          return DKColumnModel.Type.STRING;
       case DATE:
          return DKColumnModel.Type.DATE;

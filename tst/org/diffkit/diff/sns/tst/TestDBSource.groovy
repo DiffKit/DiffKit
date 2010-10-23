@@ -67,7 +67,7 @@ public class TestDBSource extends GroovyTestCase {
       def fetchedTable = tableDataAccess.getTable(dbTable.tableName)
       def csvFile = this.getCsvFile()
       assert loader.load(dbTable, csvFile)
-      def tableModel = DKTableModelUtil.createDefaultTableModel(dbTable, null)
+      def tableModel = DKTableModelUtil.createDefaultTableModel(database.flavor,dbTable, null)
       assert tableModel
       
       // goof up the model to force a fail

@@ -21,6 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.util.DKSqlUtil;
@@ -45,6 +47,8 @@ public enum DKDBType {
       false);
 
    private static final Map<DKDBFlavor, Map<DKDBType, DKDBType>> _typeRemappings;
+   private static final Logger LOG = LoggerFactory.getLogger(DKDBType.class);
+   private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
    private static Pattern _flavorManglePattern;
 
    private final boolean _ignoresLengthSpecifier;
@@ -227,11 +231,16 @@ public enum DKDBType {
     * will simply return null if argument is not recognized, instead of throwing
     */
    public static DKDBType forName(String name_) {
+      if (IS_DEBUG_ENABLED)
+         LOG.debug("name_->{}", name_);
       if (name_ == null)
          return null;
 
       try {
-         return Enum.valueOf(DKDBType.class, name_);
+         DKDBType forName = Enum.valueOf(DKDBType.class, name_);
+         if (IS_DEBUG_ENABLED)
+            LOG.debug("forName->{}", forName);
+         return forName;
       }
       catch (Exception e_) {
          return null;

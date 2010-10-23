@@ -22,8 +22,6 @@ import org.diffkit.db.DKDBColumn
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable;
-import org.diffkit.db.DKDBType 
-import org.diffkit.db.DKDBTypeInfo 
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.sns.DKTableModelUtil;
 
@@ -38,13 +36,13 @@ public class TestTableModelUtil extends GroovyTestCase {
    
    public void testCreateColumnModel(){
       def table = this.createCustomerMetaTable()
-      def firstName = DKTableModelUtil.createDefaultColumnModel(table.columns[0])
+      def firstName = DKTableModelUtil.createDefaultColumnModel(DKDBFlavor.H2,table.columns[0])
       
       assert firstName.name == 'first_name'
       assert firstName.index == 0
       assert firstName.type == DKColumnModel.Type.STRING
       
-      def age = DKTableModelUtil.createDefaultColumnModel(table.columns[5])
+      def age = DKTableModelUtil.createDefaultColumnModel(DKDBFlavor.H2,table.columns[5])
       assert age.name == 'age'
       assert age.index == 5
       assert age.type == DKColumnModel.Type.NUMBER
@@ -52,7 +50,7 @@ public class TestTableModelUtil extends GroovyTestCase {
    
    public void testCreateTableModel(){
       def table = this.createCustomerMetaTable()
-      def tableModel = DKTableModelUtil.createDefaultTableModel(table, null)
+      def tableModel = DKTableModelUtil.createDefaultTableModel(DKDBFlavor.H2,table, null)
       
       assert tableModel
       assert tableModel.name == 'CUSTOMER'
