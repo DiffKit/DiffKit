@@ -28,16 +28,17 @@ import org.diffkit.diff.diffor.DKEqualsDiffor;
  * @author jpanico
  */
 public class TestConvertingDiffor extends GroovyTestCase {
-	
-	public void testDiff(){
-		
-		DKConvertingDiffor diffor = [null, Long.class, DKEqualsDiffor.instance]
-		assert ! diffor.isDiff(new Long(1234), '1234', null)
-	}
-	
-	public void testConvert(){
-		
-		assert new IntegerConverter(true).convert(Long.class, '1234') == 1234
-	}
-	
+   
+   public void testDiff(){
+      
+      DKConvertingDiffor diffor = [null, Long.class, DKEqualsDiffor.instance]
+      assert ! diffor.isDiff(new Long(1234), '1234', null)
+   }
+   
+   public void testConvert(){
+      
+      assert new IntegerConverter(true).convert(Long.class, '1234') == 1234
+      
+      assert new BigDecimal(1).equals(new BigDecimal(1))
+   }
 }

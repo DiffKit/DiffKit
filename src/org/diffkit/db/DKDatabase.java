@@ -167,6 +167,10 @@ public class DKDatabase {
       return _sqlGenerator;
    }
 
+   public DKDBTableDataAccess getTableDataAccess() {
+      return _tableDataAccess;
+   }
+
    /**
     * convenience method
     * 

@@ -15,6 +15,8 @@
  */
 package org.diffkit.diff.diffor;
 
+import org.apache.commons.lang.ClassUtils;
+
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
 
@@ -59,5 +61,10 @@ public class DKNumberDiffor implements DKDiffor {
          return false;
       diff = (diff >= 0 ? diff : -1 * diff);
       return (diff > _tolerance);
+   }
+
+   public String toString() {
+      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
+         _tolerance);
    }
 }

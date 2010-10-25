@@ -59,10 +59,10 @@ public class DKSqlGenerator {
    public String generateSizeSpecifier(DKDBColumn column_) throws SQLException {
       if (column_ == null)
          return null;
-      DKDBType colType = _database.getType(column_.getDBTypeName());
-      if (colType == null)
-         _log.warn("no colType for column_->{}", column_);
-      else if (colType.ignoresLengthSpecifier()) {
+      DKDBTypeInfo dbTypeInfo = _database.getConcreteTypeInfo(column_.getDBTypeName());
+      if (dbTypeInfo == null)
+         _log.warn("no dbTypeInfo for column_->{}", column_);
+      else if (dbTypeInfo.getType().ignoresLengthSpecifier()) {
          return "";
       }
       int size = column_.getSize();
@@ -93,11 +93,16 @@ public class DKSqlGenerator {
             builder.append(",");
          builder.append("\n");
       }
+      if (_log.isDebugEnabled())
+         _log.debug("primaryKey->{}", primaryKey);
       if (primaryKey != null)
          builder.append(String.format("\t\t%s", this.generateCreateDDL(primaryKey)));
 
       builder.append(")\n");
-      return builder.toString();
+      String ddlString = builder.toString();
+      if (_log.isDebugEnabled())
+         _log.debug("ddlString->{}", ddlString);
+      return ddlString;
    }
 
    public String generateCreateDDL(DKDBPrimaryKey primaryKey_) {

@@ -15,6 +15,8 @@
  */
 package org.diffkit.diff.diffor;
 
+import org.apache.commons.lang.ClassUtils;
+
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
 
@@ -46,4 +48,7 @@ public class DKEqualsDiffor implements DKDiffor {
       return !lhs_.equals(rhs_);
    }
 
+   public String toString() {
+      return String.format("%s", ClassUtils.getShortClassName(this.getClass()));
+   }
 }

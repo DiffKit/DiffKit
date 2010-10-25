@@ -19,13 +19,17 @@ import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.commons.beanutils.converters.ShortConverter;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
 
 /**
- * converts from String to specified types before diffing
+ * converts from String to specified types before diff'ng
  * 
  * @author jpanico
  */
@@ -36,6 +40,8 @@ public class DKConvertingDiffor implements DKDiffor {
    private final Class<?> _rhsType;
    private final Converter _rhsConverter;
    private final DKDiffor _diffor;
+   private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    public DKConvertingDiffor(Class<?> lhsType_, Class<?> rhsType_, DKDiffor diffor_) {
       _lhsType = lhsType_;
@@ -57,10 +63,18 @@ public class DKConvertingDiffor implements DKDiffor {
          return false;
       if (lhsNull || rhsNull)
          return true;
+      if (_isDebugEnabled) {
+         _log.debug("lhs_ Class->{}", lhs_.getClass());
+         _log.debug("rhs_ Class->{}", rhs_.getClass());
+      }
       Object convertedLhs = (_lhsConverter == null ? lhs_ : _lhsConverter.convert(
          _lhsType, lhs_));
       Object convertedRhs = (_rhsConverter == null ? rhs_ : _rhsConverter.convert(
          _rhsType, rhs_));
+      if (_isDebugEnabled) {
+         _log.debug("convertedLhs Class->{}", convertedLhs.getClass());
+         _log.debug("convertedRhs Class->{}", convertedRhs.getClass());
+      }
       return _diffor.isDiff(convertedLhs, convertedRhs, context_);
    }
 
@@ -74,5 +88,13 @@ public class DKConvertingDiffor implements DKDiffor {
       else if (type_ == Long.class)
          return new LongConverter();
       throw new RuntimeException(String.format("unrecognized type_->%s", type_));
+   }
+
+   public String toString() {
+      return String.format("%s", ClassUtils.getShortClassName(this.getClass()));
+   }
+
+   public String getDescription() {
+      return ReflectionToStringBuilder.toString(this);
    }
 }

@@ -18,7 +18,10 @@ package org.diffkit.db.tst
 
 
 
+import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBPrimaryKey 
+import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBType;
 import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
@@ -55,7 +58,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       println "TABLES->${tables[0].description}"
    }
    
-   public void tXstOracle(){
+   public void testOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
@@ -76,6 +79,14 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert database.supportsType('_ORACLE_NUMBER')
       assert database.supportsType(DKDBType._ORACLE_VARCHAR2)
       assert database.supportsType(DKDBType._ORACLE_NUMBER)
+      
+      def table = this.createCustomerMetaTable()
+      assert table
+      if(database.tableExists(table))
+         database.dropTable(table)
+      database.createTable(table)
+      def fetchedTable = database.getTable( table.catalog, table.schema, table.tableName)
+      assert fetchedTable
    }
    
    public void testH2(){
@@ -94,5 +105,18 @@ public class TestVolatileStuff extends GroovyTestCase {
       //      properties.put('user', username);
       //      properties.put('password', password);
       //      DriverManager.getConnection(jdbcUrl, properties);
+   }
+   private DKDBTable createCustomerMetaTable(){
+      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
+      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', 20, true]
+      DKDBColumn column3 = ['address', 2, 'VARCHAR', 20, true]
+      DKDBColumn column4 = ['city', 2, 'VARCHAR', 20, true]
+      DKDBColumn column5 = ['country', 2, 'VARCHAR', 20, true]
+      DKDBColumn column6 = ['age', 2, 'INTEGER', 20, true]
+      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
+      String[] pkColNames = ['first_name', 'last_name']
+      DKDBPrimaryKey pk = ['pk_customer', pkColNames]
+      DKDBTable table = [null, null, 'CUSTOMER', columns, pk]
+      return table
    }
 }

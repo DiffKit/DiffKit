@@ -17,6 +17,8 @@ package org.diffkit.diff.diffor;
 
 import java.util.Date;
 
+import org.apache.commons.lang.ClassUtils;
+
 import org.diffkit.common.DKCalendarSpan;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
@@ -58,5 +60,10 @@ public class DKDateDiffor implements DKDiffor {
          return false;
       diff = (diff >= 0 ? diff : -1 * diff);
       return (diff > _tolerance._spanMillis);
+   }
+
+   public String toString() {
+      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
+         _tolerance);
    }
 }

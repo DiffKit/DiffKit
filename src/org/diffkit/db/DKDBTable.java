@@ -60,7 +60,7 @@ public class DKDBTable {
          return this;
       DKDBColumn[] copyColumns = this.copyColumns(typeNameSubstitutionMap_);
       return new DKDBTable(this.getCatalog(), this.getSchema(), this.getTableName(),
-         copyColumns);
+         copyColumns, this.getPrimaryKey());
    }
 
    private DKDBColumn[] copyColumns(Map<String, String> typeNameSubstitutionMap_) {

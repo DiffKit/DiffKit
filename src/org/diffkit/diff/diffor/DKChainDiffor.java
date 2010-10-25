@@ -15,9 +15,11 @@
  */
 package org.diffkit.diff.diffor;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ClassUtils;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
@@ -51,4 +53,8 @@ public class DKChainDiffor implements DKDiffor {
       return true;
    }
 
+   public String toString() {
+      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
+         Arrays.toString(_diffors));
+   }
 }

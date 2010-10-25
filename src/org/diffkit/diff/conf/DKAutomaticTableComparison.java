@@ -47,6 +47,7 @@ import org.diffkit.diff.engine.DKStandardTableComparison;
 import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKArrayUtil;
+import org.diffkit.util.DKObjectUtil;
 
 /**
  * @author jpanico
@@ -67,7 +68,6 @@ public class DKAutomaticTableComparison implements DKTableComparison {
    private final Map<String, Float> _toleranceMap;
    private DKStandardTableComparison _standardComparison;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
-   private static final Logger LOG = LoggerFactory.getLogger(DKAutomaticTableComparison.class);
 
    /**
     * if both diffColumnNames_ and ignoreColumnNames_ are non-null,
@@ -323,9 +323,19 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       DKColumnModel[] lhsColumns = lhsModel_.getColumns();
       for (DKColumnModel lhsColumn : lhsColumns) {
          DKColumnModel rhsColumn = rhsModel_.getColumn(lhsColumn.getName());
+         if (_log.isDebugEnabled()) {
+            _log.debug("lhsColumn->{}", lhsColumn.getDescription());
+            _log.debug("rhsColumn->{}", rhsColumn.getDescription());
+         }
          if (rhsColumn == null)
             continue;
          DKDiffor diffor = this.getDiffor(lhsColumn, rhsColumn);
+         if (_log.isDebugEnabled()) {
+            String difforString = DKObjectUtil.respondsTo(diffor, "getDescription", null)
+               ? (String) DKObjectUtil.invokeSafe(diffor, "getDescription", null)
+               : diffor.toString();
+            _log.debug("diffor->{}", difforString);
+         }
          DKColumnComparison columnComparison = new DKColumnComparison(lhsColumn,
             rhsColumn, diffor);
          columnComparisons.add(columnComparison);

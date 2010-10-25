@@ -15,6 +15,8 @@
  */
 package org.diffkit.diff.diffor;
 
+import org.apache.commons.lang.ClassUtils;
+
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
 
@@ -33,11 +35,14 @@ public class DKIdentityDiffor implements DKDiffor {
    }
 
    /**
-    * @see org.diffkit.diff.engine.DKDiffor#isDiff(java.lang.Object, java.lang.Object,
-    *      org.diffkit.diff.engine.DKContext)
+    * @see org.diffkit.diff.engine.DKDiffor#isDiff(java.lang.Object,
+    *      java.lang.Object, org.diffkit.diff.engine.DKContext)
     */
    public boolean isDiff(Object lhs_, Object rhs_, DKContext context_) {
       return !(lhs_ == rhs_);
    }
 
+   public String toString() {
+      return String.format("%s", ClassUtils.getShortClassName(this.getClass()));
+   }
 }
