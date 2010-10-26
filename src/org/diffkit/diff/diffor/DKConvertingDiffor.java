@@ -15,7 +15,11 @@
  */
 package org.diffkit.diff.diffor;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.converters.BigDecimalConverter;
+import org.apache.commons.beanutils.converters.DoubleConverter;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.commons.beanutils.converters.ShortConverter;
@@ -87,6 +91,10 @@ public class DKConvertingDiffor implements DKDiffor {
          return new IntegerConverter();
       else if (type_ == Long.class)
          return new LongConverter();
+      else if (type_ == Double.class)
+         return new DoubleConverter();
+      else if (type_ == BigDecimal.class)
+         return new BigDecimalConverter();
       throw new RuntimeException(String.format("unrecognized type_->%s", type_));
    }
 

@@ -15,6 +15,7 @@
  */
 package org.diffkit.diff.conf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -373,10 +374,18 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       DKColumnModel.Type rhsType = rhsColumn_.getType();
       if (lhsType == rhsType)
          return baseDiffor_;
-      if (lhsType._isNumber && (rhsType == Type.STRING))
+      if ((lhsType == Type.INTEGER) && (rhsType == Type.STRING))
          return new DKConvertingDiffor(null, Long.class, baseDiffor_);
-      else if (rhsType._isNumber && (lhsType == Type.STRING))
+      else if ((lhsType == Type.STRING) && (rhsType == Type.INTEGER))
          return new DKConvertingDiffor(Long.class, null, baseDiffor_);
+      else if ((lhsType == Type.REAL) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(null, Double.class, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.REAL))
+         return new DKConvertingDiffor(Double.class, null, baseDiffor_);
+      else if ((lhsType == Type.DECIMAL) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(null, BigDecimal.class, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.DECIMAL))
+         return new DKConvertingDiffor(BigDecimal.class, null, baseDiffor_);
       else
          throw new RuntimeException(String.format(
             "unhandled conversion needed: lhsType->%s rhsType->%s", lhsType, rhsType));
