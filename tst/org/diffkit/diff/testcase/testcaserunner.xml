@@ -7,7 +7,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="runner" class="org.diffkit.diff.testcase.TestCaseRunner">
 		<constructor-arg index="0">
-         <null /> 
+         <list>
+            <value>19</value>
+         </list>
          <!-- 
 			<list>
 				<value>12</value>
@@ -20,7 +22,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		</constructor-arg>
 		<constructor-arg index="1">
 			<list>
-				<value>DB2</value>
+				<value>ORACLE</value>
 			</list>
 		</constructor-arg>
 	</bean>
