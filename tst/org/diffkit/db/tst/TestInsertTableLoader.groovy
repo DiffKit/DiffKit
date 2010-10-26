@@ -36,8 +36,8 @@ import groovy.util.GroovyTestCase;
 public class TestInsertTableLoader extends GroovyTestCase {
    
    public void testLoader(){
-      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
-      //      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      //      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       def metaTable = this.createCustomerMetaTable()
@@ -62,7 +62,7 @@ public class TestInsertTableLoader extends GroovyTestCase {
       assert rob['BIRTH']
       assert rob['BIRTH'].class == java.sql.Date.class
       assert rob['NOW']
-
+      
       database.dropTable(metaTable)
    }
    

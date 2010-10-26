@@ -116,6 +116,7 @@ public class TestSqlGenerator extends GroovyTestCase {
       address     VARCHAR2(20),
       code     NUMBER,
       country     VARCHAR2(10),
+      age     NUMBER,
       CONSTRAINT pk_customer PRIMARY KEY (first_name,last_name))
       """)
    }

@@ -31,6 +31,7 @@ import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.sns.DKDBSource 
 import org.diffkit.diff.sns.DKTableModelUtil;
 import org.diffkit.util.DKResourceUtil
+import org.diffkit.util.DKTimeUtil;
 
 import groovy.util.GroovyTestCase;
 
@@ -83,10 +84,13 @@ public class TestDBSource extends GroovyTestCase {
       def row = source.nextRow
       assert row
       println "row->$row"
-      assert row == (Object[])['rob','smith', '100 spruce st', 'Phila', 'usa', 50]
+      println "row[6]->${row[6].class}"
+      assert row[6] == DKTimeUtil.createDate(1956, 11, 12)
+      assert row[7] == DKTimeUtil.createDate(2004, 4, 23, 14, 25, 10, 487)
+      assert row == (Object[])['rob','smith', '100 spruce st', 'Phila', 'usa', 50, DKTimeUtil.createDate(1956, 11, 12), DKTimeUtil.createDate(2004, 4, 23, 14, 25, 10, 487)]
       
       row = source.nextRow
-      assert row == (Object[])['steve','jobs', 'infinite, loop', 'Cupertino', 'usa', 54]
+      assert row == (Object[])['steve','jobs', 'infinite, loop', 'Cupertino', 'usa', 54, DKTimeUtil.createDate(1955, 0, 1), DKTimeUtil.createDate(2004, 4, 23, 14, 25, 10, 487)]
       
       row = source.nextRow
       assert !row
@@ -108,14 +112,16 @@ public class TestDBSource extends GroovyTestCase {
    }
    
    private DKDBTable createCustomerMetaTable(){
-      DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
-      DKDBColumn column2 = ['last_name', 2, 'VARCHAR', -1, true]
-      DKDBColumn column3 = ['address', 2, 'VARCHAR', -1, true]
-      DKDBColumn column4 = ['city', 2, 'VARCHAR', -1, true]
-      DKDBColumn column5 = ['country', 2, 'VARCHAR', -1, true]
-      DKDBColumn column6 = ['age', 2, 'INTEGER', -1, true]
-      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
-      String[] pkColNames = ['first_name', 'last_name']
+      DKDBColumn column1 = ['FIRST_NAME', 1, 'VARCHAR', 50, true]
+      DKDBColumn column2 = ['LAST_NAME', 2, 'VARCHAR', 50, true]
+      DKDBColumn column3 = ['ADDRESS', 3, 'VARCHAR', 50, true]
+      DKDBColumn column4 = ['CITY', 4, 'VARCHAR', 50, true]
+      DKDBColumn column5 = ['COUNTRY', 5, 'VARCHAR', 25, true]
+      DKDBColumn column6 = ['AGE', 6, 'INTEGER', -1, true]
+      DKDBColumn column7 = ['BIRTH', 7, 'DATE', -1, true]
+      DKDBColumn column8 = ['NOW', 8, 'TIMESTAMP', -1, true]
+      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6, column7, column8]
+      String[] pkColNames = ['FIRST_NAME', 'LAST_NAME']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
       DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]
       return table

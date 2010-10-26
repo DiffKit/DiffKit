@@ -128,7 +128,9 @@ public class TestH2Load extends GroovyTestCase {
                address       varchar(50),
                city          varchar(50),
                country       varchar(25),
-		         age           integer )
+		         age           integer,
+		         birth         DATE,
+               now          TIMESTAMP )
       """         
 		
 		assert DKSqlUtil.executeUpdate(createTableSql, connection_)

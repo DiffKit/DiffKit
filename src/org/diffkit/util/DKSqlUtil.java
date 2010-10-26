@@ -66,6 +66,18 @@ public class DKSqlUtil {
    private DKSqlUtil() {
    }
 
+   public static java.sql.Date createDate(int year_, int month_, int dayOfMonth_) {
+      return new java.sql.Date(
+         DKTimeUtil.createDate(year_, month_, dayOfMonth_).getTime());
+   }
+
+   public static java.sql.Date createDate(int year_, int month_, int dayOfMonth_,
+                                          int hourOfDay_, int minute_, int second_,
+                                          int millisecond_) {
+      return new java.sql.Date(DKTimeUtil.createDate(year_, month_, dayOfMonth_,
+         hourOfDay_, minute_, second_, millisecond_).getTime());
+   }
+
    public static Map<String, ?> getDatabaseInfo(Connection connection_)
       throws SQLException {
       if (connection_ == null)
