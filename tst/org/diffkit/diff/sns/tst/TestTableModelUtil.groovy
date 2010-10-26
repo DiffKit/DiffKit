@@ -45,7 +45,7 @@ public class TestTableModelUtil extends GroovyTestCase {
       def age = DKTableModelUtil.createDefaultColumnModel(DKDBFlavor.H2,table.columns[5])
       assert age.name == 'age'
       assert age.index == 5
-      assert age.type == DKColumnModel.Type.NUMBER
+      assert age.type == DKColumnModel.Type.INTEGER
    }
    
    public void testCreateTableModel(){

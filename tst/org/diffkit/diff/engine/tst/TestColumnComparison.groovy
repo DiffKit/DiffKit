@@ -44,8 +44,8 @@ public class TestColumnComparison extends GroovyTestCase {
 		columnPlan = [lhColumnModel, rhColumnModel, DKEqualsDiffor.instance]
 		assert  columnPlan.isDiff(lhs, rhs, null)
 		
-		lhColumnModel = [2, 'column3', DKColumnModel.Type.NUMBER]
-		rhColumnModel = [2, 'column3', DKColumnModel.Type.NUMBER]
+		lhColumnModel = [2, 'column3', DKColumnModel.Type.INTEGER]
+		rhColumnModel = [2, 'column3', DKColumnModel.Type.INTEGER]
 		columnPlan = [lhColumnModel, rhColumnModel, DKEqualsDiffor.instance]
 		assert  !columnPlan.isDiff(lhs, rhs, null)
 	}
@@ -67,8 +67,8 @@ public class TestColumnComparison extends GroovyTestCase {
 		assert columnPlan.getLHValue(lhs) == 'value1'
 		assert columnPlan.getRHValue(rhs) == 'value0'
 		
-		lhColumnModel = [2, 'column3', DKColumnModel.Type.NUMBER]
-		rhColumnModel = [2, 'column3', DKColumnModel.Type.NUMBER]
+		lhColumnModel = [2, 'column3', DKColumnModel.Type.INTEGER]
+		rhColumnModel = [2, 'column3', DKColumnModel.Type.INTEGER]
 		columnPlan = [lhColumnModel, rhColumnModel, DKEqualsDiffor.instance]
 		assert columnPlan.getLHValue(lhs) == 3
 		assert columnPlan.getRHValue(rhs) == 3

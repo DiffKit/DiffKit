@@ -65,7 +65,7 @@ public class TestFormatter  extends GroovyTestCase {
 	private DKTableModel createSimpleTableModel(){
 		DKColumnModel column1 = [0, 'column1', DKColumnModel.Type.STRING]
 		DKColumnModel column2 = [1, 'column2', DKColumnModel.Type.STRING]
-		DKColumnModel column3 = [2, 'column3', DKColumnModel.Type.NUMBER]
+		DKColumnModel column3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		DKColumnModel[] columns = [column1, column2, column3]
 		int[] key = [0,2]
 		

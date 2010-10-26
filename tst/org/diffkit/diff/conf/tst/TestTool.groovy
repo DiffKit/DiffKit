@@ -57,7 +57,7 @@ public class TestTool extends GroovyTestCase {
       assert tableModel.columns[0].name == 'column1'
       assert tableModel.columns[0].type == DKColumnModel.Type.STRING
       assert tableModel.columns[2].name == 'column3'
-      assert tableModel.columns[2].type == DKColumnModel.Type.NUMBER
+      assert tableModel.columns[2].type == DKColumnModel.Type.INTEGER
       
       def lhsSource = plan.lhsSource
       assert lhsSource

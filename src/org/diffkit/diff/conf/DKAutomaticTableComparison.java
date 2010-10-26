@@ -360,7 +360,7 @@ public class DKAutomaticTableComparison implements DKTableComparison {
          : null);
       if (tolerance != null)
          return new DKNumberDiffor(tolerance, true);
-      if ((lhsColumn_._type != Type.NUMBER) && (rhsColumn_._type != Type.NUMBER))
+      if ((!lhsColumn_._type._isNumber) && (!rhsColumn_._type._isNumber))
          return DKEqualsDiffor.getInstance();
       if (_numberTolerance == null)
          return DKEqualsDiffor.getInstance();
@@ -373,9 +373,9 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       DKColumnModel.Type rhsType = rhsColumn_.getType();
       if (lhsType == rhsType)
          return baseDiffor_;
-      if ((lhsType == Type.NUMBER) && (rhsType == Type.STRING))
+      if (lhsType._isNumber && (rhsType == Type.STRING))
          return new DKConvertingDiffor(null, Long.class, baseDiffor_);
-      else if ((rhsType == Type.NUMBER) && (lhsType == Type.STRING))
+      else if (rhsType._isNumber && (lhsType == Type.STRING))
          return new DKConvertingDiffor(Long.class, null, baseDiffor_);
       else
          throw new RuntimeException(String.format(

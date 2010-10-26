@@ -40,6 +40,8 @@ public class TestSqlUtil extends GroovyTestCase {
       DKDatabase database = [connectionInfo]
       DKDBTable table = this.createTestTable()
       assert table
+      if(database.tableExists(table))
+         database.dropTable(table)
       database.createTable(table)
       assert database.tableExists(table)
       

@@ -143,7 +143,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="rhs.column3" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="2" />
 		<constructor-arg index="1" value="column3" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="2" value="INTEGER" />
 	</bean>
 
 	<bean id="lhs.column1" class="org.diffkit.diff.engine.DKColumnModel">
@@ -161,7 +161,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="lhs.column3" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="2" />
 		<constructor-arg index="1" value="column3" />
-		<constructor-arg index="2" value="NUMBER" />
+		<constructor-arg index="2" value="INTEGER" />
 	</bean>
 
 </beans>

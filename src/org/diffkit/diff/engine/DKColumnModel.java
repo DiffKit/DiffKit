@@ -29,7 +29,17 @@ import org.diffkit.common.DKValidate;
 public class DKColumnModel {
 
    public enum Type {
-      STRING, NUMBER, DATE, TIME, TIMESTAMP, BOOLEAN, TEXT
+      STRING, INTEGER(true), REAL(true), DECIMAL(true), DATE, TIME, TIMESTAMP, BOOLEAN, TEXT;
+
+      public final boolean _isNumber;
+
+      private Type() {
+         this(false);
+      }
+
+      private Type(boolean isNumber_) {
+         _isNumber = isNumber_;
+      }
    }
 
    /**
@@ -123,7 +133,17 @@ public class DKColumnModel {
 
       case STRING:
          return null;
-      case NUMBER: {
+      case INTEGER: {
+         if (formatString_ == null)
+            return null;
+         return new DecimalFormat(formatString_);
+      }
+      case REAL: {
+         if (formatString_ == null)
+            return null;
+         return new DecimalFormat(formatString_);
+      }
+      case DECIMAL: {
          if (formatString_ == null)
             return null;
          return new DecimalFormat(formatString_);

@@ -34,7 +34,7 @@ public class TestAutomaticTableComparison extends GroovyTestCase {
 		def rhsFileResourcePath = 'org/diffkit/diff/conf/tst/test.rhs.csv'
 		DKColumnModel column1 = [0, 'column1', DKColumnModel.Type.STRING]
 		DKColumnModel column2 = [1, 'column2', DKColumnModel.Type.STRING]
-		DKColumnModel column3 = [2, 'column3', DKColumnModel.Type.NUMBER]
+		DKColumnModel column3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		DKColumnModel column4 = [3, 'column4', DKColumnModel.Type.STRING]
 		DKColumnModel[] columns = [column1, column2, column3, column4]
 		int[] key = [0,3]

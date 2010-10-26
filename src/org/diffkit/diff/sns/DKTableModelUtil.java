@@ -101,25 +101,25 @@ public class DKTableModelUtil {
    public static DKColumnModel.Type getModelType(DKDBType dbType_) {
       switch (dbType_) {
       case INTEGER:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.INTEGER;
       case BIGINT:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.INTEGER;
       case REAL:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.REAL;
       case FLOAT:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.REAL;
       case DOUBLE:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.REAL;
       case NUMERIC:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.DECIMAL;
       case DECIMAL:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.DECIMAL;
       case TINYINT:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.INTEGER;
       case SMALLINT:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.INTEGER;
       case _ORACLE_NUMBER:
-         return DKColumnModel.Type.NUMBER;
+         return DKColumnModel.Type.DECIMAL;
       case CHAR:
          return DKColumnModel.Type.STRING;
       case VARCHAR:
@@ -146,10 +146,14 @@ public class DKTableModelUtil {
 
    public static DKDBType getSqlType(DKColumnModel.Type modelType_) {
       switch (modelType_) {
-      case NUMBER:
+      case INTEGER:
          return DKDBType.BIGINT;
       case STRING:
          return DKDBType.VARCHAR;
+      case REAL:
+         return DKDBType.REAL;
+      case DECIMAL:
+         return DKDBType.NUMERIC;
       case DATE:
          return DKDBType.DATE;
       case TIME:

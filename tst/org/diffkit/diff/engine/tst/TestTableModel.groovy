@@ -31,7 +31,7 @@ public class TestTableModel extends GroovyTestCase {
 	public void testKeyValues(){
 		DKColumnModel column1_1 = [0, 'column1_1', DKColumnModel.Type.STRING]
 		DKColumnModel column1_2 = [1, 'column1_2', DKColumnModel.Type.STRING]
-		DKColumnModel column1_3 = [2, 'column1_3', DKColumnModel.Type.NUMBER]
+		DKColumnModel column1_3 = [2, 'column1_3', DKColumnModel.Type.INTEGER]
 		DKColumnModel[] columns = [column1_1, column1_2, column1_3]
 		int[] key = [0,2]
 		DKTableModel lhsTable = [columns, key]
