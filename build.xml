@@ -240,6 +240,11 @@
 		</delete>
 
 		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
+      <copy todir="${dist.dir}/conf">
+         <fileset dir="${conf.dir}">
+            <include name="*dbConnectionInfo*" />
+         </fileset>
+      </copy>
 
 		<antcall target="doc-dist" />
 		<antcall target="eg-dist" />
