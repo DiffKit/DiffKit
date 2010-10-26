@@ -36,7 +36,8 @@ import groovy.util.GroovyTestCase;
 public class TestInsertTableLoader extends GroovyTestCase {
    
    public void testLoader(){
-      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
+      //      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       def metaTable = this.createCustomerMetaTable()
@@ -58,7 +59,10 @@ public class TestInsertTableLoader extends GroovyTestCase {
       assert rob
       assert rob['LAST_NAME'] == 'smith'
       assert rob['AGE'] == 50
-      
+      assert rob['BIRTH']
+      assert rob['BIRTH'].class == java.sql.Date.class
+      assert rob['NOW']
+
       database.dropTable(metaTable)
    }
    
@@ -76,7 +80,9 @@ public class TestInsertTableLoader extends GroovyTestCase {
       DKDBColumn column4 = ['CITY', 4, 'VARCHAR', 50, true]
       DKDBColumn column5 = ['COUNTRY', 5, 'VARCHAR', 25, true]
       DKDBColumn column6 = ['AGE', 6, 'INTEGER', -1, true]
-      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
+      DKDBColumn column7 = ['BIRTH', 7, 'DATE', -1, true]
+      DKDBColumn column8 = ['NOW', 8, 'TIMESTAMP', -1, true]
+      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6, column7, column8]
       String[] pkColNames = ['FIRST_NAME', 'LAST_NAME']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
       DKDBTable table = [ null, null, 'CUSTOMER', columns, pk]

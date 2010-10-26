@@ -23,6 +23,7 @@ import org.diffkit.db.DKDBConnectionInfo;
 import org.diffkit.db.DKDBPrimaryKey 
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBType;
+import org.diffkit.db.DKDBTypeInfo;
 import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBTableDataAccess 
@@ -87,6 +88,8 @@ public class TestVolatileStuff extends GroovyTestCase {
       database.createTable(table)
       def fetchedTable = database.getTable( table.catalog, table.schema, table.tableName)
       assert fetchedTable
+      DKDBTypeInfo[] typeInfos = database.getColumnConcreteTypeInfos(table);
+      println "typeInfos->$typeInfos"
    }
    
    public void testH2(){
@@ -113,7 +116,8 @@ public class TestVolatileStuff extends GroovyTestCase {
       DKDBColumn column4 = ['city', 2, 'VARCHAR', 20, true]
       DKDBColumn column5 = ['country', 2, 'VARCHAR', 20, true]
       DKDBColumn column6 = ['age', 2, 'INTEGER', 20, true]
-      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6]
+      DKDBColumn column7 = ['BIRTH', 7, 'DATE', -1, true]
+      DKDBColumn[] columns = [column1, column2, column3, column4, column5, column6, column7]
       String[] pkColNames = ['first_name', 'last_name']
       DKDBPrimaryKey pk = ['pk_customer', pkColNames]
       DKDBTable table = [null, null, 'CUSTOMER', columns, pk]

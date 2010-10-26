@@ -47,19 +47,19 @@ public class DKSqlUtil {
    public static final String DATABASE_PRODUCT_VERSION_KEY = "DatabaseProductVersion";
 
    public static enum ReadType {
-      OBJECT, STRING, TEXT;
+      OBJECT, STRING, TEXT, TIMESTAMP;
    }
 
    public static enum WriteType {
       NUMBER, STRING, DATE, TIME, TIMESTAMP;
    }
 
-   private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+   public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
       DEFAULT_DATE_PATTERN);
-   private static final String DEFAULT_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+   public static final String DEFAULT_TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss";
    private static final SimpleDateFormat DEFAULT_TIME_FORMAT = new SimpleDateFormat(
-      DEFAULT_TIME_PATTERN);
+      DEFAULT_TIMESTAMP_PATTERN);
 
    private static final Logger LOG = LoggerFactory.getLogger(DKSqlUtil.class);
 
@@ -149,6 +149,9 @@ public class DKSqlUtil {
             break;
          case STRING:
             row[i] = resultSet_.getString(columnNames_[i]);
+            break;
+         case TIMESTAMP:
+            row[i] = resultSet_.getTimestamp(columnNames_[i]);
             break;
          case OBJECT:
             row[i] = resultSet_.getObject(columnNames_[i]);

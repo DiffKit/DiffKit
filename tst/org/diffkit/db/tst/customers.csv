@@ -1,3 +1,3 @@
-FIRST_NAME,LAST_NAME,ADDRESS,CITY,COUNTRY,AGE
-rob,smith,100 spruce st,Phila,usa,50
-steve,jobs,"infinite, loop",Cupertino,usa,54
+FIRST_NAME,LAST_NAME,ADDRESS,CITY,COUNTRY,AGE,BIRTH,NOW
+rob,smith,100 spruce st,Phila,usa,50,'1956-12-12','2004-05-23 14:25:10.487'
+steve,jobs,"infinite, loop",Cupertino,usa,54,'1955-01-01','2004-05-23 14:25:10.487'

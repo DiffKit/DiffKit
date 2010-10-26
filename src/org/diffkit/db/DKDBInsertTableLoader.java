@@ -70,6 +70,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
             _database));
 
       connection.setAutoCommit(true);
+      this.setDateFormat(connection);
       LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(
          csvFile_)));
       String[] tableColumnNames = table_.getColumnNames();
@@ -121,5 +122,16 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       _log.debug("updates: " + updates);
       reader.close();
       return true;
+   }
+
+   private void setDateFormat(Connection connection_) throws SQLException {
+      if (_database.getFlavor() != DKDBFlavor.ORACLE)
+         return;
+      String alterStatement = String.format("ALTER SESSION SET NLS_DATE_FORMAT='%s'",
+         DKSqlUtil.DEFAULT_DATE_PATTERN);
+      DKSqlUtil.executeUpdate(alterStatement, connection_);
+      alterStatement = String.format("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='yyyy-MM-dd  HH24:MI:SS.FF3'",
+         DKSqlUtil.DEFAULT_TIMESTAMP_PATTERN);
+      DKSqlUtil.executeUpdate(alterStatement, connection_);
    }
 }

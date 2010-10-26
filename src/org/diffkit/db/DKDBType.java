@@ -34,7 +34,7 @@ import org.diffkit.util.DKSqlUtil.WriteType;
  */
 public enum DKDBType {
 
-   ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR(false), CLOB(false), DATALINK(true), DATE, DECIMAL(
+   ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR(false), CLOB(true), DATALINK(true), DATE, DECIMAL(
       false), DISTINCT, DOUBLE, FLOAT(false), INTEGER, JAVA_OBJECT, LONGNVARCHAR(true), LONGVARBINARY(
       true), LONGVARCHAR, NCHAR, NCLOB, NULL, NUMERIC(false), NVARCHAR, OTHER, REAL, REF(
       true), ROWID, SMALLINT, SQLXML, STRUCT, TIME, TIMESTAMP(true), TINYINT, VARBINARY(
@@ -46,6 +46,7 @@ public enum DKDBType {
       true), _ORACLE_NUMBER, _ORACLE_LONG_RAW, _ORACLE_RAW, _ORACLE_LONG, _ORACLE_VARCHAR2(
       false);
 
+   private static final String LENGTH_SPECIFIER_PATTERN = "\\(\\d*\\)";
    private static final Map<DKDBFlavor, Map<DKDBType, DKDBType>> _typeRemappings;
    private static final Logger LOG = LoggerFactory.getLogger(DKDBType.class);
    private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
@@ -60,7 +61,22 @@ public enum DKDBType {
       Map<DKDBType, DKDBType> oracleMap = new HashMap<DKDBType, DKDBType>();
       oracleMap.put(VARCHAR, _ORACLE_VARCHAR2);
       oracleMap.put(BIGINT, _ORACLE_NUMBER);
+      oracleMap.put(INTEGER, _ORACLE_NUMBER);
+      oracleMap.put(REAL, _ORACLE_NUMBER);
+      oracleMap.put(DECIMAL, _ORACLE_NUMBER);
+      oracleMap.put(TINYINT, _ORACLE_NUMBER);
+      oracleMap.put(SMALLINT, _ORACLE_NUMBER);
       _typeRemappings.put(DKDBFlavor.ORACLE, oracleMap);
+   }
+
+   /**
+    * if fullTypeName_ has a length specifier, this will strip it off<br/>
+    * e.g. VARCHAR(128) -> VARCHAR
+    */
+   public static String getBaseTypeName(String fullTypeName_) {
+      if (fullTypeName_ == null)
+         return null;
+      return fullTypeName_.replaceAll(LENGTH_SPECIFIER_PATTERN, "");
    }
 
    private static Pattern getFlavorManglePattern() {
@@ -143,6 +159,8 @@ public enum DKDBType {
          return ReadType.STRING;
       case LONGVARCHAR:
          return ReadType.STRING;
+      case TIMESTAMP:
+         return ReadType.TIMESTAMP;
       default:
          return ReadType.OBJECT;
       }

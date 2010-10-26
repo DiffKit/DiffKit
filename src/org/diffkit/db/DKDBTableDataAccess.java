@@ -147,6 +147,7 @@ public class DKDBTableDataAccess {
       String tableName = (String) columnMap_.get("COLUMN_NAME");
       Number ordinalPosition = (Number) columnMap_.get("ORDINAL_POSITION");
       String dataTypeName = (String) columnMap_.get("TYPE_NAME");
+      dataTypeName = DKDBType.getBaseTypeName(dataTypeName);
       Number columnSize = (Number) columnMap_.get("COLUMN_SIZE");
       Boolean isNullable = DKStringUtil.parseBoolean((String) columnMap_.get("IS_NULLABLE"));
       return new DKDBColumn(tableName, DKNumberUtil.getInt(ordinalPosition, -1),

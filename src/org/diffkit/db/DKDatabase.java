@@ -140,7 +140,6 @@ public class DKDatabase {
          return null;
       DKDBTypeInfo[] typeInfos = new DKDBTypeInfo[columns.length];
       for (int i = 0; i < columns.length; i++)
-         // typeInfos[i] = this.getTypeInfo(columns[i].getDBTypeName());
          typeInfos[i] = this.getConcreteTypeInfo(columns[i].getDBTypeName());
       return typeInfos;
    }
@@ -267,7 +266,10 @@ public class DKDatabase {
          return false;
       String insertSql = _sqlGenerator.generateInsertDML(row_, table_);
       _log.debug("insertSql->{}", insertSql);
-      return DKSqlUtil.executeUpdate(insertSql, this.getConnection());
+      Connection connection = this.getConnection();
+      boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);
+//      DKSqlUtil.close(connection);
+      return insert;
    }
 
    public List<Map<String, ?>> readAllRows(DKDBTable table_) throws SQLException {
@@ -275,7 +277,17 @@ public class DKDatabase {
          return null;
       String selectSql = _sqlGenerator.generateSelectDML(table_);
       _log.debug("selectSql->{}", selectSql);
-      return DKSqlUtil.readRows(selectSql, this.getConnection());
+      Connection connection = this.getConnection();
+      List<Map<String, ?>> rows = DKSqlUtil.readRows(selectSql, connection);
+//      DKSqlUtil.close(connection);
+      return rows;
+   }
+
+   public boolean executeUpdate(String sql_) throws SQLException {
+      Connection connection = this.getConnection();
+      boolean update = DKSqlUtil.executeUpdate(sql_, connection);
+      DKSqlUtil.close(connection);
+      return update;
    }
 
 }

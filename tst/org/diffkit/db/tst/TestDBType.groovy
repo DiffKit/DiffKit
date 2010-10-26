@@ -30,6 +30,12 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBType extends GroovyTestCase {
    
+   public void testGetBaseTypeName() {
+      assert DKDBType.getBaseTypeName('VARCHAR') == 'VARCHAR'
+      assert DKDBType.getBaseTypeName('VARCHAR()') == 'VARCHAR'
+      assert DKDBType.getBaseTypeName('VARCHAR(128)') == 'VARCHAR'
+   }
+   
    public void testGetConcreteType() {
       assert !DKDBType.getConcreteType(null, null)
       assert !DKDBType.getConcreteType(DKDBFlavor.H2, null)
