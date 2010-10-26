@@ -34,8 +34,9 @@ DiffKit has been tested on the following environments:
 - Mac OS X.6
 - RH Linux
 - Windows XP
-- H2 Database 1.2
+- Oracle 10g
 - DB2 9.5
+- H2 Database 1.2
 
 
 Next Steps

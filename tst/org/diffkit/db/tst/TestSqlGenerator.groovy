@@ -97,7 +97,7 @@ public class TestSqlGenerator extends GroovyTestCase {
 		)""")
    }
    
-   public void testGenerateDDLOracle(){
+   public void tXstGenerateDDLOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
