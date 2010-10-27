@@ -11,10 +11,17 @@ Ensure that you have first read the link:README.html[README file].
 Verifying your environment 
 --------------------------
 The DiffKit standalone application carries with it a complete functional test
-suite. In order to verify that the standalone application works properly in your
-particular environment, you should first execute the functional test suite:
+suite. In order to verify that the standalone application works properly for your
+operating system and JVM, you should first execute the functional test suite:
 -------------------------------
    java -jar diffkit-app.jar -test
+-------------------------------
+In the above invocation, the test suite executes against an embedded H2 database.
+To execute the test suite against your database, edit the dbConnectionInfo
+configuration files in the conf/ directory (either DB2 or Oracle). Then invoke
+the test suite (e.g. if you have an Oracle database):
+-------------------------------
+   java -jar diffkit-app.jar -test flavors=ORACLE
 -------------------------------
 The resulting output should report that all tests PASSED. If any test FAILED,
 please report the failure to the DiffKit user group

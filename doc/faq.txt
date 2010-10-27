@@ -22,12 +22,19 @@ the User Guide.
 
 DiffKit is covered by an extensive functional TestSuite, which exercises all
 major features of the framework. All tests in this TestSuite are thoroughly
-documented. You can exercise this TestSuite at any time:
+documented. You can exercise the TestSuite at any time:
 
 ---------
 java -jar diffkit-app.jar -test
 ---------
-
+In the above invocation, the TestSuite executes against an embedded H2 database.
+To execute the TestSuite against your database, edit the dbConnectionInfo
+configuration files in the conf/ directory (either DB2 or Oracle). Then invoke
+the TestSuite with a "flavors" parameter value (e.g. if you have an Oracle
+database):
+-------------------------------
+   java -jar diffkit-app.jar -test flavors=ORACLE
+-------------------------------
 
 == Can DiffKit compare DB tables across different physical/logical Databases?
 
