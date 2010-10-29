@@ -79,7 +79,7 @@ public class TestFileSource extends GroovyTestCase {
 		assert source.getNextRow() == (Object[])['1111', '1111', 2]
 		assert source.getNextRow() == (Object[])['4444', '4444', 1]
 		assert source.getNextRow() == (Object[])['4444', '4444', 2]
-		assert source.getNextRow() == (Object[])['6666', '6666', 1]
+		assert source.getNextRow() == (Object[])['6666', '6666', null]
 		assert source.getNextRow() == (Object[])['6666', '6666', 2]
 		assert !source.getNextRow()
 		assert !source.getNextRow()

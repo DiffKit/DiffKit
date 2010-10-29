@@ -20,6 +20,7 @@ import java.text.Format;
 import java.text.ParseException;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.diffkit.common.DKValidate;
 
@@ -121,7 +122,7 @@ public class DKColumnModel {
    }
 
    public Object parseObject(String stringValue_) throws ParseException {
-      if (stringValue_ == null)
+      if (StringUtils.isEmpty(stringValue_))
          return null;
       if (_format == null)
          return stringValue_;

@@ -221,7 +221,7 @@ public class DKFileSource implements DKSource {
    private Object[] createRow(String line_) throws IOException {
       if (line_ == null)
          return null;
-      String[] strings = line_.split(_delimiter);
+      String[] strings = line_.split(_delimiter,-1);
       DKColumnModel[] readColumns = this.getReadColumns();
       if (strings.length != readColumns.length)
          throw new RuntimeException(String.format(
