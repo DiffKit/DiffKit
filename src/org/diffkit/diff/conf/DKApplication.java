@@ -41,6 +41,7 @@ import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKUserException;
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.diff.engine.DKContext;
+import org.diffkit.diff.engine.DKContext.UserKey;
 import org.diffkit.diff.engine.DKDiffEngine;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
@@ -157,8 +158,6 @@ public class DKApplication {
       DKPlan plan = (DKPlan) DKSpringUtil.getBean("plan", planFiles,
          DKApplication.class.getClassLoader());
       systemLog.info("plan->{}", plan);
-      DKDiffEngine engine = new DKDiffEngine();
-      systemLog.info("engine->{}", engine);
       DKSource lhsSource = plan.getLhsSource();
       DKSource rhsSource = plan.getRhsSource();
       DKSink sink = plan.getSink();
@@ -167,13 +166,22 @@ public class DKApplication {
       userLog.info("rhsSource->{}", rhsSource);
       userLog.info("sink->{}", sink);
       userLog.info("tableComparison->{}", tableComparison);
-      DKContext diffContext = engine.diff(lhsSource, rhsSource, sink, tableComparison);
+      DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison, null);
       userLog.info(sink.generateSummary(diffContext));
       if (plan.getSink().getDiffCount() == 0)
          System.exit(0);
       if (errorOnDiff_)
          System.exit(-1);
       System.exit(0);
+   }
+
+   private static DKContext doDiff(DKSource lhsSource_, DKSource rhsSource_,
+                                   DKSink sink_, DKTableComparison tableComparison_,
+                                   Map<UserKey, ?> userDictionary_) throws Exception {
+      Logger systemLog = getSystemLog();
+      DKDiffEngine engine = new DKDiffEngine();
+      systemLog.info("engine->{}", engine);
+      return engine.diff(lhsSource_, rhsSource_, sink_, tableComparison_, userDictionary_);
    }
 
    private static void runDemoDB() throws Exception {

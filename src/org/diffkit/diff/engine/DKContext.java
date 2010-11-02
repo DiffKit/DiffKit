@@ -16,6 +16,8 @@
 package org.diffkit.diff.engine;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.time.StopWatch;
@@ -27,10 +29,15 @@ import org.diffkit.common.DKValidate;
  */
 public class DKContext {
 
+   public enum UserKey {
+      PLAN_FILES, DIFF_COLUMN_NAMES, IGNORE_COLUMN_NAMES;
+   }
+
    public final DKSource _lhs;
    public final DKSource _rhs;
    public final DKSink _sink;
    public final DKTableComparison _tableComparison;
+   public final Map<UserKey, Object> _userDictionary = new HashMap<UserKey, Object>();
    public final long _id = UUID.randomUUID().getLeastSignificantBits();
    // current or last
    public long _rowStep;
@@ -49,11 +56,14 @@ public class DKContext {
       _tableComparison = null;
    }
 
-   public DKContext(DKSource lhs_, DKSource rhs_, DKSink sink_, DKTableComparison plan_) {
+   public DKContext(DKSource lhs_, DKSource rhs_, DKSink sink_, DKTableComparison plan_,
+                    Map<UserKey, ?> userDictionary_) {
       _lhs = lhs_;
       _rhs = rhs_;
       _sink = sink_;
       _tableComparison = plan_;
+      if (userDictionary_ != null)
+         _userDictionary.putAll(userDictionary_);
       DKValidate.notNull(_lhs, _rhs, _sink, _tableComparison);
    }
 

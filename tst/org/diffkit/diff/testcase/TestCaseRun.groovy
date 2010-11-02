@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.diff.conf.DKApplication;
 import org.diffkit.diff.conf.DKPassthroughPlan;
 import org.diffkit.diff.conf.DKPlan 
 import org.diffkit.diff.engine.DKDiffEngine 
@@ -63,8 +64,7 @@ public class TestCaseRun {
    }
    
    public void diff(){
-      DKDiffEngine engine = []
-      engine.diff(plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison)
+      DKApplication.doDiff plan.lhsSource, plan.rhsSource, plan.sink, plan.tableComparison, null
    }
    
    public void setIsExecuted(boolean isExecuted_){

@@ -18,6 +18,7 @@ package org.diffkit.diff.engine;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 import org.apache.commons.collections.OrderedMap;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.common.annot.Stateless;
+import org.diffkit.diff.engine.DKContext.UserKey;
 
 /**
  * @author jpanico
@@ -39,14 +41,17 @@ public class DKDiffEngine {
    private final boolean _isDebug = _log.isDebugEnabled();
 
    public DKContext diff(DKSource lhs_, DKSource rhs_, DKSink sink_,
-                         DKTableComparison tableComparison_) throws IOException {
+                         DKTableComparison tableComparison_,
+                         Map<UserKey, ?> userDictionary_) throws IOException {
       _log.info("lhs_->{}", lhs_);
       _log.info("rhs_->{}", rhs_);
       _log.info("sink_->{}", sink_);
       _log.info("tableComparison_->{}", tableComparison_.getDescription());
+      _log.debug("userDictionary_->{}", userDictionary_);
 
       DKValidate.notNull(lhs_, rhs_, sink_, tableComparison_);
-      DKContext context = new DKContext(lhs_, rhs_, sink_, tableComparison_);
+      DKContext context = new DKContext(lhs_, rhs_, sink_, tableComparison_,
+         userDictionary_);
       _log.info("context->{}", context);
       this.diff(context);
       return context;

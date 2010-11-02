@@ -92,7 +92,7 @@ public class TestEngine extends GroovyTestCase {
       DKDBSink sink = new DKDBSink(database)
       DKDiffEngine engine = new DKDiffEngine()
       
-      engine.diff(lhsSource, rhsSource, sink, tableComparison)
+      engine.diff(lhsSource, rhsSource, sink, tableComparison, null)
       
       assert lhsSource.lastIndex == 5
       assert rhsSource.lastIndex == 5
@@ -166,7 +166,7 @@ public class TestEngine extends GroovyTestCase {
       DKFileSink sink = this.createSink2( diffFileName)
       DKDiffEngine engine = new DKDiffEngine()
       
-      engine.diff(lhsSource, rhsSource, sink, tableComparison)
+      engine.diff(lhsSource, rhsSource, sink, tableComparison, null)
       
       assert lhsSource.lastIndex == 5
       assert rhsSource.lastIndex == 5
@@ -266,7 +266,7 @@ public class TestEngine extends GroovyTestCase {
       println "tableComparison->$tableComparison"
       DKDiffEngine engine = new DKDiffEngine()
       
-      engine.diff(lhsSource, rhsSource, sink, tableComparison)
+      engine.diff(lhsSource, rhsSource, sink, tableComparison, null)
       
       assert sink.diffCount == 6
       
@@ -307,7 +307,7 @@ public class TestEngine extends GroovyTestCase {
       println "tableComparison->$tableComparison"
       DKDiffEngine engine = new DKDiffEngine()
       DKListSink sink = new DKListSink()
-      engine.diff(lSource, rSource, sink, tableComparison)
+      engine.diff(lSource, rSource, sink, tableComparison, null)
       
       assert sink.diffCount == 6
       for(diff in sink.diffs) {
@@ -320,7 +320,7 @@ public class TestEngine extends GroovyTestCase {
       rSource = [tableModel, rows]
       println "rSource->$rSource"
       sink = new DKListSink()
-      engine.diff(lSource, rSource, sink, tableComparison)
+      engine.diff(lSource, rSource, sink, tableComparison, null)
       
       assert sink.diffCount == 6
       for(diff in sink.diffs) {
@@ -358,7 +358,7 @@ public class TestEngine extends GroovyTestCase {
       println "tableComparison->$tableComparison"
       DKDiffEngine engine = new DKDiffEngine()
       DKListSink sink = []
-      engine.diff(lSource, rSource, sink, tableComparison)
+      engine.diff(lSource, rSource, sink, tableComparison, null)
       
       assert sink.diffCount == 6
       
@@ -419,7 +419,7 @@ public class TestEngine extends GroovyTestCase {
       DKListSink sink = []
       println "tableComparison->$tableComparison"
       
-      engine.diff(lhSource, rhSource, sink, tableComparison)
+      engine.diff(lhSource, rhSource, sink, tableComparison, null)
       
       assert sink.diffCount == 0
    }
@@ -476,7 +476,7 @@ public class TestEngine extends GroovyTestCase {
    
    
    private DKContext createSimpleContext() {
-      return new DKContext(this.createSimpleSource(), this.createSimpleSource(), new DKListSink(),this.createSimpleComparison())
+      return new DKContext(this.createSimpleSource(), this.createSimpleSource(), new DKListSink(),this.createSimpleComparison(), null)
    }
    
    private DKStandardTableComparison createSimpleComparison() {

@@ -15,24 +15,6 @@
       </layout>
    </appender>
 
-   <logger name="org.diffkit.diff.diffor">
-      <level value="warn" />
-   </logger>
-   <logger name="org.diffkit.diff.conf.DKAutomaticTableComparison">
-      <level value="warn" />
-   </logger>
-   <logger name="org.diffkit.db.DKDBInsertTableLoader">
-      <level value="warn" />
-   </logger>
-   <logger name="org.diffkit.db.DKSqlGenerator">
-      <level value="warn" />
-   </logger>
-   <logger name="org.diffkit.util.DKSqlUtil">
-      <level value="warn" />
-   </logger>
-   <logger name="org.diffkit.diff.sns.DKFileSource">
-      <level value="warn" />
-   </logger>
    <logger name="org.diffkit">
       <level value="warn" />
    </logger>
