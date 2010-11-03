@@ -71,7 +71,7 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule WHERE_CLAUSE_RULE = new DKMagicPlanRule(
       "whereClause",
       "if whereClause is specified in plan, then use it in any constructor that requires one",
-      DKDBSource.class, null, "whereClause_", "whereClause", false, new PlanValue(true));
+      DKDBSource.class, null, "whereClause_", "whereClause", true, new PlanValue(true));
    private static final DKMagicPlanRule LHS_WHERE_CLAUSE_RULE = new DKMagicPlanRule(
       "lhsWhereClause",
       "assign lhsWhereClause from Plan to lhs DBSource, whether null or non-null",
@@ -82,6 +82,10 @@ public class DKMagicPlanRules {
       "assign rhsWhereClause from Plan to rhs DBSource, whether null or non-null",
       DKDBSource.class, "rhsSource_.whereClause_", "rhsWhereClause", true, new PlanValue(
          true));
+   private static final DKMagicPlanRule DEFAULT_WHERE_CLAUSE_RULE = new DKMagicPlanRule(
+      "defaultWhereClause",
+      "assign default null value to whereClause if value in Plan is null",
+      DKDBSource.class, "whereClause_", "whereClause", false, new PlanValue(false));
    private static final DKMagicPlanRule DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "dbConnectionInfo",
       "if dbConnectionInfo is specified in plan, then use it in any constructor that requires one",
@@ -210,15 +214,16 @@ public class DKMagicPlanRules {
       RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE, LHS_DB_SOURCE_FROM_DB_TABLE_RULE,
       RHS_DB_SOURCE_FROM_DB_TABLE_RULE, DB_TABLE_NAME_RULE, LHS_DB_TABLE_NAME_RULE,
       RHS_DB_TABLE_NAME_RULE, WHERE_CLAUSE_RULE, LHS_WHERE_CLAUSE_RULE,
-      RHS_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE, LHS_DB_CONNECTION_INFO_RULE,
-      RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE, KEY_COLUMN_NAMES_RULE,
-      READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE, RHS_FILE_SOURCE_RULE,
-      RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE, DEFAULT_SINK_RULE,
-      AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE, DEFAULT_DELIMITER_RULE,
-      IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE, DEFAULT_DIFF_KIND_RULE,
-      DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE, DISPLAY_COLUMN_NAMES_RULE,
-      MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE, NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE,
-      WITH_SUMMARY_RULE, DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE };
+      RHS_WHERE_CLAUSE_RULE, DEFAULT_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE,
+      LHS_DB_CONNECTION_INFO_RULE, RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE,
+      KEY_COLUMN_NAMES_RULE, READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE,
+      RHS_FILE_SOURCE_RULE, RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE,
+      DEFAULT_SINK_RULE, AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE,
+      DEFAULT_DELIMITER_RULE, IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE,
+      DEFAULT_DIFF_KIND_RULE, DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE,
+      DISPLAY_COLUMN_NAMES_RULE, MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE,
+      NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE, WITH_SUMMARY_RULE,
+      DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

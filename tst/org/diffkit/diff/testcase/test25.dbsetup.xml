@@ -24,7 +24,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
-		<constructor-arg index="0" value="test24_lhs_pk" />
+		<constructor-arg index="0" value="test25_lhs_pk" />
 		<constructor-arg index="1">
 			<list>
 				<value>COLUMN1</value>

@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
@@ -90,6 +91,7 @@ public class DKDBSource implements DKSource {
       if (_table == null)
          throw new RuntimeException(String.format("couldn't find table named->%s",
             _tableName));
+      this.validateKeyColumnNames(_table, keyColumnNames_);
       _keyColumnNames = keyColumnNames_;
       _model = this.getModel(model_, _keyColumnNames, _table);
       _log.info("_model->{}", _model);
@@ -291,6 +293,16 @@ public class DKDBSource implements DKSource {
                "modelled column->%s does not exist in table->%s", columnModel, table_));
       }
       _isValidated = true;
+   }
+
+   private void validateKeyColumnNames(DKDBTable table_, String[] keyColumnNames_) {
+      if (ArrayUtils.isEmpty(keyColumnNames_))
+         return;
+      for (String keyColumnName : keyColumnNames_) {
+         if (!table_.containsColumn(keyColumnName))
+            throw new RuntimeException(String.format(
+               "table->%s does not contain keyColumnName->%s", table_, keyColumnName));
+      }
    }
 
    private void ensureOpen() {

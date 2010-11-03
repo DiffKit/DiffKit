@@ -41,6 +41,20 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBSource extends GroovyTestCase {
    
+   public void testValidateKeyColumnNames() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      def dbTable = this.createCustomerMetaTable()
+      assert database.createTable( dbTable)
+      
+      shouldFail(RuntimeException) {
+         DKDBSource source = new DKDBSource(dbTable.tableName, null, database, null, (String[])['maiden_name'], null)
+      }
+      assert database.dropTable( dbTable)
+   }
+   
    public void testDescription() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
