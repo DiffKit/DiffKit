@@ -6,11 +6,9 @@
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
-		<property name="lhsDBTableName" value="TEST24_LHS_TABLE" />
-      <property name="rhsDBTableName" value="TEST24_RHS_TABLE" />
-      <property name="whereClause" value="where COLUMN1 != 'cccc'" />
+		<property name="dbTableName" value="TEST25_TABLE" />
 		<property name="dbConnectionInfo" ref="connectionInfo" />
-		<property name="sinkFilePath" value="./test24.sink.diff" />
+		<property name="sinkFilePath" value="./test25.sink.diff" />
 	</bean>
 
 </beans>

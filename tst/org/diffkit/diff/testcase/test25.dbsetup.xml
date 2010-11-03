@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="lhs.table" class="org.diffkit.db.DKDBTable">
+		<constructor-arg index="0">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="1">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="2" value="TEST25_TABLE" />
+		<constructor-arg index="3">
+			<list>
+				<ref bean="lhs.column1" />
+				<ref bean="lhs.column2" />
+				<ref bean="lhs.column3" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="4" ref="lhs.pk" />
+	</bean>
+
+	<bean id="lhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
+		<constructor-arg index="0" value="test24_lhs_pk" />
+		<constructor-arg index="1">
+			<list>
+				<value>COLUMN1</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN1" />
+		<constructor-arg index="1" value="1" />
+		<constructor-arg index="2" value="VARCHAR" />
+		<constructor-arg index="3" value="128" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="lhs.column2" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN2" />
+		<constructor-arg index="1" value="2" />
+		<constructor-arg index="2" value="CLOB" />
+		<constructor-arg index="3" value="1000" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="lhs.column3" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN3" />
+		<constructor-arg index="1" value="3" />
+		<constructor-arg index="2" value="VARCHAR" />
+		<constructor-arg index="3" value="128" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+
+	<bean id="connectionSource" class="org.diffkit.db.DKDatabase">
+		<constructor-arg ref="connectionInfo" />
+	</bean>
+
+</beans>

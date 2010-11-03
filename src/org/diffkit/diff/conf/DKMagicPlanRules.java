@@ -38,34 +38,50 @@ import org.diffkit.diff.sns.DKWriterSink;
 @SuppressWarnings("unchecked")
 public class DKMagicPlanRules {
 
-   private static final DKMagicPlanRule LHS_DB_SOURCE_RULE = new DKMagicPlanRule(
-      "lhsDBSource",
+   private static final DKMagicPlanRule LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE = new DKMagicPlanRule(
+      "lhsDBSource.lhsDBtable",
       "if lhsDBTableName is specified in plan, then force lhsSource to be DBSource",
       null, "lhsSource_", "lhsDBTableName", true, new TypeRefinement(DKDBSource.class));
+   private static final DKMagicPlanRule RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE = new DKMagicPlanRule(
+      "rhsDBSource.rhsDBtable",
+      "if rhsDBTableName is specified in plan, then force rhsSource to be DBSource",
+      null, "rhsSource_", "rhsDBTableName", true, new TypeRefinement(DKDBSource.class));
+   private static final DKMagicPlanRule LHS_DB_SOURCE_FROM_DB_TABLE_RULE = new DKMagicPlanRule(
+      "lhsDBSource.dbTable",
+      "if dbTableName is specified in plan, then force lhsSource to be DBSource", null,
+      "lhsSource_", "dbTableName", true, new TypeRefinement(DKDBSource.class));
+   private static final DKMagicPlanRule RHS_DB_SOURCE_FROM_DB_TABLE_RULE = new DKMagicPlanRule(
+      "rhsDBSource.dbTable",
+      "if dbTableName is specified in plan, then force rhsSource to be DBSource", null,
+      "rhsSource_", "dbTableName", true, new TypeRefinement(DKDBSource.class));
+   private static final DKMagicPlanRule DB_TABLE_NAME_RULE = new DKMagicPlanRule(
+      "dbTableName",
+      "if dbTableName is specified in plan, then use it in any DBSource constructor that requires one",
+      DKDBSource.class, null, "tableName_", "dbTableName", false, new PlanValue(true));
    private static final DKMagicPlanRule LHS_DB_TABLE_NAME_RULE = new DKMagicPlanRule(
       "lhsDBTableName",
       "if lhsDBTableName is specified in plan, then use it as the tableName in the lhs DBSource",
       DKDBSource.class, "lhsSource_.tableName_", "lhsDBTableName", true, new PlanValue(
          true));
-   private static final DKMagicPlanRule LHS_WHERE_CLAUSE_RULE = new DKMagicPlanRule(
-      "lhsWhereClause",
-      "assign lhsWhereClause from Plan to lhs DBSource, whether null or non-null",
-      DKDBSource.class, "lhsSource_.whereClause_", "lhsWhereClause", true, new PlanValue(
-         false));
-   private static final DKMagicPlanRule RHS_DB_SOURCE_RULE = new DKMagicPlanRule(
-      "rhsDBSource",
-      "if rhsDBTableName is specified in plan, then force rhsSource to be DBSource",
-      null, "rhsSource_", "rhsDBTableName", true, new TypeRefinement(DKDBSource.class));
    private static final DKMagicPlanRule RHS_DB_TABLE_NAME_RULE = new DKMagicPlanRule(
       "rhsDBTableName",
       "if rhsDBTableName is specified in plan, then use it as the tableName in the lhs DBSource",
       DKDBSource.class, "rhsSource_.tableName_", "rhsDBTableName", true, new PlanValue(
          true));
+   private static final DKMagicPlanRule WHERE_CLAUSE_RULE = new DKMagicPlanRule(
+      "whereClause",
+      "if whereClause is specified in plan, then use it in any constructor that requires one",
+      DKDBSource.class, null, "whereClause_", "whereClause", false, new PlanValue(true));
+   private static final DKMagicPlanRule LHS_WHERE_CLAUSE_RULE = new DKMagicPlanRule(
+      "lhsWhereClause",
+      "assign lhsWhereClause from Plan to lhs DBSource, whether null or non-null",
+      DKDBSource.class, "lhsSource_.whereClause_", "lhsWhereClause", true, new PlanValue(
+         true));
    private static final DKMagicPlanRule RHS_WHERE_CLAUSE_RULE = new DKMagicPlanRule(
       "rhsWhereClause",
       "assign rhsWhereClause from Plan to rhs DBSource, whether null or non-null",
       DKDBSource.class, "rhsSource_.whereClause_", "rhsWhereClause", true, new PlanValue(
-         false));
+         true));
    private static final DKMagicPlanRule DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "dbConnectionInfo",
       "if dbConnectionInfo is specified in plan, then use it in any constructor that requires one",
@@ -74,13 +90,13 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule LHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "lhsDBConnectionInfo",
       "if lhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the lhs DBSource",
-      DKDatabase.class, "lhsSource_.database_.connectionInfo_",
-      "lhsDBConnectionInfo", true, new PlanValue(true));
+      DKDatabase.class, "lhsSource_.database_.connectionInfo_", "lhsDBConnectionInfo",
+      true, new PlanValue(true));
    private static final DKMagicPlanRule RHS_DB_CONNECTION_INFO_RULE = new DKMagicPlanRule(
       "rhsDBConnectionInfo",
       "if rhsDBConnectionInfo is specified in plan, then use it as the ConnectionInfo in the rhs DBSource",
-      DKDatabase.class, "rhsSource_.database_.connectionInfo_",
-      "rhsDBConnectionInfo", true, new PlanValue(true));
+      DKDatabase.class, "rhsSource_.database_.connectionInfo_", "rhsDBConnectionInfo",
+      true, new PlanValue(true));
    private static final DKMagicPlanRule MODEL_DEFAULT_RULE = new DKMagicPlanRule(
       "modelDefault",
       "if no TableModel is explicitly supplied, set it to null so that target object will default it from its ultimate source",
@@ -190,8 +206,10 @@ public class DKMagicPlanRules {
       DKFileSink.class, "groupByColumnNames_", "groupByColumnNames", true, new PlanValue(
          false));
 
-   public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_RULE, RHS_DB_SOURCE_RULE,
-      LHS_DB_TABLE_NAME_RULE, RHS_DB_TABLE_NAME_RULE, LHS_WHERE_CLAUSE_RULE,
+   public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE,
+      RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE, LHS_DB_SOURCE_FROM_DB_TABLE_RULE,
+      RHS_DB_SOURCE_FROM_DB_TABLE_RULE, DB_TABLE_NAME_RULE, LHS_DB_TABLE_NAME_RULE,
+      RHS_DB_TABLE_NAME_RULE, WHERE_CLAUSE_RULE, LHS_WHERE_CLAUSE_RULE,
       RHS_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE, LHS_DB_CONNECTION_INFO_RULE,
       RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE, KEY_COLUMN_NAMES_RULE,
       READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE, RHS_FILE_SOURCE_RULE,

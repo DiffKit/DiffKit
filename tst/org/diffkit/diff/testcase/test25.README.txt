@@ -1,0 +1,21 @@
+test24 README
+=========
+
+Description
+----------
+Demonstrates the use of dbTableName in MagicPlan. The table name is the
+same on the LHS and RHS. Also demonstrates use of whereClause in MagicPlan. 
+The where clause is the same on the LHS and RHS.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- plan file supplies only dbTableName, not lhs table name or rhs table name
+- dbsetup.xml only creates on table: TEST25_TABLE
+- MagicPlan reverse engineers TableModels from the database
+- since LHS and RHS point to the same table, there can be no diffs.
+
+Expectations
+-----------
+- no diffs

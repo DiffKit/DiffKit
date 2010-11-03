@@ -33,8 +33,10 @@ import org.diffkit.diff.engine.DKTableComparison;
 public class DKMagicPlan implements DKPlan {
 
    private final DKPassthroughPlan _providedPlan = new DKPassthroughPlan();
+   private String _dbTableName;
    private String _lhsDBTableName;
    private String _rhsDBTableName;
+   private String _whereClause;
    private String _lhsWhereClause;
    private String _rhsWhereClause;
    private String _lhsFilePath;
@@ -57,6 +59,14 @@ public class DKMagicPlan implements DKPlan {
    private DKPassthroughPlan _builtPlan;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
+   public String getDbTableName() {
+      return _dbTableName;
+   }
+
+   public void setDbTableName(String dbTableName_) {
+      _dbTableName = dbTableName_;
+   }
+
    public String getLhsDBTableName() {
       return _lhsDBTableName;
    }
@@ -71,6 +81,14 @@ public class DKMagicPlan implements DKPlan {
 
    public void setRhsDBTableName(String rhsDBTableName_) {
       _rhsDBTableName = rhsDBTableName_;
+   }
+
+   public String getWhereClause() {
+      return _whereClause;
+   }
+
+   public void setWhereClause(String whereClause_) {
+      _whereClause = whereClause_;
    }
 
    public String getLhsWhereClause() {

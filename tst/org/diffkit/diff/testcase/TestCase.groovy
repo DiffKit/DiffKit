@@ -141,8 +141,8 @@ public class TestCase implements Comparable<TestCase>{
     * the receiver validates itself
     */
    private void validate(){
-      this.validateResourceFile('lhsSourceFile',lhsSourceFile)
-      this.validateResourceFile('rhsSourceFile', rhsSourceFile)
+//      this.validateResourceFile('lhsSourceFile',lhsSourceFile)
+//      this.validateResourceFile('rhsSourceFile', rhsSourceFile)
       this.validateResourceFile('planFile', planFile)
       boolean expectedPresent = expectedFile.canRead()
       boolean exceptionPresent = exceptionFile.canRead()

@@ -4,7 +4,7 @@ test24 README
 Description
 ----------
 Demonstrates the TextDiffor and how it can be used to compare CLOBs in a way
-that is insensitive to newlines.
+that is insensitive to newlines. Also demonstrates the use of the whereClause.
 
 
 Assumptions
@@ -12,12 +12,15 @@ Assumptions
 - lhs & rhs are DB tables
 - plan file supplies lhs table name and rhs table name
 - lhs and rhs tables have identical structure
+- MagicPlan specifies the whereClause, the same applied to both sides
 - MagicPlan reverse engineers TableModels from the database
 - MagicPlan will assign TextDiffor, that ignores newlines, to CLOB columns
 - column2 is a CLOB
 - row 'bbbb' differs lhs vs. rhs only in the CLOB column, and only by newlines
+- column3 has diffs
 
 Expectations
 -----------
 - 1 COLUMN_DIFF diff
 - row 'bbbb' is not seen as a diff
+- no diffs are seen in column3, because the where clause filters those out
