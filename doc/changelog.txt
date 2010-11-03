@@ -1,0 +1,19 @@
+DiffKit Changelong
+==================
+@AUTHOR@
+v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
+
+
+== release 0.7.4 (11/03/2010)
+
+.Google Issue Tracker
+[format="csv",options="header"]
+|===================================================
+"ID","Type","Status","Priority","Milestone","Owner","Summary","AllLabels"
+"19","Enhancement","Fixed","Medium","","trurl00","MagicPlan should support dbTableName property","Type-Enhancement, Priority-Medium, OpSys-All"
+"20","Enhancement","Fixed","Medium","","trurl00","MagicPlan should support whereClause property","Type-Enhancement, Priority-Medium, OpSys-All"
+"26","Defect","Fixed","Medium","","trurl00","validate keyColumnNames in MagicPlan up front","Type-Defect, Priority-Medium, OpSys-All"
+"41","Defect","Fixed","Medium","","","Report Readability","Type-Defect, Priority-Medium"
+"43","Defect","Fixed","Medium","","","Exception if last value in the row in csv file is null","Type-Defect, Priority-Medium"
+|===================================================
+

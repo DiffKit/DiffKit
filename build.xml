@@ -366,6 +366,15 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="compatibility.txt" />
 		</exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
+         <arg line="-a toc" />
+         <arg line="changelog.txt" />
+      </exec>
 
 	</target>
 
@@ -492,6 +501,17 @@
          <arg line="-a scriptsdir=resources" />
          <arg line="-a stylesdir=resources" />
          <arg line="support.txt" />
+      </exec>
+		
+      <exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="--conf-file=web_template.conf" />
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
+         <arg line="-a toc" />
+         <arg line="changelog.txt" />
       </exec>
 
 	</target>
