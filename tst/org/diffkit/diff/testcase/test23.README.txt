@@ -18,6 +18,7 @@ Assumptions
 
 Expectations
 -----------
+- header information in the .diff file
 - summary information in the .diff file
 - summary information shows column diff clusters (clustered by row)
 - summary information also shows results grouped by column2 & column3

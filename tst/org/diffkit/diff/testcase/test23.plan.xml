@@ -10,6 +10,11 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<property name="rhsFilePath" value="./test23.rhs.csv" />
 		<property name="sinkFilePath" value="./test23.sink.diff" />
 		<property name="withSummary" value="TRUE" />
+      <property name="ignoreColumnNames">
+         <list>
+            <value>COLUMN5</value>
+         </list>
+      </property>
       <property name="displayColumnNames">
          <list>
             <value>COLUMN1</value>

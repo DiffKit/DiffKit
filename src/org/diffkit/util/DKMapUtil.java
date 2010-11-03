@@ -7,6 +7,8 @@ package org.diffkit.util;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.MapUtils;
+
 /**
  * @author jpanico
  */
@@ -25,5 +27,16 @@ public class DKMapUtil {
             return target_.get(key);
       }
       return null;
+   }
+
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public static Map combine(Map target_, Map source_) {
+
+      if (MapUtils.isEmpty(source_))
+         return target_;
+      if (MapUtils.isEmpty(target_))
+         return source_;
+      target_.putAll(source_);
+      return target_;
    }
 }

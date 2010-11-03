@@ -139,7 +139,7 @@ public class DKRuntime {
    public Logger getUserLog() {
       if (_userLog != null)
          return _userLog;
-      _userLog = LoggerFactory.getLogger("user");
+      _userLog = LoggerFactory.getLogger(USER_LOG_CATEGORY_KEY);
       return _userLog;
    }
 }

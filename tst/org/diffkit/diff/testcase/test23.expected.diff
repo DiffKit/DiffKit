@@ -1,3 +1,12 @@
+diff start->xxx
+diff elapsed time->xxx
+lhs->test23.lhs.csv
+rhs->test23.rhs.csv
+sink->test23.sink.diff
+kind->BOTH
+maxDiffs->9223372036854775807
+diff_column_names=[COLUMN5]
+
 --- vhl summary ---
 diff'd 8 rows in xxx, found:
 !4 row diffs

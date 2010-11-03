@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
@@ -189,8 +190,10 @@ public class DKFileSource implements DKSource {
    }
 
    public String toString() {
+      if (DKRuntime.getInstance().getIsTest())
+         return _file.getName();
       return String.format("%s@%x[%s]", ClassUtils.getShortClassName(this.getClass()),
-         System.identityHashCode(this), _file.getAbsolutePath());
+         System.identityHashCode(this), _file.getPath());
    }
 
    public Object[] getNextRow() throws IOException {
@@ -221,7 +224,7 @@ public class DKFileSource implements DKSource {
    private Object[] createRow(String line_) throws IOException {
       if (line_ == null)
          return null;
-      String[] strings = line_.split(_delimiter,-1);
+      String[] strings = line_.split(_delimiter, -1);
       DKColumnModel[] readColumns = this.getReadColumns();
       if (strings.length != readColumns.length)
          throw new RuntimeException(String.format(

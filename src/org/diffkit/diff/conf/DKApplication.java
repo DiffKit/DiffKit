@@ -46,6 +46,7 @@ import org.diffkit.diff.engine.DKDiffEngine;
 import org.diffkit.diff.engine.DKSink;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableComparison;
+import org.diffkit.util.DKMapUtil;
 import org.diffkit.util.DKSpringUtil;
 import org.diffkit.util.DKStringUtil;
 
@@ -178,11 +179,14 @@ public class DKApplication {
       System.exit(0);
    }
 
+   @SuppressWarnings("unchecked")
    private static DKContext doDiff(DKSource lhsSource_, DKSource rhsSource_,
                                    DKSink sink_, DKTableComparison tableComparison_,
-                                   Map<UserKey, ?> userDictionary_) throws Exception {
+                                   Map<UserKey, Object> userDictionary_) throws Exception {
       Logger systemLog = getSystemLog();
       DKDiffEngine engine = new DKDiffEngine();
+      userDictionary_ = DKMapUtil.combine(userDictionary_,
+         tableComparison_.getUserDictionary());
       systemLog.info("engine->{}", engine);
       return engine.diff(lhsSource_, rhsSource_, sink_, tableComparison_, userDictionary_);
    }

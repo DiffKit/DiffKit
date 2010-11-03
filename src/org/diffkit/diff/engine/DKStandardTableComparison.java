@@ -17,6 +17,7 @@ package org.diffkit.diff.engine;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.OrderedMap;
@@ -31,6 +32,7 @@ import org.diffkit.common.DKComparableComparator;
 import org.diffkit.common.DKComparatorChain;
 import org.diffkit.common.DKElementComparator;
 import org.diffkit.common.DKValidate;
+import org.diffkit.diff.engine.DKContext.UserKey;
 
 /**
  * The instructions for how to carry out a complete comparison of one table
@@ -285,6 +287,10 @@ public class DKStandardTableComparison implements DKTableComparison {
       builder.append("_maxDiffs", _maxDiffs);
 
       return builder.toString();
+   }
+
+   public Map<UserKey, ?> getUserDictionary() {
+      return null;
    }
 
 }

@@ -39,6 +39,7 @@ import org.diffkit.diff.diffor.DKTextDiffor;
 import org.diffkit.diff.engine.DKColumnComparison;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKColumnModel.Type;
+import org.diffkit.diff.engine.DKContext.UserKey;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKDiff.Kind;
 import org.diffkit.diff.engine.DKDiffor;
@@ -248,6 +249,15 @@ public class DKAutomaticTableComparison implements DKTableComparison {
     */
    public Object[] getRowKeyValues(Object[] aRow_, int sideIdx_) {
       return this.getStandardComparison().getRowKeyValues(aRow_, sideIdx_);
+   }
+
+   public Map<UserKey, Object> getUserDictionary() {
+      Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
+      if (!ArrayUtils.isEmpty(_diffColumnNames))
+         userDictionary.put(UserKey.DIFF_COLUMN_NAMES, Arrays.asList(_diffColumnNames));
+      if (!ArrayUtils.isEmpty(_ignoreColumnNames))
+         userDictionary.put(UserKey.DIFF_COLUMN_NAMES, Arrays.asList(_ignoreColumnNames));
+      return userDictionary;
    }
 
    /**

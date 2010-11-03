@@ -1,8 +1,8 @@
-COLUMN1,COLUMN2,COLUMN3,COLUMN4
-2,1111,x,aaaa
-3,2222,y,aaaa
-4,0000,z,bbbb
-5,4444,z,bbbb
-6,5555,u,aaaa
-7,0000,v,aaaa
-8,1111,x,aaaa
+COLUMN1,COLUMN2,COLUMN3,COLUMN4,COLUMN5
+2,1111,x,aaaa,a
+3,2222,y,aaaa,b
+4,0000,z,bbbb,c
+5,4444,z,bbbb,d
+6,5555,u,aaaa,e
+7,0000,v,aaaa,f
+8,1111,x,aaaa,g

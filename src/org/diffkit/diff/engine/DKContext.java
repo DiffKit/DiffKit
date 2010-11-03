@@ -30,7 +30,7 @@ import org.diffkit.common.DKValidate;
 public class DKContext {
 
    public enum UserKey {
-      PLAN_FILES, DIFF_COLUMN_NAMES, IGNORE_COLUMN_NAMES;
+      PLAN_FILES, DIFF_COLUMN_NAMES, IGNORE_COLUMN_NAMES, NUMBER_TOLERANCE;
    }
 
    public final DKSource _lhs;
@@ -107,5 +107,17 @@ public class DKContext {
 
    public int getColumnStep() {
       return _columnStep;
+   }
+
+   public long getDiffStartTime() {
+      return _stopwatch.getStartTime();
+   }
+
+   public long getDiffEndTime() {
+      return _stopwatch.getTime();
+   }
+
+   public Map<UserKey, ?> getUserDictionary() {
+      return _userDictionary;
    }
 }

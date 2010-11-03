@@ -19,14 +19,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKContext;
+import org.diffkit.diff.engine.DKContext.UserKey;
 import org.diffkit.util.DKFileUtil;
 
 /**
@@ -83,8 +87,10 @@ public class DKFileSink extends DKWriterSink {
    }
 
    public String toString() {
+      if (DKRuntime.getInstance().getIsTest())
+         return _file.getName();
       return String.format("%s@%x[%s]", ClassUtils.getShortClassName(this.getClass()),
-         System.identityHashCode(this), _file.getAbsolutePath());
+         System.identityHashCode(this), _file.getPath());
    }
 
    @Override
@@ -100,6 +106,26 @@ public class DKFileSink extends DKWriterSink {
    }
 
    public String generateContextDescription(DKContext context_) {
-      return "context";
+      StringBuilder builder = new StringBuilder();
+      String startTimeString = DKRuntime.getInstance().getIsTest() ? "xxx"
+         : new SimpleDateFormat().format(context_.getDiffStartTime());
+      builder.append(String.format("diff start->%s\n", startTimeString));
+      String elapsedTimeString = DKRuntime.getInstance().getIsTest() ? "xxx"
+         : context_.getElapsedTimeString();
+      builder.append(String.format("diff elapsed time->%s\n", elapsedTimeString));
+      builder.append(String.format("lhs->%s\n", context_.getLhs()));
+      builder.append(String.format("rhs->%s\n", context_.getRhs()));
+      builder.append(String.format("sink->%s\n", context_.getSink()));
+      builder.append(String.format("kind->%s\n", context_.getTableComparison().getKind()));
+      builder.append(String.format("maxDiffs->%s\n",
+         context_.getTableComparison().getMaxDiffs()));
+      UserKey[] userKeys = DKContext.UserKey.class.getEnumConstants();
+      Map<UserKey, ?> userDictionary = context_.getUserDictionary();
+      for (UserKey userKey : userKeys) {
+         if (userDictionary.containsKey(userKey))
+            builder.append(String.format("%s=%s\n", userKey.toString().toLowerCase(),
+               userDictionary.get(userKey)));
+      }
+      return builder.toString();
    }
 }

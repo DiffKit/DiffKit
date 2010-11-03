@@ -16,8 +16,11 @@
 package org.diffkit.diff.engine;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import org.apache.commons.collections.OrderedMap;
+
+import org.diffkit.diff.engine.DKContext.UserKey;
 
 /**
  * The instructions for how to carry out a complete comparison of one table
@@ -73,4 +76,9 @@ public interface DKTableComparison {
    public OrderedMap getRowDisplayValues(Object[] row_, int sideIdx_);
 
    public String getDescription();
+
+   /**
+    * contextual information that might be interesting for user reports
+    */
+   public Map<UserKey, ?> getUserDictionary();
 }
