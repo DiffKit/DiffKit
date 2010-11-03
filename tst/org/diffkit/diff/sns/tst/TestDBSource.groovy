@@ -41,6 +41,35 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBSource extends GroovyTestCase {
    
+   public void testDescription() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      def dbTable = this.createCustomerMetaTable()
+      assert database.createTable( dbTable)
+      
+      DKDBSource source = new DKDBSource(dbTable.tableName, null, database, null, (String[])['first_name'], null)
+      println "source->$source"
+      assert source.description  == 'DKDBSource[tableName=CUSTOMER, whereClause=null, keyColumnNames=[first_name], database=DKDBConnectionInfo[test(flavor=H2,database=mem:test,host=null,port=null)]]'
+      assert database.dropTable( dbTable)
+   }
+   
+   public void testToString() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      def dbTable = this.createCustomerMetaTable()
+      assert database.createTable( dbTable)
+      
+      DKDBSource source = new DKDBSource(dbTable.tableName, null, database, null, (String[])['first_name'], null)
+      println "source->$source"
+      assert source.toString().startsWith( 'DKDBSource')
+      assert source.toString().endsWith( '[CUSTOMER,jdbc:h2:mem:test]')
+      assert database.dropTable( dbTable)
+   }
+   
    public void testKeyColumnNames() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"

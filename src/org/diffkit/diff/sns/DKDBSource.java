@@ -21,7 +21,9 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +101,14 @@ public class DKDBSource implements DKSource {
       return _tableName;
    }
 
+   public String getWhereClause() {
+      return _whereClause;
+   }
+
+   public String[] getKeyColumnNames() {
+      return _keyColumnNames;
+   }
+
    // @Override
    public void close(DKContext context_) throws IOException {
       this.ensureOpen();
@@ -131,6 +141,25 @@ public class DKDBSource implements DKSource {
          _isOpen = false;
          throw new RuntimeException(e_);
       }
+   }
+
+   public String toString() {
+      try {
+         return String.format("%s@%x[%s,%s]",
+            ClassUtils.getShortClassName(this.getClass()), System.identityHashCode(this),
+            this.getTableName(), this.getURI().toASCIIString());
+      }
+      catch (IOException e_) {
+         throw new RuntimeException(e_);
+      }
+   }
+
+   public String getDescription() {
+      return String.format(
+         "%s[tableName=%s, whereClause=%s, keyColumnNames=%s, database=%s]",
+         ClassUtils.getShortClassName(this.getClass()), this.getTableName(),
+         this.getWhereClause(), Arrays.toString(this.getKeyColumnNames()),
+         this.getDatabase().toString());
    }
 
    private DKDBTable getTable() throws SQLException {

@@ -35,7 +35,7 @@ import groovy.util.GroovyTestCase;
 public class TestSqlUtil extends GroovyTestCase {
    
    public void testBatchUpdate() {
-      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test;DB_CLOSE_DELAY=-1", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       DKDBTable table = this.createTestTable()
@@ -57,7 +57,8 @@ public class TestSqlUtil extends GroovyTestCase {
       println "connection->$connection"
       assert connection
       
-      assert DKSqlUtil.executeBatchUpdate(insertStrings, connection) == 2
+//      assert DKSqlUtil.executeBatchUpdate(insertStrings, connection) == 2
+       DKSqlUtil.executeBatchUpdate(insertStrings, connection) 
       def readRows = database.readAllRows(table)
       assert readRows
       assert readRows.size() == 2

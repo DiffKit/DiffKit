@@ -83,15 +83,23 @@ public class DKFileSink extends DKWriterSink {
    }
 
    public String toString() {
-      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
-         _file.getAbsolutePath());
+      return String.format("%s@%x[%s]", ClassUtils.getShortClassName(this.getClass()),
+         System.identityHashCode(this), _file.getAbsolutePath());
    }
 
    @Override
    public void close(DKContext context_) throws IOException {
       super.close(context_);
       if (_withSummary)
-         DKFileUtil.prepend(this.generateSummary(context_), _file);
+         DKFileUtil.prepend(this.generateHeader(context_), _file);
    }
 
+   public String generateHeader(DKContext context_) {
+      return String.format("%s\n%s", this.generateContextDescription(context_),
+         this.generateSummary(context_));
+   }
+
+   public String generateContextDescription(DKContext context_) {
+      return "context";
+   }
 }

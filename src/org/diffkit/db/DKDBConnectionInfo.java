@@ -45,8 +45,24 @@ public class DKDBConnectionInfo {
       DKValidate.notNull(_name, _flavor, _database, _username, _password);
    }
 
+   public String getName() {
+      return _name;
+   }
+
    public DKDBFlavor getFlavor() {
       return _flavor;
+   }
+
+   public String getDatabase() {
+      return _database;
+   }
+
+   public String getHost() {
+      return _host;
+   }
+
+   public Long getPort() {
+      return _port;
    }
 
    public String getJDBCUrl() {
@@ -90,7 +106,8 @@ public class DKDBConnectionInfo {
    }
 
    public String toString() {
-      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()),
-         this.getJDBCUrl());
+      return String.format("%s[%s(flavor=%s,database=%s,host=%s,port=%s)]",
+         ClassUtils.getShortClassName(this.getClass()), this.getName(), this.getFlavor(),
+         this.getDatabase(), this.getHost(), this.getPort());
    }
 }

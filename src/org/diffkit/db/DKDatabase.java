@@ -268,7 +268,7 @@ public class DKDatabase {
       _log.debug("insertSql->{}", insertSql);
       Connection connection = this.getConnection();
       boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);
-//      DKSqlUtil.close(connection);
+      // DKSqlUtil.close(connection);
       return insert;
    }
 
@@ -279,7 +279,7 @@ public class DKDatabase {
       _log.debug("selectSql->{}", selectSql);
       Connection connection = this.getConnection();
       List<Map<String, ?>> rows = DKSqlUtil.readRows(selectSql, connection);
-//      DKSqlUtil.close(connection);
+      // DKSqlUtil.close(connection);
       return rows;
    }
 
@@ -290,4 +290,7 @@ public class DKDatabase {
       return update;
    }
 
+   public String toString() {
+      return _connectionInfo.toString();
+   }
 }

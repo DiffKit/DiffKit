@@ -166,7 +166,10 @@ public class DKApplication {
       userLog.info("rhsSource->{}", rhsSource);
       userLog.info("sink->{}", sink);
       userLog.info("tableComparison->{}", tableComparison);
-      DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison, null);
+      Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
+      userDictionary.put(UserKey.PLAN_FILES, planFilesString_);
+      DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison,
+         userDictionary);
       userLog.info(sink.generateSummary(diffContext));
       if (plan.getSink().getDiffCount() == 0)
          System.exit(0);
