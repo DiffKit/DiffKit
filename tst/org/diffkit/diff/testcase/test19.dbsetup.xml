@@ -38,7 +38,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test19_rhs_pk" />
 		<constructor-arg index="1">
 			<list>
-				<value>column1</value>
+				<value>COLUMN1</value>
 			</list>
 		</constructor-arg>
 	</bean>
@@ -76,13 +76,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test19_lhs_pk" />
 		<constructor-arg index="1">
 			<list>
-				<value>column1</value>
+				<value>COLUMN1</value>
 			</list>
 		</constructor-arg>
 	</bean>
 
 	<bean id="rhs.column1" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column1" />
+		<constructor-arg index="0" value="COLUMN1" />
 		<constructor-arg index="1" value="1" />
 		<constructor-arg index="2" value="VARCHAR" />
 		<constructor-arg index="3" value="128" />
@@ -90,7 +90,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column2" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column2" />
+		<constructor-arg index="0" value="COLUMN2" />
 		<constructor-arg index="1" value="2" />
 		<constructor-arg index="2" value="BIGINT" />
 		<constructor-arg index="3" value="32" />
@@ -98,7 +98,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column3" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column3" />
+		<constructor-arg index="0" value="COLUMN3" />
 		<constructor-arg index="1" value="3" />
 		<constructor-arg index="2" value="DATE" />
 		<constructor-arg index="3" value="0" />
@@ -106,7 +106,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column4" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column4" />
+		<constructor-arg index="0" value="COLUMN4" />
 		<constructor-arg index="1" value="4" />
 		<constructor-arg index="2" value="CHAR" />
 		<constructor-arg index="3" value="4" />
@@ -114,7 +114,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column5" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column5" />
+		<constructor-arg index="0" value="COLUMN5" />
 		<constructor-arg index="1" value="5" />
 		<constructor-arg index="2" value="TIME" />
 		<constructor-arg index="3" value="0" />
@@ -122,7 +122,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column6" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column6" />
+		<constructor-arg index="0" value="COLUMN6" />
 		<constructor-arg index="1" value="6" />
 		<constructor-arg index="2" value="INTEGER" />
 		<constructor-arg index="3" value="0" />
@@ -130,7 +130,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column7" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column7" />
+		<constructor-arg index="0" value="COLUMN7" />
 		<constructor-arg index="1" value="7" />
 		<constructor-arg index="2" value="DECIMAL" />
 		<constructor-arg index="3" value="10" />
@@ -139,7 +139,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column8" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column8" />
+		<constructor-arg index="0" value="COLUMN8" />
 		<constructor-arg index="1" value="8" />
 		<constructor-arg index="2" value="DOUBLE" />
 		<constructor-arg index="3" value="10" />
@@ -147,7 +147,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column9" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column9" />
+		<constructor-arg index="0" value="COLUMN9" />
 		<constructor-arg index="1" value="9" />
 		<constructor-arg index="2" value="REAL" />
 		<constructor-arg index="3" value="10" />
@@ -155,7 +155,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column10" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column10" />
+		<constructor-arg index="0" value="COLUMN10" />
 		<constructor-arg index="1" value="10" />
 		<constructor-arg index="2" value="TIMESTAMP" />
 		<constructor-arg index="3" value="10" />
@@ -163,7 +163,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column11" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column11" />
+		<constructor-arg index="0" value="COLUMN11" />
 		<constructor-arg index="1" value="11" />
 		<constructor-arg index="2" value="BOOLEAN" />
 		<constructor-arg index="3" value="0" />
@@ -171,7 +171,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column12" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column12" />
+		<constructor-arg index="0" value="COLUMN12" />
 		<constructor-arg index="1" value="12" />
 		<constructor-arg index="2" value="TINYINT" />
 		<constructor-arg index="3" value="0" />
@@ -179,7 +179,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column13" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column13" />
+		<constructor-arg index="0" value="COLUMN13" />
 		<constructor-arg index="1" value="13" />
 		<constructor-arg index="2" value="SMALLINT" />
 		<constructor-arg index="3" value="0" />
@@ -187,7 +187,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.column14" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column14" />
+		<constructor-arg index="0" value="COLUMN14" />
 		<constructor-arg index="1" value="14" />
 		<constructor-arg index="2" value="CLOB" />
 		<constructor-arg index="3" value="1000" />
@@ -195,7 +195,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column1" />
+		<constructor-arg index="0" value="COLUMN1" />
 		<constructor-arg index="1" value="1" />
 		<constructor-arg index="2" value="VARCHAR" />
 		<constructor-arg index="3" value="128" />
@@ -203,7 +203,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column2" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column2" />
+		<constructor-arg index="0" value="COLUMN2" />
 		<constructor-arg index="1" value="2" />
 		<constructor-arg index="2" value="BIGINT" />
 		<constructor-arg index="3" value="32" />
@@ -211,7 +211,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column3" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column3" />
+		<constructor-arg index="0" value="COLUMN3" />
 		<constructor-arg index="1" value="3" />
 		<constructor-arg index="2" value="DATE" />
 		<constructor-arg index="3" value="0" />
@@ -219,7 +219,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column4" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column4" />
+		<constructor-arg index="0" value="COLUMN4" />
 		<constructor-arg index="1" value="4" />
 		<constructor-arg index="2" value="CHAR" />
 		<constructor-arg index="3" value="4" />
@@ -227,7 +227,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column5" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column5" />
+		<constructor-arg index="0" value="COLUMN5" />
 		<constructor-arg index="1" value="5" />
 		<constructor-arg index="2" value="TIME" />
 		<constructor-arg index="3" value="0" />
@@ -235,7 +235,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column6" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column6" />
+		<constructor-arg index="0" value="COLUMN6" />
 		<constructor-arg index="1" value="6" />
 		<constructor-arg index="2" value="INTEGER" />
 		<constructor-arg index="3" value="0" />
@@ -243,7 +243,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column7" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column7" />
+		<constructor-arg index="0" value="COLUMN7" />
 		<constructor-arg index="1" value="7" />
 		<constructor-arg index="2" value="DECIMAL" />
 		<constructor-arg index="3" value="10" />
@@ -252,7 +252,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column8" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column8" />
+		<constructor-arg index="0" value="COLUMN8" />
 		<constructor-arg index="1" value="8" />
 		<constructor-arg index="2" value="DOUBLE" />
 		<constructor-arg index="3" value="10" />
@@ -260,7 +260,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column9" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column9" />
+		<constructor-arg index="0" value="COLUMN9" />
 		<constructor-arg index="1" value="9" />
 		<constructor-arg index="2" value="REAL" />
 		<constructor-arg index="3" value="10" />
@@ -268,7 +268,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column10" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column10" />
+		<constructor-arg index="0" value="COLUMN10" />
 		<constructor-arg index="1" value="10" />
 		<constructor-arg index="2" value="TIMESTAMP" />
 		<constructor-arg index="3" value="10" />
@@ -276,7 +276,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column11" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column11" />
+		<constructor-arg index="0" value="COLUMN11" />
 		<constructor-arg index="1" value="11" />
 		<constructor-arg index="2" value="BOOLEAN" />
 		<constructor-arg index="3" value="0" />
@@ -284,7 +284,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column12" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column12" />
+		<constructor-arg index="0" value="COLUMN12" />
 		<constructor-arg index="1" value="12" />
 		<constructor-arg index="2" value="TINYINT" />
 		<constructor-arg index="3" value="0" />
@@ -292,7 +292,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column13" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column13" />
+		<constructor-arg index="0" value="COLUMN13" />
 		<constructor-arg index="1" value="13" />
 		<constructor-arg index="2" value="SMALLINT" />
 		<constructor-arg index="3" value="0" />
@@ -300,7 +300,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column14" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column14" />
+		<constructor-arg index="0" value="COLUMN14" />
 		<constructor-arg index="1" value="14" />
 		<constructor-arg index="2" value="CLOB" />
 		<constructor-arg index="3" value="1000" />

@@ -114,9 +114,13 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.DECIMAL;
       case DECIMAL:
          return DKColumnModel.Type.DECIMAL;
+      case BIT:
+         return DKColumnModel.Type.INTEGER;
       case TINYINT:
          return DKColumnModel.Type.INTEGER;
       case SMALLINT:
+         return DKColumnModel.Type.INTEGER;
+      case _MYSQL_INT:
          return DKColumnModel.Type.INTEGER;
       case _ORACLE_NUMBER:
          return DKColumnModel.Type.DECIMAL;
@@ -137,6 +141,8 @@ public class DKTableModelUtil {
       case BOOLEAN:
          return DKColumnModel.Type.BOOLEAN;
       case CLOB:
+         return DKColumnModel.Type.TEXT;
+      case _MYSQL_TEXT:
          return DKColumnModel.Type.TEXT;
 
       default:

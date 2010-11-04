@@ -72,6 +72,11 @@ public enum DKDBType {
       oracleMap.put(TINYINT, _ORACLE_NUMBER);
       oracleMap.put(SMALLINT, _ORACLE_NUMBER);
       _typeRemappings.put(DKDBFlavor.ORACLE, oracleMap);
+      // MySQL
+      Map<DKDBType, DKDBType> mySQLMap = new HashMap<DKDBType, DKDBType>();
+      mySQLMap.put(CLOB, _MYSQL_TEXT);
+      mySQLMap.put(BOOLEAN, _MYSQL_BOOL);
+      _typeRemappings.put(DKDBFlavor.MYSQL, mySQLMap);
    }
 
    /**
@@ -182,6 +187,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case SMALLINT:
          return WriteType.NUMBER;
+      case _MYSQL_INT:
+         return WriteType.NUMBER;
       case DECIMAL:
          return WriteType.NUMBER;
       case NUMERIC:
@@ -194,6 +201,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case REAL:
          return WriteType.NUMBER;
+      case BIT:
+         return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
       case VARCHAR:
@@ -203,6 +212,8 @@ public enum DKDBType {
       case LONGVARCHAR:
          return WriteType.STRING;
       case CLOB:
+         return WriteType.STRING;
+      case _MYSQL_TEXT:
          return WriteType.STRING;
       case DATE:
          return WriteType.DATE;

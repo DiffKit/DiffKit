@@ -28,14 +28,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="test12_lhs_pk" />
 		<constructor-arg index="1">
 			<list>
-				<value>column1</value>
+				<value>COLUMN1</value>
 			</list>
 		</constructor-arg>
 	</bean>
 
 
 	<bean id="lhs.column1" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column1" />
+		<constructor-arg index="0" value="COLUMN1" />
 		<constructor-arg index="1" value="1" />
 		<constructor-arg index="2" value="VARCHAR" />
 		<constructor-arg index="3" value="128" />
@@ -43,7 +43,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column2" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column2" />
+		<constructor-arg index="0" value="COLUMN2" />
 		<constructor-arg index="1" value="2" />
 		<constructor-arg index="2" value="VARCHAR" />
 		<constructor-arg index="3" value="128" />
@@ -51,7 +51,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.column3" class="org.diffkit.db.DKDBColumn">
-		<constructor-arg index="0" value="column3" />
+		<constructor-arg index="0" value="COLUMN3" />
 		<constructor-arg index="1" value="3" />
 		<constructor-arg index="2" value="BIGINT" />
 		<constructor-arg index="3" value="32" />
