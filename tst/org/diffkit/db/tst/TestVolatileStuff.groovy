@@ -48,6 +48,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       def tables = tableDataAccess.getTables(null, null, 'test')
       println "tables->$tables"
       println "TABLES->${tables[0].description}"
+      assert database.supportsType('VARCHAR')
    }
    
    public void tXstSupportsType() {

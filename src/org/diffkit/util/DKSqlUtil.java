@@ -302,7 +302,8 @@ public class DKSqlUtil {
 
       try {
          statement.execute(sql_);
-         connection_.commit();
+         if (!connection_.getAutoCommit())
+            connection_.commit();
          return true;
       }
       catch (Exception e_) {

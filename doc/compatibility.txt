@@ -9,8 +9,8 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 |===========================
 RDBMS,          Sun JRE 1.5,    Sun JRE 1.6,    Java for Mac OS X 10.6, Microsoft JVM, Apache Harmony 5.0/6.0, OpenJDK 6, GCJ
 Oracle 10g,     Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-IBM DB2 9.5,    Y,              Y,              ?,                      ?,              ?,                      ?,          ?
-MySQL,          Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+IBM DB2 9.5,    Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+MySQL 5.1,      Y,              Y,              Y,                      ?,              ?,                      ?,          ?
 H2 1.2.135,     Y,              Y,              Y,                      ?,              ?,                      ?,          ?
 Sybase,         X,              X,              X,                      X,              X,                      X,          X
 SQL Server,     X,              X,              X,                      X,              X,                      X,          X

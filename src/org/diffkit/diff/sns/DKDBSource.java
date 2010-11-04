@@ -230,8 +230,8 @@ public class DKDBSource implements DKSource {
    private String generateSelectString() throws SQLException {
       StringBuilder builder = new StringBuilder();
       DKDBTable table = this.getTable();
-      builder.append(String.format("SELECT * FROM %s.%s", table.getSchema(),
-         table.getTableName()));
+      builder.append(String.format("SELECT * FROM %s",
+         table.getSchemaQualifiedTableName()));
       if (_whereClause != null)
          builder.append("\n" + _whereClause);
       String orderBy = this.generateOrderByClause();

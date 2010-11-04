@@ -36,6 +36,7 @@ DiffKit has been tested on the following environments:
 - Windows XP
 - Oracle 10g
 - DB2 9.5
+- MySQL 5.1
 - H2 Database 1.2
 
 
