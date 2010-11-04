@@ -94,17 +94,21 @@ public class TestCaseRunner implements Runnable {
    
    public void run(){
       _log.debug("_flavors->{}",_flavors)
+      def success = true
       if(!_flavors)
          _flavors = [DKDBFlavor.H2]
-      _flavors.each { this.run(it) }
+      _flavors.each { def result= this.run(it); success = success && result }
+      if(!success)
+         System.exit(-1)
+      System.exit(0)
    }
    
-   public void run(DKDBFlavor flavor_){
+   public boolean run(DKDBFlavor flavor_){
       _log.info("flavor_->{}",flavor_)
       def runnerRun = this.setupRunnerRun(flavor_)
       if(!runnerRun) {
          _log.info("can't setup runnerRun; exiting.")
-         return
+         return false
       }
       _allTestCases = this.fetchAllTestCases(runnerRun.dir, flavor_)
       _log.debug("_allTestCases->{}",_allTestCases)
@@ -120,7 +124,7 @@ public class TestCaseRunner implements Runnable {
       
       if(!testCases) {
          _log.info("could not find any TestCases to run; exiting.")
-         return
+         return false
       }
       
       Collections.sort(testCases)
@@ -130,8 +134,8 @@ public class TestCaseRunner implements Runnable {
       }
       this.report(runnerRun)
       if(runnerRun.failed)
-         System.exit(-1)
-      System.exit(0)
+         return false
+      return true
    }
    
    /**

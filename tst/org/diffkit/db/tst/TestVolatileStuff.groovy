@@ -36,6 +36,11 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
+   public void testEach(){
+      def success = true
+      [true, false, true].each{ success = success &&  it; println success }
+   }
+   
    public void testMySQL(){
       DKDBConnectionInfo connectionInfo = ['mysql', DKDBFlavor.MYSQL,'DiffKit', 'localhost', 3306, 'root', '']
       println "connectionInfo->$connectionInfo"

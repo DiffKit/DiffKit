@@ -9,6 +9,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0">
         <list>
             <value>1</value>
+            <value>2</value>
          </list>
          <!-- 
 			<list>
@@ -22,7 +23,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		</constructor-arg>
 		<constructor-arg index="1">
 			<list>
+            <value>H2</value>
+            <value>DB2</value>
             <value>ORACLE</value>
+            <value>MYSQL</value>
 			</list>
 		</constructor-arg>
 	</bean>
