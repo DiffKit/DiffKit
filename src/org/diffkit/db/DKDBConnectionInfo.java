@@ -73,6 +73,8 @@ public class DKDBConnectionInfo {
          return this.getDB2Url();
       case ORACLE:
          return this.getOracleUrl();
+      case MYSQL:
+         return this.getMySQLUrl();
 
       default:
          throw new NotImplementedException();
@@ -95,6 +97,11 @@ public class DKDBConnectionInfo {
    // jdbc:db2://<host>[:<port>]/<database_name>
    private String getDB2Url() {
       return String.format("jdbc:db2://%s:%s/%s", _host, _port, _database);
+   }
+
+   // jdbc:mysql://<host>:<port>/DiffKit
+   private String getMySQLUrl() {
+      return String.format("jdbc:mysql://%s:%s/%s", _host, _port, _database);
    }
 
    public String getUsername() {

@@ -36,6 +36,20 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
+   public void testMySQL(){
+      DKDBConnectionInfo connectionInfo = ['mysql', DKDBFlavor.MYSQL,'DiffKit', 'localhost', 3306, 'root', '']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      assert connection
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, null, 'test')
+      println "tables->$tables"
+      println "TABLES->${tables[0].description}"
+   }
+   
    public void tXstSupportsType() {
       DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
