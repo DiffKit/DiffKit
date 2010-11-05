@@ -37,7 +37,9 @@ public class TestDateDiffor extends GroovyTestCase {
 		assert  new DKDateDiffor().isDiff( now, null, null)
 		assert  new DKDateDiffor().isDiff( null, now, null)
 		assert ! new DKDateDiffor().isDiff( now, now, null)
-		def threeDaysFromNow = DateUtils.addDays( now , 3)
+      def threeDaysFromNow = DateUtils.addDays( now , 3)
+      // in case of daylight savings time
+      threeDaysFromNow = DateUtils.addHours( threeDaysFromNow , -1)
 		assert new DKDateDiffor().isDiff( now, threeDaysFromNow, null)
 		assert new DKDateDiffor().isDiff( threeDaysFromNow, now, null)
 		
