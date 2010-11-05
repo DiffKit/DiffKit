@@ -51,7 +51,8 @@ public class DKTestBridge {
 
    public static void loadTestCaseData(File testcaseDir_) throws Exception {
       Object testCaseRunner = getTestCaseRunner(null, null);
-      MethodUtils.invokeExactMethod(testCaseRunner, "setupDB", testcaseDir_);
+      MethodUtils.invokeExactMethod(testCaseRunner, "setupDB", new Object[] {
+         testcaseDir_, DKDBFlavor.H2 });
    }
 
    private static Object getTestCaseRunner(List<Integer> cases_, List<DKDBFlavor> flavors_)

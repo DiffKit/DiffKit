@@ -259,8 +259,8 @@ public class TestCaseRunner implements Runnable {
    /**
     * perform all of the dbSetup for all TestCases found in file_
     */
-   public void setupDB(File dir_) {
-      def testCases = this.fetchAllTestCases(dir_)
+   public void setupDB(File dir_, DKDBFlavor flavor_) {
+      def testCases = this.fetchAllTestCases(dir_, flavor_)
       _log.debug("testCases->{}", testCases)
       if (!testCases)
          return 
