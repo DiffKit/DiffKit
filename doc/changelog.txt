@@ -1,4 +1,4 @@
-DiffKit Changelong
+DiffKit Changelog
 ==================
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
