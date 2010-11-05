@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.db.DKDBFlavor 
 
 
 /**
@@ -29,11 +30,13 @@ public class TestCaseRunnerRun {
    private static final SimpleDateFormat DIR_NAME_FORMAT = new SimpleDateFormat('MM.dd.yy.HH.mm.ss');
    
    public final File dir
+   public final DKDBFlavor flavor
    public List<TestCaseRun> testCaseRuns
    
-   public TestCaseRunnerRun(File parentDir_){
-      DKValidate.notNull(parentDir_)
+   public TestCaseRunnerRun(File parentDir_, DKDBFlavor flavor_){
+      DKValidate.notNull(parentDir_, flavor_)
       dir = this.createDir(parentDir_)
+      flavor = flavor_
       DKValidate.notNull(dir)
    }
    

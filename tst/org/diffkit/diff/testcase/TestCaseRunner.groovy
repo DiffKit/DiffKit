@@ -94,21 +94,28 @@ public class TestCaseRunner implements Runnable {
    
    public void run(){
       _log.debug("_flavors->{}",_flavors)
-      def success = true
       if(!_flavors)
          _flavors = [DKDBFlavor.H2]
-      _flavors.each { def result= this.run(it); success = success && result }
-      if(!success)
+      def flavorRuns = []
+      _flavors.each { 
+         TestCaseRunnerRun flavorRun= this.run(it)
+         _log.debug("flavorRun->{}",flavorRun)
+         flavorRun ? flavorRuns.add(flavorRun) : System.exit( -1)
+      }
+      
+      _log.debug("flavorRuns->{}",flavorRuns)
+      flavorRuns.each { println "${this.generateReport(it)}"  }
+      if(flavorRuns*.failed.contains( true) )
          System.exit(-1)
       System.exit(0)
    }
    
-   public boolean run(DKDBFlavor flavor_){
+   public TestCaseRunnerRun run(DKDBFlavor flavor_){
       _log.info("flavor_->{}",flavor_)
       def runnerRun = this.setupRunnerRun(flavor_)
       if(!runnerRun) {
          _log.info("can't setup runnerRun; exiting.")
-         return false
+         return null
       }
       _allTestCases = this.fetchAllTestCases(runnerRun.dir, flavor_)
       _log.debug("_allTestCases->{}",_allTestCases)
@@ -124,7 +131,7 @@ public class TestCaseRunner implements Runnable {
       
       if(!testCases) {
          _log.info("could not find any TestCases to run; exiting.")
-         return false
+         return null
       }
       
       Collections.sort(testCases)
@@ -132,10 +139,7 @@ public class TestCaseRunner implements Runnable {
       testCases.each {
          this.setupAndExecute(it, runnerRun)
       }
-      this.report(runnerRun)
-      if(runnerRun.failed)
-         return false
-      return true
+      return runnerRun
    }
    
    /**
@@ -147,7 +151,7 @@ public class TestCaseRunner implements Runnable {
          DKRuntime.getInstance().getUserLog().info("couldn't validate flavor->{}, skipping.",flavor_)
          return
       }
-      TestCaseRunnerRun runnerRun = [new File('./')]
+      TestCaseRunnerRun runnerRun = [new File('./'), flavor_]
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
       URL dataPathUrl = classLoader.getResource(_dataPath)
@@ -274,11 +278,12 @@ public class TestCaseRunner implements Runnable {
       return new DKPassthroughPlan(plan)
    }
    
-   private void report(TestCaseRunnerRun runnerRun_){
-      println "\nTestCaseRunnerRun -- ${runnerRun_.dir}\n=================="
-      println "\n\tTestCaseRuns\n\t------------"
-      runnerRun_.testCaseRuns.each { println "\t${it.report}" }
-      println "\n"
+   private String generateReport(TestCaseRunnerRun runnerRun_){
+      def report = "\nTestCaseRunnerRun (flavor=${runnerRun_.flavor}) -- ${runnerRun_.dir}\n=================="
+      report <<= "\n\tTestCaseRuns\n\t------------\n"
+      runnerRun_.testCaseRuns.each { report <<=  "\t${it.report}\n" }
+      report <<=  "\n\n"
+      return report
    }
    
    private void setupAndExecute(TestCase testCase_, TestCaseRunnerRun runnerRun_){
