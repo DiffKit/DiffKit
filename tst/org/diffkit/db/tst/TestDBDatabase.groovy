@@ -49,10 +49,12 @@ public class TestDBDatabase extends GroovyTestCase {
    }
    
    public void testTableExists(){
-      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test;DB_CLOSE_DELAY=-1", null, null, 'test', 'test']
       DKDatabase database = [connectionInfo]
       def table = this.createCustomerMetaTable()
       assert table
+      if(database.tableExists(table))
+         database.dropTable(table)
       assert !database.tableExists(table)
       assert database.createTable(table)
       assert database.tableExists(table)
