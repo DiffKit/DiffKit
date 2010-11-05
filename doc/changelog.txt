@@ -3,6 +3,9 @@ DiffKit Changelong
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.0 (11/05/2010)
+
+- adds fully tested support for MySQL
 
 == release 0.7.4 (11/03/2010)
 
