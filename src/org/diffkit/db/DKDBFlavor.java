@@ -22,7 +22,8 @@ import org.diffkit.common.DKValidate;
  */
 public enum DKDBFlavor {
    H2("org.h2.Driver"), MYSQL("com.mysql.jdbc.Driver"), ORACLE(
-      "oracle.jdbc.driver.OracleDriver"), DB2("com.ibm.db2.jcc.DB2Driver"), SYBASE("");
+      "oracle.jdbc.driver.OracleDriver"), DB2("com.ibm.db2.jcc.DB2Driver"), SQLSERVER(
+      "com.microsoft.sqlserver.jdbc.SQLServerDriver"), SYBASE("");
 
    public final String _driverName;
 

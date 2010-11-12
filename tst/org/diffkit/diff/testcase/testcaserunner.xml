@@ -14,7 +14,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		</constructor-arg>
 		<constructor-arg index="1">
 			<list>
-            <value>H2</value>
+            <value>SQLSERVER</value>
 			</list>
 		</constructor-arg>
 	</bean>

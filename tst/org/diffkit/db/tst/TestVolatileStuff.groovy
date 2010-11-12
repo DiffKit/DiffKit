@@ -41,7 +41,24 @@ public class TestVolatileStuff extends GroovyTestCase {
       [true, false, true].each{ success = success &&  it; println success }
    }
    
-   public void testMySQL(){
+   public void testSQLServer(){
+      DKDBConnectionInfo connectionInfo = ['sqlserver', DKDBFlavor.SQLSERVER,'test', '10.0.1.11', 1433, 'diffkit', 'diffkit']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      assert connection
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, null, 'test')
+      println "tables->$tables"
+      println "TABLES->${tables[0].description}"
+      assert tables[0]
+      assert tables[0].schema == 'dbo'
+      assert database.supportsType('VARCHAR')
+   }
+   
+   public void tXstMySQL(){
       DKDBConnectionInfo connectionInfo = ['mysql', DKDBFlavor.MYSQL,'DiffKit', 'localhost', 3306, 'root', '']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]

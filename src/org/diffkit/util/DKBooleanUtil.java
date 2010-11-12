@@ -27,6 +27,8 @@ public class DKBooleanUtil {
          return BooleanUtils.toBoolean((String) target_);
       else if (target_ instanceof BigDecimal)
          return BooleanUtils.toBoolean(((BigDecimal) target_).intValue());
+      else if (target_ instanceof Short)
+         return BooleanUtils.toBoolean(((Short) target_).intValue());
       else
          throw new IllegalArgumentException(String.format("unrecognized type->%s",
             target_.getClass()));

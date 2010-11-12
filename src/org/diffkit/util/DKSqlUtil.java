@@ -62,6 +62,7 @@ public class DKSqlUtil {
       DEFAULT_TIMESTAMP_PATTERN);
 
    private static final Logger LOG = LoggerFactory.getLogger(DKSqlUtil.class);
+   private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
 
    private DKSqlUtil() {
    }
@@ -210,10 +211,32 @@ public class DKSqlUtil {
          return null;
 
       Map<String, Object> rowMap = new HashMap<String, Object>();
-      for (String columnName : columnNames_)
-         rowMap.put(columnName, resultSet_.getObject(columnName));
+      for (String columnName : columnNames_) {
+         Object columnValue = getColumnValue(columnName, resultSet_);
+         if (LOG.isDebugEnabled())
+            LOG.debug("{}={}", columnName, columnValue);
+         rowMap.put(columnName, columnValue);
+      }
 
       return rowMap;
+   }
+
+   public static Object getColumnValue(String columnName_, ResultSet resultSet_) {
+      if ((columnName_ == null) || (resultSet_ == null))
+         return null;
+      if (LOG.isDebugEnabled())
+         LOG.debug("columnName_->{}", columnName_);
+      try {
+         return resultSet_.getObject(columnName_);
+      }
+      catch (Exception e_) {
+         if (LOG.isDebugEnabled())
+            LOG.debug(e_.getMessage());
+         if (e_.getClass().getName().equalsIgnoreCase(
+            "com.microsoft.sqlserver.jdbc.SQLServerException"))
+            return null;
+         throw new RuntimeException(e_);
+      }
    }
 
    public static String[] getColumnNames(ResultSet resultSet_) throws SQLException {

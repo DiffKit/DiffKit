@@ -75,6 +75,8 @@ public class DKDBConnectionInfo {
          return this.getOracleUrl();
       case MYSQL:
          return this.getMySQLUrl();
+      case SQLSERVER:
+         return this.getSQLServerUrl();
 
       default:
          throw new NotImplementedException();
@@ -102,6 +104,12 @@ public class DKDBConnectionInfo {
    // jdbc:mysql://<host>:<port>/DiffKit
    private String getMySQLUrl() {
       return String.format("jdbc:mysql://%s:%s/%s", _host, _port, _database);
+   }
+
+   // jdbc:sqlserver://<host>[:<port>];databaseName=<database_name>
+   private String getSQLServerUrl() {
+      return String.format("jdbc:sqlserver://%s:%s;databaseName=%s", _host, _port,
+         _database);
    }
 
    public String getUsername() {

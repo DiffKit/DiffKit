@@ -49,7 +49,12 @@ public enum DKDBType {
       true), _MYSQL_MEDIUMTEXT, _MYSQL_LONGTEXT, _MYSQL_TEXT, _MYSQL_TINYTEXT(true), _MYSQL_INTEGER_UNSIGNED(
       true), _MYSQL_INT, _MYSQL_INT_UNSIGNED, _MYSQL_MEDIUMINT, _MYSQL_MEDIUMINT_UNSIGNED(
       true), _MYSQL_SMALLINT_UNSIGNED, _MYSQL_DOUBLE_PRECISION, _MYSQL_ENUM, _MYSQL_SET(
-      true), _MYSQL_DATETIME;
+      true), _MYSQL_DATETIME, _SQLSERVER_SQL_VARIANT, _SQLSERVER_UNIQUEIDENTIFIER, _SQLSERVER_NTEXT(
+      true), _SQLSERVER_XML, _SQLSERVER_SYSNAME, _SQLSERVER_DATETIME2, _SQLSERVER_DATETIMEOFFSET(
+      true), _SQLSERVER_TINYINT_IDENTITY(true), _SQLSERVER_BIGINT_IDENTITY, _SQLSERVER_IMAGE(
+      true), _SQLSERVER_TEXT, _SQLSERVER_NUMERIC00_IDENTITY, _SQLSERVER_MONEY, _SQLSERVER_SMALLMONEY(
+      true), _SQLSERVER_DECIMAL00_IDENTITY, _SQLSERVER_INT, _SQLSERVER_INT_IDENTITY(true), _SQLSERVER_SMALLINT_IDENTITY(
+      true), _SQLSERVER_DATETIME, _SQLSERVER_SMALLDATETIME;
 
    private static final String LENGTH_SPECIFIER_PATTERN = "\\(\\d*\\)";
    private static final Map<DKDBFlavor, Map<DKDBType, DKDBType>> _typeRemappings;
@@ -77,6 +82,13 @@ public enum DKDBType {
       mySQLMap.put(CLOB, _MYSQL_TEXT);
       mySQLMap.put(BOOLEAN, _MYSQL_BOOL);
       _typeRemappings.put(DKDBFlavor.MYSQL, mySQLMap);
+      // SQLServer
+      Map<DKDBType, DKDBType> sqlServerMap = new HashMap<DKDBType, DKDBType>();
+      sqlServerMap.put(TIMESTAMP, _SQLSERVER_DATETIME);
+      sqlServerMap.put(INTEGER, _SQLSERVER_INT);
+      sqlServerMap.put(DOUBLE, FLOAT);
+      sqlServerMap.put(CLOB, _SQLSERVER_TEXT);
+      _typeRemappings.put(DKDBFlavor.SQLSERVER, sqlServerMap);
    }
 
    /**
@@ -203,6 +215,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case BIT:
          return WriteType.NUMBER;
+      case _SQLSERVER_INT:
+         return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
       case VARCHAR:
@@ -215,11 +229,15 @@ public enum DKDBType {
          return WriteType.STRING;
       case _MYSQL_TEXT:
          return WriteType.STRING;
+      case _SQLSERVER_TEXT:
+         return WriteType.STRING;
       case DATE:
          return WriteType.DATE;
       case TIME:
          return WriteType.TIME;
       case TIMESTAMP:
+         return WriteType.TIMESTAMP;
+      case _SQLSERVER_DATETIME:
          return WriteType.TIMESTAMP;
 
       default:
@@ -235,6 +253,7 @@ public enum DKDBType {
    public static DKDBType getType(DKDBFlavor flavor_, String sqlTypeName_) {
       if (sqlTypeName_ == null)
          return null;
+      sqlTypeName_ = sqlTypeName_.toUpperCase();
       DKDBType type = forName(sqlTypeName_);
       if (type != null)
          return type;

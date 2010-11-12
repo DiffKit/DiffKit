@@ -122,6 +122,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.INTEGER;
       case _MYSQL_INT:
          return DKColumnModel.Type.INTEGER;
+      case _SQLSERVER_INT:
+         return DKColumnModel.Type.INTEGER;
       case _ORACLE_NUMBER:
          return DKColumnModel.Type.DECIMAL;
       case CHAR:
@@ -144,7 +146,10 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.TEXT;
       case _MYSQL_TEXT:
          return DKColumnModel.Type.TEXT;
-
+      case _SQLSERVER_TEXT:
+         return DKColumnModel.Type.TEXT;
+      case _SQLSERVER_DATETIME:
+         return DKColumnModel.Type.TIMESTAMP;
       default:
          throw new RuntimeException(String.format("unrecognized dbType_->%s", dbType_));
       }

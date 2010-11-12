@@ -20,7 +20,7 @@
    </logger>
      -->
    <logger name="org.diffkit">
-      <level value="warn" />
+      <level value="info" />
    </logger>
    
    <logger name="user" additivity="false">
