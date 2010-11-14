@@ -100,7 +100,7 @@ Quality control
 ~~~~~~~~~~~~~~~~
 The integrity of DiffKit is maintained via two levels of testing: unit testing,
 and high level functional regression testing. The DiffKit project contains
-roughly 90 low-level unit tests. These tests are executed before each release.
+110+ low-level unit tests. These tests are executed before each release.
 But more importantly, the DiffKit standalone application carries with it a
 complete, high-level functional regression suite. Not only is this test suite
 exercised before every release but, because it is embedded in the standalone
