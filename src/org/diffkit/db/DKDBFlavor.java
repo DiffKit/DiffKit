@@ -24,18 +24,21 @@ public enum DKDBFlavor {
    H2("org.h2.Driver"), MYSQL("com.mysql.jdbc.Driver"), ORACLE(
       "oracle.jdbc.driver.OracleDriver"), DB2("com.ibm.db2.jcc.DB2Driver"), SQLSERVER(
       "com.microsoft.sqlserver.jdbc.SQLServerDriver"), POSTGRES("org.postgresql.Driver",
-      true), SYBASE("");
+      true, true), SYBASE("");
 
    public final String _driverName;
    public final boolean _ignoreUnrecognizedTypes;
+   public final boolean _caseSensitive;
 
    private DKDBFlavor(String driverName_) {
-      this(driverName_, false);
+      this(driverName_, false, false);
    }
 
-   private DKDBFlavor(String driverName_, boolean ignoreUnrecognizedTypes_) {
+   private DKDBFlavor(String driverName_, boolean ignoreUnrecognizedTypes_,
+                      boolean caseSensitive_) {
       _driverName = driverName_;
       _ignoreUnrecognizedTypes = ignoreUnrecognizedTypes_;
+      _caseSensitive = caseSensitive_;
       DKValidate.notNull(_driverName);
    }
 

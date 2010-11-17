@@ -24,7 +24,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
-		<constructor-arg index="0" value="test1_rhs_pk" />
+      <constructor-arg index="0" value="TEST1_RHS_PK" />
 		<constructor-arg index="1">
 			<list>
 				<value>COLUMN1</value>
@@ -52,7 +52,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
-		<constructor-arg index="0" value="test1_lhs_pk" />
+		<constructor-arg index="0" value="TEST1_LHS_PK" />
 		<constructor-arg index="1">
 			<list>
 				<value>COLUMN1</value>

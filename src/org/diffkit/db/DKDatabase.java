@@ -40,6 +40,7 @@ public class DKDatabase {
    private static final String USERNAME_KEY = "user";
    private static final String PASSWORD_KEY = "password";
    private final DKDBConnectionInfo _connectionInfo;
+   private final boolean _caseSensitive;
    private final DKDBTypeInfoDataAccess _typeInfoDataAccess;
    private final DKSqlGenerator _sqlGenerator;
    private final DKDBTableDataAccess _tableDataAccess;
@@ -52,6 +53,7 @@ public class DKDatabase {
       _tableDataAccess = new DKDBTableDataAccess(this);
       DKValidate.notNull(_connectionInfo, _typeInfoDataAccess, _sqlGenerator,
          _tableDataAccess);
+      _caseSensitive = _connectionInfo.getFlavor()._caseSensitive;
    }
 
    public DKDBTypeInfoDataAccess getTypeInfoDataAccess() {
@@ -75,6 +77,10 @@ public class DKDatabase {
 
    public DKDBConnectionInfo getConnectionInfo() {
       return _connectionInfo;
+   }
+
+   public boolean getCaseSensitive() {
+      return _caseSensitive;
    }
 
    /**

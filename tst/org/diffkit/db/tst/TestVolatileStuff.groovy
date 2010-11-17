@@ -38,7 +38,7 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testPostgres(){
+   public void tXstPostgres(){
       DKDBConnectionInfo connectionInfo = ['postgres', DKDBFlavor.POSTGRES,'postgres', 'localhost', 5432, 'postgres', 'torabora']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
@@ -47,12 +47,12 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert connection
       DKDBTableDataAccess tableDataAccess = [database]
       println "tableDataAccess->$tableDataAccess"
-      def tables = tableDataAccess.getTables(null, null, 'test')
+      def tables = tableDataAccess.getTables(null, null, 'TEST')
       println "tables->$tables"
       println "TABLES->${tables[0].description}"
       assert tables[0]
       assert tables[0].schema == 'public'
-      assert tables[0].tableName == 'test'
+      assert tables[0].tableName == 'TEST'
       assert database.supportsType('VARCHAR')
       tables = tableDataAccess.getTables(null, null, 'test1_lhs_table')
       assert tables[0]

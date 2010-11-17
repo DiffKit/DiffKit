@@ -50,9 +50,9 @@ public class DKSqlGenerator {
          return null;
       StringBuilder builder = new StringBuilder();
       String notNullSpecifier = column_.isPartOfPrimaryKey() ? " NOT NULL" : "";
-      builder.append(String.format("%s\t\t%s%s%s", column_.getName(),
-         concreteType.getSqlTypeName(), this.generateSizeSpecifier(column_),
-         notNullSpecifier));
+      builder.append(String.format("%s\t\t%s%s%s",
+         this.generateIdentifierString(column_.getName()), concreteType.getSqlTypeName(),
+         this.generateSizeSpecifier(column_), notNullSpecifier));
       return builder.toString();
    }
 
@@ -75,13 +75,14 @@ public class DKSqlGenerator {
    }
 
    public String generateDropDDL(DKDBTable table_) {
-      return String.format("DROP TABLE %s", table_.getSchemaQualifiedTableName());
+      return String.format("DROP TABLE %s",
+         this.generateIdentifierString(table_.getSchemaQualifiedTableName()));
    }
 
    public String generateCreateDDL(DKDBTable table_) throws SQLException {
       StringBuilder builder = new StringBuilder();
       builder.append(String.format("CREATE TABLE %s\n(\n",
-         table_.getSchemaQualifiedTableName()));
+         this.generateIdentifierString(table_.getSchemaQualifiedTableName())));
       DKDBColumn[] columns = table_.getColumns();
       DKDBPrimaryKey primaryKey = table_.getPrimaryKey();
       for (int i = 0; i < columns.length; i++) {
@@ -109,10 +110,11 @@ public class DKSqlGenerator {
       if (primaryKey_ == null)
          return "";
       StringBuilder builder = new StringBuilder();
-      builder.append(String.format("CONSTRAINT %s PRIMARY KEY (", primaryKey_.getName()));
+      builder.append(String.format("CONSTRAINT %s PRIMARY KEY (",
+         this.generateIdentifierString(primaryKey_.getName())));
       String[] columnNames = primaryKey_.getColumnNames();
       for (int i = 0; i < columnNames.length; i++) {
-         builder.append(columnNames[i]);
+         builder.append(this.generateIdentifierString(columnNames[i]));
          if (i < (columnNames.length - 1))
             builder.append(",");
       }
@@ -159,25 +161,38 @@ public class DKSqlGenerator {
                "values_ must be same size as typeInfos_ must be the same size as columnNames_; values_->%s, typeInfos_->%s, columnNames_->%s",
                values_, typeInfos_, columnNames_));
 
+      // deal with case sensitivity
+      qualifiedTableName_ = this.generateIdentifierString(qualifiedTableName_);
+      String[] columnNames = new String[columnNames_.length];
+      for (int i = 0; i < columnNames_.length; i++)
+         columnNames[i] = this.generateIdentifierString(columnNames_[i]);
+
       String[] valueStrings = new String[values_.length];
       for (int i = 0; i < values_.length; i++)
          valueStrings[i] = DKSqlUtil.formatForSql(values_[i],
             typeInfos_[i].getWriteType());
 
       String insertDML = String.format("INSERT INTO %s %s\nVALUES %s",
-         qualifiedTableName_, DKStringUtil.toSetString(columnNames_),
+         qualifiedTableName_, DKStringUtil.toSetString(columnNames),
          DKStringUtil.toSetString(valueStrings));
       _log.debug("insertDML->{}", insertDML);
       return insertDML;
    }
 
    public String generateSelectDML(DKDBTable table_) {
-      return String.format("SELECT * FROM %s", table_.getSchemaQualifiedTableName());
+      return String.format("SELECT * FROM %s",
+         this.generateIdentifierString(table_.getSchemaQualifiedTableName()));
    }
 
    private DKDBType getConcreteType(DKDBColumn column_) {
       if (column_ == null)
          return null;
       return DKDBType.getConcreteType(_database.getFlavor(), column_.getDBTypeName());
+   }
+
+   private String generateIdentifierString(String rawIdentifier_) {
+      if (!_database.getCaseSensitive())
+         return rawIdentifier_;
+      return DKStringUtil.quote(rawIdentifier_, DKStringUtil.Quote.DOUBLE);
    }
 }
