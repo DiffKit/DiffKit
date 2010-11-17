@@ -247,9 +247,10 @@ public class DKDatabase {
     * convenience that delegates to underlying SqlGenerator
     */
    public String generateInsertDML(Object[] values_, DKDBTypeInfo[] typeInfos_,
-                                   String[] columnNames_, String qualifiedTableName_) {
+                                   String[] columnNames_, String schemaName_,
+                                   String tableName_) {
       return _sqlGenerator.generateInsertDML(values_, typeInfos_, columnNames_,
-         qualifiedTableName_);
+         schemaName_, tableName_);
    }
 
    /**

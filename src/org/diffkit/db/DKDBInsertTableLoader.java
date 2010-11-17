@@ -55,7 +55,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
     * @throws IOException
     */
    public boolean load(DKDBTable table_, File csvFile_) throws IOException, SQLException {
-      _log.debug("target_->{}", table_);
+      _log.debug("table_->{}", table_);
       _log.debug("csvFile_->{}", csvFile_);
       DKValidate.notNull(table_, csvFile_);
       if (!csvFile_.canRead())
@@ -75,11 +75,9 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
          csvFile_)));
       String[] tableColumnNames = table_.getColumnNames();
       DKDBTypeInfo[] typeInfos = _database.getColumnConcreteTypeInfos(table_);
-      String qualifiedTableName = table_.getSchemaQualifiedTableName();
       if (_debugEnabled) {
          _log.debug("tableColumnNames->{}", Arrays.toString(tableColumnNames));
          _log.debug("typeInfos->{}", Arrays.toString(typeInfos));
-         _log.debug("qualifiedTableName->{}", qualifiedTableName);
       }
       String line = null;
       List<String> updateStatements = new ArrayList<String>(LOAD_BATCH_SIZE);
@@ -108,7 +106,7 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
                "number of values->%s does not match number of columns->%s",
                values.length, tableColumnNames.length));
          String insertStatementString = _database.generateInsertDML(values, typeInfos,
-            tableColumnNames, qualifiedTableName);
+            tableColumnNames, table_.getSchema(), table_.getTableName());
          updateStatements.add(insertStatementString);
          _log.debug("insertStatementString: " + insertStatementString);
          if (i % LOAD_BATCH_SIZE == 0) {
@@ -130,7 +128,8 @@ public class DKDBInsertTableLoader implements DKDBTableLoader {
       String alterStatement = String.format("ALTER SESSION SET NLS_DATE_FORMAT='%s'",
          DKSqlUtil.DEFAULT_DATE_PATTERN);
       DKSqlUtil.executeUpdate(alterStatement, connection_);
-      alterStatement = String.format("ALTER SESSION SET NLS_TIMESTAMP_FORMAT='yyyy-MM-dd  HH24:MI:SS.FF3'",
+      alterStatement = String.format(
+         "ALTER SESSION SET NLS_TIMESTAMP_FORMAT='yyyy-MM-dd  HH24:MI:SS.FF3'",
          DKSqlUtil.DEFAULT_TIMESTAMP_PATTERN);
       DKSqlUtil.executeUpdate(alterStatement, connection_);
    }

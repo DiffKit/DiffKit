@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,13 +77,13 @@ public class DKSqlGenerator {
 
    public String generateDropDDL(DKDBTable table_) {
       return String.format("DROP TABLE %s",
-         this.generateIdentifierString(table_.getSchemaQualifiedTableName()));
+         this.generateQualifiedTableIdentifierString(table_));
    }
 
    public String generateCreateDDL(DKDBTable table_) throws SQLException {
       StringBuilder builder = new StringBuilder();
       builder.append(String.format("CREATE TABLE %s\n(\n",
-         this.generateIdentifierString(table_.getSchemaQualifiedTableName())));
+         this.generateQualifiedTableIdentifierString(table_)));
       DKDBColumn[] columns = table_.getColumns();
       DKDBPrimaryKey primaryKey = table_.getPrimaryKey();
       for (int i = 0; i < columns.length; i++) {
@@ -130,7 +131,6 @@ public class DKSqlGenerator {
       List<Object> values = new ArrayList<Object>(row_.size());
       List<DKDBTypeInfo> typeInfos = new ArrayList<DKDBTypeInfo>(row_.size());
       List<String> columnNames = new ArrayList<String>(row_.size());
-      String qualifiedTableName = table_.getSchemaQualifiedTableName();
       DKDBColumn[] columns = table_.getColumns();
       for (DKDBColumn column : columns) {
          if (!row_.containsKey(column.getName()))
@@ -141,19 +141,22 @@ public class DKSqlGenerator {
       }
       return generateInsertDML(values.toArray(),
          typeInfos.toArray(new DKDBTypeInfo[typeInfos.size()]),
-         columnNames.toArray(new String[columnNames.size()]), qualifiedTableName);
+         columnNames.toArray(new String[columnNames.size()]), table_.getSchema(),
+         table_.getTableName());
    }
 
    public String generateInsertDML(Object[] values_, DKDBTypeInfo[] typeInfos_,
-                                   String[] columnNames_, String qualifiedTableName_) {
+                                   String[] columnNames_, String schemaName_,
+                                   String tableName_) {
       if (_log.isDebugEnabled()) {
          _log.debug("values_->{}", Arrays.toString(values_));
          _log.debug("typeInfos_->{}", Arrays.toString(typeInfos_));
          _log.debug("columnNames_->{}", Arrays.toString(columnNames_));
-         _log.debug("qualifiedTableName_->{}", qualifiedTableName_);
+         _log.debug("schemaName_->{}", schemaName_);
+         _log.debug("tableName_->{}", tableName_);
       }
       if (ArrayUtils.isEmpty(values_) || ArrayUtils.isEmpty(typeInfos_)
-         || ArrayUtils.isEmpty(columnNames_) || (qualifiedTableName_ == null))
+         || ArrayUtils.isEmpty(columnNames_) || (tableName_ == null))
          throw new IllegalArgumentException("null or empty value not allowed here");
       if (!((values_.length == typeInfos_.length) && (typeInfos_.length == columnNames_.length)))
          throw new IllegalArgumentException(
@@ -162,7 +165,8 @@ public class DKSqlGenerator {
                values_, typeInfos_, columnNames_));
 
       // deal with case sensitivity
-      qualifiedTableName_ = this.generateIdentifierString(qualifiedTableName_);
+      String tableIdentifier = this.generateQualifiedTableIdentifierString(schemaName_,
+         tableName_);
       String[] columnNames = new String[columnNames_.length];
       for (int i = 0; i < columnNames_.length; i++)
          columnNames[i] = this.generateIdentifierString(columnNames_[i]);
@@ -172,16 +176,16 @@ public class DKSqlGenerator {
          valueStrings[i] = DKSqlUtil.formatForSql(values_[i],
             typeInfos_[i].getWriteType());
 
-      String insertDML = String.format("INSERT INTO %s %s\nVALUES %s",
-         qualifiedTableName_, DKStringUtil.toSetString(columnNames),
-         DKStringUtil.toSetString(valueStrings));
+      String insertDML = String.format("INSERT INTO %s %s\nVALUES %s", tableIdentifier,
+         DKStringUtil.toSetString(columnNames), DKStringUtil.toSetString(valueStrings));
       _log.debug("insertDML->{}", insertDML);
       return insertDML;
    }
 
    public String generateSelectDML(DKDBTable table_) {
-      return String.format("SELECT * FROM %s",
-         this.generateIdentifierString(table_.getSchemaQualifiedTableName()));
+      return String.format(
+         "SELECT * FROM %s",
+         this.generateIdentifierString(this.generateQualifiedTableIdentifierString(table_)));
    }
 
    private DKDBType getConcreteType(DKDBColumn column_) {
@@ -190,7 +194,24 @@ public class DKSqlGenerator {
       return DKDBType.getConcreteType(_database.getFlavor(), column_.getDBTypeName());
    }
 
-   private String generateIdentifierString(String rawIdentifier_) {
+   public String generateQualifiedTableIdentifierString(DKDBTable table_) {
+      if (table_ == null)
+         return null;
+      return this.generateQualifiedTableIdentifierString(table_.getSchema(),
+         table_.getTableName());
+   }
+
+   public String generateQualifiedTableIdentifierString(String schemaName_,
+                                                        String tableName_) {
+      if (tableName_ == null)
+         return null;
+      if (StringUtils.isEmpty(schemaName_))
+         return this.generateIdentifierString(tableName_);
+      return String.format("%s.%s", this.generateIdentifierString(schemaName_),
+         this.generateIdentifierString(tableName_));
+   }
+
+   public String generateIdentifierString(String rawIdentifier_) {
       if (!_database.getCaseSensitive())
          return rawIdentifier_;
       return DKStringUtil.quote(rawIdentifier_, DKStringUtil.Quote.DOUBLE);

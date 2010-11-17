@@ -238,6 +238,8 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case _SQLSERVER_INT:
          return WriteType.NUMBER;
+      case _POSTGRES_INT8:
+         return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
       case VARCHAR:

@@ -231,7 +231,7 @@ public class DKDBSource implements DKSource {
       StringBuilder builder = new StringBuilder();
       DKDBTable table = this.getTable();
       builder.append(String.format("SELECT * FROM %s",
-         table.getSchemaQualifiedTableName()));
+         _database.getSqlGenerator().generateQualifiedTableIdentifierString(table)));
       if (_whereClause != null)
          builder.append("\n" + _whereClause);
       String orderBy = this.generateOrderByClause();
@@ -247,7 +247,9 @@ public class DKDBSource implements DKSource {
       StringBuilder builder = new StringBuilder();
       builder.append("ORDER BY ");
       for (int i = 0; i < orderByColumnNames.length; i++) {
-         builder.append(orderByColumnNames[i]);
+         // builder.append(orderByColumnNames[i]);
+         builder.append(_database.getSqlGenerator().generateIdentifierString(
+            orderByColumnNames[i]));
          if (i < orderByColumnNames.length - 1)
             builder.append(", ");
       }
