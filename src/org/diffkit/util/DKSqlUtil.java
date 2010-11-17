@@ -177,10 +177,15 @@ public class DKSqlUtil {
       return row;
    }
 
+   public static List<Map<String, ?>> readRows(ResultSet resultSet_) throws SQLException {
+      return readRows(resultSet_, false);
+   }
+
    /**
     * does not close resultSet_
     */
-   public static List<Map<String, ?>> readRows(ResultSet resultSet_) throws SQLException {
+   public static List<Map<String, ?>> readRows(ResultSet resultSet_, boolean keysUpper_)
+      throws SQLException {
       if (resultSet_ == null)
          return null;
       SQLWarning warnings = resultSet_.getWarnings();
@@ -196,7 +201,7 @@ public class DKSqlUtil {
 
       List<Map<String, ?>> maps = new ArrayList<Map<String, ?>>();
       while (resultSet_.next()) {
-         Map<String, ?> map = getRowMap(columnNames, resultSet_);
+         Map<String, ?> map = getRowMap(columnNames, resultSet_, keysUpper_);
          LOG.debug("map->{}", map);
          maps.add(map);
       }
@@ -205,8 +210,8 @@ public class DKSqlUtil {
       return maps;
    }
 
-   public static Map<String, ?> getRowMap(String[] columnNames_, ResultSet resultSet_)
-      throws SQLException {
+   public static Map<String, ?> getRowMap(String[] columnNames_, ResultSet resultSet_,
+                                          boolean keysUpper_) throws SQLException {
       if ((columnNames_ == null) || (resultSet_ == null))
          return null;
 
@@ -215,6 +220,8 @@ public class DKSqlUtil {
          Object columnValue = getColumnValue(columnName, resultSet_);
          if (LOG.isDebugEnabled())
             LOG.debug("{}={}", columnName, columnValue);
+         if (keysUpper_)
+            columnName = columnName.toUpperCase();
          rowMap.put(columnName, columnValue);
       }
 

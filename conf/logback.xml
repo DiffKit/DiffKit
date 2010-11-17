@@ -2,31 +2,35 @@
 
 <configuration>
 
-   <appender name="SYSTEM" class="ch.qos.logback.core.ConsoleAppender">
-      <layout class="ch.qos.logback.classic.PatternLayout">
-         <Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
-         </Pattern>
-      </layout>
-   </appender>
+	<appender name="SYSTEM" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
+			</Pattern>
+		</layout>
+	</appender>
 
-   <appender name="USER" class="ch.qos.logback.core.ConsoleAppender">
-      <layout class="ch.qos.logback.classic.PatternLayout">
-         <Pattern>%message%n</Pattern>
-      </layout>
-   </appender>
-<!--
-   <logger name="org.diffkit.db.DKDBInsertTableLoader">
-      <level value="warn" />
-   </logger>
-     -->
-   <logger name="org.diffkit">
-      <level value="warn" />
+	<appender name="USER" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%message%n</Pattern>
+		</layout>
+	</appender>
+
+   <logger name="org.diffkit.db">
+      <level value="debug" />
    </logger>
    
-   <logger name="user" additivity="false">
+   <logger name="org.diffkit.db.DKDBType">
       <level value="info" />
-      <appender-ref ref="USER" />
    </logger>
+
+	<logger name="org.diffkit">
+		<level value="info" />
+	</logger>
+
+	<logger name="user" additivity="false">
+		<level value="info" />
+		<appender-ref ref="USER" />
+	</logger>
 
 	<root level="warn">
 		<appender-ref ref="SYSTEM" />

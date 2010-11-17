@@ -220,6 +220,8 @@ public class DKDatabase {
          return false;
       DKDBTable fetchedTable = _tableDataAccess.getTable(table_.getCatalog(),
          table_.getSchema(), table_.getTableName());
+      if (_log.isDebugEnabled())
+         _log.debug("fetchedTable->{}", fetchedTable);
       if (fetchedTable == null)
          return false;
       return true;

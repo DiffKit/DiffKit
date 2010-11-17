@@ -20,6 +20,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -156,6 +157,10 @@ public class DKDBTableDataAccess {
 
    private DKDBPrimaryKey constructPrimaryKey(List<Map<String, ?>> pkMaps_,
                                               DKDBColumn[] columns_) {
+      if (_log.isDebugEnabled()) {
+         _log.debug("pkMaps_->{}", pkMaps_);
+         _log.debug("columns_->{}", columns_ != null ? Arrays.toString(columns_) : null);
+      }
       if ((pkMaps_ == null || (pkMaps_.isEmpty())))
          return null;
       List<Map> pkMaps = new ArrayList<Map>(pkMaps_);
@@ -207,7 +212,7 @@ public class DKDBTableDataAccess {
          _log.warn("no tablesRS for catalog_->{} schema_->{} tableName_->{}");
          return null;
       }
-      List<Map<String, ?>> tableMaps = DKSqlUtil.readRows(tablesRS);
+      List<Map<String, ?>> tableMaps = DKSqlUtil.readRows(tablesRS, true);
       _log.debug("tableMaps->{}", tableMaps);
       DKSqlUtil.close(tablesRS);
       return tableMaps;
@@ -229,7 +234,7 @@ public class DKDBTableDataAccess {
          _log.warn("no primaryKeyRS for catalog_->{} schema_->{} tableName_->{}");
          return null;
       }
-      List<Map<String, ?>> pkMaps = DKSqlUtil.readRows(primaryKeyRS);
+      List<Map<String, ?>> pkMaps = DKSqlUtil.readRows(primaryKeyRS, true);
       _log.debug("pkMaps->{}", pkMaps);
       DKSqlUtil.close(primaryKeyRS);
       return pkMaps;
@@ -242,4 +247,5 @@ public class DKDBTableDataAccess {
    private void returnConnection(Connection connection_) throws SQLException {
       DKSqlUtil.close(connection_);
    }
+
 }

@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2010 Joseph Panico
  *
@@ -17,6 +18,7 @@ package org.diffkit.db.tst
 
 
 
+import org.diffkit.db.DKDBFlavor
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo;
@@ -36,12 +38,30 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testEach(){
-      def success = true
-      [true, false, true].each{ success = success &&  it; println success }
+   public void testPostgres(){
+      DKDBConnectionInfo connectionInfo = ['postgres', DKDBFlavor.POSTGRES,'postgres', 'localhost', 5432, 'postgres', 'torabora']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      def connection = database.connection
+      println "connection->$connection"
+      assert connection
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      def tables = tableDataAccess.getTables(null, null, 'test')
+      println "tables->$tables"
+      println "TABLES->${tables[0].description}"
+      assert tables[0]
+      assert tables[0].schema == 'public'
+      assert tables[0].tableName == 'test'
+      assert database.supportsType('VARCHAR')
+      tables = tableDataAccess.getTables(null, null, 'test1_lhs_table')
+      assert tables[0]
+      assert tables[0].schema == 'public'
+      tables = tableDataAccess.getTables(null, null, 'TEST1_LHS_TABLE')
+      assert tables[0]
    }
    
-   public void testSQLServer(){
+   public void tXstSQLServer(){
       DKDBConnectionInfo connectionInfo = ['sqlserver', DKDBFlavor.SQLSERVER,'test', '10.0.1.11', 1433, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]

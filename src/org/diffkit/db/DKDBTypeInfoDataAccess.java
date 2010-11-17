@@ -163,8 +163,7 @@ public class DKDBTypeInfoDataAccess {
       Object isCaseSensitive = typeInfoMap_.get("CASE_SENSITIVE");
       DKDBType type = DKDBType.getType(_connectionSource.getFlavor(), typeName);
       if (type == null)
-         throw new RuntimeException(String.format("couldn't find type for typeName->%s",
-            typeName));
+         return null;
       return new DKDBTypeInfo(type, DKNumberUtil.getInt(dataType, -1),
          DKNumberUtil.getInt(maxPrecision, -1), DKBooleanUtil.toBoolean(isCaseSensitive));
    }

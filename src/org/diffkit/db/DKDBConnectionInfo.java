@@ -77,6 +77,8 @@ public class DKDBConnectionInfo {
          return this.getMySQLUrl();
       case SQLSERVER:
          return this.getSQLServerUrl();
+      case POSTGRES:
+         return this.getPostgresUrl();
 
       default:
          throw new NotImplementedException();
@@ -110,6 +112,11 @@ public class DKDBConnectionInfo {
    private String getSQLServerUrl() {
       return String.format("jdbc:sqlserver://%s:%s;databaseName=%s", _host, _port,
          _database);
+   }
+
+   // jdbc:postgresql://<host>[:<port>]/<database_name>
+   private String getPostgresUrl() {
+      return String.format("jdbc:postgresql://%s:%s/%s", _host, _port, _database);
    }
 
    public String getUsername() {

@@ -23,12 +23,19 @@ import org.diffkit.common.DKValidate;
 public enum DKDBFlavor {
    H2("org.h2.Driver"), MYSQL("com.mysql.jdbc.Driver"), ORACLE(
       "oracle.jdbc.driver.OracleDriver"), DB2("com.ibm.db2.jcc.DB2Driver"), SQLSERVER(
-      "com.microsoft.sqlserver.jdbc.SQLServerDriver"), SYBASE("");
+      "com.microsoft.sqlserver.jdbc.SQLServerDriver"), POSTGRES("org.postgresql.Driver",
+      true), SYBASE("");
 
    public final String _driverName;
+   public final boolean _ignoreUnrecognizedTypes;
 
    private DKDBFlavor(String driverName_) {
+      this(driverName_, false);
+   }
+
+   private DKDBFlavor(String driverName_, boolean ignoreUnrecognizedTypes_) {
       _driverName = driverName_;
+      _ignoreUnrecognizedTypes = ignoreUnrecognizedTypes_;
       DKValidate.notNull(_driverName);
    }
 
