@@ -58,6 +58,15 @@ public class TestStringUtil extends GroovyTestCase {
       assert DKStringUtil.quote("'string'",DKStringUtil.Quote.SINGLE) == "'string'"
    }
    
+   public void testQuoteEach(){
+      String[] searchStrings = ['xxxx','yyyy']
+      def target = 'in this age xxxx of yyyy affordable beauty, there was something \n xxxx heraldic'
+      assert ! DKStringUtil.quoteAllOccurrencesOfEach(null,null,DKStringUtil.Quote.DOUBLE)
+      assert ! DKStringUtil.quoteAllOccurrencesOfEach(null,searchStrings,DKStringUtil.Quote.DOUBLE)
+      assert DKStringUtil.quoteAllOccurrencesOfEach(target,null,DKStringUtil.Quote.DOUBLE) == target
+      assert DKStringUtil.quoteAllOccurrencesOfEach(target,searchStrings,DKStringUtil.Quote.DOUBLE) == 'in this age "xxxx" of "yyyy" affordable beauty, there was something \n "xxxx" heraldic'
+   }
+   
    public void testUnquote() {
       assert ! DKStringUtil.unquote((String)null,DKStringUtil.Quote.DOUBLE)
       assert DKStringUtil.unquote('hello',DKStringUtil.Quote.DOUBLE) == 'hello'

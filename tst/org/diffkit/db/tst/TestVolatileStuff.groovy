@@ -38,7 +38,7 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testPostgres(){
+   public void tXstPostgres(){
       DKDBConnectionInfo connectionInfo = ['postgres', DKDBFlavor.POSTGRES,'postgres', 'localhost', 5432, 'postgres', 'torabora']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]

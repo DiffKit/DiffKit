@@ -41,6 +41,8 @@ import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKSqlUtil;
 import org.diffkit.util.DKSqlUtil.ReadType;
+import org.diffkit.util.DKStringUtil;
+import org.diffkit.util.DKStringUtil.Quote;
 
 /**
  * @author jpanico
@@ -232,8 +234,15 @@ public class DKDBSource implements DKSource {
       DKDBTable table = this.getTable();
       builder.append(String.format("SELECT * FROM %s",
          _database.getSqlGenerator().generateQualifiedTableIdentifierString(table)));
-      if (_whereClause != null)
-         builder.append("\n" + _whereClause);
+      if (_whereClause != null) {
+         String whereClause = _whereClause;
+         if (_database.getCaseSensitive()) {
+            String[] columnNames = _table.getColumnNames();
+            whereClause = DKStringUtil.quoteAllOccurrencesOfEach(whereClause,
+               columnNames, Quote.DOUBLE);
+         }
+         builder.append("\n" + whereClause);
+      }
       String orderBy = this.generateOrderByClause();
       if (orderBy != null)
          builder.append("\n" + orderBy);

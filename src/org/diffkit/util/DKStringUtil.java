@@ -124,6 +124,37 @@ public class DKStringUtil {
    }
 
    /**
+    * commons lang version doesn't seem to work
+    */
+   public static String replaceAllOccurrencesOfEach(String target_, String[] searchList_,
+                                                    String[] replacementList_) {
+      if ((target_ == null) || (ArrayUtils.isEmpty(searchList_))
+         || (ArrayUtils.isEmpty(replacementList_)))
+         return target_;
+      if (!(searchList_.length == replacementList_.length))
+         throw new IllegalArgumentException(String.format(
+            "searchList_ size %s does not match replacementList_ size %s",
+            searchList_.length, replacementList_.length));
+      for (int i = 0; i < searchList_.length; i++)
+         target_ = target_.replaceAll(searchList_[i], replacementList_[i]);
+      return target_;
+   }
+
+   /**
+    * for each String in searchList_, replace all occurrences with quoted
+    * equivalent
+    */
+   public static String quoteAllOccurrencesOfEach(String target_, String[] searchList_,
+                                                  Quote kind_) {
+      if ((target_ == null) || (ArrayUtils.isEmpty(searchList_)) || (kind_ == null))
+         return target_;
+      String[] quotedSearchList = new String[searchList_.length];
+      for (int i = 0; i < searchList_.length; i++)
+         quotedSearchList[i] = quote(searchList_[i], kind_);
+      return replaceAllOccurrencesOfEach(target_, searchList_, quotedSearchList);
+   }
+
+   /**
     * convenience that calls unquote(String, Quote) for each element <br/>
     * 
     * N.B. actually modifies target_
