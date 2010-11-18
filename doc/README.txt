@@ -39,6 +39,7 @@ DiffKit has been tested on the following environments:
 - MySQL 5.1
 - SQL Server 2008
 - H2 Database 1.2
+- Postgres 9.x
 
 
 Next Steps
