@@ -110,6 +110,10 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.REAL;
       case DOUBLE:
          return DKColumnModel.Type.REAL;
+      case _POSTGRES_FLOAT4:
+         return DKColumnModel.Type.REAL;
+      case _POSTGRES_FLOAT8:
+         return DKColumnModel.Type.REAL;
       case NUMERIC:
          return DKColumnModel.Type.DECIMAL;
       case DECIMAL:
@@ -121,6 +125,12 @@ public class DKTableModelUtil {
       case SMALLINT:
          return DKColumnModel.Type.INTEGER;
       case _MYSQL_INT:
+         return DKColumnModel.Type.INTEGER;
+      case _POSTGRES_INT2:
+         return DKColumnModel.Type.INTEGER;
+      case _POSTGRES_INT4:
+         return DKColumnModel.Type.INTEGER;
+      case _POSTGRES_INT8:
          return DKColumnModel.Type.INTEGER;
       case _SQLSERVER_INT:
          return DKColumnModel.Type.INTEGER;
@@ -134,6 +144,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.STRING;
       case _ORACLE_VARCHAR2:
          return DKColumnModel.Type.STRING;
+      case _POSTGRES_BPCHAR:
+         return DKColumnModel.Type.STRING;
       case DATE:
          return DKColumnModel.Type.DATE;
       case TIME:
@@ -142,11 +154,15 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.TIMESTAMP;
       case BOOLEAN:
          return DKColumnModel.Type.BOOLEAN;
+      case _POSTGRES_BOOL:
+         return DKColumnModel.Type.BOOLEAN;
       case CLOB:
          return DKColumnModel.Type.TEXT;
       case _MYSQL_TEXT:
          return DKColumnModel.Type.TEXT;
       case _SQLSERVER_TEXT:
+         return DKColumnModel.Type.TEXT;
+      case _POSTGRES_TEXT:
          return DKColumnModel.Type.TEXT;
       case _SQLSERVER_DATETIME:
          return DKColumnModel.Type.TIMESTAMP;

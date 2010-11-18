@@ -16,7 +16,7 @@
 	</appender>
 
 	<logger name="org.diffkit">
-		<level value="info" />
+		<level value="warn" />
 	</logger>
 
 	<logger name="user" additivity="false">

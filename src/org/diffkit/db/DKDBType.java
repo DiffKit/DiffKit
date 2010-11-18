@@ -57,21 +57,17 @@ public enum DKDBType {
       true), _SQLSERVER_DATETIME, _SQLSERVER_SMALLDATETIME, _POSTGRES_BOOL, _POSTGRES_BYTEA(
       true), _POSTGRES_NAME, _POSTGRES_INT8, _POSTGRES_BIGSERIAL, _POSTGRES_INT2(true), _POSTGRES_INT2VECTOR(
       true), _POSTGRES_INT4, _POSTGRES_SERIAL, _POSTGRES_REGPROC, _POSTGRES_TEXT(true), _POSTGRES_OID(
-      true), _POSTGRES_TID, _POSTGRES_XID, _POSTGRES_CID, _POSTGRES_OIDVECTOR, _POSTGRES_PG_TYPE(
-      true), _POSTGRES_PG_ATTRIBUTE, _POSTGRES_PG_PROC, _POSTGRES_PG_CLASS, _POSTGRES_XML(
+      true), _POSTGRES_TID, _POSTGRES_XID, _POSTGRES_CID, _POSTGRES_OIDVECTOR, _POSTGRES_XML(
       true), _POSTGRES_SMGR, _POSTGRES_POINT, _POSTGRES_LSEG, _POSTGRES_PATH(true), _POSTGRES_BOX(
       true), _POSTGRES_POLYGON, _POSTGRES_LINE, _POSTGRES_FLOAT4(true), _POSTGRES_FLOAT8, _POSTGRES_ABSTIME(
       true), _POSTGRES_RELTIME, _POSTGRES_TINTERVAL(true), _POSTGRES_UNKNOWN, _POSTGRES_CIRCLE(
       true), _POSTGRES_MONEY, _POSTGRES_MACADDR, _POSTGRES_INET(true), _POSTGRES_CIDR, _POSTGRES_ACLITEM(
       true), _POSTGRES_BPCHAR, _POSTGRES_TIMESTAMPTZ(true), _POSTGRES_TIMETZ, _POSTGRES_VARBIT(
-      true), _POSTGRES_REFCURSOR, _POSTGRES_REGPROCEDURE(true), _POSTGRES_REGOPER, _POSTGRES_REGOPERATOR(
-      true), _POSTGRES_REGCLASS, _POSTGRES_REGTYPE(true), _POSTGRES_UUID, _POSTGRES_TSVECTOR(
-      true), _POSTGRES_GTSVECTOR(true), _POSTGRES_TSQUERY(true), _POSTGRES_REGCONFIG(true), _POSTGRES_REGDICTIONARY(
+      true), _POSTGRES_UUID, _POSTGRES_TSVECTOR(true), _POSTGRES_GTSVECTOR(true), _POSTGRES_TSQUERY(
       true), _POSTGRES_TXID_SNAPSHOT, _POSTGRES_CSTRING(true), _POSTGRES_ANY, _POSTGRES_ANYARRAY(
-      true), _POSTGRES_VOID, _POSTGRES_TRIGGER(true), _POSTGRES_LANGUAGE_HANDLER, _POSTGRES_INTERNAL(
-      true), _POSTGRES_OPAQUE, _POSTGRES_ANYELEMENT(true), _POSTGRES_ANYNONARRAY, _POSTGRES_ANYENUM(
-      true), _POSTGRES_INTERVAL, _POSTGRES_RECORD(true), _POSTGRES_CARDINAL_NUMBER, _POSTGRES_CHARACTER_DATA(
-      true), _POSTGRES_SQL_IDENTIFIER(true);
+      true), _POSTGRES_VOID, _POSTGRES_INTERNAL(true), _POSTGRES_ANYELEMENT(true), _POSTGRES_ANYNONARRAY(
+      true), _POSTGRES_ANYENUM(true), _POSTGRES_INTERVAL, _POSTGRES_RECORD(true), _POSTGRES_CARDINAL_NUMBER(
+      true), _POSTGRES_CHARACTER_DATA(true), _POSTGRES_SQL_IDENTIFIER(true);
 
    private static final String LENGTH_SPECIFIER_PATTERN = "\\(\\d*\\)";
    private static final Map<DKDBFlavor, Map<DKDBType, DKDBType>> _typeRemappings;
@@ -109,6 +105,14 @@ public enum DKDBType {
       // Postgres
       Map<DKDBType, DKDBType> postgresMap = new HashMap<DKDBType, DKDBType>();
       postgresMap.put(BIGINT, _POSTGRES_INT8);
+      postgresMap.put(INTEGER, _POSTGRES_INT4);
+      postgresMap.put(TINYINT, _POSTGRES_INT2);
+      postgresMap.put(SMALLINT, _POSTGRES_INT2);
+      postgresMap.put(DECIMAL, NUMERIC);
+      postgresMap.put(DOUBLE, _POSTGRES_FLOAT8);
+      postgresMap.put(REAL, _POSTGRES_FLOAT4);
+      postgresMap.put(BOOLEAN, _POSTGRES_BOOL);
+      postgresMap.put(CLOB, _POSTGRES_TEXT);
       _typeRemappings.put(DKDBFlavor.POSTGRES, postgresMap);
    }
 
@@ -238,7 +242,17 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case _SQLSERVER_INT:
          return WriteType.NUMBER;
+      case _POSTGRES_INT2:
+         return WriteType.NUMBER;
+      case _POSTGRES_INT4:
+         return WriteType.NUMBER;
       case _POSTGRES_INT8:
+         return WriteType.NUMBER;
+      case _POSTGRES_FLOAT4:
+         return WriteType.NUMBER;
+      case _POSTGRES_FLOAT8:
+         return WriteType.NUMBER;
+      case _POSTGRES_BOOL:
          return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
@@ -253,6 +267,10 @@ public enum DKDBType {
       case _MYSQL_TEXT:
          return WriteType.STRING;
       case _SQLSERVER_TEXT:
+         return WriteType.STRING;
+      case _POSTGRES_TEXT:
+         return WriteType.STRING;
+      case _POSTGRES_BPCHAR:
          return WriteType.STRING;
       case DATE:
          return WriteType.DATE;

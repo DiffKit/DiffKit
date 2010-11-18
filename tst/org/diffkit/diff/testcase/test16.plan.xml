@@ -7,7 +7,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
 		<property name="lhsDBTableName" value="TEST16_LHS_TABLE" />
-		<property name="lhsWhereClause" value="where COLUMN1 not in (0, 5555)" />
+		<property name="lhsWhereClause" value="where &quot;COLUMN1&quot; not in (0, 5555)" />
 		<property name="rhsDBTableName" value="TEST16_RHS_TABLE" />
 		<property name="dbConnectionInfo" ref="connectionInfo" />
 		<property name="sinkFilePath" value="./test16.sink.diff" />
