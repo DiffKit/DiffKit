@@ -3,6 +3,10 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.3 (11/20/2010)
+
+- fixes Issue 50: out of memory error with Postgres
+
 == release 0.8.2 (11/18/2010)
 
 - adds fully tested support for PostgreSQL
