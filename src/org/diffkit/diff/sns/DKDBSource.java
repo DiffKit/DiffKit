@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
+import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
@@ -138,7 +139,8 @@ public class DKDBSource implements DKSource {
          _readColumnNames = _model.getColumnNames();
          _readTypes = _table.getReadTypes(_readColumnNames, _database);
          _connection = _database.getConnection();
-         _connection.setAutoCommit(false);
+         if (_database.getFlavor() != DKDBFlavor.DB2)
+            _connection.setAutoCommit(false);
          _resultSet = this.createResultSet();
          if (_isDebug)
             _log.debug("_resultSet->{}", _resultSet);
