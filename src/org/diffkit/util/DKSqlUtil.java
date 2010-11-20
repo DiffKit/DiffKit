@@ -386,10 +386,15 @@ public class DKSqlUtil {
    }
 
    /**
-    * null safe
+    * calls executeQuery(sql_, connection_, 0)
     */
    public static ResultSet executeQuery(String sql_, Connection connection_)
       throws SQLException {
+      return executeQuery(sql_, connection_, 0);
+   }
+
+   public static ResultSet executeQuery(String sql_, Connection connection_,
+                                        int fetchSize_) throws SQLException {
       LOG.debug("sql_->{}", sql_);
       if ((sql_ == null) || (connection_ == null))
          return null;
@@ -397,6 +402,7 @@ public class DKSqlUtil {
       if (statement == null)
          return null;
 
+      statement.setFetchSize(fetchSize_);
       return statement.executeQuery(sql_);
    }
 

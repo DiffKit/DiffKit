@@ -49,6 +49,13 @@ import org.diffkit.util.DKStringUtil.Quote;
  */
 @NotThreadSafe
 public class DKDBSource implements DKSource {
+   /**
+    * Gives the JDBC driver a hint as to the number of rows that should be
+    * fetched from the database when more rows are needed for ResultSet objects
+    * genrated by this Statement. If the value specified is zero, then the hint
+    * is ignored. The default value is zero.
+    */
+   private static final int DEFAULT_FETCH_SIZE = 1000;
 
    private final String _tableName;
    private final String _whereClause;
@@ -131,6 +138,7 @@ public class DKDBSource implements DKSource {
          _readColumnNames = _model.getColumnNames();
          _readTypes = _table.getReadTypes(_readColumnNames, _database);
          _connection = _database.getConnection();
+         _connection.setAutoCommit(false);
          _resultSet = this.createResultSet();
          if (_isDebug)
             _log.debug("_resultSet->{}", _resultSet);
@@ -216,7 +224,8 @@ public class DKDBSource implements DKSource {
    }
 
    private ResultSet createResultSet() throws SQLException {
-      return DKSqlUtil.executeQuery(this.generateSelectString(), _connection);
+      return DKSqlUtil.executeQuery(this.generateSelectString(), _connection,
+         DEFAULT_FETCH_SIZE);
    }
 
    private DKDBTable getTable(String tableName_, DKDatabase connectionSource_)

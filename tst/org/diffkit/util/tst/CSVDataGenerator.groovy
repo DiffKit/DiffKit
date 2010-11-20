@@ -32,18 +32,35 @@ public class CSVDataGenerator {
    }
    
    private void generate(){
-      def rowSpecifier = [new  FieldSpecifier(FieldType.STRING,10), new FieldSpecifier(FieldType.INTEGER,10), new FieldSpecifier(FieldType.DECIMAL,10,3)]
-      def rows = this.generateRows( rowSpecifier, ',', 20)
-      rows.each { println it }
+      def rowSpecifier = [
+            new FieldSpecifier(FieldType.STRING,10), 
+            new FieldSpecifier(FieldType.INTEGER,10), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3),
+            new FieldSpecifier(FieldType.STRING,10), 
+            new FieldSpecifier(FieldType.INTEGER,10), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3),
+            new FieldSpecifier(FieldType.STRING,10), 
+            new FieldSpecifier(FieldType.INTEGER,10), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3), 
+            new FieldSpecifier(FieldType.DECIMAL,10,3)
+            ]
+      def rows = this.writeRows( rowSpecifier, '|', 500000, new File("data.csv").newWriter())
    }
    
-   private def generateRows(List rowSpecifier_, String delimeter_, int rowCount_){
-      return (0..rowCount_).collect { this.generateRow(rowSpecifier_, delimeter_)}
+   private void writeRows(List rowSpecifier_, String delimeter_, int rowCount_, Writer out_){
+      (0..rowCount_).each {
+         out_ << this.generateRow(rowSpecifier_, delimeter_) + '\n'
+      }
+      out_.close()
    }
    
    private def generateRow(List rowSpecifier_, String delimeter_){
       def builder = new StringBuilder()
-      rowSpecifier_.each { builder.append(this.generateFieldValue(it)+',')}
+      rowSpecifier_.each {
+         builder.append(this.generateFieldValue(it)+delimeter_)
+      }
       // remove the last character
       return builder.toString()[0..-2]
    }
