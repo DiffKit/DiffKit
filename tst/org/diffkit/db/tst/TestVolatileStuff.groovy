@@ -1,4 +1,5 @@
 
+
 /**
  * Copyright 2010 Joseph Panico
  *
@@ -37,6 +38,44 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestVolatileStuff extends GroovyTestCase {
+   
+   public void testHyperWeird(){
+      DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      
+      def table = this.createTest1LHSTable()
+      def createdTable = database.createTable(table)
+      assert createdTable
+      
+      table = this.createTest1RHSTable()
+      createdTable = database.createTable(table)
+      assert createdTable
+   }
+   
+   public void testHyperSQL(){
+      DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      assert database.supportsType('CHAR')
+      def table = this.createCustomerMetaTable()
+      assert table
+      if(database.tableExists(table))
+         database.dropTable(table)
+      database.createTable(table)
+      def fetchedTable = database.getTable( table.catalog, table.schema, table.tableName)
+      assert fetchedTable
+      assert fetchedTable.tableName == 'CUSTOMER'
+      def columns = table.columns
+      assert columns
+      assert columns.size() == 7
+      assert columns[6].name == 'BIRTH'
+      assert columns[6].DBTypeName == 'DATE'
+   }
    
    public void tXstPostgres(){
       DKDBConnectionInfo connectionInfo = ['postgres', DKDBFlavor.POSTGRES,'postgres', 'localhost', 5432, 'postgres', 'torabora']
@@ -147,6 +186,27 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert fetchedTable
       DKDBTypeInfo[] typeInfos = database.getColumnConcreteTypeInfos(table);
       println "typeInfos->$typeInfos"
+   }
+   
+   private DKDBTable createTest1LHSTable(){
+      DKDBColumn column1 = ['COLUMN1', 1, 'VARCHAR', 128, true]
+      DKDBColumn column2 = ['COLUMN2', 2, 'VARCHAR', 128, true]
+      DKDBColumn column3 = ['COLUMN3', 2, 'BIGINT', 32, true]
+      DKDBColumn[] columns = [column1, column2, column3]
+      String[] pkColNames = ['COLUMN1', 'COLUMN3']
+      DKDBPrimaryKey pk = ['TEST1_LHS_PK', pkColNames]
+      DKDBTable table = [null, null, 'TEST1_LHS_TABLE', columns, pk]
+      return table
+   }
+   private DKDBTable createTest1RHSTable(){
+      DKDBColumn column1 = ['COLUMN1', 1, 'VARCHAR', 128, true]
+      DKDBColumn column2 = ['COLUMN2', 2, 'VARCHAR', 128, true]
+      DKDBColumn column3 = ['COLUMN3', 2, 'BIGINT', 32, true]
+      DKDBColumn[] columns = [column1, column2, column3]
+      String[] pkColNames = ['COLUMN1', 'COLUMN3']
+      DKDBPrimaryKey pk = ['TEST1_RHS_PK', pkColNames]
+      DKDBTable table = [null, null, 'TEST1_RHS_TABLE', columns, pk]
+      return table
    }
    
    public void testH2(){

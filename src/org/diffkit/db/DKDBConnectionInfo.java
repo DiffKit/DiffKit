@@ -79,6 +79,8 @@ public class DKDBConnectionInfo {
          return this.getSQLServerUrl();
       case POSTGRES:
          return this.getPostgresUrl();
+      case HYPERSQL:
+         return this.getHyperSQLUrl();
 
       default:
          throw new NotImplementedException();
@@ -103,7 +105,7 @@ public class DKDBConnectionInfo {
       return String.format("jdbc:db2://%s:%s/%s", _host, _port, _database);
    }
 
-   // jdbc:mysql://<host>:<port>/DiffKit
+   // jdbc:mysql://<host>[:<port>]/<database_name>
    private String getMySQLUrl() {
       return String.format("jdbc:mysql://%s:%s/%s", _host, _port, _database);
    }
@@ -117,6 +119,12 @@ public class DKDBConnectionInfo {
    // jdbc:postgresql://<host>[:<port>]/<database_name>
    private String getPostgresUrl() {
       return String.format("jdbc:postgresql://%s:%s/%s", _host, _port, _database);
+   }
+
+   // jdbc:hsqldb:file:<file path>
+   // jdbc:hsqldb:mem:<database_name>
+   private String getHyperSQLUrl() {
+      return String.format("jdbc:hsqldb:%s;get_column_name=false", _database);
    }
 
    public String getUsername() {

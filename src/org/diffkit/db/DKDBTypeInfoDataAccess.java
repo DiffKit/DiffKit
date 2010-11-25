@@ -36,19 +36,19 @@ import org.diffkit.util.DKSqlUtil;
  */
 public class DKDBTypeInfoDataAccess {
 
-   private final DKDatabase _connectionSource;
+   private final DKDatabase _database;
    private Map<DKDBType, DKDBTypeInfo> _typeToTypeInfoMap;
    private Map<String, DKDBTypeInfo> _nameToTypeInfoMap;
    private Map<Integer, DKDBTypeInfo> _javaSqlTypeToTypeInfoMap;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBTypeInfoDataAccess(DKDatabase connectionSource_) {
-      _connectionSource = connectionSource_;
-      DKValidate.notNull(_connectionSource);
+   public DKDBTypeInfoDataAccess(DKDatabase database_) {
+      _database = database_;
+      DKValidate.notNull(_database);
    }
 
    public DKDBFlavor getFlavor() {
-      return _connectionSource.getFlavor();
+      return _database.getFlavor();
    }
 
    public String getNameForSqlType(Integer sqlType_) throws SQLException {
@@ -161,7 +161,7 @@ public class DKDBTypeInfoDataAccess {
       Number dataType = (Number) typeInfoMap_.get("DATA_TYPE");
       Number maxPrecision = (Number) typeInfoMap_.get("PRECISION");
       Object isCaseSensitive = typeInfoMap_.get("CASE_SENSITIVE");
-      DKDBType type = DKDBType.getType(_connectionSource.getFlavor(), typeName);
+      DKDBType type = DKDBType.getType(_database.getFlavor(), typeName);
       if (type == null)
          return null;
       return new DKDBTypeInfo(type, DKNumberUtil.getInt(dataType, -1),
@@ -181,7 +181,7 @@ public class DKDBTypeInfoDataAccess {
    }
 
    private Connection getConnection() throws SQLException {
-      return _connectionSource.getConnection();
+      return _database.getConnection();
    }
 
    private void returnConnection(Connection connection_) throws SQLException {

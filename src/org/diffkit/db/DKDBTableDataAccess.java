@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +52,8 @@ public class DKDBTableDataAccess {
 
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKDBTableDataAccess(DKDatabase connectionSource_) {
-      _database = connectionSource_;
+   public DKDBTableDataAccess(DKDatabase database_) {
+      _database = database_;
       DKValidate.notNull(_database);
    }
 
@@ -203,6 +204,18 @@ public class DKDBTableDataAccess {
    private List<Map<String, ?>> getTableMaps(String catalog_, String schema_,
                                              String tableName_, DatabaseMetaData dbMeta_)
       throws SQLException {
+      if (_database.getFlavor() == DKDBFlavor.HYPERSQL)
+         return this.getTableMapsHyperSQL(catalog_, schema_, tableName_, dbMeta_);
+      return this.getTableMapsStandard(catalog_, schema_, tableName_, dbMeta_);
+   }
+
+   /**
+    * default (normal) implementation of getTableMaps that relies on
+    */
+   private List<Map<String, ?>> getTableMapsStandard(String catalog_, String schema_,
+                                                    String tableName_,
+                                                    DatabaseMetaData dbMeta_)
+      throws SQLException {
       _log.debug("catalog_->{}", catalog_);
       _log.debug("schema_->{}", schema_);
       _log.debug("tableName_->{}", tableName_);
@@ -216,6 +229,50 @@ public class DKDBTableDataAccess {
       _log.debug("tableMaps->{}", tableMaps);
       DKSqlUtil.close(tablesRS);
       return tableMaps;
+   }
+
+   /**
+    * HyperSQL seems to have some problems with DatabaseMetaData.getTables(),
+    * when only a tableName is specified
+    */
+   private List<Map<String, ?>> getTableMapsHyperSQL(String catalog_, String schema_,
+                                                     String tableName_,
+                                                     DatabaseMetaData dbMeta_)
+      throws SQLException {
+      _log.debug("catalog_->{}", catalog_);
+      _log.debug("schema_->{}", schema_);
+      _log.debug("tableName_->{}", tableName_);
+      ResultSet tablesRS = dbMeta_.getTables(null, null, null, null);
+      _log.debug("tablesRS->{}", tablesRS);
+      if (tablesRS == null) {
+         _log.warn("no tablesRS for catalog_->{} schema_->{} tableName_->{}");
+         return null;
+      }
+      List<Map<String, ?>> allTableMaps = DKSqlUtil.readRows(tablesRS, true);
+      _log.debug("allTableMaps->{}", allTableMaps);
+      DKSqlUtil.close(tablesRS);
+      List<Map<String, ?>> matchingTableMaps = new ArrayList<Map<String, ?>>();
+      for (Map<String, ?> map : allTableMaps) {
+         if (catalog_ != null) {
+            String catalogName = (String) DKMapUtil.getValueForKeyPrefix(map,
+               TABLE_CATALOG_KEY);
+            if (!StringUtils.equalsIgnoreCase(catalog_, catalogName))
+               continue;
+         }
+         if (schema_ != null) {
+            String schemaName = (String) DKMapUtil.getValueForKeyPrefix(map,
+               TABLE_SCHEMA_KEY);
+            if (!StringUtils.equalsIgnoreCase(schema_, schemaName))
+               continue;
+         }
+         if (tableName_ != null) {
+            String tableName = (String) map.get(TABLE_NAME_KEY);
+            if (!StringUtils.equalsIgnoreCase(tableName_, tableName))
+               continue;
+         }
+         matchingTableMaps.add(map);
+      }
+      return matchingTableMaps;
    }
 
    private List<Map<String, ?>> getPKMaps(Map<String, ?> tableMap_,

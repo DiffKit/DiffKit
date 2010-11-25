@@ -182,7 +182,7 @@ public class DKDatabase {
     * @return the newly created table, which might be different from the
     *         requested table, depending on the DB support. For examples,
     *         columns of Type not supported by particular flavor will be quietly
-    *         filterd out
+    *         filtered out
     * @throws SQLException
     */
    public DKDBTable createTable(DKDBTable table_) throws SQLException {

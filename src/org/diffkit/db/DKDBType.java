@@ -67,7 +67,8 @@ public enum DKDBType {
       true), _POSTGRES_TXID_SNAPSHOT, _POSTGRES_CSTRING(true), _POSTGRES_ANY, _POSTGRES_ANYARRAY(
       true), _POSTGRES_VOID, _POSTGRES_INTERNAL(true), _POSTGRES_ANYELEMENT(true), _POSTGRES_ANYNONARRAY(
       true), _POSTGRES_ANYENUM(true), _POSTGRES_INTERVAL, _POSTGRES_RECORD(true), _POSTGRES_CARDINAL_NUMBER(
-      true), _POSTGRES_CHARACTER_DATA(true), _POSTGRES_SQL_IDENTIFIER(true);
+      true), _POSTGRES_CHARACTER_DATA(true), _POSTGRES_SQL_IDENTIFIER(true), _HYPERSQL_CHARACTER(
+      true), _HYPERSQL_VARCHAR_IGNORECASE;
 
    private static final String LENGTH_SPECIFIER_PATTERN = "\\(\\d*\\)";
    private static final Map<DKDBFlavor, Map<DKDBType, DKDBType>> _typeRemappings;
@@ -114,6 +115,10 @@ public enum DKDBType {
       postgresMap.put(BOOLEAN, _POSTGRES_BOOL);
       postgresMap.put(CLOB, _POSTGRES_TEXT);
       _typeRemappings.put(DKDBFlavor.POSTGRES, postgresMap);
+      // HyperSQL
+      Map<DKDBType, DKDBType> hyperSQLMap = new HashMap<DKDBType, DKDBType>();
+      hyperSQLMap.put(CHAR, VARCHAR);
+      _typeRemappings.put(DKDBFlavor.HYPERSQL, hyperSQLMap);
    }
 
    /**
@@ -251,6 +256,8 @@ public enum DKDBType {
       case _POSTGRES_FLOAT4:
          return WriteType.NUMBER;
       case _POSTGRES_FLOAT8:
+         return WriteType.NUMBER;
+      case BOOLEAN:
          return WriteType.NUMBER;
       case _POSTGRES_BOOL:
          return WriteType.NUMBER;
