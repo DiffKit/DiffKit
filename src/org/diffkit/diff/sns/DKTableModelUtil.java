@@ -166,6 +166,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.TEXT;
       case _SQLSERVER_DATETIME:
          return DKColumnModel.Type.TIMESTAMP;
+      case _POSTGRES_TIMESTAMPTZ:
+         return DKColumnModel.Type.TIMESTAMP;
       default:
          throw new RuntimeException(String.format("unrecognized dbType_->%s", dbType_));
       }
