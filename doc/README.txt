@@ -40,6 +40,7 @@ DiffKit has been tested on the following environments:
 - SQL Server 2008
 - H2 Database 1.2
 - Postgres 9.x
+- HyperSQL 2.0
 
 
 Next Steps

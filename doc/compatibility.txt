@@ -14,9 +14,9 @@ MySQL 5.1,       Y,              Y,              Y,                      ?,     
 H2 1.2.135,      Y,              Y,              Y,                      ?,              ?,                      ?,          ?
 SQL Server 2008, Y,              Y,              Y,                      ?,              ?,                      ?,          ?
 PostgreSQL 9.x,  Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+HyperSQL 2.0,    Y,              Y,              Y,                      ?,              ?,                      ?,          ?
 Sybase ASE 15.X, X,              X,              X,                      X,              X,                      X,          X
 SQLite,          X,              X,              X,                      X,              X,                      X,          X
-HSQLDB 2.0,      X,              X,              X,                      X,              X,                      X,          X
 Apache Derby,    X,              X,              X,                      X,              X,                      X,          X
 |===========================
 Y=tested successfully; ?=should work, but not tested; X=not supported

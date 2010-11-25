@@ -3,6 +3,11 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.4 (11/26/2010)
+
+- fixes Issue 49: add fully tested support for HyperSQL 2
+- fixes Issue 50: out of memory error with Postgres
+
 == release 0.8.3 (11/20/2010)
 
 - fixes Issue 50: out of memory error with Postgres
