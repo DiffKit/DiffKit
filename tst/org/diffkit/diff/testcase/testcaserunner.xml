@@ -13,15 +13,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		</constructor-arg>
 		<constructor-arg index="1">
 			<list>
+            <value>ORACLE</value>
+			<!--
             <value>HYPERSQL</value>
-            <!--
             <value>H2</value>
             <value>DB2</value>
-            <value>ORACLE</value>
             <value>SQLSERVER</value>
             <value>POSTGRES</value>
             <value>MYSQL</value>
-             -->
+              -->
 			</list>
 		</constructor-arg>
 	</bean>

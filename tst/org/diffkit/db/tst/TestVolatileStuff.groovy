@@ -39,7 +39,7 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testHyperWeird(){
+   public void tXstHyperWeird(){
       DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
@@ -55,7 +55,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert createdTable
    }
    
-   public void testHyperSQL(){
+   public void tXstHyperSQL(){
       DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
@@ -155,9 +155,9 @@ public class TestVolatileStuff extends GroovyTestCase {
       println "TABLES->${tables[0].description}"
    }
    
-   public void tXstOracle(){
-      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.11', 1521, 'diffkit', 'diffkit']
-      println "connectionInfo->$connectionInfo"
+   public void testOracle(){
+      DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.8', 1521, 'diffkit', 'diffkit']
+      println "connectionInfo->${connectionInfo.JDBCUrl}"
       DKDatabase database = [connectionInfo]
       def connection = database.connection
       println "connection->$connection"
