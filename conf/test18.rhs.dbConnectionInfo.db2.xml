@@ -10,7 +10,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="db2" />
 		<constructor-arg index="1" value="DB2" />
 		<constructor-arg index="2" value="SAMPLE" />
-		<constructor-arg index="3" value="10.0.1.11" />
+		<constructor-arg index="3" value="10.0.1.8" />
 		<constructor-arg index="4" value="50000" />
 		<constructor-arg index="5" value="db2admin" />
 		<constructor-arg index="6" value="torabora" />

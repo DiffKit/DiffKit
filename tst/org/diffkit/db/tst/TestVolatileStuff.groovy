@@ -141,8 +141,8 @@ public class TestVolatileStuff extends GroovyTestCase {
       //      assert database.supportsType('BOOLEAN')
    }
    
-   public void tXstDB2(){
-      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.11', 50000, 'db2admin', 'torabora']
+   public void testDB2(){
+      DKDBConnectionInfo connectionInfo = ['db2', DKDBFlavor.DB2,'SAMPLE', '10.0.1.8', 50000, 'db2admin', 'torabora']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       def connection = database.connection
@@ -153,9 +153,12 @@ public class TestVolatileStuff extends GroovyTestCase {
       def tables = tableDataAccess.getTables(null, 'SYSCAT', 'TABLES')
       println "tables->$tables"
       println "TABLES->${tables[0].description}"
+      assert tables
+      assert tables.size() == 1
+      assert tables[0].tableName == 'TABLES'
    }
    
-   public void testOracle(){
+   public void tXstOracle(){
       DKDBConnectionInfo connectionInfo = ['oracle', DKDBFlavor.ORACLE,'XE', '10.0.1.8', 1521, 'diffkit', 'diffkit']
       println "connectionInfo->${connectionInfo.JDBCUrl}"
       DKDatabase database = [connectionInfo]
