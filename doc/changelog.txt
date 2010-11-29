@@ -6,7 +6,7 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 == release 0.8.4 (11/29/2010)
 
 - fixes Issue 49: add fully tested support for HyperSQL 2
-- fixes Issue 50: out of memory error with Postgres
+- fixes Issue 51: Postgres data type "timestamp with time zone" throws "unrecognized dbType"-excecption
 
 == release 0.8.3 (11/20/2010)
 
