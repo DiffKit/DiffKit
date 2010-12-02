@@ -45,6 +45,7 @@ public class DKDatabase {
    private final DKSqlGenerator _sqlGenerator;
    private final DKDBTableDataAccess _tableDataAccess;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    public DKDatabase(DKDBConnectionInfo connectionInfo_) {
       _connectionInfo = connectionInfo_;
@@ -106,6 +107,8 @@ public class DKDatabase {
 
    public DKDBTypeInfo getConcreteTypeInfo(String dbTypeName_) throws SQLException {
       DKDBType concreteType = DKDBType.getConcreteType(this.getFlavor(), dbTypeName_);
+      if (_isDebugEnabled)
+         _log.debug("dbTypeName_->{} concreteType->{}", dbTypeName_, concreteType);
       return _typeInfoDataAccess.getTypeInfo(concreteType);
    }
 

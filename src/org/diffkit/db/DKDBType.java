@@ -49,8 +49,8 @@ public enum DKDBType {
       true), _MYSQL_MEDIUMTEXT, _MYSQL_LONGTEXT, _MYSQL_TEXT, _MYSQL_TINYTEXT(true), _MYSQL_INTEGER_UNSIGNED(
       true), _MYSQL_INT, _MYSQL_INT_UNSIGNED, _MYSQL_MEDIUMINT, _MYSQL_MEDIUMINT_UNSIGNED(
       true), _MYSQL_SMALLINT_UNSIGNED, _MYSQL_DOUBLE_PRECISION, _MYSQL_ENUM, _MYSQL_SET(
-      true), _MYSQL_DATETIME, _SQLSERVER_SQL_VARIANT, _SQLSERVER_UNIQUEIDENTIFIER, _SQLSERVER_NTEXT(
-      true), _SQLSERVER_XML, _SQLSERVER_SYSNAME, _SQLSERVER_DATETIME2, _SQLSERVER_DATETIMEOFFSET(
+      true), _MYSQL_DATETIME, _MYSQL_DECIMAL_UNSIGNED, _SQLSERVER_SQL_VARIANT, _SQLSERVER_UNIQUEIDENTIFIER(
+      true), _SQLSERVER_NTEXT(true), _SQLSERVER_XML, _SQLSERVER_SYSNAME, _SQLSERVER_DATETIME2, _SQLSERVER_DATETIMEOFFSET(
       true), _SQLSERVER_TINYINT_IDENTITY(true), _SQLSERVER_BIGINT_IDENTITY, _SQLSERVER_IMAGE(
       true), _SQLSERVER_TEXT, _SQLSERVER_NUMERIC00_IDENTITY, _SQLSERVER_MONEY, _SQLSERVER_SMALLMONEY(
       true), _SQLSERVER_DECIMAL00_IDENTITY, _SQLSERVER_INT, _SQLSERVER_INT_IDENTITY(true), _SQLSERVER_SMALLINT_IDENTITY(
@@ -95,6 +95,7 @@ public enum DKDBType {
       Map<DKDBType, DKDBType> mySQLMap = new HashMap<DKDBType, DKDBType>();
       mySQLMap.put(CLOB, _MYSQL_TEXT);
       mySQLMap.put(BOOLEAN, _MYSQL_BOOL);
+      mySQLMap.put(_MYSQL_DECIMAL_UNSIGNED, DECIMAL);
       _typeRemappings.put(DKDBFlavor.MYSQL, mySQLMap);
       // SQLServer
       Map<DKDBType, DKDBType> sqlServerMap = new HashMap<DKDBType, DKDBType>();
@@ -178,9 +179,18 @@ public enum DKDBType {
     */
    public static DKDBType getConcreteType(DKDBFlavor flavor_, String abstractSqlTypeName_) {
       DKDBType abstractType = getType(flavor_, abstractSqlTypeName_);
+      if (LOG.isDebugEnabled()) {
+         LOG.debug(String.format("flavor_->%s abstractSqlTypeName_->%s abstractType->%s",
+            flavor_, abstractSqlTypeName_, abstractType));
+      }
       if (abstractType == null)
          return null;
-      return getConcreteTypeForAbstractType(flavor_, abstractType);
+      DKDBType concreteType = getConcreteTypeForAbstractType(flavor_, abstractType);
+      if (LOG.isDebugEnabled()) {
+         LOG.debug(String.format("flavor_->%s abstractType->%s concreteType->%s",
+            flavor_, abstractType, concreteType));
+      }
+      return concreteType;
    }
 
    public static DKDBType getConcreteTypeForAbstractType(DKDBFlavor flavor_,

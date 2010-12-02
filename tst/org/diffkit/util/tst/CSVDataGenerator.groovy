@@ -33,6 +33,18 @@ public class CSVDataGenerator {
    
    private void generate(){
       def rowSpecifier = [
+            new FieldSpecifier(FieldType.INTEGER,10),
+            new FieldSpecifier(FieldType.INTEGER,5),
+            new FieldSpecifier(FieldType.INTEGER,5),
+            new FieldSpecifier(FieldType.INTEGER,3),
+            new FieldSpecifier(FieldType.INTEGER,1),
+            new FieldSpecifier(FieldType.DECIMAL,6,2)
+            ]
+      def rows = this.writeRows( rowSpecifier, '|', 100, new File("data.csv").newWriter())
+   }
+
+   private void generate1(){
+      def rowSpecifier = [
             new FieldSpecifier(FieldType.STRING,10), 
             new FieldSpecifier(FieldType.INTEGER,10), 
             new FieldSpecifier(FieldType.DECIMAL,10,3), 

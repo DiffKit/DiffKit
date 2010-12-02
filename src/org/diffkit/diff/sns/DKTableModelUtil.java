@@ -134,7 +134,19 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.INTEGER;
       case _SQLSERVER_INT:
          return DKColumnModel.Type.INTEGER;
+      case _MYSQL_BIGINT_UNSIGNED:
+         return DKColumnModel.Type.INTEGER;
+      case _MYSQL_INT_UNSIGNED:
+         return DKColumnModel.Type.INTEGER;
+      case _MYSQL_MEDIUMINT_UNSIGNED:
+         return DKColumnModel.Type.INTEGER;
+      case _MYSQL_SMALLINT_UNSIGNED:
+         return DKColumnModel.Type.INTEGER;
+      case _MYSQL_TINYINT_UNSIGNED:
+         return DKColumnModel.Type.INTEGER;
       case _ORACLE_NUMBER:
+         return DKColumnModel.Type.DECIMAL;
+      case _MYSQL_DECIMAL_UNSIGNED:
          return DKColumnModel.Type.DECIMAL;
       case CHAR:
          return DKColumnModel.Type.STRING;

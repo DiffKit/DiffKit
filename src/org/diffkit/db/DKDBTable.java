@@ -23,6 +23,8 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.util.DKSqlUtil.ReadType;
@@ -36,6 +38,8 @@ public class DKDBTable {
    private final String _tableName;
    private final DKDBColumn[] _columns;
    private final DKDBPrimaryKey _primaryKey;
+   private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    public DKDBTable(String catalog_, String schema_, String tableName_,
                     DKDBColumn[] columns_) {
@@ -177,7 +181,15 @@ public class DKDBTable {
          if (column == null)
             throw new RuntimeException(String.format(
                "could not find column for columnName [%s]", columnNames_[i]));
-         readTypes[i] = database_.getConcreteTypeInfo(column.getDBTypeName()).getReadType();
+         DKDBTypeInfo concreteTypeInfo = database_.getConcreteTypeInfo(column.getDBTypeName());
+         if (_isDebugEnabled)
+            _log.debug("dbTypeName->{} concreteTypeInfo->{}", column.getDBTypeName(),
+               concreteTypeInfo);
+         if (concreteTypeInfo == null)
+            throw new RuntimeException(String.format(
+               "couldn't find concreteTypeInfo for dbTypeName->%s",
+               column.getDBTypeName()));
+         readTypes[i] = concreteTypeInfo.getReadType();
       }
       return readTypes;
    }
