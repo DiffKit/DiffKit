@@ -48,7 +48,15 @@ public class DKStringUtil {
    private DKStringUtil() {
    }
 
+   public static Boolean parseBoolean(String target_, Boolean default_) {
+      Boolean parsed = parseBoolean(target_);
+      if (parsed == null)
+         return default_;
+      return parsed;
+   }
+
    public static Boolean parseBoolean(String target_) {
+      target_ = StringUtils.trimToNull(target_);
       if (target_ == null)
          return null;
       if ((target_.equalsIgnoreCase("true")) || (target_.equalsIgnoreCase("yes")))

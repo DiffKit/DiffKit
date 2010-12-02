@@ -151,7 +151,8 @@ public class DKDBTableDataAccess {
       String dataTypeName = (String) columnMap_.get("TYPE_NAME");
       dataTypeName = DKDBType.getBaseTypeName(dataTypeName);
       Number columnSize = (Number) columnMap_.get("COLUMN_SIZE");
-      Boolean isNullable = DKStringUtil.parseBoolean((String) columnMap_.get("IS_NULLABLE"));
+      Boolean isNullable = DKStringUtil.parseBoolean(
+         (String) columnMap_.get("IS_NULLABLE"), Boolean.TRUE);
       return new DKDBColumn(tableName, DKNumberUtil.getInt(ordinalPosition, -1),
          dataTypeName, DKNumberUtil.getInt(columnSize, -1), isNullable);
    }
@@ -213,8 +214,8 @@ public class DKDBTableDataAccess {
     * default (normal) implementation of getTableMaps that relies on
     */
    private List<Map<String, ?>> getTableMapsStandard(String catalog_, String schema_,
-                                                    String tableName_,
-                                                    DatabaseMetaData dbMeta_)
+                                                     String tableName_,
+                                                     DatabaseMetaData dbMeta_)
       throws SQLException {
       _log.debug("catalog_->{}", catalog_);
       _log.debug("schema_->{}", schema_);
