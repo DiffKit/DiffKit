@@ -3,6 +3,12 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.5 (12/2/2010)
+
+- fixes Issue 52: DiffKit 0.8.4- does not work with Java 1.5 and flavor=SQLSERVER
+- fixes Issue 53: mysql unrecognized dbType _MYSQL_INT_UNSIGNED
+- fixes Issue 54: DiffKit 0.8.4- does not work with SQLServer 2005
+
 == release 0.8.4 (11/29/2010)
 
 - fixes Issue 49: add fully tested support for HyperSQL 2
