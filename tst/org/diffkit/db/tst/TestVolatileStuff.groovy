@@ -101,7 +101,7 @@ public class TestVolatileStuff extends GroovyTestCase {
    }
    
    public void testSQLServer(){
-      DKDBConnectionInfo connectionInfo = ['sqlserver', DKDBFlavor.SQLSERVER,'test', '10.0.1.8', 1433, 'diffkit', 'diffkit']
+      DKDBConnectionInfo connectionInfo = ['sqlserver', DKDBFlavor.SQLSERVER,'test', '10.0.1.9', 1433, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       def connection = database.connection

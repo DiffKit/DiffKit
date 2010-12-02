@@ -205,6 +205,8 @@ public enum DKDBType {
       switch (dbType_) {
       case CLOB:
          return ReadType.TEXT;
+      case _SQLSERVER_TEXT:
+         return ReadType.TEXT;
       case CHAR:
          return ReadType.STRING;
       case VARCHAR:

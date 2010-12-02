@@ -26,6 +26,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -151,6 +152,9 @@ public class DKSqlUtil {
     */
    public static Object[] readRow(ResultSet resultSet_, String[] columnNames_,
                                   ReadType[] readTypes_) throws SQLException {
+      if (IS_DEBUG_ENABLED)
+         LOG.debug("readTypes_->{}",
+            readTypes_ == null ? null : Arrays.toString(readTypes_));
       if ((resultSet_ == null) || (columnNames_ == null) || (columnNames_.length == 0)
          || (readTypes_ == null))
          return null;

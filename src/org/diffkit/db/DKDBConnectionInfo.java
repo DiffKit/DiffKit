@@ -110,9 +110,9 @@ public class DKDBConnectionInfo {
       return String.format("jdbc:mysql://%s:%s/%s", _host, _port, _database);
    }
 
-   // jdbc:sqlserver://<host>[:<port>];databaseName=<database_name>
+   // jdbc:jtds:<server_type>://<server>[:<port>][/<database>][;<property>=<value>[;...]]
    private String getSQLServerUrl() {
-      return String.format("jdbc:sqlserver://%s:%s;databaseName=%s", _host, _port,
+      return String.format("jdbc:jtds:sqlserver://%s:%s/%s", _host, _port,
          _database);
    }
 
