@@ -34,7 +34,6 @@ import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
-import org.diffkit.db.DKDBTableDataAccess;
 import org.diffkit.db.DKDatabase;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKContext;
@@ -95,9 +94,10 @@ public class DKDBSource implements DKSource {
       _tableName = tableName_;
       _whereClause = whereClause_;
       _database = database_;
-      _table = this.getTable(_tableName, _database);
+      DKValidate.notNull(_database);
+      _table = _database.getTable(tableName_);
       _log.info("table->{}", _table);
-      DKValidate.notNull(_tableName, _database);
+      DKValidate.notNull(_tableName);
       if (_table == null)
          throw new RuntimeException(String.format("couldn't find table named->%s",
             _tableName));
@@ -228,16 +228,6 @@ public class DKDBSource implements DKSource {
    private ResultSet createResultSet() throws SQLException {
       return DKSqlUtil.executeQuery(this.generateSelectString(), _connection,
          DEFAULT_FETCH_SIZE);
-   }
-
-   private DKDBTable getTable(String tableName_, DKDatabase connectionSource_)
-      throws SQLException {
-      _log.debug("tableName_->{}", tableName_);
-      if ((tableName_ == null) || (connectionSource_ == null))
-         return null;
-      DKDBTableDataAccess tableDataAccess = new DKDBTableDataAccess(connectionSource_);
-      DKDBTable dbTable = tableDataAccess.getTable(tableName_);
-      return dbTable;
    }
 
    private String generateSelectString() throws SQLException {

@@ -210,6 +210,15 @@ public class DKDatabase {
    }
 
    /**
+    * convenience method that delegates to underlying TableDataAccess
+    * 
+    * @throws SQLException
+    */
+   public DKDBTable getTable(String tableName_) throws SQLException {
+      return _tableDataAccess.getTable(tableName_);
+   }
+
+   /**
     * convenience method
     * 
     * @throws SQLException

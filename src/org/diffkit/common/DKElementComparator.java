@@ -40,15 +40,13 @@ public class DKElementComparator<T> implements Comparator<T[]> {
       T rhsValue = rhs_[_rhsIdx];
       boolean lhsNull = (lhsValue == null) ? true : false;
       boolean rhsNull = (rhsValue == null) ? true : false;
-      if (lhsNull && rhsNull) {
+      if (lhsNull && rhsNull)
          return 0;
-      }
-      if (lhsNull) {
+      else if (lhsNull)
          return -1;
-      }
-      if (rhsNull) {
+      else if (rhsNull)
          return 1;
-      }
+
       return _comparator.compare(lhsValue, rhsValue);
    }
 

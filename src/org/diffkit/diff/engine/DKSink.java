@@ -26,7 +26,6 @@ import org.diffkit.common.annot.ThreadSafe;
  * 
  * @author jpanico
  */
-@ThreadSafe
 public interface DKSink extends DKSourceSink {
 
    public void record(DKDiff diff_, DKContext context_) throws IOException;
