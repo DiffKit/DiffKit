@@ -150,7 +150,11 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.DECIMAL;
       case CHAR:
          return DKColumnModel.Type.STRING;
+      case NCHAR:
+         return DKColumnModel.Type.STRING;
       case VARCHAR:
+         return DKColumnModel.Type.STRING;
+      case NVARCHAR:
          return DKColumnModel.Type.STRING;
       case LONGVARCHAR:
          return DKColumnModel.Type.STRING;

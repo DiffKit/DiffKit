@@ -42,7 +42,15 @@ COLUMN13
 >12345
 @{COLUMN1=rrrr}
 COLUMN14
+<column1X                                                        
+>column14                                                        
+@{COLUMN1=ssss}
+COLUMN15
+<column1X
+>column15
+@{COLUMN1=tttt}
+COLUMN16
 <my clobby text
 >my clubby text
-!{COLUMN1=ssss}
+!{COLUMN1=uuuu}
 <

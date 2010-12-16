@@ -36,7 +36,7 @@ public enum DKDBType {
 
    ARRAY, BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR(false), CLOB(true), DATALINK(true), DATE, DECIMAL(
       false), DISTINCT, DOUBLE, FLOAT(false), INTEGER, JAVA_OBJECT, LONGNVARCHAR(true), LONGVARBINARY(
-      true), LONGVARCHAR, NCHAR, NCLOB, NULL, NUMERIC(false), NVARCHAR, OTHER, REAL, REF(
+      true), LONGVARCHAR, NCHAR(false), NCLOB, NULL, NUMERIC(false), NVARCHAR(false), OTHER, REAL, REF(
       true), ROWID, SMALLINT, SQLXML, STRUCT, TIME, TIMESTAMP(true), TINYINT, VARBINARY(
       true), VARCHAR(false), _H2_IDENTITY, _H2_UUID, _H2_VARCHAR_IGNORECASE(false), _DB2_LONG_VARCHAR_FOR_BIT_DATA(
       true), _DB2_VARCHAR_00_FOR_BIT_DATA(true), _DB2_CHAR_00_FOR_BIT_DATA, _DB2_LONG_VARCHAR(
@@ -81,8 +81,23 @@ public enum DKDBType {
 
    static {
       _typeRemappings = new HashMap<DKDBFlavor, Map<DKDBType, DKDBType>>();
+      // DB2
+      Map<DKDBType, DKDBType> db2Map = new HashMap<DKDBType, DKDBType>();
+      db2Map.put(NCHAR, CHAR);
+      db2Map.put(NVARCHAR, VARCHAR);
+      _typeRemappings.put(DKDBFlavor.DB2, db2Map);
+      // H2
+      Map<DKDBType, DKDBType> h2Map = new HashMap<DKDBType, DKDBType>();
+      h2Map.put(NCHAR, CHAR);
+      h2Map.put(NVARCHAR, VARCHAR);
+      _typeRemappings.put(DKDBFlavor.H2, h2Map);
       // Oracle
       Map<DKDBType, DKDBType> oracleMap = new HashMap<DKDBType, DKDBType>();
+      // these next two are a little odd; the Oracle documentation claims that
+      // NCHAR and NVARCHAR are supported, but the types don't see to come up
+      // through the JDBC driver
+      oracleMap.put(NCHAR, CHAR);
+      oracleMap.put(NVARCHAR, _ORACLE_VARCHAR2);
       oracleMap.put(VARCHAR, _ORACLE_VARCHAR2);
       oracleMap.put(BIGINT, _ORACLE_NUMBER);
       oracleMap.put(INTEGER, _ORACLE_NUMBER);
@@ -93,6 +108,8 @@ public enum DKDBType {
       _typeRemappings.put(DKDBFlavor.ORACLE, oracleMap);
       // MySQL
       Map<DKDBType, DKDBType> mySQLMap = new HashMap<DKDBType, DKDBType>();
+      mySQLMap.put(NCHAR, CHAR);
+      mySQLMap.put(NVARCHAR, VARCHAR);
       mySQLMap.put(CLOB, _MYSQL_TEXT);
       mySQLMap.put(BOOLEAN, _MYSQL_BOOL);
       mySQLMap.put(_MYSQL_DECIMAL_UNSIGNED, DECIMAL);
@@ -106,6 +123,8 @@ public enum DKDBType {
       _typeRemappings.put(DKDBFlavor.SQLSERVER, sqlServerMap);
       // Postgres
       Map<DKDBType, DKDBType> postgresMap = new HashMap<DKDBType, DKDBType>();
+      postgresMap.put(NCHAR, VARCHAR);
+      postgresMap.put(NVARCHAR, VARCHAR);
       postgresMap.put(BIGINT, _POSTGRES_INT8);
       postgresMap.put(INTEGER, _POSTGRES_INT4);
       postgresMap.put(TINYINT, _POSTGRES_INT2);
@@ -118,6 +137,8 @@ public enum DKDBType {
       _typeRemappings.put(DKDBFlavor.POSTGRES, postgresMap);
       // HyperSQL
       Map<DKDBType, DKDBType> hyperSQLMap = new HashMap<DKDBType, DKDBType>();
+      hyperSQLMap.put(NCHAR, VARCHAR);
+      hyperSQLMap.put(NVARCHAR, VARCHAR);
       hyperSQLMap.put(CHAR, VARCHAR);
       _typeRemappings.put(DKDBFlavor.HYPERSQL, hyperSQLMap);
    }
@@ -275,7 +296,11 @@ public enum DKDBType {
          return WriteType.NUMBER;
       case CHAR:
          return WriteType.STRING;
+      case NCHAR:
+         return WriteType.STRING;
       case VARCHAR:
+         return WriteType.STRING;
+      case NVARCHAR:
          return WriteType.STRING;
       case _ORACLE_VARCHAR2:
          return WriteType.STRING;

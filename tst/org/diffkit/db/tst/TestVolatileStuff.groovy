@@ -39,6 +39,16 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
+   public void testH2(){
+      
+      DKDBConnectionInfo connectionInfo = ['h2', DKDBFlavor.H2,'mem:test;DB_CLOSE_DELAY=-1', null, -1, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      assert database.supportsType('NCHAR')
+   }
+   
    public void tXstHyperWeird(){
       DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
       println "connectionInfo->$connectionInfo"
@@ -211,24 +221,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       DKDBTable table = [null, null, 'TEST1_RHS_TABLE', columns, pk]
       return table
    }
-   
-   public void testH2(){
       
-      // start the TCP Server
-      //      Server server = Server.createTcpServer(null).start()
-      //      Thread.currentThread().sleep(10000)
-      //      def driverName = 'org.h2.Driver'
-      //      def jdbcUrl = 'jdbc:h2:file:./test'
-      //      def username = 'test'
-      //      def password = 'test'
-      //      
-      //      Class.forName(driverName);
-      //      
-      //      Properties properties = new Properties();
-      //      properties.put('user', username);
-      //      properties.put('password', password);
-      //      DriverManager.getConnection(jdbcUrl, properties);
-   }
    private DKDBTable createCustomerMetaTable(){
       DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
       DKDBColumn column2 = ['last_name', 2, 'VARCHAR', 20, true]

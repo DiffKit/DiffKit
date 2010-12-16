@@ -10,7 +10,7 @@ DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT, CLOB
 Assumptions
 -----------
 - lhs & rhs are DB tables
-- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT, CLOB
+- DB tables use SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT, CLOB, NCHAR, NVARCHAR
 - lhs vs. rhs has both row and column diffs
 - plan file supplies lhs table name and rhs table name
 - plan file supplies ConnectionInfo to H2 DB
