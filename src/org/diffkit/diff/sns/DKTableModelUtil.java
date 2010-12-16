@@ -134,6 +134,14 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.INTEGER;
       case _SQLSERVER_INT:
          return DKColumnModel.Type.INTEGER;
+      case _SQLSERVER_INT_IDENTITY:
+         return DKColumnModel.Type.INTEGER;
+      case _SQLSERVER_BIGINT_IDENTITY:
+         return DKColumnModel.Type.INTEGER;
+      case _SQLSERVER_SMALLINT_IDENTITY:
+         return DKColumnModel.Type.INTEGER;
+      case _SQLSERVER_TINYINT_IDENTITY:
+         return DKColumnModel.Type.INTEGER;
       case _MYSQL_BIGINT_UNSIGNED:
          return DKColumnModel.Type.INTEGER;
       case _MYSQL_INT_UNSIGNED:
@@ -161,6 +169,8 @@ public class DKTableModelUtil {
       case _ORACLE_VARCHAR2:
          return DKColumnModel.Type.STRING;
       case _POSTGRES_BPCHAR:
+         return DKColumnModel.Type.STRING;
+      case _SQLSERVER_UNIQUEIDENTIFIER:
          return DKColumnModel.Type.STRING;
       case DATE:
          return DKColumnModel.Type.DATE;
