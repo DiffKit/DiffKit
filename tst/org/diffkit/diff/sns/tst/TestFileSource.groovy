@@ -93,7 +93,7 @@ public class TestFileSource extends GroovyTestCase {
 		DKColumnModel[] columns = [column1, column2, column3]
 		int[] key = [0,2]
 		
-		return new DKTableModel(columns, key) 
+		return new DKTableModel("simple_table_model",columns, key) 
 	}
 	
 }

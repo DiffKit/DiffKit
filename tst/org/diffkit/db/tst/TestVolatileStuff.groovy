@@ -39,7 +39,7 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void testH2(){
+   public void tXstH2(){
       
       DKDBConnectionInfo connectionInfo = ['h2', DKDBFlavor.H2,'mem:test;DB_CLOSE_DELAY=-1', null, -1, 'test', 'test']
       println "connectionInfo->$connectionInfo"

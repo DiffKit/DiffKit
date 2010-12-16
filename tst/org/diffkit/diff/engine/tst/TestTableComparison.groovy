@@ -41,14 +41,14 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column1_3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		DKColumnModel[] columns = [column1_1, column1_2, column1_3]
 		int[] key = [0,2]
-		DKTableModel lhsTable = [columns, key]
+		DKTableModel lhsTable = ["lhs_table",columns, key]
 		
 		DKColumnModel column2_1 = [0, 'column1', DKColumnModel.Type.STRING]
 		DKColumnModel column2_2 = [1, 'column2', DKColumnModel.Type.INTEGER]
 		DKColumnModel column2_3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		columns = [column2_1, column2_2, column2_3]
 		key = [0,2]
-		DKTableModel rhsTable = [columns, key]
+		DKTableModel rhsTable = ["rhs_table",columns, key]
 		
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[1], DKEqualsDiffor.instance)
 		int[][] displayIndexes = [(int[])[0,2],(int[])[0,2]]
@@ -74,14 +74,14 @@ public class TestTableComparison extends GroovyTestCase {
 		column1_3 = [2, 'column1_3', DKColumnModel.Type.INTEGER]
 		columns = [column1_1, column1_2, column1_3]
 		key = [0,2]
-		lhsTable = [columns, key]
+		lhsTable = ["lhs_table",columns, key]
 		
 		column2_1 = [0, 'column2_1', DKColumnModel.Type.STRING]
 		column2_2 = [1, 'column2_2', DKColumnModel.Type.INTEGER]
 		column2_3 = [2, 'column2_3', DKColumnModel.Type.INTEGER]
 		columns = [column2_1, column2_2, column2_3]
 		key = [0,2]
-		rhsTable = [columns, key]
+		rhsTable = ["rhs_table",columns, key]
 		
 		displayIndexes = [(int[])[0,2],(int[])[0,2]]
 		map =DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[1], DKEqualsDiffor.instance)
@@ -95,14 +95,14 @@ public class TestTableComparison extends GroovyTestCase {
 		column1_3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		columns = [column1_1, column1_2, column1_3]
 		key = [0,2]
-		lhsTable = [columns, key]
+		lhsTable = ["lhs_table",columns, key]
 		
 		column2_1 = [0, 'column2_1', DKColumnModel.Type.STRING]
 		column2_2 = [1, 'column2_2', DKColumnModel.Type.INTEGER]
 		column2_3 = [2, 'column3', DKColumnModel.Type.INTEGER]
 		columns = [column2_1, column2_2, column2_3]
 		key = [0,2]
-		rhsTable = [columns, key]
+		rhsTable = ["rhs_table",columns, key]
 		
 		displayIndexes = [(int[])[0,2],(int[])[0,2]]
 		map =DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[1], DKEqualsDiffor.instance)
@@ -118,7 +118,7 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel[] columns = [column1_1, column1_2, column1_3]
 		int[] key = [0,2]
 		int[][] displayIndexes = [(int[])[0,2],(int[])[0,2]]
-		DKTableModel lhsTable = [columns, key]
+		DKTableModel lhsTable = ["lhs_table",columns, key]
 		
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(lhsTable, lhsTable, (int[])[1], DKEqualsDiffor.instance)
 		DKStandardTableComparison plan = [lhsTable, lhsTable, DKDiff.Kind.BOTH, map, (int[])[1], displayIndexes, 100]
@@ -136,14 +136,14 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column1_3 = [2, 'column1_3', DKColumnModel.Type.INTEGER]
 		DKColumnModel[] columns = [column1_1, column1_2, column1_3]
 		int[] key = [0,2]
-		DKTableModel lhsTable = [columns, key]
+		DKTableModel lhsTable = ["lhs_table",columns, key]
 		
 		DKColumnModel column2_1 = [0, 'column2_1', DKColumnModel.Type.STRING]
 		DKColumnModel column2_2 = [1, 'column2_2', DKColumnModel.Type.INTEGER]
 		DKColumnModel column2_3 = [2, 'column2_3', DKColumnModel.Type.INTEGER]
 		columns = [column2_1, column2_2, column2_3]
 		key = [0,2]
-		DKTableModel rhsTable = [columns, key]
+		DKTableModel rhsTable = ["rhs_table",columns, key]
 		
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[1], DKEqualsDiffor.instance)
 		DKStandardTableComparison plan = new DKStandardTableComparison(lhsTable, rhsTable, DKDiff.Kind.BOTH, map,  (int[])[1], (int[][])null, 100)
@@ -166,7 +166,7 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column4 = [3, 'column4', DKColumnModel.Type.STRING]
 		DKColumnModel[] columns = [column1, column2, column3, column4]
 		int[] key = [1]
-		DKTableModel tableModel = [columns, key]
+		DKTableModel tableModel = ["table_model",columns, key]
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(tableModel,tableModel, (int[])[1], DKEqualsDiffor.instance)
 		DKStandardTableComparison plan = [tableModel, tableModel, DKDiff.Kind.BOTH, map, (int[])[1], null, 100]
 		def comparator = plan.rowComparator
@@ -180,13 +180,13 @@ public class TestTableComparison extends GroovyTestCase {
 		assert comparator.compare(lhs, rhs) <0
 		
 		key = [2]
-		tableModel = [columns, key]
+		tableModel = ["table_model",columns, key]
 		plan = [tableModel, tableModel, DKDiff.Kind.BOTH, map, (int[])[1], null, 100]
 		comparator = plan.rowComparator     
 		assert comparator.compare(lhs, rhs) ==0
 		
 		key = [3]
-		tableModel = [columns, key]
+		tableModel = ["table_model",columns, key]
 		plan = [tableModel, tableModel, DKDiff.Kind.BOTH, map, (int[])[1], null, 100]
 		comparator = plan.rowComparator     
 		assert comparator.compare(lhs, rhs) ==0
@@ -197,14 +197,14 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column1_1 = [0, 'column1_1', DKColumnModel.Type.STRING]
 		DKColumnModel[] columns = [column1_1]
 		int[] key = [0]
-		DKTableModel lhsTable = [columns, key]
+		DKTableModel lhsTable = ["lhs_table",columns, key]
 		
 		DKColumnModel column2_1 = [0, 'column2_1', DKColumnModel.Type.STRING]
 		DKColumnModel column2_2 = [1, 'column2_2', DKColumnModel.Type.INTEGER]
 		DKColumnModel column2_3 = [2, 'column2_3', DKColumnModel.Type.STRING]
 		columns = [column2_1, column2_2, column2_3]
 		key = [0,2]
-		DKTableModel rhsTable = [columns, key]
+		DKTableModel rhsTable = ["rhs_table",columns, key]
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[0], DKEqualsDiffor.instance)
 		// key sizes don't match
 		shouldFail(RuntimeException) {
@@ -215,7 +215,7 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column1_3 = [2, 'column1_3', DKColumnModel.Type.STRING]
 		columns = [column1_1, column1_2, column1_3]
 		key = [0,1]
-		lhsTable = [columns, key]
+		lhsTable = ["lhs_table",columns, key]
 		// key type don't match
 		shouldFail(RuntimeException) {
 			def DKStandardTableComparison plan = new DKStandardTableComparison(lhsTable, rhsTable,  DKDiff.Kind.BOTH, map, (int[])[1], null, 100)
@@ -228,7 +228,7 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column1_3 = [2, 'column1_3', DKColumnModel.Type.INTEGER]
 		DKColumnModel[] columns = [column1_1, column1_2, column1_3]
 		int[] key = [0,2]
-		DKTableModel lhsTable = [columns, key]
+		DKTableModel lhsTable = ["lhs_table",columns, key]
 		
 		DKColumnModel column2_1 = [0, 'column2_1', DKColumnModel.Type.STRING]
 		DKColumnModel column2_2 = [1, 'column2_2', DKColumnModel.Type.STRING]
@@ -236,7 +236,7 @@ public class TestTableComparison extends GroovyTestCase {
 		DKColumnModel column2_4 = [3, 'column2_4', DKColumnModel.Type.INTEGER]
 		columns = [column2_1, column2_2, column2_3, column2_4]
 		key = [1,3]
-		DKTableModel rhsTable = [columns, key]
+		DKTableModel rhsTable = ["rhs_table",columns, key]
 		DKColumnComparison[] map = DKColumnComparison.createColumnPlans(lhsTable, rhsTable, (int[])[1], DKEqualsDiffor.instance)
 		DKStandardTableComparison plan = new DKStandardTableComparison(lhsTable, rhsTable, DKDiff.Kind.BOTH, map,  (int[])[1], null, 100)
 		def comparator = plan.rowComparator

@@ -3,6 +3,12 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.6 (12/16/2010)
+
+- fixes Issue 55: unrecognized dbType_->NCHAR on SQL Server 2005
+- fixes Issue 56: unrecognized dbType_- >_SQLSERVER_INT_IDENTITY
+- fixes Issue 57: fix confusing logging message for DKTableModel
+
 == release 0.8.5 (12/2/2010)
 
 - fixes Issue 52: DiffKit 0.8.4- does not work with Java 1.5 and flavor=SQLSERVER
