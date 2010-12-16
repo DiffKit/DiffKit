@@ -36,10 +36,6 @@ public class DKTableModel {
     */
    private final int[] _key;
 
-   public DKTableModel(DKColumnModel[] columns_, int[] key_) {
-      this(null, columns_, key_);
-   }
-
    public DKTableModel(String name_, DKColumnModel[] columns_, int[] key_) {
       _name = name_;
       _columns = columns_;
@@ -250,6 +246,6 @@ public class DKTableModel {
       for (int i = 0; i < columnNames_.length; i++)
          columns[i] = new DKColumnModel(i, columnNames_[i], Type.STRING);
 
-      return new DKTableModel(columns, key_);
+      return new DKTableModel("GENERIC_STRING_MODEL", columns, key_);
    }
 }

@@ -97,14 +97,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="rhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
-		<constructor-arg index="0">
+      <constructor-arg index="0" value="TEST4_RHS_TABLE" />
+		<constructor-arg index="1">
 			<list>
 				<ref bean="rhs.column1" />
 				<ref bean="rhs.column2" />
 				<ref bean="rhs.column3" />
 			</list>
 		</constructor-arg>
-		<constructor-arg index="1">
+		<constructor-arg index="2">
 			<list>
 				<value>0</value>
 				<value>2</value>
@@ -113,14 +114,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 
 	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
-		<constructor-arg index="0">
+      <constructor-arg index="0" value="TEST4_LHS_TABLE" />
+		<constructor-arg index="1">
 			<list>
 				<ref bean="lhs.column1" />
 				<ref bean="lhs.column2" />
 				<ref bean="lhs.column3" />
 			</list>
 		</constructor-arg>
-		<constructor-arg index="1">
+		<constructor-arg index="2">
 			<list>
 				<value>0</value>
 				<value>2</value>
