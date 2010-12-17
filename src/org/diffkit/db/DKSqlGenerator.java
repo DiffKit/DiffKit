@@ -125,6 +125,10 @@ public class DKSqlGenerator {
 
    public String generateInsertDML(Map<String, ?> row_, DKDBTable table_)
       throws SQLException {
+      if (_log.isDebugEnabled()) {
+         _log.debug("row_->{}", row_);
+         _log.debug("table_->{}", table_);
+      }
       DKValidate.notNull(table_);
       if (MapUtils.isEmpty(row_))
          return null;

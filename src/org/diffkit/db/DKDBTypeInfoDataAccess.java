@@ -79,10 +79,13 @@ public class DKDBTypeInfoDataAccess {
    }
 
    public DKDBTypeInfo getTypeInfo(String dbTypeName_) throws SQLException {
+      _log.debug("dbTypeName_->{}", dbTypeName_);
       if (dbTypeName_ == null)
          return null;
       Map<String, DKDBTypeInfo> typeInfoMap = this.getNameToTypeInfoMap();
-      return typeInfoMap.get(dbTypeName_);
+      DKDBTypeInfo typeInfo = typeInfoMap.get(dbTypeName_);
+      _log.debug("typeInfo->{}", typeInfo);
+      return typeInfo;
    }
 
    public Integer getJavaSqlTypeForName(String dbTypeName_) throws SQLException {
