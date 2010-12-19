@@ -98,8 +98,8 @@ The line type character can be left or right padded with any amount of whitespac
 
 In the case of column diffs, for each cell that was different between the LHS and the RHS, both the old and new values are displayed. The old value must come first, followed by '->' (dash greater than), followed by the new value. For all three diff line types, the generator may include source (LHS) name-value pairs that are not strictly needed, but help with row identification.
 
-Pseudo Column
--------------
+<ROW_NUM> Pseudo Column
+-----------------------
 Some sources of table data have an meaningful notion of row or line number (e.g. spreadsheets, CSV files) but others do not (RDBMS tables). In many cases, the representation of the row number is external to the table data itself. In order to accomodate these sources, document generators can make use of the <ROW_NUM> pseudo column. In most cases, the <ROW_NUM> will form the key for the table, and so, just like any other key columns, it should ocurr within the diff line before any non-key name-value pairs.
 
 .pseudo column examples
@@ -111,9 +111,39 @@ Some sources of table data have an meaningful notion of row or line number (e.g.
 
 Colum Numbers
 -------------
-Some sources of table data do not use named columns-- 
+Some sources of table data do not use named columns-- for instance, CSV files that have not designated a column header row. In those cases, column names are replaced with column number designators. The designators follow this pattern:
+
+<COL_NUM1>, <COL_NUM2>, ...
+
+N.B. The ordinal numbers embedded within column number designators are 1's based, not 0's based. In other words, counting starts at 1, not at zero.
+
+.column number example
+----
+= | <COL_NUM1>=value1| <COL_NUM2>=value2| <COL_NUM3>=old-value3->new-value3| <COL_NUM4>=old-value4->new-value4
+----
+
+
 Context
 -------
+
+Though not always strictly required to fully and accurately described differences between the LHS and RHS, generators are allowed to include extra rows and extra column values as contextual information. These can help human readers oriented themselves within the data, and might help machine interpretors to resolve otherwise ambiguities in applying a tDiff document. In the case of missing row or extra row lines, extra column data can be included within the row as name-value pairs, just like any other name-value pairs. In he case of a column diff line, extra name-value pairs can be included within the line, but they must ocurr after the key name-value pairs (as is the case for all non-key name-value pairs). These contextual name-value pairs should also include only the old value, since both the old value and new value are ostensibly the same. In other words, contextual column values should not include "->new-value". In addition to contextual column information, a chunk may contain any number of contextual rows. These rows appear with the line type character _'*'_. Streaks of contextual rows can prefix and suffix the block of actual (+, -, =) real diff lines, but cannot be interspersed amongst them. In other words, a chunk is:
+
+<streak of context lines>
+
+<streak of real (+ or - or =) diff lines>
+
+<streak of context lines>
+
+.context example
+----
+* | key-name1=value-1| key-name2=value-1| nonkey-name3=value-1| nonkey-name4=value-1
+* | key-name1=value0| key-name2=value0| nonkey-name3=value0| nonkey-name4=value0
++ | key-name1=value1| key-name2=value2| nonkey-name3=value3| nonkey-name4=value4
+- | key-name1=value5| key-name2=value6 
+= | key-name1=value7| key-name2=value8| nonkey-name3=old-value9->new-value9| nonkey-name4=old-value10->new-value10
+* | key-name1=value11| key-name2=value11| nonkey-name3=value11| nonkey-name4=value11
+* | key-name1=value12| key-name2=value12| nonkey-name3=value12| nonkey-name4=value12
+----
 
 Examples
 --------
