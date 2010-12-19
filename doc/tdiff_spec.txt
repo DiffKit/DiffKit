@@ -1,0 +1,119 @@
+
+tDiff Format Specification
+=========================
+:Author: Paul Fitzpatrick, Joe Panico
+:Email: paul@somewhere, trurl00@gmail.com
+:Date:  2010-12-19
+:Revision: 0.1
+
+[abstract]
+Purpose
+-------
+This document defines the tDiff format; a text encoding for describing the differences between two tables of data.
+
+tDiff output is intended for two audiences: end-users who are looking for an easily readable report that describes the differences between two tables; and tools that will interpret tDiff output in order to perform further processing or analysis (e.g. "patch" tools).
+
+Scope
+-----
+tDiff should be able to describe the differences between *any types* of data tables. That includes: tables that have an identifiable unique key (e.g. RDBMS tables with primary key) and tables that don't (RDBMS tables without primary key, or heaps); tables where row ordering is meaningful, whether explicit or implied, such as spreadsheets or CSV files; and tables where row ordering has no inherent meaning (RDBMS tables). Further, tDiff should be able to represent the differences between two different *types* of table, e.g. an RDBMS table versus a spreadsheet table.
+
+Limitations
+-----------
+tDiff is designed to described the differences in *content* between two tables-- it does not have any facilities for describing the differences in *structure* between two tables. A future revision will expand the specification to include structure or schema information.
+
+tDiff is designed to described text (character) content. It has no facilities to describe differences in content that does not have a natural default character representation. A future revision may expand the specification to include arbitrary binary data.
+
+tDiff can represent the differences between exactly *two* tables. It cannot represent an n-way compare where n > 2.
+
+
+Representation
+--------------
+tDiff documents use the UTF-8 character encoding.
+
+
+Top-level structure
+-------------------
+tDiff documents comprise any number of comments and diff "chunks" (hunks?), interleaved in any order. The intent is that comments hold meta information about diffs or environmental information that might be useful to a human or machine interpretor. Each diff chunk describes a contiguos block of data differences between the two sources, where the meaning of contiguos depends on the type of sources involved. No relationship between any chunk or comment is implied by its order in the stream relative to any other chunk or comment. Ordering is generally arbitrary or at the discretion of the interpreter. The intent is that, generally, each chunk could stand on its own as an independent tDiff document, for the sake of any type of interpretation.
+
+Comment
+-------
+Comment blocks are delimeted using: /* */ (C style). Any content can ocurr within a a comment block. Machine interpretors may read the contents of comment blocks-- the comment blocks may include information that affects how the interpretor reads the comment or even how it interprets diff chunks.
+
+Chunk [Hunk?]
+-------------
+A chunk is a series of one or more adjacent diff lines, where each line represents the diffs in a single row from the source tables. The diff lines within a chunk should be separated by only the newline characters that terminate each diff line, so that they all appear as adjacent lines within a text editor. Within a tDiff document, each chunk must be offset from any other chunk by delimeting it, both before and after, with standalone newlines. A standalone newline is a single Unix newline ('\n') on it's own line.
+
+.document example (high level)
+----
+
+/*
+ * this comment could describe the whole document
+ */
+
+/*
+ * this comment could describe the following chunk (chunk1)
+ */
+* chunk1, context1
++ chunk1, diff1
+- chunk1, diff2
+= chunk1, diff3
+* chunk1, context2
+
+/*
+ * this comment could describe the following chunk (chunk2), even though it's 
+ * not immediately adjacent to the chunk (there is an intervening newline).
+ */
+ 
++ chunk2, diff1
+- chunk2, diff2
+
+/*
+ * final, wrap up, comment
+ */
+
+----
+
+Diff line
+---------
+A diff line describes the diffs in a single row of the two tables that were compared. In order to interpret this specification, one table is designated the *source* or *LHS* (Left Hand Side) and the other table is designated the *destination* or *RHS* (Right Hand Side). Each row is identified, on both the LHS and RHS, by its *key*. There are three types of line diffs, described from the perspective of the source (LHS) being the reference (or correct) table:
+
+- Missing row: the row, as identified by its key, was present on the LHS, but not present on the RHS.
+- Extra row: the row, as identified by its key, was not present on the LHS, but was present on the RHS.
+- Column diffs: the row, as identified by its key, was present in both the LHS and RHS tables. But some of the non-key columns had values on the RHS that were different from those on the LHS.
+
+Each diff line occupies its own line in the document, and begins with one of three characters, depending on the type of diff is represents. These three characters are called "line type" characters:
+
+- Missing row diff begins with plus: _'+'_. That's because the diffs are described from the perspective of the LHS being the reference table; in order to make the RHS look like the LHS we would have to add the missing row to the RHS.
+- Extra row diff begins with minus: _'-'_. In order to make the RHS look like the LHS we would have to remove the extra row from the RHS.
+- Column diffs begin with equals: _'='_. The same row (according to the key) was found on both the LHS and the RHS (the row keys were equal). In order to make the RHS look like the LHS we would have to update some of the column values on the RHS. 
+
+The line type character can be left or right padded with any amount of whitespace, for readability. The line type character is followed by any number of name-value pairs, where the names represent column names, and the values are the values for the corresponding column name in that particular row. The name is separated from the value by an equals ('=') sign. The name-value pairs, as well as the line type character, are delimited with a pipe _'|'_ character. If the name or value contain a pipe, dash, greater than, or any other character that might make it confusing or difficult to read, the token can be single quoted. If the original value was single quoted to begin with, then the encoded value requires double single quotes. The document generator must ensure that the key columns (though not explicitly tagged as such) ocurr in the diff line before all non-key columns.
+
+.diff line examples
+----
++ | key-name1=value1| key-name2=value2| nonkey-name3=value3| nonkey-name4=value4
+- | key-name1=value5| key-name2=value6 
+= | key-name1=value7| key-name2=value8| nonkey-name3=old-value9->new-value9| nonkey-name4=old-value10->new-value10
+----
+
+In the case of column diffs, for each cell that was different between the LHS and the RHS, both the old and new values are displayed. The old value must come first, followed by '->' (dash greater than), followed by the new value. For all three diff line types, the generator may include source (LHS) name-value pairs that are not strictly needed, but help with row identification.
+
+Pseudo Column
+-------------
+Some sources of table data have an meaningful notion of row or line number (e.g. spreadsheets, CSV files) but others do not (RDBMS tables). In many cases, the representation of the row number is external to the table data itself. In order to accomodate these sources, document generators can make use of the <ROW_NUM> pseudo column. In most cases, the <ROW_NUM> will form the key for the table, and so, just like any other key columns, it should ocurr within the diff line before any non-key name-value pairs.
+
+.pseudo column examples
+----
++ | <ROW_NUM>=3 | nonkey-name3=value3| nonkey-name4=value4
+- | <ROW_NUM>=4
+= | <ROW_NUM>=5 | nonkey-name3=old-value9->new-value9| nonkey-name4=old-value10->new-value10
+----
+
+Colum Numbers
+-------------
+Some sources of table data do not use named columns-- 
+Context
+-------
+
+Examples
+--------
