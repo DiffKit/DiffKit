@@ -2,7 +2,7 @@
 tDiff Format Specification
 =========================
 :Author: Paul Fitzpatrick, Joe Panico
-:Email: paul@somewhere, trurl00@gmail.com
+:Email: paul@somewhere, diffkit-user@googlegroups.com
 :Date:  2010-12-19
 :Revision: 0.1
 
@@ -147,3 +147,85 @@ Though not always strictly required to fully and accurately described difference
 
 Examples
 --------
+
+.example 1
+----
+
+In example one, both tables are in an RDBMS, both tables have the same column names, and the primary key is column1. The generator requested no context.
+
+lhs:                                      rhs:
+column1,column2,column3,column4           column1,column2,column3,column4
+----------------------------              1,      0000,   x,      aaaa
+2,      1111,   x,      aaaa              ----------------------------
+3,      2222,   y,      aaaa              3,      2222,   x,      aaaa
+4,      0000,   z,      bbbb              4,      3333,   x,      aaaa
+5,      4444,   z,      bbbb              5,      4444,   x,      aaaa
+6,      5555,   u,      aaaa              6,      5555,   x,      aaaa
+7,      0000,   v,      aaaa              ----------------------------
+8,      1111,   x,      aaaa              ----------------------------
+
+/*
+ * this is the tDiff document for example 1, using 1 chunk only and no context
+ */
+- | column1=1
++ | column1=2| column2=1111| column3=x| column4=aaaa 
+= | column1=3| column3=x->y 
+= | column1=4| column2=3333->0000| column3=x->z| column4=aaaa->bbbb
+= | column1=5| column3=x->z| column4=aaaa->bbbb
+= | column1=6| column3=x->u
++ | column1=7| column2=0000| column3=v| column4=aaaa 
++ | column1=8| column2=1111| column3=x| column4=aaaa 
+/*
+ * end of tDiff document
+ */
+
+/*
+ * here is a tDiff document that is equivalent to the document above, except
+ * that it uses 8 chunks, more comments, and adds in some context
+ */
+/*
+ * chunk 1: notice that columns 2,3,4 are context-- not strictly necessary 
+ * to specify a remove
+ */
+- | column1=1| column2=0000| column3=x| column4=aaaa 
+
+/*
+ * chunk 2: notice that the chunks are separated by standalone newline
+ */
++ | column1=2| column2=1111| column3=x| column4=aaaa 
+
+/*
+ * chunk 3: notice that column2 and column4 are merely context
+ */
+= | column1=3| column2=2222| column3=x->y| column4=aaaa 
+
+/*
+ * chunk 4: notice that the column diff line is surrounded by context rows, and
+ * that the context rows describe the values on the RHS.
+ */
+* | column1=3| column2=2222| column3=x| column4=aaaa 
+= | column1=4| column2=3333->0000| column3=x->z| column4=aaaa->bbbb
+* | column1=5| column2=4444| column3=x| column4=aaaa 
+
+/*
+ * chunk 5
+ */
+= | column1=5| column3=x->z| column4=aaaa->bbbb
+
+/*
+ * chunk 6
+ */
+= | column1=6| column3=x->u
+
+/*
+ * chunk 7
+ */
++ | column1=7| column2=0000| column3=v| column4=aaaa 
+
+/*
+ * chunk 8
+ */
++ | column1=8| column2=1111| column3=x| column4=aaaa 
+----
+
+
