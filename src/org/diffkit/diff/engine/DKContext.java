@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.time.StopWatch;
 
 import org.diffkit.common.DKValidate;
@@ -119,5 +120,9 @@ public class DKContext {
 
    public Map<UserKey, ?> getUserDictionary() {
       return _userDictionary;
+   }
+
+   public String toString() {
+      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()), _id);
    }
 }

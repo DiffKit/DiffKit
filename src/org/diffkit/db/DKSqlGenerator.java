@@ -140,7 +140,7 @@ public class DKSqlGenerator {
          if (!row_.containsKey(column.getName()))
             continue;
          values.add(row_.get(column.getName()));
-         typeInfos.add(_database.getTypeInfo(column.getDBTypeName()));
+         typeInfos.add(_database.getConcreteTypeInfo(column.getDBTypeName()));
          columnNames.add(column.getName());
       }
       return generateInsertDML(values.toArray(),

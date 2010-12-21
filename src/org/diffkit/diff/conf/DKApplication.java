@@ -155,7 +155,7 @@ public class DKApplication {
       Logger userLog = DKRuntime.getInstance().getUserLog();
       systemLog.info("planFilesString_->{}", planFilesString_);
       String[] planFiles = planFilesString_.split("\\,");
-      userLog.info("planfile(s)->{}", planFiles);
+      userLog.info("planfile(s)->{}", Arrays.toString(planFiles));
       DKPlan plan = (DKPlan) DKSpringUtil.getBean("plan", planFiles,
          DKApplication.class.getClassLoader());
       systemLog.info("plan->{}", plan);

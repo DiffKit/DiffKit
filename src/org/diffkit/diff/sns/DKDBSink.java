@@ -216,7 +216,4 @@ public class DKDBSink extends DKAbstractSink {
             diff_.getKind()));
    }
 
-   public String generateSummary(DKContext context_) {
-      return "summary";
-   }
 }
