@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.contrib;
+package org.diffkit.diff.sns;
 
 import java.net.URI;
 import java.sql.SQLException;
@@ -31,8 +31,6 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKRowDiff;
 import org.diffkit.diff.engine.DKSide;
-import org.diffkit.diff.sns.DKAbstractSink;
-import org.diffkit.diff.sns.DKDiffUtil;
 import org.diffkit.util.DKObjectUtil;
 import org.diffkit.util.DKStringUtil;
 

@@ -1,0 +1,24 @@
+test26 README
+=========
+
+Description
+----------
+Demonstrates SqlPatchSink, and how it is used to generate SQL statements 
+(INSERT, DELETE, UPDATE) in order to synchronize two tables.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- plan file supplies lhs table name and rhs table name
+- lhs and rhs tables have identical structure
+- MagicPlan specifies the patchFileName, which configures a SqlPatchSink.
+- MagicPlan reverse engineers TableModels from the database
+- there is 
+
+Expectations
+-----------
+- 2 missing row diffs result in 2 INSERT statements.
+- 2 extra row diffs result in 2 DELETE statements.
+- column diff on row 3 result in UPDATE statement with 1 value.
+- 3 column diffs on row 4 result in UPDATE statement with 3 values.

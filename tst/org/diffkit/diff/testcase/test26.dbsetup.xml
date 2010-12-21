@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <bean id="rhs.table" class="org.diffkit.db.DKDBTable">
+      <constructor-arg index="0">
+         <null />
+      </constructor-arg>
+      <constructor-arg index="1">
+         <null />
+      </constructor-arg>
+      <constructor-arg index="2" value="TEST26_RHS_TABLE" />
+      <constructor-arg index="3">
+         <list>
+            <ref bean="rhs.COLUMN1" />
+            <ref bean="rhs.COLUMN2" />
+            <ref bean="rhs.COLUMN4" />
+            <ref bean="rhs.COLUMN3" />
+         </list>
+      </constructor-arg>
+      <constructor-arg index="4" ref="rhs.pk" />
+   </bean>
+
+   <bean id="rhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
+      <constructor-arg index="0" value="test26_rhs_pk" />
+      <constructor-arg index="1">
+         <list>
+            <value>COLUMN1</value>
+         </list>
+      </constructor-arg>
+   </bean>
+
+   <bean id="lhs.table" class="org.diffkit.db.DKDBTable">
+      <constructor-arg index="0">
+         <null />
+      </constructor-arg>
+      <constructor-arg index="1">
+         <null />
+      </constructor-arg>
+      <constructor-arg index="2" value="TEST26_LHS_TABLE" />
+      <constructor-arg index="3">
+         <list>
+            <ref bean="lhs.COLUMN1" />
+            <ref bean="lhs.COLUMN2" />
+            <ref bean="lhs.COLUMN3" />
+            <ref bean="lhs.COLUMN4" />
+         </list>
+      </constructor-arg>
+      <constructor-arg index="4" ref="lhs.pk" />
+   </bean>
+
+   <bean id="lhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
+      <constructor-arg index="0" value="test26_lhs_pk" />
+      <constructor-arg index="1">
+         <list>
+            <value>COLUMN1</value>
+         </list>
+      </constructor-arg>
+   </bean>
+
+   <bean id="rhs.COLUMN1" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN1" />
+      <constructor-arg index="1" value="1" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="rhs.COLUMN2" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN2" />
+      <constructor-arg index="1" value="2" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="rhs.COLUMN3" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN3" />
+      <constructor-arg index="1" value="3" />
+      <constructor-arg index="2" value="BIGINT" />
+      <constructor-arg index="3" value="32" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="rhs.COLUMN4" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN4" />
+      <constructor-arg index="1" value="4" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="false" />
+   </bean>
+
+   <bean id="lhs.COLUMN1" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN1" />
+      <constructor-arg index="1" value="1" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="lhs.COLUMN2" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN2" />
+      <constructor-arg index="1" value="2" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="lhs.COLUMN3" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN3" />
+      <constructor-arg index="1" value="3" />
+      <constructor-arg index="2" value="BIGINT" />
+      <constructor-arg index="3" value="32" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="lhs.COLUMN4" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN4" />
+      <constructor-arg index="1" value="4" />
+      <constructor-arg index="2" value="VARCHAR" />
+      <constructor-arg index="3" value="128" />
+      <constructor-arg index="4" value="false" />
+   </bean>
+
+   <bean id="connectionSource" class="org.diffkit.db.DKDatabase">
+      <constructor-arg ref="connectionInfo" />
+   </bean>
+
+</beans>
