@@ -25,8 +25,6 @@ import org.diffkit.common.DKValidate;
 public class DKRowDiff implements DKDiff {
 
    private final long _rowStep;
-   // private final Object[] _keyValues;
-   // private final OrderedMap _displayValues;
    private final Object[] _row;
    private final DKSide _side;
    private final DKTableComparison _tableComparison;

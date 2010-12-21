@@ -29,8 +29,6 @@ import org.diffkit.common.DKValidate;
 public class DKColumnDiffRow {
 
    private final long _rowStep;
-   // private final Object[] _rowKeyValues;
-   // private final OrderedMap _rowDisplayValues;
    private final Object[] _lhsRow;
    private final Object[] _rhsRow;
    private final DKTableComparison _tableComparison;

@@ -40,6 +40,9 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBTable extends GroovyTestCase {
    
+   public void testCreateRowMap() {
+   }
+   
    /**
     * are MEM tables specific to a single connection (like temp tables), 
     * or are they visible across connections?

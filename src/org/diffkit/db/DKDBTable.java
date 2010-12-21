@@ -17,6 +17,7 @@ package org.diffkit.db;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
@@ -116,6 +117,22 @@ public class DKDBTable {
     */
    public DKDBColumn[] getColumns() {
       return _columns;
+   }
+
+   public Map<String, ?> createRowMap(Object[] rowValues_) {
+      if (ArrayUtils.isEmpty(rowValues_))
+         return null;
+      String[] columnNames = this.getColumnNames();
+      if (ArrayUtils.isEmpty(columnNames))
+         throw new RuntimeException("no columnNames for table->" + this);
+      if (rowValues_.length != columnNames.length)
+         throw new RuntimeException(String.format(
+            "rowValues_.length->%s does not match columnNames.length->%s",
+            rowValues_.length, columnNames.length));
+      Map<String, Object> rowMap = new HashMap<String, Object>();
+      for (int i = 0; i < rowValues_.length; i++)
+         rowMap.put(columnNames[i], rowValues_[i]);
+      return rowMap;
    }
 
    /**
