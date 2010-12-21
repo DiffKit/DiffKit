@@ -17,6 +17,7 @@ package org.diffkit.diff.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.OrderedMap;
 
@@ -28,29 +29,37 @@ import org.diffkit.common.DKValidate;
 public class DKColumnDiffRow {
 
    private final long _rowStep;
-   private final Object[] _rowKeyValues;
-   private final OrderedMap _rowDisplayValues;
+   // private final Object[] _rowKeyValues;
+   // private final OrderedMap _rowDisplayValues;
+   private final Object[] _lhsRow;
+   private final Object[] _rhsRow;
    private final DKTableComparison _tableComparison;
    private final List<DKColumnDiff> _diffs = new ArrayList<DKColumnDiff>();
+   // lazy
+   private OrderedMap _rowDisplayValues;
 
-   public DKColumnDiffRow(long rowStep_, Object[] rowKeyValues_,
-                          OrderedMap rowDisplayValues_, DKTableComparison tableComparison_) {
+   public DKColumnDiffRow(long rowStep_, Object[] lhsRow_, Object[] rhsRow_,
+                          DKTableComparison tableComparison_) {
       _rowStep = rowStep_;
-      _rowKeyValues = rowKeyValues_;
-      _rowDisplayValues = rowDisplayValues_;
+      _lhsRow = lhsRow_;
+      _rhsRow = rhsRow_;
       _tableComparison = tableComparison_;
-      DKValidate.notNull(_rowKeyValues, _rowDisplayValues, _tableComparison);
+      DKValidate.notNull(_lhsRow, _rhsRow, _tableComparison);
    }
 
    public long getRowStep() {
       return _rowStep;
    }
 
+   // key side arbitrary; keyValeus guaranteed to match on both sides
    public Object[] getRowKeyValues() {
-      return _rowKeyValues;
+      return _tableComparison.getRowKeyValues(_lhsRow, DKSide.LEFT_INDEX);
    }
 
    public OrderedMap getRowDisplayValues() {
+      if (_rowDisplayValues != null)
+         return _rowDisplayValues;
+      _rowDisplayValues = _tableComparison.getRowDisplayValues(_lhsRow, _rhsRow);
       return _rowDisplayValues;
    }
 
@@ -58,7 +67,10 @@ public class DKColumnDiffRow {
     * convenience method that gets displayValue for give columnName_
     */
    public Object getRowDisplayValue(String columnName_) {
-      return _rowDisplayValues.get(columnName_);
+      Map rowDisplayValues = this.getRowDisplayValues();
+      if (rowDisplayValues == null)
+         return null;
+      return rowDisplayValues.get(columnName_);
    }
 
    public DKTableComparison getTableComparison() {

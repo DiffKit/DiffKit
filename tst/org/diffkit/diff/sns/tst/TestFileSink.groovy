@@ -54,10 +54,10 @@ public class TestFileSink extends GroovyTestCase {
 		
 		sink.open()
 		
-		DKRowDiff rowDiff = [1, keyValues, displayValues, DKSide.LEFT, plan]
+		DKRowDiff rowDiff = [1, row, DKSide.LEFT, plan]
 		sink.record(rowDiff, null)
 		
-		DKColumnDiffRow diffRow = [1, keyValues, displayValues, plan]
+		DKColumnDiffRow diffRow = [1, row, row, plan]
 		def columnDiff = diffRow.createDiff(1, '1111', 'xxxx')
 		sink.record(columnDiff, null)
 		

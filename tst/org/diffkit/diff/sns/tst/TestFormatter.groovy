@@ -41,13 +41,13 @@ public class TestFormatter  extends GroovyTestCase {
 		def plan = this.createSimplePlan()
 		def keyValues = plan.getRowKeyValues( row, DKSide.LEFT_INDEX)
 		def displayValues = plan.getRowDisplayValues( row, DKSide.LEFT_INDEX )
-		DKRowDiff rowDiff = [1, keyValues, displayValues, DKSide.LEFT, plan]
+		DKRowDiff rowDiff = [1, row, DKSide.LEFT, plan]
 		def context = new DKContext()
 		String formatted = DKDefaultFormatter.instance.formatRowDiff(rowDiff, context)
 		
 		assert formatted == '!{column2=1111, column3=1}\n<'
 		
-		DKColumnDiffRow diffRow = [1, keyValues, displayValues, plan]
+		DKColumnDiffRow diffRow = [1, row, row, plan]
 		def columnDiff = diffRow.createDiff(1, '1111', 'xxxx')
 		formatted = DKDefaultFormatter.instance.formatColumnDiff(columnDiff, context)
 		println "formatted->$formatted"

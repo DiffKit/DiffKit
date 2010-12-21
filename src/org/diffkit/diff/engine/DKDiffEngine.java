@@ -144,9 +144,7 @@ public class DKDiffEngine {
             if (diffRow == null)
                // key side arbitrary; keyValeus guaranteed to match on both
                // sides
-               diffRow = new DKColumnDiffRow(context_._rowStep,
-                  context_._tableComparison.getRowKeyValues(lhs_, DKSide.LEFT_INDEX),
-                  context_._tableComparison.getRowDisplayValues(lhs_, rhs_),
+               diffRow = new DKColumnDiffRow(context_._rowStep, lhs_, rhs_,
                   context_._tableComparison);
             DKColumnDiff columnDiff = diffRow.createDiff(context_._columnStep,
                columnComparisons[diffIndexes[i]].getLHValue(lhs_),
@@ -169,8 +167,7 @@ public class DKDiffEngine {
       Object[] rowKeyValues = tableComparison.getRowKeyValues(row_, sideIdx_);
       OrderedMap rowDisplayValues = tableComparison.getRowDisplayValues(row_, sideIdx_);
       DKSide side = DKSide.getEnumForConstant(sideIdx_);
-      DKRowDiff rowDiff = new DKRowDiff(rowStep, rowKeyValues, rowDisplayValues, side,
-         tableComparison);
+      DKRowDiff rowDiff = new DKRowDiff(rowStep, row_, side, tableComparison);
       sink_.record(rowDiff, context_);
    }
 

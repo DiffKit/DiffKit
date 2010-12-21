@@ -39,14 +39,14 @@ import groovy.util.GroovyTestCase;
  */
 public class TestVolatileStuff extends GroovyTestCase {
    
-   public void tXstH2(){
+   public void testH2(){
       
       DKDBConnectionInfo connectionInfo = ['h2', DKDBFlavor.H2,'mem:test;DB_CLOSE_DELAY=-1', null, -1, 'test', 'test']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
       DKDBTableDataAccess tableDataAccess = [database]
       println "tableDataAccess->$tableDataAccess"
-      assert database.supportsType('NCHAR')
+      assert database.supportsType('VARCHAR')
    }
    
    public void tXstHyperWeird(){
@@ -110,7 +110,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert tables[0]
    }
    
-   public void testSQLServer(){
+   public void tXstSQLServer(){
       DKDBConnectionInfo connectionInfo = ['sqlserver', DKDBFlavor.SQLSERVER,'test', '10.0.1.9', 1433, 'diffkit', 'diffkit']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]

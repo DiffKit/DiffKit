@@ -25,19 +25,19 @@ import org.diffkit.common.DKValidate;
 public class DKRowDiff implements DKDiff {
 
    private final long _rowStep;
-   private final Object[] _keyValues;
-   private final OrderedMap _displayValues;
+   // private final Object[] _keyValues;
+   // private final OrderedMap _displayValues;
+   private final Object[] _row;
    private final DKSide _side;
    private final DKTableComparison _tableComparison;
 
-   public DKRowDiff(long rowStep_, Object[] keyValues_, OrderedMap displayValues_,
-                    DKSide side_, DKTableComparison tableComparison_) {
+   public DKRowDiff(long rowStep_, Object[] row_, DKSide side_,
+                    DKTableComparison tableComparison_) {
       _rowStep = rowStep_;
-      _displayValues = displayValues_;
-      _keyValues = keyValues_;
+      _row = row_;
       _side = side_;
       _tableComparison = tableComparison_;
-      DKValidate.notNull(_displayValues, _keyValues, _side, _tableComparison);
+      DKValidate.notNull(_row, _side, _tableComparison);
    }
 
    public long getRowStep() {
@@ -49,11 +49,11 @@ public class DKRowDiff implements DKDiff {
    }
 
    public Object[] getRowKeyValues() {
-      return _keyValues;
+      return _tableComparison.getRowKeyValues(_row, _side.ordinal());
    }
 
    public OrderedMap getRowDisplayValues() {
-      return _displayValues;
+      return _tableComparison.getRowDisplayValues(_row, _side.ordinal());
    }
 
    /**
@@ -72,7 +72,7 @@ public class DKRowDiff implements DKDiff {
    }
 
    public String getRowDisplayString() {
-      return _displayValues.toString();
+      return this.getRowDisplayValues().toString();
    }
 
    public int compareTo(DKDiff target_) {

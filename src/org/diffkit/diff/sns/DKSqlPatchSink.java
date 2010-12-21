@@ -15,18 +15,19 @@
  */
 package org.diffkit.diff.sns;
 
+import java.io.File;
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.NotImplementedException;
 
+import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.ThreadSafe;
 import org.diffkit.db.DKDBConnectionInfo;
-import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBTable;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKRowDiff;
@@ -38,17 +39,23 @@ import org.diffkit.util.DKStringUtil;
  * @author jpanico
  */
 @ThreadSafe
-public class DKSqlPatchSink extends DKAbstractSink {
+public class DKSqlPatchSink extends DKWriterSink {
 
-   private List<DKDiff> _diffs;
+   private long _rowDiffCount;
+   private long _columnDiffCount;
    private final DKDatabase _database;
    private final DKDBTable _lhsTable;
    private final DKDBTable _rhsTable;
+   private final File _file;
 
    public DKSqlPatchSink(DKDBConnectionInfo connectionInfo_, String lhsTableName_,
-                         String rhsTableName_) throws SQLException {
+                         String rhsTableName_, String patchFilePath_) throws SQLException {
       super(null);
-      DKValidate.notNull(connectionInfo_, lhsTableName_, rhsTableName_);
+      DKValidate.notNull(connectionInfo_, lhsTableName_, rhsTableName_, patchFilePath_);
+      _file = new File(patchFilePath_);
+      if (_file.exists())
+         throw new DKUserException(String.format(
+            "sink file [%s] already exists! please remove it and try again.", _file));
       _database = new DKDatabase(connectionInfo_);
       _lhsTable = _database.getTable(null, null, lhsTableName_);
       _rhsTable = _database.getTable(null, null, rhsTableName_);
@@ -60,19 +67,17 @@ public class DKSqlPatchSink extends DKAbstractSink {
       this.ensureNotEnded();
       if (diff_ == null)
          return;
-      if (_diffs == null)
-         _diffs = new ArrayList<DKDiff>();
-      synchronized (_diffs) {
-         _diffs.add(diff_);
+      DKDiff.Kind diffKind = diff_.getKind();
+      if (diffKind == DKDiff.Kind.ROW_DIFF)
+         _rowDiffCount++;
+      else if (diffKind == DKDiff.Kind.COLUMN_DIFF)
+         _columnDiffCount++;
+
+      if (diffKind == DKDiff.Kind.ROW_DIFF) {
+
       }
-      if (diff_.getKind() == org.diffkit.diff.engine.DKDiff.Kind.ROW_DIFF) {
-         try {
-            this.printRowDiff((DKRowDiff) diff_);
-         }
-         catch (SQLException e_) {
-            e_.printStackTrace();
-         }
-      }
+      else if (diffKind == DKDiff.Kind.COLUMN_DIFF)
+         _columnDiffCount++;
    }
 
    @SuppressWarnings("unchecked")
@@ -85,34 +90,22 @@ public class DKSqlPatchSink extends DKAbstractSink {
 
    // @Override
    public Kind getKind() {
-      return Kind.STREAM;
-   }
-
-   public List<DKDiff> getDiffs() {
-      return _diffs;
+      return Kind.FILE;
    }
 
    @Override
    public long getDiffCount() {
-      if (_diffs == null)
-         return 0;
-      return _diffs.size();
+      return (_rowDiffCount + _columnDiffCount);
    }
 
    @Override
    public long getRowDiffCount() {
-      List<DKDiff> rowDiffs = DKDiffUtil.getRowDiffs(this.getDiffs());
-      if (rowDiffs == null)
-         return 0;
-      return rowDiffs.size();
+      return _rowDiffCount;
    }
 
    @Override
    public long getColumnDiffCount() {
-      List<DKDiff> columnDiffs = DKDiffUtil.getColumnDiffs(this.getDiffs());
-      if (columnDiffs == null)
-         return 0;
-      return columnDiffs.size();
+      return _columnDiffCount;
    }
 
    public URI getURI() {
@@ -126,7 +119,4 @@ public class DKSqlPatchSink extends DKAbstractSink {
          this.getDiffCount());
    }
 
-   public String generateSummary(DKContext context_) {
-      return "summary";
-   }
 }
