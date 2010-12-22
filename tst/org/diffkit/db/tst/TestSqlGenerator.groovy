@@ -23,6 +23,8 @@ import org.apache.commons.lang.StringUtils;
 
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBConnectionInfo 
+import org.diffkit.db.DKDBType;
+import org.diffkit.db.DKDBTypeInfo;
 import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
@@ -38,6 +40,66 @@ import groovy.util.GroovyTestCase;
  */
 public class TestSqlGenerator extends GroovyTestCase {
    
+   
+   public void testGenerateUpdateDML(){
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDatabase database = [connectionInfo]
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      DKDBTypeInfo varcharTypeInfo = database.getTypeInfo(DKDBType.VARCHAR)
+      DKDBTypeInfo intTypeInfo = database.getTypeInfo(DKDBType.INTEGER)
+      DKDBTypeInfo[] typeInfos = [varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,intTypeInfo]
+      String[] columnNames = ['first_name','last_name','address','city','country','age']
+      DKSqlGenerator sqlGenerator = [database]
+      int[] keyIndices = [0,1]
+      int[] updateIndices = [2,3,4,5]
+      def updateStatement = sqlGenerator.generateUpdateDML( row, typeInfos, columnNames, keyIndices, updateIndices, 'schema', 'customer')
+      assert updateStatement == "UPDATE schema.customer\nSET first_name='bob', last_name='smith', address='addr1', city='city', country='country', age=55\nWHERE (first_name='bob' ) AND (last_name='smith' )"
+   }
+   
+   public void testGenerateSetClause(){
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDatabase database = [connectionInfo]
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      DKDBTypeInfo varcharTypeInfo = database.getTypeInfo(DKDBType.VARCHAR)
+      DKDBTypeInfo intTypeInfo = database.getTypeInfo(DKDBType.INTEGER)
+      DKDBTypeInfo[] typeInfos = [varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,intTypeInfo]
+      String[] columnNames = ['first_name','last_name','address','city','country','age']
+      DKSqlGenerator sqlGenerator = [database]
+      int[] updateIndices = [2,3,4,5]
+      def setClause = sqlGenerator.generateSetClause( row, typeInfos, columnNames, updateIndices)
+      println "setClause->$setClause"
+      assert setClause == "SET first_name='bob', last_name='smith', address='addr1', city='city', country='country', age=55"
+      assert ! sqlGenerator.generateSetClause( null, null, null, null)
+   }
+   
+   public void testGenerateDeleteDML(){
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDatabase database = [connectionInfo]
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      DKDBTypeInfo varcharTypeInfo = database.getTypeInfo(DKDBType.VARCHAR)
+      DKDBTypeInfo intTypeInfo = database.getTypeInfo(DKDBType.INTEGER)
+      DKDBTypeInfo[] typeInfos = [varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,intTypeInfo]
+      String[] columnNames = ['first_name','last_name','address','city','country','age']
+      DKSqlGenerator sqlGenerator = [database]
+      def deleteStatement = sqlGenerator.generateDeleteDML( row, typeInfos, columnNames, 'schema', 'customer')
+      println "deleteStatement->$deleteStatement"
+      assert deleteStatement == """DELETE FROM schema.customer\nWHERE (first_name='bob' ) AND (last_name='smith' ) AND (address='addr1' ) AND (city='city' ) AND (country='country' ) AND (age=55 )"""
+   }
+   
+   public void testGenerateWhereClause(){
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      DKDatabase database = [connectionInfo]
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      DKDBTypeInfo varcharTypeInfo = database.getTypeInfo(DKDBType.VARCHAR)
+      DKDBTypeInfo intTypeInfo = database.getTypeInfo(DKDBType.INTEGER)
+      DKDBTypeInfo[] typeInfos = [varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,varcharTypeInfo,intTypeInfo]
+      String[] columnNames = ['first_name','last_name','address','city','country','age']
+      DKSqlGenerator sqlGenerator = [database]
+      def whereClause = sqlGenerator.generateWhereClause( row, typeInfos, columnNames)
+      println "whereClause->$whereClause"
+      assert whereClause == "WHERE (first_name='bob' ) AND (last_name='smith' ) AND (address='addr1' ) AND (city='city' ) AND (country='country' ) AND (age=55 )"
+      assert ! sqlGenerator.generateWhereClause( null, null, null)
+   }
    
    public void testGenerateInsert(){
       def table = this.createContextMetaTable()
