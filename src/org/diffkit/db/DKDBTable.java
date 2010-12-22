@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
+import org.diffkit.util.DKArrayUtil;
 import org.diffkit.util.DKSqlUtil.ReadType;
 
 /**
@@ -119,6 +120,22 @@ public class DKDBTable {
       return _columns;
    }
 
+   public DKDBColumn[] getPrimaryKeyColumns() {
+      DKDBPrimaryKey primaryKey = this.getPrimaryKey();
+      if (primaryKey == null)
+         return null;
+      return this.getColumns(primaryKey.getColumnNames());
+   }
+
+   public Object[] getPrimaryKeyValues(Object[] row_) {
+      if (row_ == null)
+         return null;
+      int[] primaryKeyIndices = this.getPrimaryKeyColumnIndices();
+      if (ArrayUtils.isEmpty(primaryKeyIndices))
+         return null;
+      return DKArrayUtil.retainElementsAtIndices(row_, primaryKeyIndices);
+   }
+
    public Map<String, ?> createRowMap(Object[] rowValues_) {
       if (ArrayUtils.isEmpty(rowValues_))
          return null;
@@ -159,6 +176,19 @@ public class DKDBTable {
             return column;
       }
       return null;
+   }
+
+   /**
+    * convenience method that delegates to getColumn(String)
+    */
+   public DKDBColumn[] getColumns(String[] columnNames_) {
+      if (ArrayUtils.isEmpty(columnNames_))
+         return null;
+      DKDBColumn[] columns = new DKDBColumn[columnNames_.length];
+      for (int i = 0; i < columnNames_.length; i++)
+         columns[i] = this.getColumn(columnNames_[i]);
+
+      return columns;
    }
 
    /**

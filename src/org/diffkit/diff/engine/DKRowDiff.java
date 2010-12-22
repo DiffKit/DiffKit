@@ -46,6 +46,10 @@ public class DKRowDiff implements DKDiff {
       return -1;
    }
 
+   public Object[] getRow() {
+      return _row;
+   }
+
    public Object[] getRowKeyValues() {
       return _tableComparison.getRowKeyValues(_row, _side.ordinal());
    }

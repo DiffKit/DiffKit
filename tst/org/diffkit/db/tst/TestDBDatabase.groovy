@@ -31,7 +31,11 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBDatabase extends GroovyTestCase {
    
-	public void testGenerateInsert() {
+   public void testConcreteKeyTypeInfos() {
+      
+   }
+   
+   public void testGenerateInsert() {
 		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
 		println "connectionInfo->$connectionInfo"
 		DKDatabase database = [connectionInfo]

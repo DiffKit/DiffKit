@@ -40,15 +40,25 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBTable extends GroovyTestCase {
    
-   public void testCreateRowMap() {
+   public void testPrimaryKeyColumns() {
       DKDBTable table = this.createCustomerMetaTable()
-	  assert table
-	  Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
-	  def rowMap = table.createRowMap( row)
-      println "rowMap->$rowMap"
-	  assert rowMap == ['first_name':'bob', 'last_name':'smith', 'address':'addr1', 'city':'city', 'country':'country', 'age':55]
+     assert table
+     def primaryKeyColumns = table.getPrimaryKeyColumns()
+     assert primaryKeyColumns
+     assert primaryKeyColumns.length ==2
+     assert primaryKeyColumns[0].name == 'first_name'
+     assert primaryKeyColumns[1].name == 'last_name'
    }
    
+   public void testCreateRowMap() {
+      DKDBTable table = this.createCustomerMetaTable()
+     assert table
+     Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+     def rowMap = table.createRowMap( row)
+      println "rowMap->$rowMap"
+     assert rowMap == ['first_name':'bob', 'last_name':'smith', 'address':'addr1', 'city':'city', 'country':'country', 'age':55]
+   }
+
    /**
     * are MEM tables specific to a single connection (like temp tables), 
     * or are they visible across connections?

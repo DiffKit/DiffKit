@@ -104,7 +104,15 @@ public class DKSqlPatchSink extends DKAbstractSink {
       this.flushRunningColumnDiffRow();
       if (rowDiff_ == null)
          return;
-      throw new NotImplementedException();
+      try {
+         String insertSql = _database.generateInsertDML(rowDiff_.getRow(), _rhsTable);
+         if (_isDebugEnabled)
+            _log.debug("insertSql->{}", insertSql);
+         _writer.write(String.format("%s;\n\n", insertSql));
+      }
+      catch (Exception e_) {
+         _log.error(null, e_);
+      }
    }
 
    // it's "missing" from the RHS, which means it has to be INSERTed
@@ -114,10 +122,15 @@ public class DKSqlPatchSink extends DKAbstractSink {
       this.flushRunningColumnDiffRow();
       if (rowDiff_ == null)
          return;
-      // String insertSql =
-      // _database.generateInsertDML(rowDiff_.getRowDisplayValues(),
-      // table);
-      throw new NotImplementedException();
+      try {
+         String insertSql = _database.generateInsertDML(rowDiff_.getRow(), _rhsTable);
+         if (_isDebugEnabled)
+            _log.debug("insertSql->{}", insertSql);
+         _writer.write(String.format("%s;\n\n", insertSql));
+      }
+      catch (Exception e_) {
+         _log.error(null, e_);
+      }
    }
 
    // add an UPDATE to the running columnDiffRow
