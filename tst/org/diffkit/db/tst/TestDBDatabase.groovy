@@ -31,6 +31,17 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBDatabase extends GroovyTestCase {
    
+	public void testGenerateInsert() {
+		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+		println "connectionInfo->$connectionInfo"
+		DKDatabase database = [connectionInfo]
+        DKDBTable table = this.createCustomerMetaTable()
+	    assert table
+	    Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+		def insertSQLString = database.generateInsertDML(row, table)
+        assert insertSQLString == "INSERT INTO CUSTOMER (first_name, last_name, address, city, country, age)\nVALUES ('bob', 'smith', 'addr1', 'city', 'country', 55)"
+	 }
+  
    public void testSupportsType() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"

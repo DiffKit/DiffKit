@@ -41,6 +41,12 @@ import groovy.util.GroovyTestCase;
 public class TestDBTable extends GroovyTestCase {
    
    public void testCreateRowMap() {
+      DKDBTable table = this.createCustomerMetaTable()
+	  assert table
+	  Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+	  def rowMap = table.createRowMap( row)
+      println "rowMap->$rowMap"
+	  assert rowMap == ['first_name':'bob', 'last_name':'smith', 'address':'addr1', 'city':'city', 'country':'country', 'age':55]
    }
    
    /**
