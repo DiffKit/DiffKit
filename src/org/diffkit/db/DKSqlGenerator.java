@@ -186,17 +186,19 @@ public class DKSqlGenerator {
    }
 
    private String generateSetClause(Object[] values_, DKDBTypeInfo[] typeInfos_,
-                                    String[] columnNames_, int[] updateIndices_) {
+                                    String[] columnNames_, int[] setIndices_) {
 
-      if (ArrayUtils.isEmpty(values_) || ArrayUtils.isEmpty(updateIndices_))
+      if (ArrayUtils.isEmpty(values_) || ArrayUtils.isEmpty(setIndices_))
          return null;
       StringBuilder builder = new StringBuilder();
       builder.append("SET ");
-      for (int i = 0; i < values_.length; i++) {
-         builder.append(String.format("%s=%s",
-            this.generateIdentifierString(columnNames_[i]),
-            DKSqlUtil.formatForSql(values_[i], typeInfos_[i].getWriteType())));
-         if (i < values_.length - 1)
+      for (int i = 0; i < setIndices_.length; i++) {
+         builder.append(String.format(
+            "%s=%s",
+            this.generateIdentifierString(columnNames_[setIndices_[i]]),
+            DKSqlUtil.formatForSql(values_[setIndices_[i]],
+               typeInfos_[setIndices_[i]].getWriteType())));
+         if (i < setIndices_.length - 1)
             builder.append(", ");
       }
       return builder.toString();

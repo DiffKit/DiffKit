@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -154,7 +155,7 @@ public class DKDatabase {
    }
 
    public DKDBTypeInfo[] getKeyConcreteTypeInfos(DKDBTable table_) throws SQLException {
-      DKDBColumn[] columns = table_.getColumns();
+      DKDBColumn[] columns = table_.getPrimaryKeyColumns();
       if (ArrayUtils.isEmpty(columns))
          return null;
       DKDBTypeInfo[] typeInfos = new DKDBTypeInfo[columns.length];
@@ -267,14 +268,52 @@ public class DKDatabase {
    }
 
    /**
-    * convenience that delegates to generateInsertDML(Map,DKDBTable)
+    * convenience that delegates to underlying SqlGenerator
     */
    public String generateDeleteDML(Object[] rowValues_, DKDBTable table_)
       throws SQLException {
-      if ((table_ == null) || (rowValues_ == null))
+      if (_log.isDebugEnabled()) {
+         _log.debug("rowValues_->{}", Arrays.toString(rowValues_));
+         _log.debug("table_->{}", table_);
+      }
+      if ((table_ == null) || ArrayUtils.isEmpty(rowValues_))
          return null;
-      Map<String, ?> rowMap = table_.createRowMap(rowValues_);
-      return _sqlGenerator.generateInsertDML(rowMap, table_);
+      Object[] keyValues = table_.getPrimaryKeyValues(rowValues_);
+      DKDBTypeInfo[] keyTypeInfos = this.getKeyConcreteTypeInfos(table_);
+      String[] keyColumnNames = table_.getPrimaryKeyColumnNames();
+      if (_log.isDebugEnabled()) {
+         _log.debug("keyValues->{}", Arrays.toString(keyValues));
+         _log.debug("keyTypeInfos->{}", Arrays.toString(keyTypeInfos));
+         _log.debug("keyColumnNames->{}", Arrays.toString(keyColumnNames));
+      }
+      DKValidate.notEmpty(keyValues, keyTypeInfos, keyColumnNames);
+      if ((keyValues.length != keyTypeInfos.length)
+         || (keyTypeInfos.length != keyColumnNames.length))
+         throw new RuntimeException(
+            String.format(
+               "keyValues.length->{} keyTypeInfos_.length->{} keyColumnNames_.length->{} don't match",
+               keyValues.length, keyTypeInfos.length, keyColumnNames.length));
+      return _sqlGenerator.generateDeleteDML(keyValues, keyTypeInfos, keyColumnNames,
+         table_.getSchema(), table_.getTableName());
+   }
+
+   /**
+    * convenience that delegates to underlying SqlGenerator
+    */
+   public String generateUpdateDML(Object[] rowValues_, int[] updateIndices_,
+                                   DKDBTable table_) throws SQLException {
+      if (_log.isDebugEnabled()) {
+         _log.debug("rowValues_->{}", Arrays.toString(rowValues_));
+         _log.debug("updateIndices_->{}", Arrays.toString(updateIndices_));
+         _log.debug("table_->{}", table_);
+      }
+      if ((table_ == null) || ArrayUtils.isEmpty(rowValues_)
+         || ArrayUtils.isEmpty(updateIndices_))
+         return null;
+      return _sqlGenerator.generateUpdateDML(rowValues_,
+         this.getColumnConcreteTypeInfos(table_), table_.getColumnNames(),
+         table_.getPrimaryKeyColumnIndices(), updateIndices_, table_.getSchema(),
+         table_.getTableName());
    }
 
    /**

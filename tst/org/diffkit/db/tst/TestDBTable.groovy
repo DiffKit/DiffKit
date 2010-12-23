@@ -17,7 +17,6 @@
  */
 package org.diffkit.db.tst
 
-import java.sql.Time 
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -40,25 +39,36 @@ import groovy.util.GroovyTestCase;
  */
 public class TestDBTable extends GroovyTestCase {
    
+   public void testKeyValues() {
+      DKDBTable table = this.createCustomerMetaTable()
+      assert table
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      def keyValues = table.getPrimaryKeyValues(row)
+      assert keyValues
+      assert keyValues.length ==2
+      assert keyValues[0] == 'bob'
+      assert keyValues[1] == 'smith'
+   }
+   
    public void testPrimaryKeyColumns() {
       DKDBTable table = this.createCustomerMetaTable()
-     assert table
-     def primaryKeyColumns = table.getPrimaryKeyColumns()
-     assert primaryKeyColumns
-     assert primaryKeyColumns.length ==2
-     assert primaryKeyColumns[0].name == 'first_name'
-     assert primaryKeyColumns[1].name == 'last_name'
+      assert table
+      def primaryKeyColumns = table.getPrimaryKeyColumns()
+      assert primaryKeyColumns
+      assert primaryKeyColumns.length ==2
+      assert primaryKeyColumns[0].name == 'first_name'
+      assert primaryKeyColumns[1].name == 'last_name'
    }
    
    public void testCreateRowMap() {
       DKDBTable table = this.createCustomerMetaTable()
-     assert table
-     Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
-     def rowMap = table.createRowMap( row)
+      assert table
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      def rowMap = table.createRowMap( row)
       println "rowMap->$rowMap"
-     assert rowMap == ['first_name':'bob', 'last_name':'smith', 'address':'addr1', 'city':'city', 'country':'country', 'age':55]
+      assert rowMap == ['first_name':'bob', 'last_name':'smith', 'address':'addr1', 'city':'city', 'country':'country', 'age':55]
    }
-
+   
    /**
     * are MEM tables specific to a single connection (like temp tables), 
     * or are they visible across connections?

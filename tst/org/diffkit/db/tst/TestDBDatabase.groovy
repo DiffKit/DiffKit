@@ -18,6 +18,7 @@ package org.diffkit.db.tst
 
 import org.diffkit.db.DKDBColumn 
 import org.diffkit.db.DKDBConnectionInfo;
+import org.diffkit.db.DKDBType;
 import org.diffkit.db.DKDatabase 
 import org.diffkit.db.DKDBFlavor;
 import org.diffkit.db.DKDBPrimaryKey 
@@ -32,20 +33,57 @@ import groovy.util.GroovyTestCase;
 public class TestDBDatabase extends GroovyTestCase {
    
    public void testConcreteKeyTypeInfos() {
-      
+   }
+   
+   public void testGenerateUpdate() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTable table = this.createCustomerMetaTable()
+      assert table
+      Object[] row = ['bob', 'smith', 'update-addr1', 'city', 'update-country', 55]
+      int[] updateIndices = [2,4]
+      def updateSQLString = database.generateUpdateDML(row, updateIndices, table)
+      println "updateSQLString->$updateSQLString"
+      assert updateSQLString == "UPDATE CUSTOMER\nSET address='update-addr1', country='update-country'\nWHERE (first_name='bob' ) AND (last_name='smith' )"
+   }
+   
+   public void testGenerateDelete() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTable table = this.createCustomerMetaTable()
+      assert table
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      def deleteSQLString = database.generateDeleteDML(row, table)
+      println "deleteSQLString->$deleteSQLString"
+      assert deleteSQLString == "DELETE FROM CUSTOMER\nWHERE (first_name='bob' ) AND (last_name='smith' )"
+   }
+   
+   public void testKeyTypeInfos() {
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTable table = this.createCustomerMetaTable()
+      assert table
+      def keyTypeInfos = database.getKeyConcreteTypeInfos(table)
+      assert keyTypeInfos
+      assert keyTypeInfos.length ==2
+      assert keyTypeInfos[0].type == DKDBType.VARCHAR
+      assert keyTypeInfos[1].type == DKDBType.VARCHAR
    }
    
    public void testGenerateInsert() {
-		DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
-		println "connectionInfo->$connectionInfo"
-		DKDatabase database = [connectionInfo]
-        DKDBTable table = this.createCustomerMetaTable()
-	    assert table
-	    Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
-		def insertSQLString = database.generateInsertDML(row, table)
-        assert insertSQLString == "INSERT INTO CUSTOMER (first_name, last_name, address, city, country, age)\nVALUES ('bob', 'smith', 'addr1', 'city', 'country', 55)"
-	 }
-  
+      DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTable table = this.createCustomerMetaTable()
+      assert table
+      Object[] row = ['bob', 'smith', 'addr1', 'city', 'country', 55]
+      def insertSQLString = database.generateInsertDML(row, table)
+      assert insertSQLString == "INSERT INTO CUSTOMER (first_name, last_name, address, city, country, age)\nVALUES ('bob', 'smith', 'addr1', 'city', 'country', 55)"
+   }
+   
    public void testSupportsType() {
       DKDBConnectionInfo connectionInfo = ['test', DKDBFlavor.H2,"mem:test", null, null, 'test', 'test']
       println "connectionInfo->$connectionInfo"

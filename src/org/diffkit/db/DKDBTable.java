@@ -127,6 +127,13 @@ public class DKDBTable {
       return this.getColumns(primaryKey.getColumnNames());
    }
 
+   public String[] getPrimaryKeyColumnNames() {
+      DKDBPrimaryKey primaryKey = this.getPrimaryKey();
+      if (primaryKey == null)
+         return null;
+      return primaryKey.getColumnNames();
+   }
+
    public Object[] getPrimaryKeyValues(Object[] row_) {
       if (row_ == null)
          return null;
