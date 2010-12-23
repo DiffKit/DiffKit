@@ -53,7 +53,7 @@ public class TestSqlGenerator extends GroovyTestCase {
       int[] keyIndices = [0,1]
       int[] updateIndices = [2,3,4,5]
       def updateStatement = sqlGenerator.generateUpdateDML( row, typeInfos, columnNames, keyIndices, updateIndices, 'schema', 'customer')
-      assert updateStatement == "UPDATE schema.customer\nSET first_name='bob', last_name='smith', address='addr1', city='city', country='country', age=55\nWHERE (first_name='bob' ) AND (last_name='smith' )"
+      assert updateStatement == "UPDATE schema.customer\nSET address='addr1', city='city', country='country', age=55\nWHERE (first_name='bob' ) AND (last_name='smith' )"
    }
    
    public void testGenerateSetClause(){
@@ -68,7 +68,7 @@ public class TestSqlGenerator extends GroovyTestCase {
       int[] updateIndices = [2,3,4,5]
       def setClause = sqlGenerator.generateSetClause( row, typeInfos, columnNames, updateIndices)
       println "setClause->$setClause"
-      assert setClause == "SET first_name='bob', last_name='smith', address='addr1', city='city', country='country', age=55"
+      assert setClause == "SET address='addr1', city='city', country='country', age=55"
       assert ! sqlGenerator.generateSetClause( null, null, null, null)
    }
    

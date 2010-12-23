@@ -140,6 +140,8 @@ public class DKDiffEngine {
       DKColumnDiffRow diffRow = null;
       for (int i = 0; i < diffIndexes.length; i++) {
          context_._columnStep++;
+         context_._lhsColumnIdx = columnComparisons[diffIndexes[i]]._lhsColumn.getIndex();
+         context_._rhsColumnIdx = columnComparisons[diffIndexes[i]]._rhsColumn.getIndex();
          if (columnComparisons[diffIndexes[i]].isDiff(lhs_, rhs_, context_)) {
             if (diffRow == null)
                // key side arbitrary; keyValeus guaranteed to match on both

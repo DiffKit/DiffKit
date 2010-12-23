@@ -22,9 +22,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
 import org.diffkit.diff.engine.DKRowDiff;
 import org.diffkit.diff.engine.DKSide;
+import org.diffkit.util.DKListUtil;
 import org.diffkit.util.DKObjectUtil;
 import org.diffkit.util.DKStringUtil;
 
@@ -52,6 +54,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
    private long _rowDiffCount;
    private long _columnDiffCount;
    private DKColumnDiffRow _runnningColumnDiffRow;
+   private final List<Integer> _runningRhsColumnDiffIndices = new ArrayList<Integer>();
    private Writer _writer;
    private final DKDatabase _database;
    private final DKDBTable _rhsTable;
@@ -85,15 +88,17 @@ public class DKSqlPatchSink extends DKAbstractSink {
 
       if (diff_ instanceof DKRowDiff) {
          DKRowDiff diff = (DKRowDiff) diff_;
-         // it's not on the LHS, which is the reference side, so it's an *extra*
+         // it's on the RHS, which is not the reference side, so it's an *extra*
          // row
-         if (diff.getSide() == DKSide.LEFT)
+         if (diff.getSide() == DKSide.RIGHT)
             this.writeExtraRow(diff);
-         else if (diff.getSide() == DKSide.RIGHT)
+         // it's on the LHS, which is the reference side, so it's *missing* from
+         // the RHS
+         else if (diff.getSide() == DKSide.LEFT)
             this.writeMissingRow(diff);
       }
       else if (diff_ instanceof DKColumnDiff)
-         this.writeColumnDiff((DKColumnDiff) diff_);
+         this.writeColumnDiff((DKColumnDiff) diff_, context_);
 
    }
 
@@ -105,10 +110,10 @@ public class DKSqlPatchSink extends DKAbstractSink {
       if (rowDiff_ == null)
          return;
       try {
-         String insertSql = _database.generateInsertDML(rowDiff_.getRow(), _rhsTable);
+         String deleteSql = _database.generateDeleteDML(rowDiff_.getRow(), _rhsTable);
          if (_isDebugEnabled)
-            _log.debug("insertSql->{}", insertSql);
-         _writer.write(String.format("%s;\n\n", insertSql));
+            _log.debug("deleteSql->{}", deleteSql);
+         _writer.write(String.format("%s;\n\n", deleteSql));
       }
       catch (Exception e_) {
          _log.error(null, e_);
@@ -134,9 +139,11 @@ public class DKSqlPatchSink extends DKAbstractSink {
    }
 
    // add an UPDATE to the running columnDiffRow
-   private void writeColumnDiff(DKColumnDiff columnDiff_) {
-      if (_isDebugEnabled)
+   private void writeColumnDiff(DKColumnDiff columnDiff_, DKContext context_) {
+      if (_isDebugEnabled) {
          _log.debug("columnDiff_->{}", columnDiff_);
+         _log.debug("context_->{}", (context_ == null ? null : context_.getDescription()));
+      }
       if (columnDiff_ == null) {
          this.flushRunningColumnDiffRow();
          return;
@@ -146,13 +153,27 @@ public class DKSqlPatchSink extends DKAbstractSink {
          this.flushRunningColumnDiffRow();
          _runnningColumnDiffRow = columnDiffRow;
       }
-      throw new NotImplementedException();
+      _runningRhsColumnDiffIndices.add(new Integer(context_._rhsColumnIdx));
    }
 
    private void flushRunningColumnDiffRow() {
-      if (_runnningColumnDiffRow == null)
+      if (_runnningColumnDiffRow == null) {
+         _runningRhsColumnDiffIndices.clear();
          return;
-      throw new NotImplementedException();
+      }
+      try {
+         String updateSql = _database.generateUpdateDML(
+            _runnningColumnDiffRow.getRhsRow(),
+            DKListUtil.toPrimitiveArray(_runningRhsColumnDiffIndices), _rhsTable);
+         if (_isDebugEnabled)
+            _log.debug("updateSql->{}", updateSql);
+         _writer.write(String.format("%s;\n\n", updateSql));
+      }
+      catch (Exception e_) {
+         _log.error(null, e_);
+      }
+      _runnningColumnDiffRow = null;
+      _runningRhsColumnDiffIndices.clear();
    }
 
    @Override
@@ -191,7 +212,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
    }
 
    public URI getURI() {
-      return DKStringUtil.createURI(String.format("sql://%s",
+      return DKStringUtil.createURI(String.format("patch://%s",
          DKObjectUtil.getAddressHexString(this)));
    }
 

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.time.StopWatch;
 
 import org.diffkit.common.DKValidate;
@@ -44,6 +45,10 @@ public class DKContext {
    public long _rowStep;
    // current or last
    public int _columnStep;
+   // column index of the current or last lhs value diff'd
+   public int _lhsColumnIdx;
+   // column index of the current or last rhs value diff'd
+   public int _rhsColumnIdx;
    private final StopWatch _stopwatch = new StopWatch();
 
    /**
@@ -124,5 +129,9 @@ public class DKContext {
 
    public String toString() {
       return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()), _id);
+   }
+
+   public String getDescription() {
+      return ReflectionToStringBuilder.toString(this);
    }
 }
