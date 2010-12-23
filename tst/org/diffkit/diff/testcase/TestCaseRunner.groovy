@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.ClassUtils 
+import org.apache.commons.lang.reflect.ConstructorUtils;
 
 import org.diffkit.common.DKRegexFilenameFilter;
 import org.diffkit.common.DKRuntime 
@@ -45,9 +46,7 @@ import org.diffkit.diff.engine.DKSink
 import org.diffkit.diff.engine.DKSource 
 import org.diffkit.diff.engine.DKSourceSink 
 import org.diffkit.diff.engine.DKSourceSink.Kind
-import org.diffkit.diff.sns.DKFileSink 
 import org.diffkit.diff.sns.DKFileSource 
-import org.diffkit.diff.sns.DKWriterSink 
 import org.diffkit.util.DKFileUtil;
 import org.diffkit.util.DKResourceUtil;
 import org.diffkit.util.DKSpringUtil;
@@ -342,10 +341,12 @@ public class TestCaseRunner implements Runnable {
       source_.isSorted, source_.validateLazily )
    }
    
-   private DKSink setupFileSink(DKWriterSink sink_, TestCaseRunnerRun runnerRun_){
+   private DKSink setupFileSink(DKSink sink_, TestCaseRunnerRun runnerRun_){
+      _log.debug("sink_->{}",sink_)
+      _log.debug("runnerRun_->{}",runnerRun_)
       File newSinkPath = [runnerRun_.dir, sink_.file.path ]
       _log.debug("newSinkPath->{}",newSinkPath)
-      return new DKFileSink(newSinkPath.absolutePath, sink_)
+      return ConstructorUtils.invokeConstructor( sink_.class, (Object[])[newSinkPath.getAbsolutePath(),sink_])
    }
    
    private DKDBTableLoader getLoaderForSource(DKDatabase source_){

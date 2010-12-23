@@ -30,6 +30,7 @@ import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.diff.sns.DKDBSource;
 import org.diffkit.diff.sns.DKFileSink;
 import org.diffkit.diff.sns.DKFileSource;
+import org.diffkit.diff.sns.DKSqlPatchSink;
 import org.diffkit.diff.sns.DKWriterSink;
 
 /**
@@ -137,6 +138,20 @@ public class DKMagicPlanRules {
       "fileSinkPath",
       "if sinkFilePath is specified in plan, then use it as filePath_ arg to FileSink",
       DKFileSink.class, "sink_.filePath_", "sinkFilePath", true, new PlanValue(true));
+   private static final DKMagicPlanRule SQL_PATCH_SINK_RULE = new DKMagicPlanRule(
+      "sqlPatchSink",
+      "if sqlPatchFilePath specified, then force sink_ to be SqlPatchSink",
+      DKPassthroughPlan.class, "sink_", "sqlPatchFilePath", true, new TypeRefinement(
+         DKSqlPatchSink.class));
+   private static final DKMagicPlanRule SQL_PATCH_SINK_RHS_TABLE_NAME_RULE = new DKMagicPlanRule(
+      "sqlPatchRhsTableName",
+      "if rhsDBTableName is specified in plan, then use it as the rhsTableName_ in any DKSqlPatchSink",
+      DKSqlPatchSink.class, "rhsTableName_", "rhsDBTableName", true, new PlanValue(true));
+   private static final DKMagicPlanRule SQL_PATCH_FILE_PATH_RULE = new DKMagicPlanRule(
+      "sqlPatchFilePath",
+      "if sqlPatchFilePath is specified in plan, then use it as the patchFilePath_ in any DKSqlPatchSink",
+      DKSqlPatchSink.class, "patchFilePath_", "sqlPatchFilePath", true, new PlanValue(
+         true));
    private static final DKMagicPlanRule DEFAULT_SINK_RULE = new DKMagicPlanRule(
       "defaultSink",
       "if no other Sink specified, then use WriterSink that sends output to stderr using a default formatter",
@@ -218,6 +233,7 @@ public class DKMagicPlanRules {
       LHS_DB_CONNECTION_INFO_RULE, RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE,
       KEY_COLUMN_NAMES_RULE, READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE,
       RHS_FILE_SOURCE_RULE, RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE,
+      SQL_PATCH_SINK_RULE, SQL_PATCH_SINK_RHS_TABLE_NAME_RULE, SQL_PATCH_FILE_PATH_RULE,
       DEFAULT_SINK_RULE, AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE,
       DEFAULT_DELIMITER_RULE, IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE,
       DEFAULT_DIFF_KIND_RULE, DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE,

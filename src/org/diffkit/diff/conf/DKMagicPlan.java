@@ -42,6 +42,7 @@ public class DKMagicPlan implements DKPlan {
    private String _lhsFilePath;
    private String _rhsFilePath;
    private String _sinkFilePath;
+   private String _sqlPatchFilePath;
    private String _delimiter;
    private DKDBConnectionInfo _dbConnectionInfo;
    private DKDBConnectionInfo _lhsDBConnectionInfo;
@@ -129,6 +130,14 @@ public class DKMagicPlan implements DKPlan {
 
    public void setSinkFilePath(String sinkFilePath_) {
       _sinkFilePath = sinkFilePath_;
+   }
+
+   public String getSqlPatchFilePath() {
+      return _sqlPatchFilePath;
+   }
+
+   public void setSqlPatchFilePath(String sqlPatchFilePath_) {
+      _sqlPatchFilePath = sqlPatchFilePath_;
    }
 
    public String getDelimiter() {

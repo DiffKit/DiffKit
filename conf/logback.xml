@@ -17,7 +17,7 @@
 
    
    <logger name="org.diffkit">
-      <level value="info" />
+      <level value="debug" />
    </logger>
 
 	<logger name="user" additivity="false">

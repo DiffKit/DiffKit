@@ -64,7 +64,8 @@ public class TestSqlPatchSink extends GroovyTestCase {
       assert tableModel
       DKTableComparison tableComparison = DKAutomaticTableComparison.createDefaultTableComparison(tableModel, tableModel, null, null)
       assert tableModel
-      Object[] firstRow = ['bob', 'smith', 'update-addr1', 'city', 'update-country', 55, new Date(), new Timestamp(new Date().time)]
+      Date date = [1000000000000]
+      Object[] firstRow = ['bob', 'smith', 'update-addr1', 'city', 'update-country', 55, date, new Timestamp(date.time)]
       writer = new StringWriter()
       sink = [connectionInfo, dbTable.tableName, writer]      
       context = new DKContext(sink, tableComparison)
@@ -73,12 +74,12 @@ public class TestSqlPatchSink extends GroovyTestCase {
       DKRowDiff diff = [1, firstRow, DKSide.LEFT, tableComparison]
       sink.record( diff, context)
       
-      Object[] secondRow = ['john', 'candy', 'candy st', 'candy land', 'CANADA', -1, new Date(), new Timestamp(new Date().time)]
+      Object[] secondRow = ['john', 'candy', 'candy st', 'candy land', 'CANADA', -1, date, new Timestamp(date.time)]
       diff = [2, secondRow, DKSide.RIGHT, tableComparison]
       sink.record( diff, context)
       
-      Object[] thirdRowLeft = ['elton', 'john', 'nyc', 'ny', 'USA', 80, new Date(), new Timestamp(new Date().time)]
-      Object[] thirdRowRight = ['elton', 'john', 'new york', 'new york', 'AMERICA', -1, new Date(), new Timestamp(new Date().time)]
+      Object[] thirdRowLeft = ['elton', 'john', 'nyc', 'ny', 'USA', 80, date, new Timestamp(date.time)]
+      Object[] thirdRowRight = ['elton', 'john', 'new york', 'new york', 'AMERICA', -1, date, new Timestamp(date.time)]
       
       DKColumnDiffRow columnDiffRow = [3, thirdRowLeft, thirdRowRight, tableComparison]
       context._columnStep = 3
@@ -97,6 +98,7 @@ public class TestSqlPatchSink extends GroovyTestCase {
       context.close()
       def patchString = writer.toString()
       println "patchString->$patchString"
+      assert patchString.startsWith("INSERT INTO PUBLIC.CUSTOMER (FIRST_NAME, LAST_NAME, ADDRESS, CITY, COUNTRY, AGE, BIRTH, NOW)\nVALUES ('bob', 'smith', 'update-addr1', 'city', 'update-country', 55, '2001-09-08', {ts '2001-09-08 21:46:40'});\n\nDELETE FROM PUBLIC.CUSTOMER\nWHERE (FIRST_NAME='john' ) AND (LAST_NAME='candy' );\n\nUPDATE PUBLIC.CUSTOMER\nSET ADDRESS='nyc', CITY='ny'\nWHERE (FIRST_NAME='elton' ) AND (LAST_NAME='john' );")
    }
    
    private DKDBTable createCustomerMetaTable(){

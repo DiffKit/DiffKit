@@ -70,7 +70,12 @@ public class DKSqlPatchSink extends DKAbstractSink {
       if (_file.exists())
          throw new DKUserException(String.format(
             "sink file [%s] already exists! please remove it and try again.", _file));
-      this.init(connectionInfo_, rhsTableName_, new BufferedWriter(new FileWriter(_file)));
+      this.init(connectionInfo_, rhsTableName_, null);
+   }
+
+   public DKSqlPatchSink(String newFilePath_, DKSqlPatchSink toClone_)
+      throws IOException, SQLException {
+      this(toClone_.getConnectionInfo(), toClone_.getRhsTableName(), newFilePath_);
    }
 
    private DKSqlPatchSink(DKDBConnectionInfo connectionInfo_, String rhsTableName_,
@@ -86,7 +91,19 @@ public class DKSqlPatchSink extends DKAbstractSink {
       _writer = writer_;
       _database = new DKDatabase(connectionInfo_);
       _rhsTable = _database.getTable(null, null, rhsTableName_);
-      DKValidate.notNull(_writer, _database, _rhsTable);
+      DKValidate.notNull(_database, _rhsTable);
+   }
+
+   private DKDBConnectionInfo getConnectionInfo() {
+      return _database.getConnectionInfo();
+   }
+
+   private String getRhsTableName() {
+      return _rhsTable.getTableName();
+   }
+
+   public File getFile() {
+      return _file;
    }
 
    public void record(DKDiff diff_, DKContext context_) {
@@ -188,6 +205,13 @@ public class DKSqlPatchSink extends DKAbstractSink {
       }
       _runnningColumnDiffRow = null;
       _runningRhsColumnDiffIndices.clear();
+   }
+
+   @Override
+   public void open(DKContext context_) throws IOException {
+      super.open(context_);
+      if (_writer == null)
+         _writer = new BufferedWriter(new FileWriter(_file));
    }
 
    @Override
