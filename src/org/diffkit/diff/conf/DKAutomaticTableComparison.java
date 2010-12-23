@@ -56,6 +56,7 @@ import org.diffkit.util.DKObjectUtil;
  */
 public class DKAutomaticTableComparison implements DKTableComparison {
    private static final DKDiffor DEFAULT_TEXT_DIFFOR = new DKTextDiffor(null);
+   private static final Logger LOG = LoggerFactory.getLogger(DKAutomaticTableComparison.class);
    private final DKSource _lhsSource;
    private final DKSource _rhsSource;
    private final DKDiff.Kind _kind;
@@ -121,8 +122,8 @@ public class DKAutomaticTableComparison implements DKTableComparison {
    private DKStandardTableComparison buildStandardComparison() {
       _log.debug("_lhsSource->{}", _lhsSource.getModel().getDescription());
       _log.debug("_rhsSource->{}", _rhsSource.getModel().getDescription());
-      DKColumnComparison[] map = this.createDefaultMap(_lhsSource.getModel(),
-         _rhsSource.getModel());
+      DKColumnComparison[] map = createDefaultMap(_lhsSource.getModel(),
+         _rhsSource.getModel(), _numberTolerance, _toleranceMap);
       _log.debug("map->{}", Arrays.toString(map));
       if (ArrayUtils.isEmpty(map))
          throw new RuntimeException(String.format(
@@ -309,10 +310,13 @@ public class DKAutomaticTableComparison implements DKTableComparison {
     * that don't participate in the key for diffIndexes. Uses the diff keys for
     * display
     */
-   public DKStandardTableComparison createDefaultTableComparison(DKTableModel lhsModel_,
-                                                                 DKTableModel rhsModel_) {
+   public static DKStandardTableComparison createDefaultTableComparison(DKTableModel lhsModel_,
+                                                                        DKTableModel rhsModel_,
+                                                                        Float numberTolerance_,
+                                                                        Map<String, Float> toleranceMap_) {
       DKValidate.notNull(lhsModel_, rhsModel_);
-      DKColumnComparison[] map = this.createDefaultMap(lhsModel_, rhsModel_);
+      DKColumnComparison[] map = createDefaultMap(lhsModel_, rhsModel_, numberTolerance_,
+         toleranceMap_);
       List<Integer> diffIndexesValue = new ArrayList<Integer>();
       if (map != null) {
          for (int i = 0; i < map.length; i++) {
@@ -328,24 +332,27 @@ public class DKAutomaticTableComparison implements DKTableComparison {
          diffIndexes, displayIndexes, Long.MAX_VALUE);
    }
 
-   private DKColumnComparison[] createDefaultMap(DKTableModel lhsModel_,
-                                                 DKTableModel rhsModel_) {
+   public static DKColumnComparison[] createDefaultMap(DKTableModel lhsModel_,
+                                                       DKTableModel rhsModel_,
+                                                       Float numberTolerance_,
+                                                       Map<String, Float> toleranceMap_) {
       List<DKColumnComparison> columnComparisons = new ArrayList<DKColumnComparison>();
       DKColumnModel[] lhsColumns = lhsModel_.getColumns();
       for (DKColumnModel lhsColumn : lhsColumns) {
          DKColumnModel rhsColumn = rhsModel_.getColumn(lhsColumn.getName());
-         if (_log.isDebugEnabled()) {
-            _log.debug("lhsColumn->{}", lhsColumn.getDescription());
-            _log.debug("rhsColumn->{}", rhsColumn.getDescription());
+         if (LOG.isDebugEnabled()) {
+            LOG.debug("lhsColumn->{}", lhsColumn.getDescription());
+            LOG.debug("rhsColumn->{}", rhsColumn.getDescription());
          }
          if (rhsColumn == null)
             continue;
-         DKDiffor diffor = this.getDiffor(lhsColumn, rhsColumn);
-         if (_log.isDebugEnabled()) {
+         DKDiffor diffor = getDiffor(lhsColumn, rhsColumn, numberTolerance_,
+            toleranceMap_);
+         if (LOG.isDebugEnabled()) {
             String difforString = DKObjectUtil.respondsTo(diffor, "getDescription", null)
                ? (String) DKObjectUtil.invokeSafe(diffor, "getDescription", null)
                : diffor.toString();
-            _log.debug("diffor->{}", difforString);
+            LOG.debug("diffor->{}", difforString);
          }
          DKColumnComparison columnComparison = new DKColumnComparison(lhsColumn,
             rhsColumn, diffor);
@@ -356,30 +363,36 @@ public class DKAutomaticTableComparison implements DKTableComparison {
       return columnComparisons.toArray(new DKColumnComparison[columnComparisons.size()]);
    }
 
-   private DKDiffor getDiffor(DKColumnModel lhsColumn_, DKColumnModel rhsColumn_) {
-      DKDiffor baseDiffor = this.getBaseDiffor(lhsColumn_, rhsColumn_);
-      return this.getConvertingDiffor(lhsColumn_, rhsColumn_, baseDiffor);
+   public static DKDiffor getDiffor(DKColumnModel lhsColumn_, DKColumnModel rhsColumn_,
+                                    Float numberTolerance_,
+                                    Map<String, Float> toleranceMap_) {
+      DKDiffor baseDiffor = getBaseDiffor(lhsColumn_, rhsColumn_, numberTolerance_,
+         toleranceMap_);
+      return getConvertingDiffor(lhsColumn_, rhsColumn_, baseDiffor);
    }
 
-   private DKDiffor getBaseDiffor(DKColumnModel lhsColumn_, DKColumnModel rhsColumn_) {
+   public static DKDiffor getBaseDiffor(DKColumnModel lhsColumn_,
+                                        DKColumnModel rhsColumn_, Float numberTolerance_,
+                                        Map<String, Float> toleranceMap_) {
       if ((lhsColumn_._type == DKColumnModel.Type.TEXT)
          && (rhsColumn_._type == DKColumnModel.Type.TEXT))
          return DEFAULT_TEXT_DIFFOR;
-      if ((_numberTolerance == null) && (_toleranceMap == null))
+      if ((numberTolerance_ == null) && (toleranceMap_ == null))
          return DKEqualsDiffor.getInstance();
-      Float tolerance = (_toleranceMap != null ? _toleranceMap.get(lhsColumn_._name)
+      Float tolerance = (toleranceMap_ != null ? toleranceMap_.get(lhsColumn_._name)
          : null);
       if (tolerance != null)
          return new DKNumberDiffor(tolerance, true);
       if ((!lhsColumn_._type._isNumber) && (!rhsColumn_._type._isNumber))
          return DKEqualsDiffor.getInstance();
-      if (_numberTolerance == null)
+      if (numberTolerance_ == null)
          return DKEqualsDiffor.getInstance();
-      return new DKNumberDiffor(_numberTolerance, true);
+      return new DKNumberDiffor(numberTolerance_, true);
    }
 
-   private DKDiffor getConvertingDiffor(DKColumnModel lhsColumn_,
-                                        DKColumnModel rhsColumn_, DKDiffor baseDiffor_) {
+   private static DKDiffor getConvertingDiffor(DKColumnModel lhsColumn_,
+                                               DKColumnModel rhsColumn_,
+                                               DKDiffor baseDiffor_) {
       DKColumnModel.Type lhsType = lhsColumn_.getType();
       DKColumnModel.Type rhsType = rhsColumn_.getType();
       if (lhsType == rhsType)

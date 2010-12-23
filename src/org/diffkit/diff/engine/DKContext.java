@@ -62,12 +62,23 @@ public class DKContext {
       _tableComparison = null;
    }
 
-   public DKContext(DKSource lhs_, DKSource rhs_, DKSink sink_, DKTableComparison plan_,
-                    Map<UserKey, ?> userDictionary_) {
+   /**
+    * for testing only
+    */
+   @SuppressWarnings("unused")
+   private DKContext(DKSink sink_, DKTableComparison tableComparison_) {
+      _lhs = null;
+      _rhs = null;
+      _sink = sink_;
+      _tableComparison = tableComparison_;
+   }
+
+   public DKContext(DKSource lhs_, DKSource rhs_, DKSink sink_,
+                    DKTableComparison tableComparison_, Map<UserKey, ?> userDictionary_) {
       _lhs = lhs_;
       _rhs = rhs_;
       _sink = sink_;
-      _tableComparison = plan_;
+      _tableComparison = tableComparison_;
       if (userDictionary_ != null)
          _userDictionary.putAll(userDictionary_);
       DKValidate.notNull(_lhs, _rhs, _sink, _tableComparison);
@@ -75,16 +86,20 @@ public class DKContext {
 
    public void open() throws IOException {
       _sink.open(this);
-      _lhs.open(this);
-      _rhs.open(this);
+      if (_lhs != null)
+         _lhs.open(this);
+      if (_rhs != null)
+         _rhs.open(this);
       _stopwatch.start();
    }
 
    public void close() throws IOException {
       _stopwatch.stop();
       _sink.close(this);
-      _lhs.close(this);
-      _rhs.close(this);
+      if (_lhs != null)
+         _lhs.close(this);
+      if (_rhs != null)
+         _rhs.close(this);
    }
 
    public String getElapsedTimeString() {

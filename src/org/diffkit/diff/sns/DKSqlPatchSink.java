@@ -56,23 +56,37 @@ public class DKSqlPatchSink extends DKAbstractSink {
    private DKColumnDiffRow _runnningColumnDiffRow;
    private final List<Integer> _runningRhsColumnDiffIndices = new ArrayList<Integer>();
    private Writer _writer;
-   private final DKDatabase _database;
-   private final DKDBTable _rhsTable;
-   private final File _file;
+   private DKDatabase _database;
+   private DKDBTable _rhsTable;
+   private File _file;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    public DKSqlPatchSink(DKDBConnectionInfo connectionInfo_, String rhsTableName_,
-                         String patchFilePath_) throws SQLException {
+                         String patchFilePath_) throws SQLException, IOException {
       super(null);
-      DKValidate.notNull(connectionInfo_, rhsTableName_, patchFilePath_);
+      DKValidate.notNull(patchFilePath_);
       _file = new File(patchFilePath_);
       if (_file.exists())
          throw new DKUserException(String.format(
             "sink file [%s] already exists! please remove it and try again.", _file));
+      this.init(connectionInfo_, rhsTableName_, new BufferedWriter(new FileWriter(_file)));
+   }
+
+   private DKSqlPatchSink(DKDBConnectionInfo connectionInfo_, String rhsTableName_,
+                          Writer writer_) throws SQLException {
+      super(null);
+      this.init(connectionInfo_, rhsTableName_, writer_);
+   }
+
+   private void init(DKDBConnectionInfo connectionInfo_, String rhsTableName_,
+                     Writer writer_) throws SQLException {
+
+      DKValidate.notNull(connectionInfo_, rhsTableName_);
+      _writer = writer_;
       _database = new DKDatabase(connectionInfo_);
       _rhsTable = _database.getTable(null, null, rhsTableName_);
-      DKValidate.notNull(_rhsTable);
+      DKValidate.notNull(_writer, _database, _rhsTable);
    }
 
    public void record(DKDiff diff_, DKContext context_) {
@@ -163,7 +177,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
       }
       try {
          String updateSql = _database.generateUpdateDML(
-            _runnningColumnDiffRow.getRhsRow(),
+            _runnningColumnDiffRow.getLhsRow(),
             DKListUtil.toPrimitiveArray(_runningRhsColumnDiffIndices), _rhsTable);
          if (_isDebugEnabled)
             _log.debug("updateSql->{}", updateSql);
@@ -174,12 +188,6 @@ public class DKSqlPatchSink extends DKAbstractSink {
       }
       _runnningColumnDiffRow = null;
       _runningRhsColumnDiffIndices.clear();
-   }
-
-   @Override
-   public void open(DKContext context_) throws IOException {
-      _writer = new BufferedWriter(new FileWriter(_file));
-      super.open(context_);
    }
 
    @Override

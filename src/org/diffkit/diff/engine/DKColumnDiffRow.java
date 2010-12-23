@@ -49,8 +49,8 @@ public class DKColumnDiffRow {
       return _rowStep;
    }
 
-   public Object[] getRhsRow() {
-      return _rhsRow;
+   public Object[] getLhsRow() {
+      return _lhsRow;
    }
 
    // key side arbitrary; keyValeus guaranteed to match on both sides
