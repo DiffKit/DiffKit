@@ -45,7 +45,7 @@ public class TestFormatter  extends GroovyTestCase {
 		def context = new DKContext()
 		String formatted = DKDefaultFormatter.instance.formatRowDiff(rowDiff, context)
 		
-		assert formatted == '!{column2=1111, column3=1}\n<'
+		assert formatted == '!{column2=1111, column3=1}\n>'
 		
 		DKColumnDiffRow diffRow = [1, row, row, plan]
 		def columnDiff = diffRow.createDiff(1, '1111', 'xxxx')

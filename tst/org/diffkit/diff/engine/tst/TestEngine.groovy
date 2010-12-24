@@ -312,7 +312,7 @@ public class TestEngine extends GroovyTestCase {
       assert sink.diffCount == 6
       for(diff in sink.diffs) {
          assert diff.kind == DKDiff.Kind.ROW_DIFF
-         assert diff.side == DKSide.RIGHT
+         assert diff.side == DKSide.LEFT
       }
       
       lSource = [tableModel, []]
@@ -325,7 +325,7 @@ public class TestEngine extends GroovyTestCase {
       assert sink.diffCount == 6
       for(diff in sink.diffs) {
          assert diff.kind == DKDiff.Kind.ROW_DIFF
-         assert diff.side == DKSide.LEFT
+         assert diff.side == DKSide.RIGHT
       }
    }
    
@@ -374,28 +374,28 @@ public class TestEngine extends GroovyTestCase {
       assert sink.diffs[1] instanceof DKRowDiff
       assert sink.diffs[1].kind == DKDiff.Kind.ROW_DIFF
       assert sink.diffs[1].rowStep == 3
-      assert sink.diffs[1].side == DKSide.LEFT
+      assert sink.diffs[1].side == DKSide.RIGHT
       assert sink.diffs[1].rowKeyValues == ['2222',1]
       assert sink.diffs[1].rowDisplayValues == [column2:'2222', column3:'1']
       
       assert sink.diffs[2] instanceof DKRowDiff
       assert sink.diffs[2].kind == DKDiff.Kind.ROW_DIFF
       assert sink.diffs[2].rowStep == 4
-      assert sink.diffs[2].side == DKSide.RIGHT
+      assert sink.diffs[2].side == DKSide.LEFT
       assert sink.diffs[2].rowKeyValues == ['4444',1]
       assert sink.diffs[2].rowDisplayValues == [column2:'4444', column3:'1']
       
       assert sink.diffs[3] instanceof DKRowDiff
       assert sink.diffs[3].kind == DKDiff.Kind.ROW_DIFF
       assert sink.diffs[3].rowStep == 5
-      assert sink.diffs[3].side == DKSide.RIGHT
+      assert sink.diffs[3].side == DKSide.LEFT
       assert sink.diffs[3].rowKeyValues == ['4444',2]
       assert sink.diffs[3].rowDisplayValues == [column2:'4444', column3:'2']
       
       assert sink.diffs[4] instanceof DKRowDiff
       assert sink.diffs[4].kind == DKDiff.Kind.ROW_DIFF
       assert sink.diffs[4].rowStep == 6
-      assert sink.diffs[4].side == DKSide.LEFT
+      assert sink.diffs[4].side == DKSide.RIGHT
       assert sink.diffs[4].rowKeyValues == ['5555',2]
       assert sink.diffs[4].rowDisplayValues == [column2:'5555', column3:'2']
       
