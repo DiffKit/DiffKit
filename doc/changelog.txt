@@ -3,6 +3,11 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.7 (12/24/2010)
+
+- fixes Issue 59: add fully functional SqlPatchSink
+- fixes Issue 58: NullPointerException in DBSink when used with Oracle
+
 == release 0.8.6 (12/16/2010)
 
 - fixes Issue 55: unrecognized dbType_->NCHAR on SQL Server 2005
