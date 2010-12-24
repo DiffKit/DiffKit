@@ -23,10 +23,11 @@ the test suite (e.g. if you have an Oracle database):
 -------------------------------
    java -jar diffkit-app.jar -test flavors=ORACLE
 -------------------------------
-The resulting output should report that all tests PASSED. If any test FAILED,
-please report the failure to the DiffKit user group
-http://groups.google.com/group/diffkit-user[diffkit-user] as soon as possible,
-and don't use DiffKit.
+Applying the embedded test suite against your own database requires that the DB
+user specified in your dbConnectionInfo has the proper permissions and db object
+grants to perform all of the activities required for DiffKit to execute the
+tests, such as CREATE TABLE. If you are having difficulties getting this to
+work, please consult the DiffKit user group http://groups.google.com/group/diffkit-user[diffkit-user] 
 
 
 Diff'ng
@@ -266,6 +267,52 @@ java -jar ../diffkit-app.jar -planfiles test18.plan.xml,
      test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
 -----------------
 
+Generating DB patch files
+------------------------
+In addition to producing diff reports, as in the previous examples, DiffKit is
+also able to generate "patch" files, analogous to the patch files produced by the
+traditional Unix diff utility.  A DB patch file is a complete set of SQL DML
+statements (INSERT, DELETE, UPDATE) that will make the RHS table looks exactly
+like the LHS table. test26.plan.xml demonstrates generating DB patch files:
+
+.test26.plan.xml
+-----------------
+   ...
+      <property name="sqlPatchFilePath" value="./test26.sink.patch" />
+   ...
+-----------------
+
+invoked this way:
+
+-----------------
+java -jar ../diffkit-app.jar -planfiles test26.plan.xml,dbConnectionInfo.xml
+-----------------
+
+produces this output in the patch file:
+
+.test26.sink.patch
+-----------------
+DELETE FROM PUBLIC.TEST26_RHS_TABLE
+WHERE (COLUMN1='1' );
+
+INSERT INTO PUBLIC.TEST26_RHS_TABLE (COLUMN1, COLUMN2, COLUMN3, COLUMN4)
+VALUES ('2', 'xxxx', 2, 'zz2zz');
+
+UPDATE PUBLIC.TEST26_RHS_TABLE
+SET COLUMN3=3
+WHERE (COLUMN1='3' );
+
+UPDATE PUBLIC.TEST26_RHS_TABLE
+SET COLUMN2='5555', COLUMN3=4, COLUMN4='zz4zz'
+WHERE (COLUMN1='4' );
+
+INSERT INTO PUBLIC.TEST26_RHS_TABLE (COLUMN1, COLUMN2, COLUMN3, COLUMN4)
+VALUES ('5', 'xxxx', 5, 'zz5zz');
+
+DELETE FROM PUBLIC.TEST26_RHS_TABLE
+WHERE (COLUMN1='6' );
+
+-----------------
 
 Diff'ng different kinds of Sources
 ----------------------------------

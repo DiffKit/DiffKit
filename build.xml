@@ -535,7 +535,8 @@
 				<include name="**/testcase/test13*" />
 				<include name="**/testcase/test14*" />
 				<include name="**/testcase/test18*" />
-				<include name="**/testcase/test21*" />
+            <include name="**/testcase/test21*" />
+            <include name="**/testcase/test26*" />
 				<exclude name="**/testcase/*.h2.db" />
 			</fileset>
 			<filterset>
