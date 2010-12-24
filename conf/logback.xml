@@ -8,7 +8,7 @@
 			</Pattern>
 		</layout>
 	</appender>
-
+ˇ
 	<appender name="USER" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%message%n</Pattern>
@@ -16,8 +16,14 @@
 	</appender>
 
    
+   <logger name="org.diffkit.diff.engine.DKDiffEngine">
+      <level value="warn" />
+   </logger>
+   <logger name="org.diffkit.diff.sns.DKSqlPatchSink">
+      <level value="warn" />
+   </logger>
    <logger name="org.diffkit">
-      <level value="debug" />
+      <level value="warn" />
    </logger>
 
 	<logger name="user" additivity="false">

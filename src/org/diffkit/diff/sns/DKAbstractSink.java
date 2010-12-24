@@ -294,8 +294,8 @@ public abstract class DKAbstractSink implements DKSink {
    public String generateRowDiffSummary(DKContext context_) {
       StringBuilder builder = new StringBuilder();
       builder.append("--- row diff summary ---\n");
-      builder.append(String.format("%s row diffs <\n", _rowDiffCount[DKSide.LEFT_INDEX]));
-      builder.append(String.format("%s row diffs >\n", _rowDiffCount[DKSide.RIGHT_INDEX]));
+      builder.append(String.format("%s row diffs <\n", _rowDiffCount[DKSide.RIGHT_INDEX]));
+      builder.append(String.format("%s row diffs >\n", _rowDiffCount[DKSide.LEFT_INDEX]));
       builder.append("------------------------\n");
       return builder.toString();
    }
@@ -304,21 +304,21 @@ public abstract class DKAbstractSink implements DKSink {
       StringBuilder builder = new StringBuilder();
       builder.append("--- row diff groups ---\n");
       builder.append(String.format("%s groups <\n",
-         _rowGroupDiffCount[DKSide.LEFT_INDEX].size()));
-      builder.append(String.format("%s groups >\n",
          _rowGroupDiffCount[DKSide.RIGHT_INDEX].size()));
+      builder.append(String.format("%s groups >\n",
+         _rowGroupDiffCount[DKSide.LEFT_INDEX].size()));
       builder.append("- <\n");
-      Iterator rowGroup = _rowGroupDiffCount[DKSide.LEFT_INDEX].iterator();
-      while (rowGroup.hasNext()) {
-         String groupKey = (String) rowGroup.next();
-         int diffCount = _rowGroupDiffCount[DKSide.LEFT_INDEX].getCount(groupKey);
-         builder.append(String.format("%s has %s diffs\n", groupKey, diffCount));
-      }
-      builder.append("- >\n");
-      rowGroup = _rowGroupDiffCount[DKSide.RIGHT_INDEX].iterator();
+      Iterator rowGroup = _rowGroupDiffCount[DKSide.RIGHT_INDEX].iterator();
       while (rowGroup.hasNext()) {
          String groupKey = (String) rowGroup.next();
          int diffCount = _rowGroupDiffCount[DKSide.RIGHT_INDEX].getCount(groupKey);
+         builder.append(String.format("%s has %s diffs\n", groupKey, diffCount));
+      }
+      builder.append("- >\n");
+      rowGroup = _rowGroupDiffCount[DKSide.LEFT_INDEX].iterator();
+      while (rowGroup.hasNext()) {
+         String groupKey = (String) rowGroup.next();
+         int diffCount = _rowGroupDiffCount[DKSide.LEFT_INDEX].getCount(groupKey);
          builder.append(String.format("%s has %s diffs\n", groupKey, diffCount));
       }
       builder.append("------------------------\n");

@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 
-import org.apache.commons.collections.OrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,8 +91,7 @@ public class DKDiffEngine {
             _log.debug("oneSide->{}", oneSide);
          }
          if (oneSided) {
-            this.recordRowDiff(rows[oneSide], DKSide.flip(oneSide), context_,
-               context_._sink);
+            this.recordRowDiff(rows[oneSide], oneSide, context_, context_._sink);
             rows[oneSide] = null;
             continue;
          }
@@ -102,13 +100,13 @@ public class DKDiffEngine {
             rows[DKSide.RIGHT_INDEX]);
          // LEFT < RIGHT
          if (comparison < 0) {
-            this.recordRowDiff(rows[DKSide.LEFT_INDEX], DKSide.RIGHT_INDEX, context_,
+            this.recordRowDiff(rows[DKSide.LEFT_INDEX], DKSide.LEFT_INDEX, context_,
                context_._sink);
             rows[DKSide.LEFT_INDEX] = null;
          }
          // LEFT > RIGHT
          else if (comparison > 0) {
-            this.recordRowDiff(rows[DKSide.RIGHT_INDEX], DKSide.LEFT_INDEX, context_,
+            this.recordRowDiff(rows[DKSide.RIGHT_INDEX], DKSide.RIGHT_INDEX, context_,
                context_._sink);
             rows[DKSide.RIGHT_INDEX] = null;
          }
@@ -158,7 +156,7 @@ public class DKDiffEngine {
 
    private void recordRowDiff(Object[] row_, int sideIdx_, DKContext context_,
                               DKSink sink_) throws IOException {
-      _log.debug("row_->{} sideIdx_", row_, sideIdx_);
+      _log.debug("row_->{} sideIdx_->{}", row_, sideIdx_);
       DKDiff.Kind kind = context_._tableComparison.getKind();
       if (kind == DKDiff.Kind.COLUMN_DIFF)
          return;
@@ -166,8 +164,6 @@ public class DKDiffEngine {
          return;
       DKTableComparison tableComparison = context_.getTableComparison();
       long rowStep = context_.getRowStep();
-      Object[] rowKeyValues = tableComparison.getRowKeyValues(row_, sideIdx_);
-      OrderedMap rowDisplayValues = tableComparison.getRowDisplayValues(row_, sideIdx_);
       DKSide side = DKSide.getEnumForConstant(sideIdx_);
       DKRowDiff rowDiff = new DKRowDiff(rowStep, row_, side, tableComparison);
       sink_.record(rowDiff, context_);

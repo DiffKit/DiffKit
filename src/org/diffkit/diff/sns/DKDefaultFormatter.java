@@ -56,7 +56,7 @@ public class DKDefaultFormatter implements DKDiffFormatter {
       StringBuilder builder = new StringBuilder();
       DKSide side = diff_.getSide();
       builder.append("!" + diff_.getRowDisplayValues().toString() + "\n");
-      builder.append((side == DKSide.LEFT ? "<" : ">"));
+      builder.append((side == DKSide.LEFT ? ">" : "<"));
       return builder.toString();
    }
 
