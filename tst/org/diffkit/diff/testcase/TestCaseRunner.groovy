@@ -15,9 +15,6 @@ package org.diffkit.diff.testcase
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
 import java.net.URL;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern 
@@ -67,7 +64,7 @@ public class TestCaseRunner implements Runnable {
    public static final String TEST18_RHS_TARGET_DATABASE = "mem:testcase18_rhs;DB_CLOSE_DELAY=-1"
    public static final String TEST_CASE_PLAN_FILE_PATTERN = 'test(\\d*)\\.plan\\.xml'
    public static final DKRegexFilenameFilter TEST_CASE_PLAN_FILTER = new DKRegexFilenameFilter(TEST_CASE_PLAN_FILE_PATTERN);
-   private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt', 'exception']
+   private static final List TEST_CASE_DATA_SUFFIXES = ['xml', 'diff', 'csv', 'txt', 'exception', 'xls', 'xlsx']
    private static final FileFilter TEST_CASE_DATA_FILTER = new SuffixFileFilter(TEST_CASE_DATA_SUFFIXES)
    private static final String TEST_CASE_DATA_ARCHIVE_NAME = "testcasedata.jar"
    
@@ -81,14 +78,18 @@ public class TestCaseRunner implements Runnable {
    /**
     * @param dataPath_ expressed as a classpath resource
     */
-   public TestCaseRunner(List<Integer> testCaseNumbers_, List<DKDBFlavor> flavors_){
-      _log.debug("testCaseNumbers_->{}",testCaseNumbers_)
+   public TestCaseRunner(String testCaseNumberString_, List<DKDBFlavor> flavors_){
+      _log.debug("testCaseNumberString_->{}",testCaseNumberString_)
       _log.debug("flavors_->{}",flavors_)
-      _testCaseNumbers = testCaseNumbers_
+      _testCaseNumbers = this.parseTestCaseNumbers( testCaseNumberString_)
       _flavors = flavors_
       _dataPath =  getDefaultDataPath()
       DKResourceUtil.prependResourceDir(DKRuntime.getInstance().getConfDir());
       DKValidate.notNull(_dataPath)
+   }
+   
+   private List<Integer> parseTestCaseNumbers(String testCaseNumberString_) {
+      return DKStringUtil.parseIntegers(testCaseNumberString_)
    }
    
    public void run(){

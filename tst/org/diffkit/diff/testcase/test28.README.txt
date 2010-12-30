@@ -1,0 +1,22 @@
+test27 README
+=========
+
+Description
+----------
+Compare two spreadsheet file tables using mostly automatic default provided by
+the MagicPlan. Only the two file names are provided in the plan file.
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- lhs vs. rhs has no diffs
+- plan file supplies lhs  and rhs spreadsheet file paths
+- plan file supplies file path for Sink
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the spreadsheet
+- MagicPlan generates default TableComparison by aligning lhs column to rhs
+column based on name 
+
+Expectations
+-----------
+- No Diffs

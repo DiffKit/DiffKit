@@ -13,23 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.diffkit.diff.engine;
-
-import java.io.IOException;
+package org.diffkit.diff.sns;
 
 /**
- * @author jpanico
+ * @author joe
+ *
  */
-public interface DKSourceSink {
-
-   public enum Kind {
-      FILE, DB, STREAM, MEMORY, EXCEL;
-   }
-
-   public void open(DKContext context_) throws IOException;
-
-   public void close(DKContext context_) throws IOException;
-
-   public Kind getKind();
+public class DKPoiSheet {
 
 }

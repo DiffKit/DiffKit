@@ -1,0 +1,24 @@
+test28 README
+=========
+
+Description
+----------
+Compare spreadsheet tables using mostly automatic default provided by the MagicPlan. Plan specifies keyColumnNames, 
+which are different from the default keyColumn (COLUMN1). If alignment was carried out using 
+default (COLUMN1), all rows would be row diffs. Instead, engine is able to align the rows and produce only column diffs
+because of the keyColumnName override (column3).
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- lhs vs. rhs has no diffs
+- plan file supplies lhs  and rhs spreadsheet file paths
+- plan file supplies file path for Sink
+- lhs and rhs tables have identical structure
+- MagicPlan reverse engineers TableModels from the spreadsheet
+- MagicPlan generates default TableComparison by aligning lhs column to rhs
+column based on name 
+
+Expectations
+-----------
+- No Diffs

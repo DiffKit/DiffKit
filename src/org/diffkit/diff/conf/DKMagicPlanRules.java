@@ -30,31 +30,34 @@ import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.diff.sns.DKDBSource;
 import org.diffkit.diff.sns.DKFileSink;
 import org.diffkit.diff.sns.DKFileSource;
+import org.diffkit.diff.sns.DKSpreadSheetFileSource;
 import org.diffkit.diff.sns.DKSqlPatchSink;
 import org.diffkit.diff.sns.DKWriterSink;
 
 /**
  * @author jpanico
  */
-@SuppressWarnings("unchecked")
+//@SuppressWarnings("unchecked")
 public class DKMagicPlanRules {
 
    private static final DKMagicPlanRule LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE = new DKMagicPlanRule(
       "lhsDBSource.lhsDBtable",
       "if lhsDBTableName is specified in plan, then force lhsSource to be DBSource",
-      null, "lhsSource_", "lhsDBTableName", true, new TypeRefinement(DKDBSource.class));
+      null, "lhsSource_", "lhsDBTableName", true, new TypeRefinement<DKDBSource>(
+         DKDBSource.class));
    private static final DKMagicPlanRule RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE = new DKMagicPlanRule(
       "rhsDBSource.rhsDBtable",
       "if rhsDBTableName is specified in plan, then force rhsSource to be DBSource",
-      null, "rhsSource_", "rhsDBTableName", true, new TypeRefinement(DKDBSource.class));
+      null, "rhsSource_", "rhsDBTableName", true, new TypeRefinement<DKDBSource>(
+         DKDBSource.class));
    private static final DKMagicPlanRule LHS_DB_SOURCE_FROM_DB_TABLE_RULE = new DKMagicPlanRule(
       "lhsDBSource.dbTable",
       "if dbTableName is specified in plan, then force lhsSource to be DBSource", null,
-      "lhsSource_", "dbTableName", true, new TypeRefinement(DKDBSource.class));
+      "lhsSource_", "dbTableName", true, new TypeRefinement<DKDBSource>(DKDBSource.class));
    private static final DKMagicPlanRule RHS_DB_SOURCE_FROM_DB_TABLE_RULE = new DKMagicPlanRule(
       "rhsDBSource.dbTable",
       "if dbTableName is specified in plan, then force rhsSource to be DBSource", null,
-      "rhsSource_", "dbTableName", true, new TypeRefinement(DKDBSource.class));
+      "rhsSource_", "dbTableName", true, new TypeRefinement<DKDBSource>(DKDBSource.class));
    private static final DKMagicPlanRule DB_TABLE_NAME_RULE = new DKMagicPlanRule(
       "dbTableName",
       "if dbTableName is specified in plan, then use it in any DBSource constructor that requires one",
@@ -115,7 +118,8 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule LHS_FILE_SOURCE_RULE = new DKMagicPlanRule(
       "lhsFileSource",
       "if lhsFilePath is specified in plan, then force lhsSource to be FileSource", null,
-      "lhsSource_", "lhsFilePath", true, new TypeRefinement(DKFileSource.class));
+      "lhsSource_", "lhsFilePath", true, new TypeRefinement<DKFileSource>(
+         DKFileSource.class));
    private static final DKMagicPlanRule LHS_FILE_PATH_RULE = new DKMagicPlanRule(
       "lhsFilePath",
       "if lhsFilePath is specified in plan, then use it as the filePath_ in the lhs FileSource",
@@ -124,7 +128,8 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule RHS_FILE_SOURCE_RULE = new DKMagicPlanRule(
       "rhsFileSource",
       "if rhsFilePath is specified in plan, then force rhsSource to be FileSource", null,
-      "rhsSource_", "rhsFilePath", true, new TypeRefinement(DKFileSource.class));
+      "rhsSource_", "rhsFilePath", true, new TypeRefinement<DKFileSource>(
+         DKFileSource.class));
    private static final DKMagicPlanRule RHS_FILE_PATH_RULE = new DKMagicPlanRule(
       "rhsFilePath",
       "if rhsFilePath is specified in plan, then use it as the filePath_ in the rhs FileSource",
@@ -132,8 +137,8 @@ public class DKMagicPlanRules {
       new PlanValue(true));
    private static final DKMagicPlanRule FILE_SINK_RULE = new DKMagicPlanRule("fileSink",
       "if sinkFilePath specified, then force sink_ to be FileSink",
-      DKPassthroughPlan.class, "sink_", "sinkFilePath", true, new TypeRefinement(
-         DKFileSink.class));
+      DKPassthroughPlan.class, "sink_", "sinkFilePath", true,
+      new TypeRefinement<DKFileSink>(DKFileSink.class));
    private static final DKMagicPlanRule FILE_SINK_PATH_RULE = new DKMagicPlanRule(
       "fileSinkPath",
       "if sinkFilePath is specified in plan, then use it as filePath_ arg to FileSink",
@@ -141,8 +146,8 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule SQL_PATCH_SINK_RULE = new DKMagicPlanRule(
       "sqlPatchSink",
       "if sqlPatchFilePath specified, then force sink_ to be SqlPatchSink",
-      DKPassthroughPlan.class, "sink_", "sqlPatchFilePath", true, new TypeRefinement(
-         DKSqlPatchSink.class));
+      DKPassthroughPlan.class, "sink_", "sqlPatchFilePath", true,
+      new TypeRefinement<DKSqlPatchSink>(DKSqlPatchSink.class));
    private static final DKMagicPlanRule SQL_PATCH_SINK_RHS_TABLE_NAME_RULE = new DKMagicPlanRule(
       "sqlPatchRhsTableName",
       "if rhsDBTableName is specified in plan, then use it as the rhsTableName_ in any DKSqlPatchSink",
@@ -159,8 +164,8 @@ public class DKMagicPlanRules {
    private static final DKMagicPlanRule AUTOMATIC_TABLE_COMPARISON_RULE = new DKMagicPlanRule(
       "automaticTableComparison",
       "always use an AutomaticTableComparison for tableComparison_",
-      DKPassthroughPlan.class, "tableComparison_", null, false, new TypeRefinement(
-         DKAutomaticTableComparison.class));
+      DKPassthroughPlan.class, "tableComparison_", null, false,
+      new TypeRefinement<DKAutomaticTableComparison>(DKAutomaticTableComparison.class));
    private static final DKMagicPlanRule DELIMITER_RULE = new DKMagicPlanRule("delimiter",
       "if delimiter is specified in plan, then use it FileSources", DKFileSource.class,
       "delimiter_", "delimiter", true, new PlanValue(true));
@@ -224,6 +229,50 @@ public class DKMagicPlanRules {
       "groupByColumnNames", "assign groupByColumnNames from Plan to DKFileSink",
       DKFileSink.class, "groupByColumnNames_", "groupByColumnNames", true, new PlanValue(
          false));
+   private static final DKMagicPlanRule LHS_SPREADSHEET_FILE_SOURCE_RULE = new DKMagicPlanRule(
+      "lhsSpreadSheetFileSource",
+      "if lhsSpreadSheetFilePath is specified in plan, then force lhsSource to be SpreadSheetFileSource",
+      null, "lhsSource_", "lhsSpreadSheetFilePath", true,
+      new TypeRefinement<DKSpreadSheetFileSource>(DKSpreadSheetFileSource.class));
+   private static final DKMagicPlanRule RHS_SPREADSHEET_FILE_SOURCE_RULE = new DKMagicPlanRule(
+      "rhsSpreadSheetFileSource",
+      "if rhsSpreadSheetFilePath is specified in plan, then force rhsSource to be SpreadSheetFileSource",
+      null, "rhsSource_", "rhsSpreadSheetFilePath", true,
+      new TypeRefinement<DKSpreadSheetFileSource>(DKSpreadSheetFileSource.class));
+   private static final DKMagicPlanRule LHS_SPREADSHEET_FILE_PATH_RULE = new DKMagicPlanRule(
+      "lhsSpreadSheetFilePath",
+      "if lhsSpreadSheetFilePath is specified in plan, then use it as the filePath_ in the lhsSpreadSheetFileSource",
+      DKSpreadSheetFileSource.class, "lhsSource_.filePath_", "lhsSpreadSheetFilePath",
+      true, new PlanValue(true));
+
+   private static final DKMagicPlanRule RHS_SPREADSHEET_FILE_PATH_RULE = new DKMagicPlanRule(
+      "rhsSpreadSheetFilePath",
+      "if rhsSpreadSheetFilePath is specified in plan, then use it as the filePath_ in the rhsSpreadSheetFileSource",
+      DKSpreadSheetFileSource.class, "rhsSource_.filePath_", "rhsSpreadSheetFilePath",
+      true, new PlanValue(true));
+   private static final DKMagicPlanRule IS_SPREADSHEET_SORTED_RULE = new DKMagicPlanRule(
+      "isSorted", "hardwire isSorted to false", DKSpreadSheetFileSource.class,
+      "isSorted_", null, true, new Constant(Boolean.FALSE));
+   private static final DKMagicPlanRule SPREADSHEET_HAS_HEADER_RULE = new DKMagicPlanRule(
+      "hasHeader", "hardwire hasHeader to true", DKSpreadSheetFileSource.class,
+      "hasHeader_", null, true, new Constant(Boolean.TRUE));
+   private static final DKMagicPlanRule SPREADSHEET_VALIDATE_LAZILY_RULE = new DKMagicPlanRule(
+      "validateLazily", "hardwire validateLazily to false",
+      DKSpreadSheetFileSource.class, "validateLazily_", null, true, new Constant(
+         Boolean.FALSE));
+   private static final DKMagicPlanRule LHS_SPREADSHEET_SHEET_NAME_RULE = new DKMagicPlanRule(
+      "lhsSpreadSheetName",
+      "if lhsSheetName is specified in plan, then use it for lhsSpreadSheetFileSource",
+      DKSpreadSheetFileSource.class, "lhsSource_.sheetName_", "lhsSpreadSheetName", true,
+      new PlanValue(true));
+   private static final DKMagicPlanRule RHS_SPREADSHEET_SHEET_NAME_RULE = new DKMagicPlanRule(
+      "rhsSpreadSheetName",
+      "if rhsSheetName is specified in plan, then use it for rhsSpreadSheetFileSource",
+      DKSpreadSheetFileSource.class, "rhsSource_.sheetName_", "rhsSpreadSheetName", true,
+      new PlanValue(true));
+   private static final DKMagicPlanRule DEFAULT_SPREADSHEET_SHEET_NAME_RULE = new DKMagicPlanRule(
+      "defaultSheetName_", "if no sheetName is specified in plan, use 'Sheet1'",
+      DKSpreadSheetFileSource.class, "sheetName_", null, false, new Constant(null));
 
    public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE,
       RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE, LHS_DB_SOURCE_FROM_DB_TABLE_RULE,
@@ -232,14 +281,19 @@ public class DKMagicPlanRules {
       RHS_WHERE_CLAUSE_RULE, DEFAULT_WHERE_CLAUSE_RULE, DB_CONNECTION_INFO_RULE,
       LHS_DB_CONNECTION_INFO_RULE, RHS_DB_CONNECTION_INFO_RULE, MODEL_DEFAULT_RULE,
       KEY_COLUMN_NAMES_RULE, READ_COLUMNS_RULE, LHS_FILE_SOURCE_RULE, LHS_FILE_PATH_RULE,
-      RHS_FILE_SOURCE_RULE, RHS_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE,
+      RHS_FILE_SOURCE_RULE, RHS_FILE_PATH_RULE, LHS_SPREADSHEET_FILE_SOURCE_RULE,
+      RHS_SPREADSHEET_FILE_SOURCE_RULE, LHS_SPREADSHEET_FILE_PATH_RULE,
+      RHS_SPREADSHEET_FILE_PATH_RULE, FILE_SINK_RULE, FILE_SINK_PATH_RULE,
       SQL_PATCH_SINK_RULE, SQL_PATCH_SINK_RHS_TABLE_NAME_RULE, SQL_PATCH_FILE_PATH_RULE,
       DEFAULT_SINK_RULE, AUTOMATIC_TABLE_COMPARISON_RULE, DELIMITER_RULE,
       DEFAULT_DELIMITER_RULE, IS_SORTED_RULE, VALIDATE_LAZILY_RULE, DIFF_KIND_RULE,
       DEFAULT_DIFF_KIND_RULE, DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE,
       DISPLAY_COLUMN_NAMES_RULE, MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE,
       NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE, WITH_SUMMARY_RULE,
-      DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE };
+      DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE, IS_SPREADSHEET_SORTED_RULE,
+      SPREADSHEET_HAS_HEADER_RULE, LHS_SPREADSHEET_SHEET_NAME_RULE,
+      RHS_SPREADSHEET_SHEET_NAME_RULE, DEFAULT_SPREADSHEET_SHEET_NAME_RULE,
+      SPREADSHEET_VALIDATE_LAZILY_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

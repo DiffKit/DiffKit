@@ -1,0 +1,19 @@
+test26 README
+=========
+
+Description
+----------
+A basic sanity check that compares two identical Excel File Tables using the
+most straightforward possible comparison. Everything is wired explicitly into a
+PassthroughPlan.
+
+Assumptions
+-----------
+- lhs & rhs are File tables
+- lhs == rhs
+- Comparisons are all passthrough-- column identical on both sides & only Equals
+comparison
+
+Expectations
+-----------
+- no diffs

@@ -41,6 +41,10 @@ public class DKMagicPlan implements DKPlan {
    private String _rhsWhereClause;
    private String _lhsFilePath;
    private String _rhsFilePath;
+   private String _lhsSpreadSheetFilePath;
+   private String _rhsSpreadSheetFilePath;
+   private String _lhsSpreadSheetName;
+   private String _rhsSpreadSheetName;
    private String _sinkFilePath;
    private String _sqlPatchFilePath;
    private String _delimiter;
@@ -123,7 +127,36 @@ public class DKMagicPlan implements DKPlan {
    public void setRhsFilePath(String rhsFilePath_) {
       _rhsFilePath = rhsFilePath_;
    }
+   
+   public String getRhsSpreadSheetFilePath() {
+	      return _rhsSpreadSheetFilePath;
+   }
 
+   public void setRhsSpreadSheetFilePath(String rhsSpreadSheetFilePath_) {
+	      _rhsSpreadSheetFilePath = rhsSpreadSheetFilePath_;
+   }   
+   public String getLhsSpreadSheetFilePath() {
+	      return _lhsSpreadSheetFilePath;
+   }
+
+   public void setLhsSpreadSheetFilePath(String lhsSpreadSheetFilePath_) {
+	      _lhsSpreadSheetFilePath = lhsSpreadSheetFilePath_;
+   }   
+
+   public String getRhsSpreadSheetName() {
+	      return _rhsSpreadSheetName;
+   }
+
+   public void setRhsSpreadSheetName(String rhsSpreadSheetName_) {
+	      _rhsSpreadSheetName = rhsSpreadSheetName_;
+   }   
+   public String getLhsSpreadSheetName() {
+	      return _lhsSpreadSheetName;
+   }
+   public void setLhsSpreadSheetName(String lhsSpreadSheetName_) {
+	      _lhsSpreadSheetName = lhsSpreadSheetName_;
+   }   
+   
    public String getSinkFilePath() {
       return _sinkFilePath;
    }

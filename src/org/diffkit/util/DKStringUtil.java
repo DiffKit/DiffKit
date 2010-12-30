@@ -87,6 +87,28 @@ public class DKStringUtil {
    }
 
    /**
+    * one range only; dash (hyphen) separated
+    */
+   public static List<Integer> parseIntegerRange(String target_) {
+      target_ = StringUtils.trimToNull(target_);
+      if (target_ == null)
+         return null;
+      String[] endPoints = target_.split("-");
+      if ((endPoints == null) || (endPoints.length != 2))
+         throw new RuntimeException(String.format("invalid range string->%s", target_));
+      int start = Integer.parseInt(StringUtils.trimToNull(endPoints[0]));
+      int end = Integer.parseInt(StringUtils.trimToNull(endPoints[1]));
+      if (!(end >= start))
+         throw new RuntimeException(String.format(
+            "end must be >= start in range string->%s", target_));
+
+      List<Integer> list = new ArrayList<Integer>(end - start);
+      for (int i = start; i <= end; i++)
+         list.add(new Integer(i));
+      return list;
+   }
+
+   /**
     * assumes comma separator
     */
    public static List<Integer> parseIntegerList(String target_) {
@@ -97,8 +119,26 @@ public class DKStringUtil {
          return null;
       List<Integer> values = new ArrayList<Integer>(elements.length);
       for (String element : elements)
-         values.add(NumberUtils.createInteger(element));
+         values.add(NumberUtils.createInteger(StringUtils.trimToNull(element)));
       return values;
+   }
+
+   /**
+    * can handle individual values, comma separated lists, and dash (hyphen)
+    * separated ranges <br/>
+    * null safe
+    */
+   public static List<Integer> parseIntegers(String target_) {
+      target_ = StringUtils.trimToNull(target_);
+      if (target_ == null)
+         return null;
+      if (target_.contains(","))
+         return parseIntegerList(target_);
+      else if (target_.contains("-"))
+         return parseIntegerRange(target_);
+      List<Integer> list = new ArrayList<Integer>(1);
+      list.add(Integer.valueOf(target_));
+      return list;
    }
 
    /**

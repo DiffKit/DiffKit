@@ -28,6 +28,20 @@ import org.diffkit.util.DKStringUtil;
  */
 public class TestStringUtil extends GroovyTestCase {
    
+   public void testParseIntegers() {
+      assert ! DKStringUtil.parseIntegers(null)
+      assert  DKStringUtil.parseIntegers("1-2") == [1,2]
+      assert  DKStringUtil.parseIntegers(" 0 - 10 ") == [0,1,2,3,4,5,6,7,8,9,10]
+      assert  DKStringUtil.parseIntegers("1,2") == [1,2]
+      assert  DKStringUtil.parseIntegers(" 0, 10 ") == [0,10]
+   }
+   
+   public void testParseIntegerRange() {
+      assert ! DKStringUtil.parseIntegerRange(null)
+      assert  DKStringUtil.parseIntegerRange("1-2") == [1,2]
+      assert  DKStringUtil.parseIntegerRange(" 0 - 10 ") == [0,1,2,3,4,5,6,7,8,9,10]
+   }
+   
    public void testParseEnumList() {
       def enumList = DKStringUtil.parseEnumList('ORACLE,DB2,H2', DKDBFlavor)
       assert enumList
