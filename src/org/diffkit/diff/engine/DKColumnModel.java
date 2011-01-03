@@ -30,7 +30,7 @@ import org.diffkit.common.DKValidate;
 public class DKColumnModel {
 
    public enum Type {
-      STRING, INTEGER(true), REAL(true), DECIMAL(true), DATE, TIME, TIMESTAMP, BOOLEAN, TEXT;
+      STRING, INTEGER(true), REAL(true), DECIMAL(true), DATE, TIME, TIMESTAMP, BOOLEAN, TEXT, MIXED;
 
       public final boolean _isNumber;
 

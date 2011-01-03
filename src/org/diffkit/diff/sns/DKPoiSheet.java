@@ -15,10 +15,42 @@
  */
 package org.diffkit.diff.sns;
 
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.poi.ss.usermodel.Row;
+
+import org.diffkit.diff.engine.DKTableModel;
+
 /**
- * @author joe
- *
+ * @author jpanico
  */
-public class DKPoiSheet {
+public class DKPoiSheet extends DKAbstractSheet {
+
+   public static final String[] HANDLED_FILE_EXTENSIONS = { "xls", "xlsx" };
+
+   private List<Row> _rows;
+   private Row _headerRow;
+
+   public DKPoiSheet(File file_, String name_, boolean isSorted_, boolean hasHeader_,
+                     boolean validateLazily_) {
+      super(file_, name_, isSorted_, hasHeader_, validateLazily_);
+   }
+
+   public Iterator<Object[]> getRowIterator(DKTableModel model_) {
+      throw new NotImplementedException();
+   }
+
+   protected DKTableModel createModelFromSheet() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   protected String getNameFromSheet(int sheetIndex_) {
+      // TODO Auto-generated method stub
+      return null;
+   }
 
 }
