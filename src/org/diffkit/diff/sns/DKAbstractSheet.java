@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Joseph Panico
+ * Copyright 2010 Kiran Ratnapu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.diffkit.diff.sns;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,27 +28,29 @@ import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKTableModel;
 
 /**
- * @author jpanico
+ * @author kratnapu
  */
 public abstract class DKAbstractSheet implements DKSheet {
 
+   public static final String ROW_NUM_COLUMN_NAME = "<ROW_NUM>";
+
    private final File _file;
-   private String _name;
+   private String _requestedName;
    private final boolean _isSorted;
    private final boolean _hasHeader;
    private final boolean _validateLazily;
    private DKTableModel _modelFromSheet;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-   public DKAbstractSheet(File file_, String name_, boolean isSorted_,
+   public DKAbstractSheet(File file_, String requestedName_, boolean isSorted_,
                           boolean hasHeader_, boolean validateLazily_) {
       _log.debug("file_->{}", file_);
-      _log.debug("name_->{}", name_);
+      _log.debug("requestedName_->{}", requestedName_);
       _log.debug("isSorted_->{}", isSorted_);
       _log.debug("hasHeader_->{}", hasHeader_);
       _log.debug("validateLazily_->{}", validateLazily_);
       _file = file_;
-      _name = StringUtils.trimToNull(name_);
+      _requestedName = StringUtils.trimToNull(requestedName_);
       _isSorted = isSorted_;
       _hasHeader = hasHeader_;
       _validateLazily = validateLazily_;
@@ -56,7 +59,7 @@ public abstract class DKAbstractSheet implements DKSheet {
          this.validate();
    }
 
-   private void validate() {
+   protected void validate() {
       if (!_file.canRead())
          throw new DKUserException(String.format("can't read file->%s", _file));
    }
@@ -79,16 +82,17 @@ public abstract class DKAbstractSheet implements DKSheet {
       return _file;
    }
 
+   protected String getRequestedName() {
+      return _requestedName;
+   }
+
    /*
     * (non-Javadoc)
     * 
     * @see org.diffkit.diff.sns.DKSheet#getName()
     */
-   public String getName() {
-      if (_name != null)
-         return _name;
-      _name = this.getNameFromSheet(0);
-      return _name;
+   public String getName() throws IOException {
+      return this.getNameFromSheet();
    }
 
    /*
@@ -96,7 +100,7 @@ public abstract class DKAbstractSheet implements DKSheet {
     * 
     * @see org.diffkit.diff.sns.DKSheet#getModel()
     */
-   public DKTableModel getModelFromSheet() {
+   public DKTableModel getModelFromSheet() throws IOException {
       if (_modelFromSheet != null)
          return _modelFromSheet;
       _modelFromSheet = this.createModelFromSheet();
@@ -116,9 +120,10 @@ public abstract class DKAbstractSheet implements DKSheet {
     * 
     * @see org.diffkit.diff.sns.DKSheet#getRowIterator()
     */
-   public abstract Iterator<Object[]> getRowIterator(DKTableModel model_);
+   public abstract Iterator<Object[]> getRowIterator(DKTableModel model_)
+      throws IOException;
 
-   protected abstract String getNameFromSheet(int sheetIndex_);
+   protected abstract String getNameFromSheet() throws IOException;
 
-   protected abstract DKTableModel createModelFromSheet();
+   protected abstract DKTableModel createModelFromSheet() throws IOException;
 }

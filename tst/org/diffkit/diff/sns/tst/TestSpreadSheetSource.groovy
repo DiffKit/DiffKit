@@ -16,12 +16,10 @@
 package org.diffkit.diff.sns.tst
 
 
-import org.apache.commons.lang.ClassUtils 
 
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.sns.DKSpreadSheetFileSource;
 import org.diffkit.util.DKResourceUtil
-import org.diffkit.util.DKStringUtil 
 
 import groovy.util.GroovyTestCase;
 
@@ -32,10 +30,7 @@ import groovy.util.GroovyTestCase;
 public class TestSpreadSheetSource extends GroovyTestCase {
    
    public void testModelColumns() {
-      String sourceFileName = 'type_test.xls'
-      String sourceFilePath = ClassUtils.getPackageName(this.getClass()) 
-      sourceFilePath = DKStringUtil.packageNameToResourcePath(sourceFilePath) + sourceFileName
-      def sourceFile = DKResourceUtil.findResourceAsFile(sourceFilePath)
+      def sourceFile = DKResourceUtil.findResourceAsFile('type_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
       assert sourceFile.canRead()
@@ -72,10 +67,7 @@ public class TestSpreadSheetSource extends GroovyTestCase {
    }
    
    public void testKey() {
-      String sourceFileName = 'type_test.xls'
-      String sourceFilePath = ClassUtils.getPackageName(this.getClass())
-      sourceFilePath = DKStringUtil.packageNameToResourcePath(sourceFilePath) + sourceFileName
-      def sourceFile = DKResourceUtil.findResourceAsFile(sourceFilePath)
+      def sourceFile = DKResourceUtil.findResourceAsFile('type_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
       assert sourceFile.canRead()
@@ -89,10 +81,7 @@ public class TestSpreadSheetSource extends GroovyTestCase {
    }
    
    public void testModelName() {
-      String sourceFileName = 'type_test.xls'
-      String sourceFilePath = ClassUtils.getPackageName(this.getClass()) 
-      sourceFilePath = DKStringUtil.packageNameToResourcePath(sourceFilePath) + sourceFileName
-      def sourceFile = DKResourceUtil.findResourceAsFile(sourceFilePath)
+      def sourceFile = DKResourceUtil.findResourceAsFile('type_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
       assert sourceFile.canRead()

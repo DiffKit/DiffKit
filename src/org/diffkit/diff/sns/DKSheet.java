@@ -16,6 +16,7 @@
 package org.diffkit.diff.sns;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 import org.diffkit.diff.engine.DKTableModel;
@@ -30,14 +31,14 @@ public interface DKSheet {
    /**
     * always the name extracted from the sheet itself
     */
-   public String getName();
+   public String getName() throws IOException;
 
    /**
     * this is always the model extracted from the sheet itself, never a
     * client-supplied model
     */
-   public DKTableModel getModelFromSheet();
+   public DKTableModel getModelFromSheet() throws IOException;
 
-   public Iterator<Object[]> getRowIterator(DKTableModel model_);
+   public Iterator<Object[]> getRowIterator(DKTableModel model_) throws IOException;
 
 }

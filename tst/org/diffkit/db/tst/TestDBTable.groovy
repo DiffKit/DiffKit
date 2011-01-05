@@ -79,6 +79,8 @@ public class TestDBTable extends GroovyTestCase {
       DKDatabase database = [connectionInfo]
       DKDBTableDataAccess tableDataAccess = [database]
       DKDBTable table = this.createCustomerMetaTable()
+      if(database.tableExists(table))
+         database.dropTable(table)
       def connection = database.connection
       assert database.createTable( table)
       DKSqlUtil.close(connection)

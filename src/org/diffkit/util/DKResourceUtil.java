@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,8 +119,28 @@ public class DKResourceUtil {
    }
 
    /**
+    * assumes that File named fileName_ and the caller are in the same location
+    * on the classpath<br/>
+    * 
+    * uses findResourceAsFile(String)
+    */
+   public static File findResourceAsFile(String fileName_, Object caller_)
+      throws URISyntaxException {
+      LOG.debug("fileName_->{}", fileName_);
+      LOG.debug("caller_->{}", caller_);
+      String resourceFilePath = ClassUtils.getPackageName(caller_.getClass());
+      resourceFilePath = DKStringUtil.packageNameToResourcePath(resourceFilePath)
+         + fileName_;
+      LOG.debug("resourceFilePath->{}", resourceFilePath);
+      File sourceFile = findResourceAsFile(resourceFilePath);
+      LOG.debug("sourceFile->{}", sourceFile);
+      return sourceFile;
+   }
+
+   /**
     * uses findResource(String)
     */
+
    public static File findResourceAsFile(String resource_) throws URISyntaxException {
       File localFile = findLocalResource(resource_);
       if (localFile != null)
