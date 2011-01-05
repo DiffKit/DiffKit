@@ -102,7 +102,9 @@ public class DKSqlUtil {
       case NUMBER:
          return value_.toString();
       case STRING:
-         return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
+         String stringValue = value_.toString();
+         stringValue = stringValue.replaceAll("'", "''");
+         return DKStringUtil.quote(stringValue, DKStringUtil.Quote.SINGLE);
       case DATE:
          if (value_ instanceof Date)
             return DKStringUtil.quote(DEFAULT_DATE_FORMAT.format(value_),

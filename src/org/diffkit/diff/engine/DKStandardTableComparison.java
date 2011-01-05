@@ -78,7 +78,7 @@ public class DKStandardTableComparison implements DKTableComparison {
       _rowComparator = this.buildRowComparator(_tableModels[DKSide.LEFT_INDEX],
          _tableModels[DKSide.RIGHT_INDEX]);
       _maxDiffs = maxDiffs_;
-      DKValidate.notNull(_kind, _map, _diffIndexes, _rowComparator);
+      DKValidate.notNull(_kind, _map, _rowComparator);
       this.validateComparisons(_tableModels[DKSide.LEFT_INDEX],
          _tableModels[DKSide.RIGHT_INDEX], _map);
    }

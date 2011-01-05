@@ -1,0 +1,23 @@
+test30 README
+=========
+
+Description
+----------
+Demonstrates situation where all columns in target tables are part of primary
+key defined in the database. This covers issue #62. Even though it's not possible
+to search for column diffs in this scenario, DiffKit must still be able to properly
+find row diffs.
+
+
+Assumptions
+-----------
+- lhs & rhs are DB tables
+- both tables have PK defined in the DB
+- table structures are identical on both sides
+- all columns in table pariticipate in the PK
+- MagicPlan reverse engineers TableModels from the database
+
+Expectations
+-----------
+- no column diffs
+- last row (cccc,3333,cccc/xxxx) should create two row diffs

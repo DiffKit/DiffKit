@@ -99,6 +99,7 @@ public class TestSqlPatchSink extends GroovyTestCase {
       def patchString = writer.toString()
       println "patchString->$patchString"
       assert patchString.startsWith("INSERT INTO PUBLIC.CUSTOMER (FIRST_NAME, LAST_NAME, ADDRESS, CITY, COUNTRY, AGE, BIRTH, NOW)\nVALUES ('bob', 'smith', 'update-addr1', 'city', 'update-country', 55, '2001-09-08', {ts '2001-09-08 21:46:40'});\n\nDELETE FROM PUBLIC.CUSTOMER\nWHERE (FIRST_NAME='john' ) AND (LAST_NAME='candy' );\n\nUPDATE PUBLIC.CUSTOMER\nSET ADDRESS='nyc', CITY='ny'\nWHERE (FIRST_NAME='elton' ) AND (LAST_NAME='john' );")
+      database.dropTable(dbTable)
    }
    
    private DKDBTable createCustomerMetaTable(){

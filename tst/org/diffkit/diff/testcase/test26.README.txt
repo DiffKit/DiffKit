@@ -4,7 +4,9 @@ test26 README
 Description
 ----------
 Demonstrates SqlPatchSink, and how it is used to generate SQL statements 
-(INSERT, DELETE, UPDATE) in order to synchronize two tables.
+(INSERT, DELETE, UPDATE) in order to synchronize two tables. Also demonstrates
+how DiffKit handles creating DML statements for Strings that contain embedded
+single quotes (')
 
 
 Assumptions

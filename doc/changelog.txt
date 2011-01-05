@@ -3,6 +3,11 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.8 (1/5/2011)
+
+- fixes Issue 61: SqlPatchSink not generating proper DML statements when String value contains single quote
+- fixes Issue 62: MagicPlan does not work for tables that have all columns being part of primary key
+
 == release 0.8.7 (12/24/2010)
 
 - fixes Issue 59: add fully functional SqlPatchSink
