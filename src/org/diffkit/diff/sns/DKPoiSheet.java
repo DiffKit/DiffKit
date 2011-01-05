@@ -17,8 +17,12 @@ package org.diffkit.diff.sns;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -82,7 +86,7 @@ public class DKPoiSheet extends DKAbstractSheet {
       if (_isDebugEnabled)
          _log.debug("columNames->{}", Arrays.toString(columNames));
       DKColumnModel[] columnModels = new DKColumnModel[columnTypes.size() + 1];
-      columnModels[0] = new DKColumnModel(0, ROW_NUM_COLUMN_NAME, Type.INTEGER);
+      columnModels[0] = DKColumnModel.createRowNumColumnModel();
       for (int i = 1; i < columnModels.length; i++)
          columnModels[i] = new DKColumnModel(i, columNames[i - 1], columnTypes.get(i - 1));
       int[] key = { 0 };
@@ -320,5 +324,69 @@ public class DKPoiSheet extends DKAbstractSheet {
          return Type.INTEGER;
       else
          return Type.DECIMAL;
+   }
+
+   /**
+    * if hasRowNum_, types_[0] will represent the ROW_NUM column
+    */
+   private static Object[] readRow(Row row_, Type[] types_, boolean hasRowNum_) {
+      if ((row_ == null) || (types_ == null))
+         return null;
+      Object[] result = new Object[types_.length];
+      int start = hasRowNum_ ? 1 : 0;
+      if (hasRowNum_)
+         result[0] = (Integer) row_.getRowNum();
+
+      for (int i = start; i < types_.length; i++)
+         result[i] = readCell(row_.getCell(i - 1), types_[i]);
+
+      return result;
+   }
+
+   private static Object readCell(Cell cell_, Type type_) {
+      if ((cell_ == null) || (type_ == null))
+         return null;
+      if (cell_.getCellType() == Cell.CELL_TYPE_BLANK)
+         return null;
+      switch (type_) {
+      case STRING:
+         return cell_.getStringCellValue();
+      case DATE:
+         return cell_.getDateCellValue();
+      case DECIMAL:
+         return new BigDecimal(cell_.getNumericCellValue());
+      case INTEGER:
+         return new Long(new Double(cell_.getNumericCellValue()).longValue());
+      case REAL:
+         return new Double(cell_.getNumericCellValue());
+      case BOOLEAN:
+         return Boolean.valueOf(cell_.getBooleanCellValue());
+      case TIME:
+         return readTime(cell_);
+      case TIMESTAMP:
+         return readTimestamp(cell_);
+      case MIXED:
+         return cell_.toString();
+      default:
+         return cell_.toString();
+      }
+   }
+
+   private static Time readTime(Cell cell_) {
+      Date dateValue = cell_.getDateCellValue();
+      if (dateValue == null)
+         return null;
+      return new Time(dateValue.getTime());
+   }
+
+   private static Timestamp readTimestamp(Cell cell_) {
+      Date dateValue = cell_.getDateCellValue();
+      if (dateValue == null)
+         return null;
+      return new Timestamp(dateValue.getTime());
+   }
+
+   private static class RowIterator {
+      int _currentIndex = -1;
    }
 }

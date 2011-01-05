@@ -32,8 +32,6 @@ import org.diffkit.diff.engine.DKTableModel;
  */
 public abstract class DKAbstractSheet implements DKSheet {
 
-   public static final String ROW_NUM_COLUMN_NAME = "<ROW_NUM>";
-
    private final File _file;
    private String _requestedName;
    private final boolean _isSorted;
