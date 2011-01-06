@@ -422,4 +422,110 @@ public class DKPoiSheet extends DKAbstractSheet {
          throw new UnsupportedOperationException();
       }
    }
+
+   // public class RowComparator implements java.util.Comparator<Row> {
+   // private int _compareColumnIndex;
+   // private DKColumnModel _compareColumnModel;
+   //
+   // public RowComparator(int compareColumnIndex, DKColumnModel
+   // compareColumnModel) {
+   // _compareColumnIndex = compareColumnIndex;
+   // _compareColumnModel = compareColumnModel;
+   // }
+   //
+   // public int compare(Row row1, Row row2) {
+   //
+   // Cell cell1 = row1.getCell(_compareColumnIndex);
+   // Cell cell2 = row2.getCell(_compareColumnIndex);
+   //
+   // _log.debug("Comparing rows of indices:" + row1.getRowNum() + "&"
+   // + row2.getRowNum());
+   // _log.debug("Comapring cells of index:" + _compareColumnIndex);
+   // _log.debug("cell1:" + cell1);
+   // _log.debug("cell2:" + cell2);
+   //
+   // if (cell1 != null && cell2 != null) {
+   // Object value1 = getCellValue(cell1, _compareColumnModel);
+   // Object value2 = getCellValue(cell2, _compareColumnModel);
+   //
+   // _log.debug("value1:" + value1);
+   // _log.debug("value2:" + value2);
+   //
+   // if (value1 != null && value2 != null) {
+   //
+   // int result = 0;
+   // switch (_compareColumnModel._type) {
+   // case STRING:
+   // if (value1 instanceof String && value2 instanceof String) {
+   // result = ((String) value1).compareTo((String) value2);
+   // }
+   // else {
+   // _log.error("Either of the cell value types are not as expected from model. Expecting String");
+   // }
+   // break;
+   // case DATE:
+   // if (value1 instanceof Date && value2 instanceof Date) {
+   // result = ((Date) value1).compareTo((Date) value2);
+   // }
+   // else {
+   // _log.error("Either of the cell value types are not as expected from model. Expecting Date");
+   // }
+   // break;
+   // case DECIMAL:
+   // if (value1 instanceof Double && value2 instanceof Double) {
+   // result = ((Double) value1).compareTo((Double) value2);
+   // }
+   // else {
+   // _log.error("Either of the cell value types are not as expected from model. Expecting Double");
+   // }
+   // break;
+   // case INTEGER:
+   // if (value1 instanceof Double && value2 instanceof Double) {
+   // result = ((Double) value1).compareTo((Double) value2);
+   // }
+   // else {
+   // _log.error("Either of the cell value types are not as expected from model. Expecting Double");
+   // }
+   // break;
+   // case BOOLEAN:
+   // if (value1 instanceof Boolean && value2 instanceof Boolean) {
+   // result = ((Boolean) value1).compareTo((Boolean) value2);
+   // }
+   // else {
+   // _log.error("Either of the cell value types are not as expected from model. Expecting Boolean");
+   // }
+   // break;
+   // default:
+   // // TODO decide what to do in such error situation
+   // result = 0;
+   // }
+   // _log.debug("Compare result:" + result);
+   // return result;
+   // }
+   //
+   // _log.warn("Null values in the cell. Assuming null is less than any filled value");
+   // if (value1 == null && value2 != null) {
+   // return -1;
+   // }
+   // else if (value1 == null && value2 == null) {
+   // return 0;
+   // }
+   // else if (value1 != null && value2 == null) {
+   // return 1;
+   // }
+   //
+   // }
+   //
+   // if (cell1 == null && cell2 != null) {
+   // return -1;
+   // }
+   // else if (cell1 == null && cell2 == null) {
+   // return 0;
+   // }
+   // else if (cell1 != null && cell2 == null) {
+   // return 1;
+   // }
+   // return 0;
+   // }
+   // }
 }

@@ -52,6 +52,24 @@ public class TestPoiSheet extends GroovyTestCase {
       aRow = rowIterator.next()
       assert aRow
       assert aRow[0] == 5
+      assert aRow[0].class == Integer.class
+      assert aRow[1] == -2222
+      assert aRow[1].class == Long.class
+      assert aRow[2] == '       '
+      assert aRow[2].class == String.class
+      assert aRow[3] == 0.0
+      assert aRow[3].class == BigDecimal.class
+      assert aRow[4] == 3.0
+      assert aRow[4].class == BigDecimal.class
+      assert aRow[5] == '-1.0'
+      assert aRow[5].class == String.class
+      // ????
+      assert aRow[6].toString() == '31-Dec-1899'
+      assert aRow[6].class == String.class
+      assert aRow[7] == 14.2
+      assert aRow[7].class == Double.class
+      assert aRow[8] == 'FALSE'
+      assert aRow[8].class == String.class
    }
    
    public void testRowIteratorEasy() {
