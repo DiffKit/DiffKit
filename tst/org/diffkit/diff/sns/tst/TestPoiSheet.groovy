@@ -34,6 +34,79 @@ import org.diffkit.util.DKTimeUtil;
  */
 public class TestPoiSheet extends GroovyTestCase {
    
+   public void testRowIteratorHard() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, true, false]
+      Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      assert aRow.class == Object[].class
+      // first row should be row_num=2, because there is a header
+      assert aRow[0] == 2
+      rowIterator.next()
+      rowIterator.next()
+      aRow = rowIterator.next()
+      assert aRow
+      assert aRow[0] == 5
+   }
+   
+   public void testRowIteratorEasy() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "easy sheet", false, false, false]
+      Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      assert aRow.class == Object[].class
+      assert aRow[0] == 1
+      assert aRow[0].class == Integer.class
+      assert aRow[1] == 'aaaa'
+      assert aRow[1].class == String.class
+      assert aRow[2] == 1111
+      assert aRow[2].class == BigDecimal.class
+      assert aRow[3] == DKTimeUtil.createDate( 2008, 0, 1)
+      assert aRow[3].class == Date.class
+      assert aRow[4] == 'zzzz'
+      assert aRow[4].class == String.class
+      assert aRow[5].toString() == '00:31:31'
+      assert aRow[5].class == Time.class
+      assert aRow[6] == 1234
+      assert aRow[6].class == BigDecimal.class
+      assert aRow[7] == 123456.78
+      assert aRow[7].class == BigDecimal.class
+      assert aRow[8] == 1234.5678
+      assert aRow[8].class == BigDecimal.class
+      assert aRow[9] == 1234.5678
+      assert aRow[9].class == BigDecimal.class
+      assert aRow[10].toString() == '2004-05-23 14:25:10.487'
+      assert aRow[10].class == Timestamp.class
+      assert aRow[11] == Boolean.TRUE
+      assert aRow[11].class == Boolean.class
+      assert aRow[12] == 10
+      assert aRow[12].class == Long.class
+      assert aRow[13] == 12345
+      assert aRow[13].class == BigDecimal.class
+      assert aRow[14] == 'column14'
+      assert aRow[14].class == String.class
+      assert aRow[15] == 'column15'
+      assert aRow[15].class == String.class
+      assert aRow[16] == 'my clobby text'
+      assert aRow[16].class == String.class
+      while(rowIterator.hasNext()) {
+         aRow = rowIterator.next();
+         print "aRow->${aRow[0]} "
+         println "${aRow[1]} "
+      }
+      assert !rowIterator.hasNext()
+   }
+   
    public void testReadRowHard() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"

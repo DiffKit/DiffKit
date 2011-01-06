@@ -57,6 +57,12 @@ public class DKTableModel {
       return _name;
    }
 
+   public boolean hasRowNum() {
+      if (ArrayUtils.isEmpty(_columns))
+         return false;
+      return _columns[0].isRowNum();
+   }
+
    public DKColumnModel[] getColumns() {
       return _columns;
    }
@@ -100,6 +106,17 @@ public class DKTableModel {
          columnNames[i] = _columns[i].getName();
       }
       return columnNames;
+   }
+
+   /**
+    * convenience method that extracts types from underlying DKColumns
+    */
+   public Type[] getColumnTypes() {
+      Type[] columnTypes = new Type[_columns.length];
+      for (int i = 0; i < _columns.length; i++) {
+         columnTypes[i] = _columns[i].getType();
+      }
+      return columnTypes;
    }
 
    public int[] getKey() {

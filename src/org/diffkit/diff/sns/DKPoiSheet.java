@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.FactoryUtils;
@@ -34,7 +35,6 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.list.GrowthList;
 import org.apache.commons.collections.list.LazyList;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -45,6 +45,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKColumnModel.Type;
 import org.diffkit.diff.engine.DKTableModel;
@@ -71,7 +72,11 @@ public class DKPoiSheet extends DKAbstractSheet {
    }
 
    public Iterator<Object[]> getRowIterator(DKTableModel model_) {
-      throw new NotImplementedException();
+      DKValidate.notNull(model_);
+
+      int startIndex = this.hasHeader() ? 1 : 0;
+      return new RowIterator(_rows, model_.getColumnTypes(), startIndex,
+         model_.hasRowNum());
    }
 
    /**
@@ -350,7 +355,7 @@ public class DKPoiSheet extends DKAbstractSheet {
          return null;
       switch (type_) {
       case STRING:
-         return cell_.getStringCellValue();
+         return cell_.toString();
       case DATE:
          return cell_.getDateCellValue();
       case DECIMAL:
@@ -386,7 +391,35 @@ public class DKPoiSheet extends DKAbstractSheet {
       return new Timestamp(dateValue.getTime());
    }
 
-   private static class RowIterator {
-      int _currentIndex = -1;
+   private static class RowIterator implements Iterator<Object[]> {
+      private final int _lastIndex;
+      private final List<Row> _rows;
+      private final Type[] _types;
+      private final boolean _hasRowNum;
+      private int _currentIndex = -1;
+
+      private RowIterator(List<Row> rows_, Type[] types_, int startIndex_,
+                          boolean hasRowNum_) {
+         DKValidate.notNull(rows_, types_);
+         _rows = rows_;
+         _types = types_;
+         _lastIndex = rows_.size() - 1;
+         _currentIndex = startIndex_;
+         _hasRowNum = hasRowNum_;
+      }
+
+      public boolean hasNext() {
+         return (_currentIndex <= _lastIndex);
+      }
+
+      public Object[] next() {
+         if (!this.hasNext())
+            throw new NoSuchElementException();
+         return readRow(_rows.get(_currentIndex++), _types, _hasRowNum);
+      }
+
+      public void remove() {
+         throw new UnsupportedOperationException();
+      }
    }
 }
