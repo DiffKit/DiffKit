@@ -26,12 +26,46 @@ import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKColumnModel.Type;
 
 import org.diffkit.util.DKResourceUtil 
+import org.diffkit.util.DKTimeUtil;
 
 
 /**
  * @author jpanico
  */
 public class TestPoiSheet extends GroovyTestCase {
+   
+   public void testReadRowHard() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, false, false]
+      def rows = poiSheet.rows
+      assert rows
+      // ROW_NUM = 4
+      def row = rows.get(4)
+      Type[] types = [Type.INTEGER,Type.INTEGER,Type.STRING,Type.DECIMAL,Type.DECIMAL,Type.MIXED,Type.TIME,Type.REAL,Type.BOOLEAN]
+      def result = DKPoiSheet.readRow( row, types, true)
+      assert result
+      assert result.length == types.length
+      assert result[0] == 5
+      assert result[0].class == Integer.class
+      assert result[1] == -2222
+      assert result[1].class == Long.class
+      assert result[2] == '       '
+      assert result[2].class == String.class
+      assert result[3] == 0.0
+      assert result[3].class == BigDecimal.class
+      assert result[4] == 3.0
+      assert result[4].class == BigDecimal.class
+      assert result[5] == '-1.0'
+      assert result[5].class == String.class
+      assert result[6].toString() == '05:00:00'
+      assert result[6].class == Time.class
+      assert result[7] == 14.2
+      assert result[7].class == Double.class
+      assert result[8] == Boolean.FALSE
+      assert result[8].class == Boolean.class
+   }
    
    public void testReadRowEasy() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
@@ -44,6 +78,41 @@ public class TestPoiSheet extends GroovyTestCase {
       Type[] types = [Type.INTEGER,Type.STRING,Type.INTEGER,Type.DATE,Type.STRING,Type.TIME,Type.INTEGER,Type.DECIMAL,Type.DECIMAL,Type.DECIMAL,Type.TIMESTAMP,Type.BOOLEAN,Type.INTEGER,Type.INTEGER,Type.STRING,Type.STRING,Type.STRING]
       def result = DKPoiSheet.readRow( row, types, true)
       assert result
+      assert result.length == types.length
+      assert result[0] == 1
+      assert result[0].class == Integer.class
+      assert result[1] == 'aaaa'
+      assert result[1].class == String.class
+      assert result[2] == 1111
+      assert result[2].class == Long.class
+      assert result[3] == DKTimeUtil.createDate( 2008, 0, 1)
+      assert result[3].class == Date.class
+      assert result[4] == 'zzzz'
+      assert result[4].class == String.class
+      assert result[5].toString() == '00:31:31'
+      assert result[5].class == Time.class
+      assert result[6] == 1234
+      assert result[6].class == Long.class
+      assert result[7] == 123456.78
+      assert result[7].class == BigDecimal.class
+      assert result[8] == 1234.5678
+      assert result[8].class == BigDecimal.class
+      assert result[9] == 1234.5678
+      assert result[9].class == BigDecimal.class
+      assert result[10].toString() == '2004-05-23 14:25:10.487'
+      assert result[10].class == Timestamp.class
+      assert result[11] == Boolean.TRUE
+      assert result[11].class == Boolean.class
+      assert result[12] == 10
+      assert result[12].class == Long.class
+      assert result[13] == 12345
+      assert result[13].class == Long.class
+      assert result[14] == 'column14'
+      assert result[14].class == String.class
+      assert result[15] == 'column15'
+      assert result[15].class == String.class
+      assert result[16] == 'my clobby text'
+      assert result[16].class == String.class
    }
    
    public void testReadCellHard() {

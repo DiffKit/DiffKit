@@ -4,6 +4,7 @@
  */
 package org.diffkit.util;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -27,4 +28,12 @@ public class DKTimeUtil {
          second_).getTime();
       return DateUtils.addMilliseconds(date, millisecond_);
    }
+
+   public static Time createTime(int hourOfDay_, int minute_, int second_,
+                                 int millisecond_) {
+      long millis = DateUtils.MILLIS_PER_HOUR * hourOfDay_ + DateUtils.MILLIS_PER_MINUTE
+         * minute_ + DateUtils.MILLIS_PER_SECOND * second_ + millisecond_;
+      return new Time(millis);
+   }
+
 }

@@ -335,7 +335,7 @@ public class DKPoiSheet extends DKAbstractSheet {
       Object[] result = new Object[types_.length];
       int start = hasRowNum_ ? 1 : 0;
       if (hasRowNum_)
-         result[0] = (Integer) row_.getRowNum();
+         result[0] = (Integer) row_.getRowNum() + 1;
 
       for (int i = start; i < types_.length; i++)
          result[i] = readCell(row_.getCell(i - 1), types_[i]);
@@ -354,7 +354,7 @@ public class DKPoiSheet extends DKAbstractSheet {
       case DATE:
          return cell_.getDateCellValue();
       case DECIMAL:
-         return new BigDecimal(cell_.getNumericCellValue());
+         return new BigDecimal(cell_.toString());
       case INTEGER:
          return new Long(new Double(cell_.getNumericCellValue()).longValue());
       case REAL:
