@@ -21,7 +21,6 @@ import java.text.ParseException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.diffkit.common.DKValidate;
 
 /**
@@ -29,163 +28,173 @@ import org.diffkit.common.DKValidate;
  */
 public class DKColumnModel {
 
-   public static final String ROW_NUM_COLUMN_NAME = "<ROW_NUM>";
+	public static final String ROW_NUM_COLUMN_NAME = "<ROW_NUM>";
 
-   public enum Type {
-      STRING, INTEGER(true), REAL(true), DECIMAL(true), DATE, TIME, TIMESTAMP, BOOLEAN, TEXT, MIXED;
+	public enum Type {
+		STRING, INTEGER(true), REAL(true), DECIMAL(true), DATE, TIME, TIMESTAMP, BOOLEAN, TEXT, MIXED;
 
-      public final boolean _isNumber;
+		public final boolean _isNumber;
 
-      private Type() {
-         this(false);
-      }
+		private Type() {
+			this(false);
+		}
 
-      private Type(boolean isNumber_) {
-         _isNumber = isNumber_;
-      }
-   }
+		private Type(boolean isNumber_) {
+			_isNumber = isNumber_;
+		}
+	}
 
-   /**
-    * should be ISO 8601 compliant
-    */
-   private static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
-   /**
-    * should be ISO 8601 compliant
-    */
-   private static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
-   /**
-    * should be ISO 8601 compliant
-    */
-   private static final String DEFAULT_TIMESTAMP_FORMAT_STRING = DEFAULT_DATE_FORMAT_STRING
-      + "T" + DEFAULT_TIME_FORMAT_STRING;
+	/**
+	 * should be ISO 8601 compliant
+	 */
+	private static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
+	/**
+	 * should be ISO 8601 compliant
+	 */
+	private static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
+	/**
+	 * should be ISO 8601 compliant
+	 */
+	private static final String DEFAULT_TIMESTAMP_FORMAT_STRING = DEFAULT_DATE_FORMAT_STRING
+			+ "T" + DEFAULT_TIME_FORMAT_STRING;
 
-   /**
-    * 0's based
-    */
-   public final int _index;
-   public final String _name;
-   public final Type _type;
-   public final Format _format;
-   public final String _formatString;
-   private final boolean _isRowNum;
-   private DKTableModel _table;
+	/**
+	 * 0's based
+	 */
+	public final int _index;
+	public final String _name;
+	public final Type _type;
+	public final Format _format;
+	public final String _formatString;
+	private final boolean _isRowNum;
+	private DKTableModel _table;
 
-   public DKColumnModel(int index_, String name_, Type type_) {
-      this(index_, name_, type_, null);
-   }
+	public DKColumnModel(int index_, String name_, Type type_) {
+		this(index_, name_, type_, null);
+	}
 
-   public DKColumnModel(int index_, String name_, Type type_, String formatString_) {
-      _index = index_;
-      _name = name_;
-      _type = type_;
-      _formatString = formatString_;
-      _format = this.createFormat(_type, _formatString);
-      DKValidate.notNull(_name, _type);
-      _isRowNum = _name.equals(ROW_NUM_COLUMN_NAME);
-   }
+	public DKColumnModel(int index_, String name_, Type type_,
+			String formatString_) {
+		_index = index_;
+		_name = name_;
+		_type = type_;
+		_formatString = formatString_;
+		_format = this.createFormat(_type, _formatString);
+		DKValidate.notNull(_name, _type);
+		_isRowNum = _name.equals(ROW_NUM_COLUMN_NAME);
+	}
 
-   public static DKColumnModel createRowNumColumnModel() {
-      return new DKColumnModel(0, ROW_NUM_COLUMN_NAME, Type.INTEGER);
-   }
+	public static DKColumnModel createRowNumColumnModel() {
+		return new DKColumnModel(0, ROW_NUM_COLUMN_NAME, Type.INTEGER);
+	}
 
-   public void setTable(DKTableModel table_) {
-      _table = table_;
-   }
+	/**
+	 * create new instance that inherits all member values from receiver
+	 * <em>except</em> table
+	 */
+	public DKColumnModel copy() {
+		return new DKColumnModel(_index, _name, _type, _formatString);
+	}
 
-   public DKTableModel getTable() {
-      return _table;
-   }
+	public void setTable(DKTableModel table_) {
+		_table = table_;
+	}
 
-   public String getName() {
-      return _name;
-   }
+	public DKTableModel getTable() {
+		return _table;
+	}
 
-   public int getIndex() {
-      return _index;
-   }
+	public String getName() {
+		return _name;
+	}
 
-   public Type getType() {
-      return _type;
-   }
+	public int getIndex() {
+		return _index;
+	}
 
-   public boolean isRowNum() {
-      return _isRowNum;
-   }
+	public Type getType() {
+		return _type;
+	}
 
-   /**
-    * convenience method
-    * 
-    * @return true if receiver participates in table.key
-    */
-   public boolean isInKey() {
-      if (_table == null)
-         return false;
-      return _table.isInKey(this);
-   }
+	public boolean isRowNum() {
+		return _isRowNum;
+	}
 
-   public String toString() {
-      return String.format("Column[%s]", _name);
-   }
+	/**
+	 * convenience method
+	 * 
+	 * @return true if receiver participates in table.key
+	 */
+	public boolean isInKey() {
+		if (_table == null)
+			return false;
+		return _table.isInKey(this);
+	}
 
-   public String getDescription() {
-      return String.format("%s[%s,%s,%s,%s]",
-         ClassUtils.getShortClassName(this.getClass()), _index, _name, _type,
-         _formatString);
-   }
+	public String toString() {
+		return String.format("Column[%s]", _name);
+	}
 
-   public Object parseObject(String stringValue_) throws ParseException {
-      if (StringUtils.isEmpty(stringValue_))
-         return null;
-      if (_format == null)
-         return stringValue_;
-      return _format.parseObject(stringValue_);
-   }
+	public String getDescription() {
+		return String.format("%s[%s,%s,%s,%s]",
+				ClassUtils.getShortClassName(this.getClass()), _index, _name,
+				_type, _formatString);
+	}
 
-   private Format createFormat(Type type_, String formatString_) {
-      switch (type_) {
+	public Object parseObject(String stringValue_) throws ParseException {
+		if (StringUtils.isEmpty(stringValue_))
+			return null;
+		if (_format == null)
+			return stringValue_;
+		return _format.parseObject(stringValue_);
+	}
 
-      case STRING:
-         return null;
-      case INTEGER: {
-         if (formatString_ == null)
-            return null;
-         return new DecimalFormat(formatString_);
-      }
-      case REAL: {
-         if (formatString_ == null)
-            return null;
-         return new DecimalFormat(formatString_);
-      }
-      case DECIMAL: {
-         if (formatString_ == null)
-            return null;
-         return new DecimalFormat(formatString_);
-      }
-      case DATE: {
-         if (formatString_ == null)
-            formatString_ = DEFAULT_DATE_FORMAT_STRING;
-         return new DecimalFormat(formatString_);
-      }
-      case TIME: {
-         if (formatString_ == null)
-            formatString_ = DEFAULT_TIME_FORMAT_STRING;
-         return new DecimalFormat(formatString_);
-      }
-      case TIMESTAMP: {
-         if (formatString_ == null)
-            formatString_ = DEFAULT_TIMESTAMP_FORMAT_STRING;
-         return new DecimalFormat(formatString_);
-      }
-      case BOOLEAN:
-         return null;
-      case TEXT:
-         return null;
-      case MIXED:
-         return null;
+	private Format createFormat(Type type_, String formatString_) {
+		switch (type_) {
 
-      default:
-         throw new RuntimeException(String.format("unhandled type_->%s", type_));
-      }
-   }
+		case STRING:
+			return null;
+		case INTEGER: {
+			if (formatString_ == null)
+				return null;
+			return new DecimalFormat(formatString_);
+		}
+		case REAL: {
+			if (formatString_ == null)
+				return null;
+			return new DecimalFormat(formatString_);
+		}
+		case DECIMAL: {
+			if (formatString_ == null)
+				return null;
+			return new DecimalFormat(formatString_);
+		}
+		case DATE: {
+			if (formatString_ == null)
+				formatString_ = DEFAULT_DATE_FORMAT_STRING;
+			return new DecimalFormat(formatString_);
+		}
+		case TIME: {
+			if (formatString_ == null)
+				formatString_ = DEFAULT_TIME_FORMAT_STRING;
+			return new DecimalFormat(formatString_);
+		}
+		case TIMESTAMP: {
+			if (formatString_ == null)
+				formatString_ = DEFAULT_TIMESTAMP_FORMAT_STRING;
+			return new DecimalFormat(formatString_);
+		}
+		case BOOLEAN:
+			return null;
+		case TEXT:
+			return null;
+		case MIXED:
+			return null;
+
+		default:
+			throw new RuntimeException(String.format("unhandled type_->%s",
+					type_));
+		}
+	}
 
 }

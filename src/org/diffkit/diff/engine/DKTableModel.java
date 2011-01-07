@@ -19,7 +19,6 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
-
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKColumnModel.Type;
 import org.diffkit.util.DKArrayUtil;
@@ -29,240 +28,278 @@ import org.diffkit.util.DKArrayUtil;
  */
 public class DKTableModel {
 
-   private final String _name;
-   private final DKColumnModel[] _columns;
-   /**
-    * indexes into _columns
-    */
-   private final int[] _key;
+	private final String _name;
+	private final DKColumnModel[] _columns;
+	/**
+	 * indexes into _columns
+	 */
+	private final int[] _key;
 
-   public DKTableModel(String name_, DKColumnModel[] columns_, int[] key_) {
-      _name = name_;
-      _columns = columns_;
-      _key = key_;
-      DKValidate.notEmpty((Object[]) columns_);
-      DKValidate.notEmpty(key_);
-      this.validateColumnIndices(_key);
-      this.ensureRelationships(_columns);
-   }
+	public DKTableModel(String name_, DKColumnModel[] columns_, int[] key_) {
+		_name = name_;
+		_columns = columns_;
+		_key = key_;
+		DKValidate.notEmpty((Object[]) columns_);
+		DKValidate.notEmpty(key_);
+		this.validateColumnIndices(_key);
+		this.ensureRelationships(_columns);
+	}
 
-   private void ensureRelationships(DKColumnModel[] columns_) {
-      if ((columns_ == null) || (columns_.length == 0))
-         return;
-      for (DKColumnModel column : columns_)
-         column.setTable(this);
-   }
+	/**
+	 * @return a deep copy of the receiver, except with newKeyColumnNames for
+	 *         key, instead of receiver's values. newKeyColumnNames_ will be
+	 *         validated up front.
+	 */
+	public DKTableModel copyWithNewKey(String[] newKeyColumnNames_) {
+		this.validateColumnNames(newKeyColumnNames_);
+		int[] newKey = this.getColumnIndexes(newKeyColumnNames_);
+		return new DKTableModel(_name, this.copyColumns(), newKey);
+	}
 
-   public String getName() {
-      return _name;
-   }
+	private DKColumnModel[] copyColumns() {
+		DKColumnModel[] newColumns = new DKColumnModel[_columns.length];
+		for (int i = 0; i < _columns.length; i++)
+			newColumns[i] = _columns[i].copy();
+		return newColumns;
+	}
 
-   public boolean hasRowNum() {
-      if (ArrayUtils.isEmpty(_columns))
-         return false;
-      return _columns[0].isRowNum();
-   }
+	private void ensureRelationships(DKColumnModel[] columns_) {
+		if ((columns_ == null) || (columns_.length == 0))
+			return;
+		for (DKColumnModel column : columns_)
+			column.setTable(this);
+	}
 
-   public DKColumnModel[] getColumns() {
-      return _columns;
-   }
+	public String getName() {
+		return _name;
+	}
 
-   public DKColumnModel getColumn(int index_) {
-      for (DKColumnModel column : _columns) {
-         if (column._index == index_)
-            return column;
-      }
-      return null;
-   }
+	public boolean hasRowNum() {
+		if (ArrayUtils.isEmpty(_columns))
+			return false;
+		return _columns[0].isRowNum();
+	}
 
-   public DKColumnModel getColumn(String columnName_) {
-      if (columnName_ == null)
-         return null;
-      if ((_columns == null) || (_columns.length == 0))
-         return null;
-      for (DKColumnModel column : _columns) {
-         if (column.getName().equals(columnName_))
-            return column;
-      }
-      return null;
-   }
+	public DKColumnModel[] getColumns() {
+		return _columns;
+	}
 
-   public DKColumnModel[] getColumns(int[] indxs_) {
-      if (indxs_ == null)
-         return null;
-      this.validateColumnIndices(indxs_);
-      DKColumnModel[] columns = new DKColumnModel[indxs_.length];
-      for (int i = 0; i < indxs_.length; i++)
-         columns[i] = this.getColumn(indxs_[i]);
-      return columns;
-   }
+	public DKColumnModel getColumn(int index_) {
+		for (DKColumnModel column : _columns) {
+			if (column._index == index_)
+				return column;
+		}
+		return null;
+	}
 
-   /**
-    * convenience method that extracts names from underlying DKColumns
-    */
-   public String[] getColumnNames() {
-      String[] columnNames = new String[_columns.length];
-      for (int i = 0; i < _columns.length; i++) {
-         columnNames[i] = _columns[i].getName();
-      }
-      return columnNames;
-   }
+	public DKColumnModel getColumn(String columnName_) {
+		if (columnName_ == null)
+			return null;
+		if ((_columns == null) || (_columns.length == 0))
+			return null;
+		for (DKColumnModel column : _columns) {
+			if (column.getName().equals(columnName_))
+				return column;
+		}
+		return null;
+	}
 
-   /**
-    * convenience method that extracts types from underlying DKColumns
-    */
-   public Type[] getColumnTypes() {
-      Type[] columnTypes = new Type[_columns.length];
-      for (int i = 0; i < _columns.length; i++) {
-         columnTypes[i] = _columns[i].getType();
-      }
-      return columnTypes;
-   }
+	public DKColumnModel[] getColumns(int[] indxs_) {
+		if (indxs_ == null)
+			return null;
+		this.validateColumnIndices(indxs_);
+		DKColumnModel[] columns = new DKColumnModel[indxs_.length];
+		for (int i = 0; i < indxs_.length; i++)
+			columns[i] = this.getColumn(indxs_[i]);
+		return columns;
+	}
 
-   public int[] getKey() {
-      return _key;
-   }
+	/**
+	 * convenience method that extracts names from underlying DKColumns
+	 */
+	public String[] getColumnNames() {
+		String[] columnNames = new String[_columns.length];
+		for (int i = 0; i < _columns.length; i++) {
+			columnNames[i] = _columns[i].getName();
+		}
+		return columnNames;
+	}
 
-   public Object[] getKeyValues(Object[] row_) {
-      if (row_ == null)
-         return null;
-      Object[] keyValues = new Object[_key.length];
-      for (int i = 0; i < _key.length; i++)
-         keyValues[i] = row_[_key[i]];
-      return keyValues;
-   }
+	/**
+	 * convenience method that extracts types from underlying DKColumns
+	 */
+	public Type[] getColumnTypes() {
+		Type[] columnTypes = new Type[_columns.length];
+		for (int i = 0; i < _columns.length; i++) {
+			columnTypes[i] = _columns[i].getType();
+		}
+		return columnTypes;
+	}
 
-   public String toString() {
-      return String.format("%s[%s]", ClassUtils.getShortClassName(this.getClass()), _name);
-   }
+	public int[] getKey() {
+		return _key;
+	}
 
-   public String getDescription() {
-      return String.format("%s[name=%s, columnCount=%s, key=%s]",
-         ClassUtils.getShortClassName(this.getClass()), _name, _columns.length,
-         Arrays.toString(this.getKeyColumnNames()));
-   }
+	public Object[] getKeyValues(Object[] row_) {
+		if (row_ == null)
+			return null;
+		Object[] keyValues = new Object[_key.length];
+		for (int i = 0; i < _key.length; i++)
+			keyValues[i] = row_[_key[i]];
+		return keyValues;
+	}
 
-   /**
-    * @throws RuntimeException
-    *            if it finds any element of columnIndices_ that does not
-    *            correspond to a KDColumnModel, in the receiver, having the same
-    *            index value
-    */
-   public void validateColumnIndices(int[] columnIndices_) {
-      if (columnIndices_ == null)
-         return;
-      for (int index : columnIndices_) {
-         DKColumnModel column = this.getColumn(index);
-         if (column == null)
-            throw new RuntimeException(String.format(
-               "couldn't find Column for index->%s", index));
-      }
-   }
+	public String toString() {
+		return String.format("%s[%s]",
+				ClassUtils.getShortClassName(this.getClass()), _name);
+	}
 
-   public String[] getKeyColumnNames() {
-      if (_key == null)
-         return null;
-      String[] keyColumnNames = new String[_key.length];
-      for (int i = 0; i < _key.length; i++) {
-         keyColumnNames[i] = _columns[_key[i]]._name;
-      }
-      return keyColumnNames;
-   }
+	public String getDescription() {
+		return String.format("%s[name=%s, columnCount=%s, key=%s]",
+				ClassUtils.getShortClassName(this.getClass()), _name,
+				_columns.length, Arrays.toString(this.getKeyColumnNames()));
+	}
 
-   /**
-    * convenience method
-    */
-   public boolean containsColumn(DKColumnModel column_) {
-      if (column_ == null)
-         return false;
-      return ArrayUtils.contains(_columns, column_);
-   }
+	/**
+	 * @throws RuntimeException
+	 *             if it finds any element of columnIndices_ that does not
+	 *             correspond to a KDColumnModel, in the receiver, having the
+	 *             same index value
+	 */
+	public void validateColumnIndices(int[] columnIndices_) {
+		if (columnIndices_ == null)
+			return;
+		for (int index : columnIndices_) {
+			DKColumnModel column = this.getColumn(index);
+			if (column == null)
+				throw new RuntimeException(String.format(
+						"couldn't find Column for index->%s", index));
+		}
+	}
 
-   /**
-    * convenience method
-    */
-   public boolean containsColumn(String columnName_) {
-      if (columnName_ == null)
-         return false;
-      return (this.getColumn(columnName_) != null);
-   }
+	/**
+	 * @throws RuntimeException
+	 *             if it finds any element of columnNames_ that the receiver
+	 *             cannot find a column for
+	 */
+	public void validateColumnNames(String[] columnNames_) {
+		if (ArrayUtils.isEmpty(columnNames_))
+			return;
+		for (String name : columnNames_) {
+			DKColumnModel column = this.getColumn(name);
+			if (column == null)
+				throw new RuntimeException(String.format(
+						"couldn't find Column for name->%s", name));
+		}
+	}
 
-   /**
-    * convenience method
-    */
-   public int getColumnIndex(DKColumnModel column_) {
-      if (column_ == null)
-         return -1;
-      if ((_columns == null) || (_columns.length == 0))
-         return -1;
-      return ArrayUtils.indexOf(_columns, column_);
-   }
+	public String[] getKeyColumnNames() {
+		if (_key == null)
+			return null;
+		String[] keyColumnNames = new String[_key.length];
+		for (int i = 0; i < _key.length; i++) {
+			keyColumnNames[i] = _columns[_key[i]]._name;
+		}
+		return keyColumnNames;
+	}
 
-   /**
-    * convenience method
-    */
-   public int[] getColumnIndexes(String[] columnNames_) {
-      if (ArrayUtils.isEmpty(columnNames_))
-         return null;
-      int[] indexes = new int[columnNames_.length];
-      Arrays.fill(indexes, -1);
-      for (int i = 0, j = 0; i < _columns.length; i++) {
-         if (!ArrayUtils.contains(columnNames_, _columns[i].getName()))
-            continue;
-         indexes[j++] = i;
-      }
-      return DKArrayUtil.compactFill(indexes, -1);
-   }
+	/**
+	 * convenience method
+	 */
+	public boolean containsColumn(DKColumnModel column_) {
+		if (column_ == null)
+			return false;
+		return ArrayUtils.contains(_columns, column_);
+	}
 
-   /**
-    * convenience method
-    * 
-    * @return true if column_ is one of the columns that comprises key
-    */
-   public boolean isInKey(DKColumnModel column_) {
-      if (column_ == null)
-         return false;
-      if ((_key == null) || (_key.length == 0))
-         return false;
-      int columnIdx = this.getColumnIndex(column_);
-      if (columnIdx < 0)
-         return false;
-      return ArrayUtils.contains(_key, columnIdx);
-   }
+	/**
+	 * convenience method
+	 */
+	public boolean containsColumn(String columnName_) {
+		if (columnName_ == null)
+			return false;
+		return (this.getColumn(columnName_) != null);
+	}
 
-   /**
-    * convenience factory method that creates generic column names based on
-    * index and then calls createGenericStringModel(String[], int[])
-    */
-   public static DKTableModel createGenericStringModel(int columnCount_, int[] key_) {
-      if (columnCount_ <= 0)
-         return null;
-      String[] columnNames = new String[columnCount_];
-      for (int i = 0; i < columnNames.length; i++)
-         columnNames[i] = String.format("column_%s", i + 1);
+	/**
+	 * convenience method
+	 */
+	public int getColumnIndex(DKColumnModel column_) {
+		if (column_ == null)
+			return -1;
+		if ((_columns == null) || (_columns.length == 0))
+			return -1;
+		return ArrayUtils.indexOf(_columns, column_);
+	}
 
-      return createGenericStringModel(columnNames, key_);
-   }
+	/**
+	 * convenience method
+	 */
+	public int[] getColumnIndexes(String[] columnNames_) {
+		if (ArrayUtils.isEmpty(columnNames_))
+			return null;
+		int[] indexes = new int[columnNames_.length];
+		Arrays.fill(indexes, -1);
+		for (int i = 0, j = 0; i < _columns.length; i++) {
+			if (!ArrayUtils.contains(columnNames_, _columns[i].getName()))
+				continue;
+			indexes[j++] = i;
+		}
+		return DKArrayUtil.compactFill(indexes, -1);
+	}
 
-   /**
-    * convenience factory method that creates DKTableModel having String type
-    * columns using columnNames_ and key = key_
-    */
-   public static DKTableModel createGenericStringModel(String[] columnNames_, int[] key_) {
-      if ((columnNames_ == null) || (columnNames_.length == 0))
-         return null;
-      if (key_ == null)
-         return null;
-      for (int i = 0; i < key_.length; i++) {
-         if ((key_[i] < 0) || (key_[i] >= columnNames_.length))
-            throw new RuntimeException(String.format(
-               "key index->%s not in range for columnNames_.length->%s", key_[i],
-               columnNames_.length));
-      }
-      DKColumnModel[] columns = new DKColumnModel[columnNames_.length];
-      for (int i = 0; i < columnNames_.length; i++)
-         columns[i] = new DKColumnModel(i, columnNames_[i], Type.STRING);
+	/**
+	 * convenience method
+	 * 
+	 * @return true if column_ is one of the columns that comprises key
+	 */
+	public boolean isInKey(DKColumnModel column_) {
+		if (column_ == null)
+			return false;
+		if ((_key == null) || (_key.length == 0))
+			return false;
+		int columnIdx = this.getColumnIndex(column_);
+		if (columnIdx < 0)
+			return false;
+		return ArrayUtils.contains(_key, columnIdx);
+	}
 
-      return new DKTableModel("GENERIC_STRING_MODEL", columns, key_);
-   }
+	/**
+	 * convenience factory method that creates generic column names based on
+	 * index and then calls createGenericStringModel(String[], int[])
+	 */
+	public static DKTableModel createGenericStringModel(int columnCount_,
+			int[] key_) {
+		if (columnCount_ <= 0)
+			return null;
+		String[] columnNames = new String[columnCount_];
+		for (int i = 0; i < columnNames.length; i++)
+			columnNames[i] = String.format("column_%s", i + 1);
+
+		return createGenericStringModel(columnNames, key_);
+	}
+
+	/**
+	 * convenience factory method that creates DKTableModel having String type
+	 * columns using columnNames_ and key = key_
+	 */
+	public static DKTableModel createGenericStringModel(String[] columnNames_,
+			int[] key_) {
+		if ((columnNames_ == null) || (columnNames_.length == 0))
+			return null;
+		if (key_ == null)
+			return null;
+		for (int i = 0; i < key_.length; i++) {
+			if ((key_[i] < 0) || (key_[i] >= columnNames_.length))
+				throw new RuntimeException(
+						String.format(
+								"key index->%s not in range for columnNames_.length->%s",
+								key_[i], columnNames_.length));
+		}
+		DKColumnModel[] columns = new DKColumnModel[columnNames_.length];
+		for (int i = 0; i < columnNames_.length; i++)
+			columns[i] = new DKColumnModel(i, columnNames_[i], Type.STRING);
+
+		return new DKTableModel("GENERIC_STRING_MODEL", columns, key_);
+	}
 }

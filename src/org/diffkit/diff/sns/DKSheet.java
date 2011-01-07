@@ -26,19 +26,22 @@ import org.diffkit.diff.engine.DKTableModel;
  */
 public interface DKSheet {
 
-   public File getFile();
+	public File getFile();
 
-   /**
-    * always the name extracted from the sheet itself
-    */
-   public String getName() throws IOException;
+	/**
+	 * always the name extracted from the sheet itself
+	 */
+	public String getName() throws IOException;
 
-   /**
-    * this is always the model extracted from the sheet itself, never a
-    * client-supplied model
-    */
-   public DKTableModel getModelFromSheet() throws IOException;
+	/**
+	 * this is always the model extracted from the sheet itself, never a
+	 * client-supplied model
+	 */
+	public DKTableModel getModelFromSheet() throws IOException;
 
-   public Iterator<Object[]> getRowIterator(DKTableModel model_) throws IOException;
+	public Iterator<Object[]> getRowIterator(DKTableModel model_)
+			throws IOException;
+
+	public void close() throws IOException;
 
 }
