@@ -49,6 +49,22 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert database.supportsType('VARCHAR')
    }
    
+   public void testHyperServer(){
+      DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'xdb', 'localhost', null, 'SA', '']
+      println "connectionInfo->$connectionInfo"
+      DKDatabase database = [connectionInfo]
+      DKDBTableDataAccess tableDataAccess = [database]
+      println "tableDataAccess->$tableDataAccess"
+      
+      def table = this.createTest1LHSTable()
+      def createdTable = database.createTable(table)
+      assert createdTable
+      
+      table = this.createTest1RHSTable()
+      createdTable = database.createTable(table)
+      assert createdTable
+   }
+   
    public void tXstHyperWeird(){
       DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'mem:test', null, -1, 'SA', '']
       println "connectionInfo->$connectionInfo"
@@ -221,7 +237,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       DKDBTable table = [null, null, 'TEST1_RHS_TABLE', columns, pk]
       return table
    }
-      
+   
    private DKDBTable createCustomerMetaTable(){
       DKDBColumn column1 = ['first_name', 1, 'VARCHAR', 20, true]
       DKDBColumn column2 = ['last_name', 2, 'VARCHAR', 20, true]

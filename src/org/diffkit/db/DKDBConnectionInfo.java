@@ -17,6 +17,7 @@ package org.diffkit.db;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 
 import org.diffkit.common.DKValidate;
 
@@ -112,8 +113,7 @@ public class DKDBConnectionInfo {
 
    // jdbc:jtds:<server_type>://<server>[:<port>][/<database>][;<property>=<value>[;...]]
    private String getSQLServerUrl() {
-      return String.format("jdbc:jtds:sqlserver://%s:%s/%s", _host, _port,
-         _database);
+      return String.format("jdbc:jtds:sqlserver://%s:%s/%s", _host, _port, _database);
    }
 
    // jdbc:postgresql://<host>[:<port>]/<database_name>
@@ -123,8 +123,15 @@ public class DKDBConnectionInfo {
 
    // jdbc:hsqldb:file:<file path>
    // jdbc:hsqldb:mem:<database_name>
+   // jdbc:hsqldb:hsql://<host>[:<port>]/<database_name>
    private String getHyperSQLUrl() {
-      return String.format("jdbc:hsqldb:%s;get_column_name=false", _database);
+      if (StringUtils.isEmpty(_host))
+         return String.format("jdbc:hsqldb:%s;get_column_name=false", _database);
+      if (_port == null)
+         return String.format("jdbc:hsqldb:hsql://%s/%s;get_column_name=false", _host,
+            _database);
+      return String.format("jdbc:hsqldb:hsql://%s:%s/%s;get_column_name=false", _host,
+         _port, _database);
    }
 
    public String getUsername() {

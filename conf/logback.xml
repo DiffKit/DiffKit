@@ -2,7 +2,8 @@
 
 <configuration>
 
-	<appender name="SYSTEM" class="ch.qos.logback.core.ConsoleAppender">
+	<appender name="SYSTEM" class="ch.qos.logback.core.FileAppender">
+	   <file>testFile.log</file>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%-5level[%date{HH:mm:ss.SSS}]{%thread}\(%C{0}.%M:%L\)-%message%n
 			</Pattern>
@@ -16,6 +17,12 @@
 	</appender>
 
    
+  <logger name="org.diffkit.db.DKSqlGenerator">
+      <level value="debug" />
+   </logger>
+  <logger name="org.diffkit.util.DKSqlUtil">
+      <level value="debug" />
+   </logger>
   <logger name="org.diffkit.diff.sns.DKPoiSheet">
       <level value="debug" />
    </logger>
