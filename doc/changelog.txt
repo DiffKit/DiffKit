@@ -3,6 +3,10 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.9 (1/8/2011)
+
+- fixes Issue 64: connections not working to HyperSQL DBs in Server mode
+
 == release 0.8.8 (1/5/2011)
 
 - fixes Issue 61: SqlPatchSink not generating proper DML statements when String value contains single quote
