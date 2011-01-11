@@ -26,22 +26,35 @@ import org.diffkit.diff.engine.DKTableModel;
  */
 public interface DKSheet {
 
-	public File getFile();
+   /**
+    * all implementing classes must have a static field of type String[] with
+    * this name
+    */
+   public static final String HANDLED_FILE_EXTENSIONS_FIELD_NAME = "HANDLED_FILE_EXTENSIONS";
+   public static final Class<String[]> HANDLED_FILE_EXTENSIONS_FIELD_TYPE = String[].class;
+   /**
+    * all implementing classes must have a Constructor that looks like this:
+    * DKAbstractSheet(File file_, String requestedName_, boolean isSorted_,
+    * boolean hasHeader_, boolean validateLazily_)
+    */
+   public static final Class<?>[] IMPLEMENTOR_CONSTRUCTOR_PARAM_TYPES = { File.class,
+      String.class, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE };
 
-	/**
-	 * always the name extracted from the sheet itself
-	 */
-	public String getName() throws IOException;
+   public File getFile();
 
-	/**
-	 * this is always the model extracted from the sheet itself, never a
-	 * client-supplied model
-	 */
-	public DKTableModel getModelFromSheet() throws IOException;
+   /**
+    * always the name extracted from the sheet itself
+    */
+   public String getName() throws IOException;
 
-	public Iterator<Object[]> getRowIterator(DKTableModel model_)
-			throws IOException;
+   /**
+    * this is always the model extracted from the sheet itself, never a
+    * client-supplied model
+    */
+   public DKTableModel getModelFromSheet() throws IOException;
 
-	public void close() throws IOException;
+   public Iterator<Object[]> getRowIterator(DKTableModel model_) throws IOException;
+
+   public void close() throws IOException;
 
 }

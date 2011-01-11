@@ -17,8 +17,8 @@ package org.diffkit.util.tst
 
 
 
-import org.diffkit.diff.engine.DKContext 
 import org.diffkit.diff.sns.DKListSink;
+import org.diffkit.diff.sns.DKPoiSheet;
 import org.diffkit.util.DKClassUtil;
 
 import groovy.util.GroovyTestCase;
@@ -28,16 +28,24 @@ import groovy.util.GroovyTestCase;
  * @author jpanico
  */
 public class TestClassUtil extends GroovyTestCase {
-	
-	public void testCreateInstance(){
-		
-		def created = DKClassUtil.createInstance(String.class, "hello")
-		assert created
-		assert created == 'hello'
-		
-		shouldFail(NoSuchMethodException) { 
-			DKClassUtil.createInstance(DKListSink.class, "hello")
-		}
-	}
-	
+   
+   public void testFindStaticField(){
+      assert !DKClassUtil.findStaticField( 'DOES_NOT_EXIST', DKPoiSheet.class)
+      assert DKClassUtil.findStaticField( 'HANDLED_FILE_EXTENSIONS', DKPoiSheet.class)
+      // doesn't find instance members
+      assert !DKClassUtil.findStaticField( '_workbook', DKPoiSheet.class)
+      // finds static field in the super of the target, not target
+      assert DKClassUtil.findStaticField( 'COLUMN_CLUSTER_KEY_SEPARATOR', DKListSink.class)
+   }
+   
+   public void testCreateInstance(){
+      
+      def created = DKClassUtil.createInstance(String.class, "hello")
+      assert created
+      assert created == 'hello'
+      
+      shouldFail(NoSuchMethodException) { 
+         DKClassUtil.createInstance(DKListSink.class, "hello")
+      }
+   }
 }

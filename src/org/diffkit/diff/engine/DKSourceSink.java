@@ -23,7 +23,7 @@ import java.io.IOException;
 public interface DKSourceSink {
 
    public enum Kind {
-      FILE, DB, STREAM, MEMORY, EXCEL;
+      FILE, DB, STREAM, MEMORY, SPREADSHEET;
    }
 
    public void open(DKContext context_) throws IOException;

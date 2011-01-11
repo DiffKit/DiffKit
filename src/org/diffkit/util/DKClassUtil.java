@@ -40,8 +40,7 @@ public class DKClassUtil {
    }
 
    /**
-    * Method can have any visibility; recursively climbs the Class hierarchy; no
-    * arg methods only; instance methods only
+    * Method can have any visibility; recursively climbs the Class hierarchy.
     */
    public static Method findMethod(String methodName_, int argCount_, Class<?> target_) {
       if ((methodName_ == null) || (target_ == null))
@@ -67,6 +66,35 @@ public class DKClassUtil {
          return null;
       }
       return findMethod(methodName_, argCount_, target_.getSuperclass());
+   }
+
+   /**
+    * Field can have any visibility; recursively climbs the Class hierarchy;
+    * static fields only
+    * 
+    */
+   public static Field findStaticField(String fieldName_, Class<?> target_) {
+      if ((fieldName_ == null) || (target_ == null))
+         return null;
+
+      try {
+         Field[] declaredFields = target_.getDeclaredFields();
+         if ((declaredFields == null) || (declaredFields.length == 0))
+            return null;
+         for (Field field : declaredFields) {
+            int modifiers = field.getModifiers();
+            if (!Modifier.isStatic(modifiers))
+               continue;
+            if (!fieldName_.equals(field.getName()))
+               continue;
+            return field;
+         }
+      }
+      catch (Exception e_) {
+         LOG.error(null, e_);
+         return null;
+      }
+      return findStaticField(fieldName_, target_.getSuperclass());
    }
 
    /**

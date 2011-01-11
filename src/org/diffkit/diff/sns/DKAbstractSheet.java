@@ -17,15 +17,22 @@ package org.diffkit.diff.sns;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
 import org.diffkit.diff.engine.DKTableModel;
+import org.diffkit.util.DKClassUtil;
 
 /**
  * @author kratnapu
@@ -38,6 +45,7 @@ public abstract class DKAbstractSheet implements DKSheet {
    private final boolean _hasHeader;
    private final boolean _validateLazily;
    private DKTableModel _modelFromSheet;
+   private static final Logger LOG = LoggerFactory.getLogger(DKAbstractSheet.class);
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
    public DKAbstractSheet(File file_, String requestedName_, boolean isSorted_,
@@ -55,6 +63,61 @@ public abstract class DKAbstractSheet implements DKSheet {
       DKValidate.notNull(_file);
       if (!_validateLazily)
          this.validate();
+   }
+
+   public static boolean classHandlesExtension(Class<DKSheet> class_, String extension_) {
+      if ((class_ == null) || (extension_ == null))
+         return false;
+      Field handledField = DKClassUtil.findStaticField(
+         HANDLED_FILE_EXTENSIONS_FIELD_NAME, class_);
+      if (handledField == null)
+         throw new IllegalArgumentException(String.format(
+            "class_->%s must have static field named->%s", class_,
+            HANDLED_FILE_EXTENSIONS_FIELD_NAME));
+      if (handledField.getType() != HANDLED_FILE_EXTENSIONS_FIELD_TYPE)
+         throw new IllegalArgumentException(String.format(
+            "field->%s in class_-> must be type->%s", HANDLED_FILE_EXTENSIONS_FIELD_NAME,
+            class_, HANDLED_FILE_EXTENSIONS_FIELD_TYPE));
+      String[] handledExtensions = (String[]) DKClassUtil.getValue(handledField, class_);
+      LOG.debug("class_->{} handledExtensions->{}", class_, handledExtensions);
+      return ArrayUtils.contains(handledExtensions, extension_.toUpperCase());
+   }
+
+   private static Class<DKSheet> getHandlerClassForFile(File file_,
+                                                        Class<DKSheet>[] availableSheetClasses_) {
+
+      String extension = FilenameUtils.getExtension(file_.getName());
+      LOG.debug("file_->{} extension->{}", file_, extension);
+
+      for (Class<DKSheet> sheetClass : availableSheetClasses_) {
+         if (classHandlesExtension(sheetClass, extension))
+            return sheetClass;
+      }
+      return null;
+   }
+
+   /**
+    * throws IllegalArgumentException if it's not able to find a handler in
+    * availableSheetClasses_ for file_
+    */
+   public static DKSheet constructSheet(File file_, String requestedName_,
+                                        boolean isSorted_, boolean hasHeader_,
+                                        boolean validateLazily_,
+                                        Class<DKSheet>[] availableSheetClasses_)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
+      InstantiationException {
+      DKValidate.notNull(file_);
+      DKValidate.notEmpty((Object[]) availableSheetClasses_);
+      Class<DKSheet> handlerClass = getHandlerClassForFile(file_, availableSheetClasses_);
+      LOG.debug("handlerClass->{}", handlerClass);
+      if (handlerClass == null)
+         throw new IllegalArgumentException(String.format(
+            "Couldn't find handler in availableSheetClasses_->% for file_->%s",
+            Arrays.toString(availableSheetClasses_), file_));
+      Object[] constructorArgs = { file_, requestedName_, Boolean.valueOf(isSorted_),
+         Boolean.valueOf(hasHeader_), Boolean.valueOf(validateLazily_) };
+      return (DKSheet) ConstructorUtils.invokeExactConstructor(handlerClass,
+         constructorArgs);
    }
 
    protected void validate() {
