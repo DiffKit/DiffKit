@@ -105,8 +105,8 @@ public class TestPoiSheet extends GroovyTestCase {
       assert aRow[9].class == BigDecimal.class
       assert aRow[10].toString() == '2004-05-23 14:25:10.487'
       assert aRow[10].class == Timestamp.class
-      assert aRow[11] == Boolean.TRUE
-      assert aRow[11].class == Boolean.class
+      assert aRow[11] == 'TRUE'
+      assert aRow[11].class == String.class
       assert aRow[12] == 10
       assert aRow[12].class == Long.class
       assert aRow[13] == 12345
@@ -269,7 +269,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert model.columns[10].name == 'J'
       assert model.columns[10].type == Type.TIMESTAMP
       assert model.columns[11].name == 'K'
-      assert model.columns[11].type == Type.BOOLEAN
+      assert model.columns[11].type == Type.STRING
       
       poiSheet = [sourceFile, "Sheet1", false, true, false]
       model = poiSheet.createModelFromSheet()
@@ -309,7 +309,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert columnTypes[7] == DKColumnModel.Type.DECIMAL
       assert columnTypes[8] == DKColumnModel.Type.DECIMAL
       assert columnTypes[9] == DKColumnModel.Type.TIMESTAMP
-      assert columnTypes[10] == DKColumnModel.Type.BOOLEAN
+      assert columnTypes[10] == DKColumnModel.Type.STRING
       assert columnTypes[11] == DKColumnModel.Type.INTEGER
       assert columnTypes[12] == DKColumnModel.Type.DECIMAL
       assert columnTypes[13] == DKColumnModel.Type.STRING

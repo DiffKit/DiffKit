@@ -15,7 +15,9 @@
  */
 package org.diffkit.diff.sns;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Iterator;
 
@@ -36,6 +38,7 @@ import org.diffkit.diff.engine.DKTableModel;
 @NotThreadSafe
 public class DKSpreadSheetFileSource implements DKSource {
 
+   @SuppressWarnings("rawtypes")
    public static final Class[] HANDLER_CLASSES = { DKPoiSheet.class };
 
    private final DKSheet _sheet;
@@ -52,7 +55,7 @@ public class DKSpreadSheetFileSource implements DKSource {
                                   DKTableModel requestedModel_,
                                   String[] requestKeyColumnNames_, int[] readColumnIdxs_,
                                   boolean isSorted_, boolean hasHeader_,
-                                  boolean validateLazily_) throws IOException {
+                                  boolean validateLazily_) {
       if (_isDebugEnabled) {
          _log.debug("filePath_->{}", filePath_);
          _log.debug("sheetName_->{}", sheetName_);
@@ -184,23 +187,22 @@ public class DKSpreadSheetFileSource implements DKSource {
     * validateLazily_]
     * 
     * @return a new instance of a DKSheet implementation
+    * @throws InstantiationException
+    * @throws InvocationTargetException
+    * @throws IllegalAccessException
+    * @throws NoSuchMethodException
     */
+   @SuppressWarnings("unchecked")
    private static DKSheet createSheet(String filePath_, String sheetName_,
                                       boolean isSorted_, boolean hasHeader_,
                                       boolean validateLazily_) {
-      // find the class that handles the extension
-      Class handlerClass = findHandlerForWorkbookFile(filePath_);
-      // find the designated constructor on that class
-      // invoke constructor with args from this method
-      throw new NotImplementedException();
-   }
-
-   /**
-    * guaranteed to not return null-- will throw a RuntimeException if it is
-    * unable to find a handler
-    */
-   private static Class findHandlerForWorkbookFile(String filePath_) {
-      throw new NotImplementedException();
+      try {
+         return DKAbstractSheet.constructSheet(new File(filePath_), sheetName_,
+            isSorted_, hasHeader_, validateLazily_, (Class<DKSheet>[]) HANDLER_CLASSES);
+      }
+      catch (Exception e_) {
+         throw new RuntimeException(e_);
+      }
    }
 
    private void ensureOpen() {

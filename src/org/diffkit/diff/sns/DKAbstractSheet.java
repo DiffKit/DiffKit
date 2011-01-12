@@ -17,6 +17,7 @@ package org.diffkit.diff.sns;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -80,7 +81,7 @@ public abstract class DKAbstractSheet implements DKSheet {
             class_, HANDLED_FILE_EXTENSIONS_FIELD_TYPE));
       String[] handledExtensions = (String[]) DKClassUtil.getValue(handledField, class_);
       LOG.debug("class_->{} handledExtensions->{}", class_, handledExtensions);
-      return ArrayUtils.contains(handledExtensions, extension_.toUpperCase());
+      return ArrayUtils.contains(handledExtensions, extension_.toLowerCase());
    }
 
    private static Class<DKSheet> getHandlerClassForFile(File file_,
@@ -100,6 +101,7 @@ public abstract class DKAbstractSheet implements DKSheet {
     * throws IllegalArgumentException if it's not able to find a handler in
     * availableSheetClasses_ for file_
     */
+   @SuppressWarnings("unchecked")
    public static DKSheet constructSheet(File file_, String requestedName_,
                                         boolean isSorted_, boolean hasHeader_,
                                         boolean validateLazily_,
@@ -112,12 +114,19 @@ public abstract class DKAbstractSheet implements DKSheet {
       LOG.debug("handlerClass->{}", handlerClass);
       if (handlerClass == null)
          throw new IllegalArgumentException(String.format(
-            "Couldn't find handler in availableSheetClasses_->% for file_->%s",
+            "Couldn't find handler in availableSheetClasses_->%s for file_->%s",
             Arrays.toString(availableSheetClasses_), file_));
+      Constructor<DKSheet> constructor = ConstructorUtils.getAccessibleConstructor(
+         handlerClass, IMPLEMENTOR_CONSTRUCTOR_PARAM_TYPES);
+      LOG.debug("constructor->{}", constructor);
+      if (constructor == null)
+         throw new IllegalArgumentException(
+            String.format(
+               "Couldn't find Constructor in handlerClass->%s for constructor parm types->%s",
+               handlerClass, Arrays.toString(IMPLEMENTOR_CONSTRUCTOR_PARAM_TYPES)));
       Object[] constructorArgs = { file_, requestedName_, Boolean.valueOf(isSorted_),
          Boolean.valueOf(hasHeader_), Boolean.valueOf(validateLazily_) };
-      return (DKSheet) ConstructorUtils.invokeExactConstructor(handlerClass,
-         constructorArgs);
+      return constructor.newInstance(constructorArgs);
    }
 
    protected void validate() {

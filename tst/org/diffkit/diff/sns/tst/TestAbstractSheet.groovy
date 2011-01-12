@@ -18,6 +18,7 @@ package org.diffkit.diff.sns.tst
 
 
 import org.diffkit.diff.sns.DKAbstractSheet;
+import org.diffkit.diff.sns.DKPoiSheet 
 
 import groovy.util.GroovyTestCase;
 
@@ -27,6 +28,31 @@ import groovy.util.GroovyTestCase;
  */
 public class TestAbstractSheet extends GroovyTestCase {
    
+   public void testConstructSheet(){
+      Class[] handlerClasses = (Class[])[DKPoiSheet.class]
+      
+      shouldFail(IllegalArgumentException) {
+         def sheet = DKAbstractSheet.constructSheet( new File('./test.txt'), 'test', false, false, true, handlerClasses)
+      }
+      def sheet = DKAbstractSheet.constructSheet( new File('./test.xls'), 'test', false, false, true, handlerClasses)
+      assert sheet
+   }
+   
+   public void testGetHandlerClassForFile(){
+      Class[] handlerClasses = (Class[])[DKPoiSheet.class]
+      
+      assert !DKAbstractSheet.getHandlerClassForFile( new File("./test.txt"), handlerClasses)
+      DKAbstractSheet.getHandlerClassForFile( new File("./test.xls"), handlerClasses) == DKPoiSheet.class
+   }
+   
+   public void testClassHandlesExtension(){
+      
+      shouldFail(IllegalArgumentException) {
+         DKAbstractSheet.classHandlesExtension( this.getClass(), 'tst')
+      }
+      assert !DKAbstractSheet.classHandlesExtension( DKPoiSheet.class, 'tst')
+      assert DKAbstractSheet.classHandlesExtension( DKPoiSheet.class, 'xls')
+   }
    
    public void testDefaultColumnName(){
       assert ! DKAbstractSheet.getDefaultColumnName(-1)

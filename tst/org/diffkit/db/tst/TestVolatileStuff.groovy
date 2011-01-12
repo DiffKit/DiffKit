@@ -49,7 +49,7 @@ public class TestVolatileStuff extends GroovyTestCase {
       assert database.supportsType('VARCHAR')
    }
    
-   public void testHyperServer(){
+   public void tXstHyperServer(){
       DKDBConnectionInfo connectionInfo = ['hyper', DKDBFlavor.HYPERSQL,'xdb', 'localhost', null, 'SA', '']
       println "connectionInfo->$connectionInfo"
       DKDatabase database = [connectionInfo]
