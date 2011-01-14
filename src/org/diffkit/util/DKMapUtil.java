@@ -14,6 +14,9 @@ import org.apache.commons.collections.MapUtils;
  */
 public class DKMapUtil {
 
+   private DKMapUtil() {
+   }
+
    /**
     * @return the first match it encounters
     */

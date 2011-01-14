@@ -24,6 +24,9 @@ public class DKStreamUtil {
 
    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
+   private DKStreamUtil() {
+   }
+
    public static BufferedInputStream ensureBuffered(InputStream inputStream_) {
       if (inputStream_ == null)
          return null;

@@ -20,6 +20,9 @@ public class DKSpringUtil {
 
    private static final Logger LOG = LoggerFactory.getLogger(DKSpringUtil.class);
 
+   private DKSpringUtil() {
+   }
+
    /**
     * @return will only return non-null value, or throw RuntimeException
     */

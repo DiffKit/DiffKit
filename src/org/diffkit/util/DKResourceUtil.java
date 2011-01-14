@@ -27,6 +27,9 @@ public class DKResourceUtil {
 
    private static File[] _resourceDirs;
 
+   private DKResourceUtil() {
+   }
+
    public static synchronized void appendResourceDir(File dir_) {
       if (dir_ == null)
          return;

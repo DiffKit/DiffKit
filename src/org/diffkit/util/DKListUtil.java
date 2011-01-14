@@ -13,6 +13,9 @@ import org.apache.commons.collections.CollectionUtils;
  */
 public class DKListUtil {
 
+   private DKListUtil() {
+   }
+
    public static int[] toPrimitiveArray(List<Integer> target_) {
       if (target_ == null)
          return null;

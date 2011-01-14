@@ -11,6 +11,9 @@ import java.lang.reflect.Constructor;
  */
 public class DKConstructorUtil {
 
+   private DKConstructorUtil() {
+   }
+
    public static int getParameterCount(Constructor<?> constructor_) {
       if (constructor_ == null)
          return -1;
