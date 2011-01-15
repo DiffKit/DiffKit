@@ -3,6 +3,11 @@ DiffKit Changelog
 @AUTHOR@
 v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 
+== release 0.8.10 (1/15/2011)
+
+- fixes Issue 66: allow users to "dropin" own jars
+- fixes Issue 68: unrecognized dbType_->_HYPERSQL_VARCHAR_IGNORECASE
+
 == release 0.8.9 (1/8/2011)
 
 - fixes Issue 64: connections not working to HyperSQL DBs in Server mode
