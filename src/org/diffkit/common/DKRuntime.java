@@ -32,6 +32,7 @@ public class DKRuntime {
    public static final String IS_TEST_PROPERTY = "isTest";
    public static final String DIFFKIT_HOME_PROPERTY = "DIFFKIT_HOME";
    private static final String CONF_DIR_NAME = "conf";
+   private static final String DROPIN_DIR_NAME = "dropin";
    private static final String USER_LOG_CATEGORY_KEY = "user";
    private static final String NULL_STRING = new String();
 
@@ -40,6 +41,7 @@ public class DKRuntime {
    private String _applicationName;
    private File _diffKitHome;
    private File _confDir;
+   private File _dropinDir;
    private Boolean _isTest;
    private Logger _userLog;
 
@@ -63,8 +65,18 @@ public class DKRuntime {
       File home = DKRuntime.getInstance().getDiffKitHome();
       _confDir = new File(home, CONF_DIR_NAME);
       if (!_confDir.isDirectory())
-         System.out.printf("no conf dir->%s.\n", _confDir);
+         System.out.printf("no conf dir at->%s.\n", _confDir);
       return _confDir;
+   }
+
+   public File getDropinDir() {
+      if (_dropinDir != null)
+         return _dropinDir;
+      File home = DKRuntime.getInstance().getDiffKitHome();
+      _dropinDir = new File(home, DROPIN_DIR_NAME);
+      if (!_dropinDir.isDirectory())
+         System.out.printf("no dropin dir at->%s.\n", _dropinDir);
+      return _dropinDir;
    }
 
    public Boolean getIsTest() {

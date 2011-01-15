@@ -17,6 +17,9 @@ package org.diffkit.diff.conf;
 
 import com.jdotsoft.jarloader.JarClassLoader;
 
+/**
+ * @author jpanico
+ */
 public class DKLauncher {
    private static final String TOOL_CLASS_NAME = "org.diffkit.diff.conf.DKApplication";
 

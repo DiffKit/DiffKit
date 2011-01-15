@@ -6,12 +6,14 @@
 	<property name="root.dir" location="." />
 	<property name="src.dir" location="${root.dir}/src" />
 	<property name="tst.dir" location="${root.dir}/tst" />
+	<property name="contrib.dir" location="${root.dir}/contrib" />
 	<property name="lib.dir" location="${root.dir}/lib" />
 	<property name="conf.dir" location="${root.dir}/conf" />
 	<property name="doc.dir" location="${root.dir}/doc" />
 	<property name="web.dir" location="${root.dir}/web" />
 	<property name="build.dir" location="${root.dir}/build" />
 	<property name="unit.build.dir" location="${root.dir}/unit.build" />
+	<property name="contrib.build.dir" location="${root.dir}/contrib.build" />
 	<property name="run.dir" location="${root.dir}/run" />
 	<property name="tstscratch.dir" location="${root.dir}/tstscratch" />
 	<property name="dist.dir" location="${root.dir}/dist" />
@@ -39,19 +41,14 @@
 		<fileset refid="libs" />
 	</path>
 
-	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"
-		classpathref="lib.classpath" />
-
-	<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy"
-		classpathref="lib.classpath" />
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="lib.classpath" />
 
 	<!-- why doesn't this work ?? -->
 	<defaultexcludes echo="false" add="**/*.__hold__" />
 
-	<target name="find-revision"
-		description="Sets property 'svn.info.lastRev' to head svn revision">
+	<target name="find-revision" description="Sets property 'svn.info.lastRev' to head svn revision">
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
-			<!-- these came from svn ant-1.3.0.zip, the only version that will work -->
+			<!-- these came from svn​ant-1.3.0.zip, the only version that will work-->
 			<classpath>
 				<pathelement location="${lib.dir}/svnant.jar" />
 				<pathelement location="${lib.dir}/svnClientAdapter.jar" />
@@ -75,8 +72,7 @@
 
 		<property file="${dist.properties.file}" />
 
-		<property name="version"
-			value="${version.major}.${version.minor}.${version.micro}" />
+		<property name="version" value="${version.major}.${version.minor}.${version.micro}" />
 		<property name="bin-distzip" value="${ant.project.name}-${version}.zip" />
 		<property name="src-distzip" value="${ant.project.name}-src-${version}.zip" />
 	</target>
@@ -100,15 +96,13 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${unit.build.dir}" />
 
-		<javac destdir="${build.dir}" classpathref="lib.classpath"
-			verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
 			<compilerarg value="-Xlint" />
 			<src path="${src.dir}" />
 		</javac>
 
 		<!-- build the TestCases -->
-		<groovyc destdir="${build.dir}" classpathref="lib.classpath"
-			verbose="on">
+		<groovyc destdir="${build.dir}" classpathref="lib.classpath" verbose="on">
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
@@ -171,25 +165,13 @@
 
 	<!-- run functional TestCase suite -->
 	<target name="testcases" depends="build">
-		<java classname="org.diffkit.diff.testcase.TestCaseRunner"
-			failonerror="yes">
+		<java classname="org.diffkit.diff.testcase.TestCaseRunner" failonerror="yes">
 			<classpath>
 				<pathelement location="${conf.dir}" />
 				<path refid="lib.classpath" />
 				<pathelement location="${build.dir}" />
 			</classpath>
 			<sysproperty key="isTest" value="true" />
-		</java>
-	</target>
-
-	<target name="print-testcase-index" depends="build">
-		<java classname="org.diffkit.diff.testcase.PrintTestCaseIndex"
-			failonerror="yes">
-			<classpath>
-				<pathelement location="${conf.dir}" />
-				<path refid="lib.classpath" />
-				<pathelement location="${build.dir}" />
-			</classpath>
 		</java>
 	</target>
 
@@ -220,8 +202,7 @@
 		</jar>
 
 		<!-- create the diffkit library as jar -->
-		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}"
-			excludes="testcasedata/" />
+		<jar destfile="${dist.dir}/${libjar}" basedir="${dist.dir}" excludes="testcasedata/" />
 
 		<!-- cleanup -->
 		<delete includeemptydirs="true">
@@ -246,7 +227,7 @@
 
 		<copy file="${conf.dir}/logback.prod.xml" tofile="${dist.dir}/conf/logback.xml" />
 		<copy file="${conf.dir}/dist.properties" todir="${dist.dir}/conf/" />
-
+		
 		<!-- create the diffkit standalone application that includes diffkit library 
 			and all its dependencies -->
 		<jar destfile="${dist.dir}/${appjar}" basedir="${dist.dir}">
@@ -266,6 +247,7 @@
 				<include name="*dbConnectionInfo*" />
 			</fileset>
 		</copy>
+      <mkdir dir="${dist.dir}/dropin/" />
 
 		<antcall target="doc-dist" />
 		<antcall target="eg-dist" />
@@ -343,11 +325,9 @@
 
 	</target>
 
-	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc"
-		if="asciidoc.found">
+	<target name="html-doc-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
 
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -355,8 +335,7 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="README.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -364,8 +343,7 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="quickstart.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -374,8 +352,7 @@
 			<arg line="-a toc" />
 			<arg line="faq.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -384,8 +361,7 @@
 			<arg line="-a toc" />
 			<arg line="userguide.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -393,8 +369,7 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="compatibility.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
 			<arg line="-a imagesdir=img" />
@@ -456,11 +431,9 @@
 
 	</target>
 
-	<target name="html-web-dist" depends="dist-properties,probe_for_asciidoc"
-		if="asciidoc.found">
+	<target name="html-web-dist" depends="dist-properties,probe_for_asciidoc" if="asciidoc.found">
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -471,8 +444,7 @@
 			<arg line="index.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -482,8 +454,7 @@
 			<arg line="README.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -493,8 +464,7 @@
 			<arg line="quickstart.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -505,8 +475,7 @@
 			<arg line="userguide.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -517,8 +486,7 @@
 			<arg line="faq.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -528,8 +496,7 @@
 			<arg line="compatibility.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -539,8 +506,7 @@
 			<arg line="support.txt" />
 		</exec>
 
-		<exec dir="${web-dist.dir}" executable="asciidoc"
-			failifexecutionfails="true" searchpath="true">
+		<exec dir="${web-dist.dir}" executable="asciidoc" failifexecutionfails="true" searchpath="true">
 			<arg line="--conf-file=web_template.conf" />
 			<arg line="-a linkcss" />
 			<arg line="-a theme=diffkit" />
@@ -586,6 +552,23 @@
 
 	</target>
 
+	<target name="build-contrib-jar" depends="build">
+		<mkdir dir="${contrib.build.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+		<javac destdir="${contrib.build.dir}" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+			<compilerarg value="-Xlint" />
+			<classpath>
+				<path refid="lib.classpath" />
+				<pathelement location="${build.dir}" />
+			</classpath>
+			<src path="${contrib.dir}" />
+		</javac>
+
+		<jar destfile="${dist.dir}/diffkit-contrib.jar" basedir="${contrib.build.dir}" />
+
+	</target>
+
 	<target name="probe_for_asciidoc">
 		<property environment="env" />
 		<echo>env.PATH--> ${env.PATH}</echo>
@@ -600,14 +583,13 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" includeEmptyDirs="true" failonerror="false" />
-		<delete dir="${unit.build.dir}" includeEmptyDirs="true"
-			failonerror="false" />
+		<delete dir="${unit.build.dir}" includeEmptyDirs="true" failonerror="false" />
+		<delete dir="${contrib.build.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${run.dir}" includeEmptyDirs="true" failonerror="false" />
 		<delete dir="${dist.dir}" includeEmptyDirs="true" failonerror="false">
 			<exclude name="*.__hold__" />
 		</delete>
-		<delete dir="${web-dist.dir}" includeEmptyDirs="true"
-			failonerror="false" />
+		<delete dir="${web-dist.dir}" includeEmptyDirs="true" failonerror="false" />
 		<!-- clean up scratch files created by Unit tests and TCR -->
 		<delete>
 			<fileset dir="${root.dir}">

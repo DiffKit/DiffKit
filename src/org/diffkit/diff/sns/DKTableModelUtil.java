@@ -170,6 +170,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.STRING;
       case _POSTGRES_BPCHAR:
          return DKColumnModel.Type.STRING;
+      case _HYPERSQL_VARCHAR_IGNORECASE:
+         return DKColumnModel.Type.STRING;
       case _SQLSERVER_UNIQUEIDENTIFIER:
          return DKColumnModel.Type.STRING;
       case DATE:
@@ -194,6 +196,8 @@ public class DKTableModelUtil {
          return DKColumnModel.Type.TIMESTAMP;
       case _POSTGRES_TIMESTAMPTZ:
          return DKColumnModel.Type.TIMESTAMP;
+      case VARBINARY:
+         return DKColumnModel.Type.STRING;
       default:
          throw new RuntimeException(String.format("unrecognized dbType_->%s", dbType_));
       }

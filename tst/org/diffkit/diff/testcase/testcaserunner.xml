@@ -9,7 +9,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="10" />
 		<constructor-arg index="1">
 			<list>
-            <value>HYPERSQL</value>
+            <value>ORACLE</value>
+            <value>SQLSERVER</value>
             <!-- 
             <value>ORACLE</value>
             <value>DB2</value>

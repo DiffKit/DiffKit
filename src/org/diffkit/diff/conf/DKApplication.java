@@ -17,7 +17,9 @@ package org.diffkit.diff.conf;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +33,11 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang.reflect.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,6 +250,8 @@ public class DKApplication {
       configureLogging();
       DKRuntime.getInstance().getUserLog().info(
          "DiffKit home->" + DKRuntime.getInstance().getDiffKitHome());
+      loadDropinJars();
+      DKRuntime.getInstance().getUserLog().info("\n");
    }
 
    private static void configureLogging() {
@@ -262,6 +269,36 @@ public class DKApplication {
       }
       if (System.getProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY) == null)
          System.setProperty(LOGBACK_CONFIGURATION_FILE_PROPERTY_KEY, logConfPath);
+   }
+
+   @SuppressWarnings("unchecked")
+   private static void loadDropinJars() {
+      Logger userLog = DKRuntime.getInstance().getUserLog();
+      File dropinDir = DKRuntime.getInstance().getDropinDir();
+      if ((dropinDir == null) || !dropinDir.isDirectory()) {
+         userLog.info("no dropin dir");
+         return;
+      }
+      userLog.info("dropin dir->{}", dropinDir);
+      Collection<File> jarFiles = FileUtils.listFiles(dropinDir, new String[] { "jar" },
+         false);
+      if (CollectionUtils.isEmpty(jarFiles)) {
+         userLog.info("no jar files in dropin dir");
+         return;
+      }
+      Logger systemLog = getSystemLog();
+      Object jarClassLoader = DKApplication.class.getClassLoader();
+      systemLog.debug("jarClassLoader->{}", jarClassLoader);
+      try {
+         MethodUtils.invokeMethod(jarClassLoader, "prependJarFiles",
+            new Object[] { new ArrayList<File>(jarFiles) });
+         // jarClassLoader.prependJarFiles(new ArrayList<File>(jarFiles));
+         userLog.info("loaded dropin jars->{}", jarFiles);
+         systemLog.debug("loaded dropin jars->{}", jarFiles);
+      }
+      catch (Exception e_) {
+         systemLog.error(null, e_);
+      }
    }
 
    private static Logger getSystemLog() {
