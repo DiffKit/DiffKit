@@ -3,7 +3,7 @@ test26 README
 
 Description
 ----------
-A basic sanity check that compares two identical Excel File Tables using the
+A basic sanity check that compares two identical Excel XLSX File Tables using the
 most straightforward possible comparison. Everything is wired explicitly into a
 PassthroughPlan.
 

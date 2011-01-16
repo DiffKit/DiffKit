@@ -111,7 +111,7 @@ public class DKSpreadSheetFileSource implements DKSource {
     * @see org.diffkit.diff.engine.DKSourceSink#getKind()
     */
    public Kind getKind() {
-      return Kind.SPREADSHEET;
+      return Kind.FILE;
    }
 
    /*

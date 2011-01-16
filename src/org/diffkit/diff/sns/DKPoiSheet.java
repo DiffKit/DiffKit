@@ -73,11 +73,11 @@ public class DKPoiSheet extends DKAbstractSheet {
       super(file_, name_, isSorted_, hasHeader_, validateLazily_);
    }
 
-   public Iterator<Object[]> getRowIterator(DKTableModel model_) {
+   public Iterator<Object[]> getRowIterator(DKTableModel model_) throws IOException {
       DKValidate.notNull(model_);
 
       int startIndex = this.hasHeader() ? 1 : 0;
-      return new RowIterator(_rows, model_.getColumnTypes(), startIndex,
+      return new RowIterator(this.getRows(), model_.getColumnTypes(), startIndex,
          model_.hasRowNum());
    }
 
@@ -409,6 +409,7 @@ public class DKPoiSheet extends DKAbstractSheet {
    }
 
    private static class RowIterator implements Iterator<Object[]> {
+      private final static Logger LOG = LoggerFactory.getLogger(DKPoiSheet.class);
       private final int _lastIndex;
       private final List<Row> _rows;
       private final Type[] _types;
@@ -417,6 +418,10 @@ public class DKPoiSheet extends DKAbstractSheet {
 
       private RowIterator(List<Row> rows_, Type[] types_, int startIndex_,
                           boolean hasRowNum_) {
+         LOG.debug("rows_->{}", rows_ == null ? null : rows_.size());
+         LOG.debug("types_->{}", types_ == null ? null : Arrays.toString(types_));
+         LOG.debug("startIndex_->{}", startIndex_);
+         LOG.debug("hasRowNum_->{}", hasRowNum_);
          DKValidate.notNull(rows_, types_);
          _rows = rows_;
          _types = types_;
