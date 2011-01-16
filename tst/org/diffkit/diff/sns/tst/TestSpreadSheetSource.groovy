@@ -19,15 +19,109 @@ package org.diffkit.diff.sns.tst
 
 
 import groovy.util.GroovyTestCase;
+import java.sql.Time 
+import java.sql.Timestamp 
+
+import org.diffkit.diff.engine.DKColumnModel;
+import org.diffkit.diff.engine.DKTableModel 
 import org.diffkit.diff.engine.DKColumnModel.Type 
 import org.diffkit.diff.sns.DKSpreadSheetFileSource 
 import org.diffkit.util.DKResourceUtil 
+import org.diffkit.util.DKTimeUtil 
 
 
 /**
  * @author jpanico
  */
 public class TestSpreadSheetSource extends GroovyTestCase {
+   
+   public void testReadHard() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      def source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'Sheet1', null, null, null, true, true, false)
+      source.open(null)
+      def aRow = source.nextRow
+      assert aRow
+      assert aRow.class == Object[].class
+      // first row should be ROW_NUM=2, because there is a header
+      assert aRow[0] == 2
+      source.nextRow
+      source.nextRow
+      aRow = source.nextRow
+      assert aRow
+      assert aRow[0] == 5
+      assert aRow[0].class == Integer.class
+      assert aRow[1] == -2222
+      assert aRow[1].class == Long.class
+      assert aRow[2] == '       '
+      assert aRow[2].class == String.class
+      assert aRow[3] == 0.0
+      assert aRow[3].class == BigDecimal.class
+      assert aRow[4] == 3.0
+      assert aRow[4].class == BigDecimal.class
+      assert aRow[5] == '-1.0'
+      assert aRow[5].class == String.class
+      // ????
+      assert aRow[6].toString() == '31-Dec-1899'
+      assert aRow[6].class == String.class
+      assert aRow[7] == 14.2
+      assert aRow[7].class == Double.class
+      assert aRow[8] == 'FALSE'
+      assert aRow[8].class == String.class
+      assert ! source.nextRow
+      assert ! source.nextRow
+      assert source.lastIndex == 3
+   }
+   
+   public void testReadEasy() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      def source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'easy sheet', null, null, null, true, false, false)
+      source.open(null)
+      def aRow = source.nextRow
+      assert aRow
+      assert aRow.class == Object[].class
+      assert aRow[0] == 1
+      assert aRow[0].class == Integer.class
+      assert aRow[1] == 'aaaa'
+      assert aRow[1].class == String.class
+      assert aRow[2] == 1111
+      assert aRow[2].class == BigDecimal.class
+      assert aRow[3] == DKTimeUtil.createDate( 2008, 0, 1)
+      assert aRow[3].class == Date.class
+      assert aRow[4] == 'zzzz'
+      assert aRow[4].class == String.class
+      assert aRow[5].toString() == '00:31:31'
+      assert aRow[5].class == Time.class
+      assert aRow[6] == 1234
+      assert aRow[6].class == BigDecimal.class
+      assert aRow[7] == 123456.78
+      assert aRow[7].class == BigDecimal.class
+      assert aRow[8] == 1234.5678
+      assert aRow[8].class == BigDecimal.class
+      assert aRow[9] == 1234.5678
+      assert aRow[9].class == BigDecimal.class
+      assert aRow[10].toString() == '2004-05-23 14:25:10.487'
+      assert aRow[10].class == Timestamp.class
+      assert aRow[11] == 'TRUE'
+      assert aRow[11].class == String.class
+      assert aRow[12] == 10
+      assert aRow[12].class == Long.class
+      assert aRow[13] == 12345
+      assert aRow[13].class == BigDecimal.class
+      assert aRow[14] == 'column14'
+      assert aRow[14].class == String.class
+      assert aRow[15] == 'column15'
+      assert aRow[15].class == String.class
+      assert aRow[16] == 'my clobby text'
+      assert aRow[16].class == String.class
+      assert source.lastIndex ==0
+      (1..19).each { assert source.nextRow }
+      assert ! source.nextRow
+      assert source.lastIndex == 19
+   }
    
    public void testModelColumns() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
@@ -87,31 +181,24 @@ public class TestSpreadSheetSource extends GroovyTestCase {
       assert model.columns[11].type == Type.STRING
       
       // automatic Model extraction, but user-supplied key
-   }
-   
-   public void testKey() {
-      //      def sourceFile = DKResourceUtil.findResourceAsFile('type_test.xls', this)
-      //      println "sourceFile->$sourceFile"
-      //      assert sourceFile
-      //      assert sourceFile.canRead()
-      //      
-      //      def source = new DKSpreadSheetFileSource(sourceFile.absolutePath, "Sheet1", null, null)
-      //      def model = source.model
-      //      assert model
-      //      def key = model.key
-      //      assert key
-      //      assert key == (int[])[0]
-   }
-   
-   public void testModelName() {
-      //      def sourceFile = DKResourceUtil.findResourceAsFile('type_test.xls', this)
-      //      println "sourceFile->$sourceFile"
-      //      assert sourceFile
-      //      assert sourceFile.canRead()
-      //      
-      //      def source = new DKSpreadSheetFileSource(sourceFile.absolutePath, "Sheet1", null, null)
-      //      def model = source.model
-      //      assert model
-      //      assert model.name  == 'Sheet1'
+      source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'Sheet1', null, (String[])['COLUMN1'], null, true, true, false)
+      model = source.model
+      assert model
+      assert model.name == 'Sheet1'
+      assert model.keyColumnNames == (String[])['COLUMN1']
+      assert model.columns.length == 9
+      
+      // supply own model
+      DKColumnModel col1 = [0, 'col1', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col2 = [1, 'col2', DKColumnModel.Type.STRING]
+      DKTableModel myModel = ['myModel', (DKColumnModel[])[col1, col2], (int[])[0]]
+      source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'Sheet1', myModel, null, null, true, true, false)
+      model = source.model
+      assert model
+      assert model.name == 'myModel'
+      assert model.keyColumnNames == (String[])['col1']
+      assert model.columns.length == 2
+      assert model.columns[0].name == 'col1'
+      assert model.columns[1].name == 'col2'
    }
 }
