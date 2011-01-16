@@ -28,6 +28,7 @@ import org.diffkit.db.DKDBTable
 import org.diffkit.db.DKDBH2Loader
 import org.diffkit.db.DKDBTableDataAccess;
 import org.diffkit.diff.engine.DKColumnModel;
+import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.diff.sns.DKDBSource 
 import org.diffkit.diff.sns.DKTableModelUtil;
 import org.diffkit.util.DKResourceUtil
@@ -115,12 +116,14 @@ public class TestDBSource extends GroovyTestCase {
       assert tableModel
       
       // goof up the model to force a fail
-      tableModel.columns[0] = new DKColumnModel(0, 'fist_name', DKColumnModel.Type.STRING)
+      def columns = tableModel.columns
+      columns[0]= new DKColumnModel(0, 'does_not_exist', DKColumnModel.Type.STRING)
+      tableModel = new DKTableModel(tableModel.name, columns, tableModel.key)
       shouldFail(IllegalArgumentException){
          DKDBSource source = new DKDBSource(dbTable.tableName, null, database, tableModel, null, null)
       }
       
-      tableModel.columns[0] = new DKColumnModel(0, 'first_name', DKColumnModel.Type.STRING)
+      tableModel = DKTableModelUtil.createDefaultTableModel(database.flavor,dbTable, null)
       DKDBSource source = new DKDBSource(dbTable.tableName, null, database, tableModel, null, null)
       source.open(null)
       

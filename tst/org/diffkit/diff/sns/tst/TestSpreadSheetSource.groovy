@@ -35,6 +35,7 @@ public class TestSpreadSheetSource extends GroovyTestCase {
       assert sourceFile
       assert sourceFile.canRead()
       
+      // explicitly specified sheet name happens to be first sheet, no model, with header
       def source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'Sheet1', null, null, null, true, true, false)
       def model = source.model
       assert model
@@ -57,11 +58,13 @@ public class TestSpreadSheetSource extends GroovyTestCase {
       source.open(null)
       source.close(null)
       
+      // no sheet name supplied, default sheet is first sheet (Sheet1)
       source = new DKSpreadSheetFileSource(sourceFile.absolutePath, null, null, null, null, true, true, false)
       model = source.model
       assert model
       assert model.name == 'Sheet1'
       
+      // explicitly specified sheet name is not same as default, no header so get default header names
       source = new DKSpreadSheetFileSource(sourceFile.absolutePath, 'easy sheet', null, null, null, true, false, false)
       model = source.model
       assert model

@@ -18,8 +18,6 @@ package org.diffkit.diff.engine;
 
 import java.io.IOException;
 
-import org.diffkit.common.annot.ThreadSafe;
-
 /**
  * Sinks are one-shot-- a new one must be created for each invocation of
  * DKDiffEnging.diff(...) and then thrown away.

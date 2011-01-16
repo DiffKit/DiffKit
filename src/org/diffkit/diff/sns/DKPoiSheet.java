@@ -261,12 +261,14 @@ public class DKPoiSheet extends DKAbstractSheet {
       if (cell_ == null)
          return null;
       int formatNumber = cell_.getCellStyle().getDataFormat();
+      // try to get it from the cache
       Type type = _numericCellTypes.get(formatNumber);
       if (type != null)
          return type;
       type = mapTypeForFormatString(cell_.getCellStyle().getDataFormatString());
       if (type == null)
          type = Type.DECIMAL;
+      // cache calculated value
       _numericCellTypes.put(formatNumber, type);
       return type;
    }

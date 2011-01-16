@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKUserException;
 import org.diffkit.common.DKValidate;
-import org.diffkit.common.annot.ThreadSafe;
+import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.db.DKDBConnectionInfo;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDatabase;
@@ -48,7 +48,7 @@ import org.diffkit.util.DKStringUtil;
 /**
  * @author jpanico
  */
-@ThreadSafe
+@NotThreadSafe
 public class DKSqlPatchSink extends DKAbstractSink {
 
    private long _rowDiffCount;

@@ -27,11 +27,10 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
-import org.diffkit.db.DKDatabase;
 import org.diffkit.db.DKDBPrimaryKey;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDBTableDataAccess;
-import org.diffkit.db.DKDBTypeInfoDataAccess;
+import org.diffkit.db.DKDatabase;
 import org.diffkit.diff.engine.DKColumnDiff;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiff;
@@ -139,7 +138,6 @@ public class DKDBSink extends DKAbstractSink {
    }
 
    private DKDBTable generateDiffContextTable() throws SQLException {
-      DKDBTypeInfoDataAccess typeInfoDataAccess = _database.getTypeInfoDataAccess();
       DKDBColumn idColumn = new DKDBColumn("ID", 1, "BIGINT", -1, false);
       DKDBColumn lhsColumn = new DKDBColumn("LHS", 2, "VARCHAR", 128, true);
       DKDBColumn rhsColumn = new DKDBColumn("RHS", 3, "VARCHAR", 128, true);
@@ -154,7 +152,6 @@ public class DKDBSink extends DKAbstractSink {
    }
 
    private DKDBTable generateDiffTable() throws SQLException {
-      DKDBTypeInfoDataAccess typeInfoDataAccess = _database.getTypeInfoDataAccess();
       DKDBColumn contextIdColumn = new DKDBColumn("CONTEXT_ID", 1, "BIGINT", -1, true);
       DKDBColumn rowStepColumn = new DKDBColumn("ROW_STEP", 2, "INTEGER", -1, true);
       DKDBColumn columnStepColumn = new DKDBColumn("COLUMN_STEP", 3, "INTEGER", -1, true);

@@ -70,7 +70,7 @@ public class DKSpreadSheetFileSource implements DKSource {
       DKValidate.notNull(filePath_);
       _sheet = createSheet(filePath_, sheetName_, isSorted_, hasHeader_, validateLazily_);
       DKValidate.notNull(_sheet);
-      _requestedModel = requestedModel_;
+      _requestedModel = requestedModel_ == null ? null : requestedModel_.copy();
       if (!ArrayUtils.isEmpty(readColumnIdxs_))
          throw new NotImplementedException("readColumnIdxs_ not yet supported!");
       _requestedKeyColumnNames = requestKeyColumnNames_;
