@@ -1,11 +1,12 @@
-test28 README
+test29 README
 =========
 
 Description
 ----------
 Compare SpreadSheet tables using a PassthroughPlan. Demonstrates targeting an 
 explicitly named sheet, rather than defaulting to first sheet. Also demonstrates
-a SpreadSheet with many different data types.
+a SpreadSheet that exercises all of the different data types available within 
+DiffKit for describing columns. 
 
 Assumptions
 -----------
@@ -19,10 +20,10 @@ Assumptions
 - ROW_NUM column is not specified as part of the TableModel in the PassthroughPlan file.
 So ROW_NUMs not used.
 - PassthroughPlan specifies no header
-- PassthroughPlan specifies key col 1st col
+- PassthroughPlan specifies that key is first column (A).
 
 Expectations
 -----------
-- 4 ROW_DIFFs
-- 7 COLUMN_DIFFs
+- 9 ROW_DIFFs
+- 15 COLUMN_DIFFs
 
