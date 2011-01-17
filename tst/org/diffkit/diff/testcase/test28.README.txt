@@ -16,6 +16,9 @@ Assumptions
 - MagicPlan reverse engineers TableModels from the spreadsheet
 - MagicPlan generates default TableComparison by aligning lhs column to rhs
 column based on name 
+- no sheet name specified, so it will default to the first one
+- MagicPlan always default isSorted to TRUE
+- MagicPlan always defaults hasHeader to TRUE
 
 Expectations
 -----------

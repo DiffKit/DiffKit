@@ -3,10 +3,9 @@ test28 README
 
 Description
 ----------
-Compare spreadsheet tables using mostly automatic default provided by the MagicPlan. Plan specifies keyColumnNames, 
-which are different from the default keyColumn (COLUMN1). If alignment was carried out using 
-default (COLUMN1), all rows would be row diffs. Instead, engine is able to align the rows and produce only column diffs
-because of the keyColumnName override (column3).
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates targeting an 
+explicitly named sheet, rather than defaulting to first sheet. Also demonstrates
+a SpreadSheet with many different data types.
 
 Assumptions
 -----------

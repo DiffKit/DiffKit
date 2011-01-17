@@ -11,6 +11,10 @@ Assumptions
 -----------
 - lhs & rhs are File tables
 - lhs == rhs
+- ROW_NUM column is not specified as part of the TableModel in the PassthroughPlan file.
+So ROW_NUMs not used.
+- hasHeader is TRUE, so first row is interpreted as column names
+- isSorted is TRUE, so DKSpreadSheetSource will not attempt to sort the rows
 - Comparisons are all passthrough-- column identical on both sides & only Equals
 comparison
 
