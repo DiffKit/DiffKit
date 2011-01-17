@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
@@ -33,6 +34,28 @@ public class DKFileUtil {
    private static final Logger LOG = LoggerFactory.getLogger(DKFileUtil.class);
 
    private DKFileUtil() {
+   }
+
+   /**
+    * first attempt to locate a File by interpreting filePath_ as an absolute FS
+    * path. If that doesn't work, interpret filePath_ as a resource path. If
+    * that doesn't work, return null.
+    */
+   public static File findFile(String filePath_) {
+      if (filePath_ == null)
+         return null;
+      File fsFile = new File(filePath_);
+      if (fsFile.exists())
+         return fsFile;
+      try {
+         File resourceFile = DKResourceUtil.findResourceAsFile(filePath_);
+         if (resourceFile != null)
+            return resourceFile;
+      }
+      catch (URISyntaxException e_) {
+         throw new RuntimeException(e_);
+      }
+      return fsFile;
    }
 
    /**

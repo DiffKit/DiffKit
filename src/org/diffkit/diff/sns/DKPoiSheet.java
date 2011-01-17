@@ -59,6 +59,8 @@ public class DKPoiSheet extends DKAbstractSheet {
 
    public static final String[] HANDLED_FILE_EXTENSIONS = { "xls", "xlsx" };
    private static final Map<Integer, Type> _numericCellTypes = new HashMap<Integer, Type>();
+   private static final Logger LOG = LoggerFactory.getLogger(DKPoiSheet.class);
+   private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
 
    private Workbook _workbook;
    private InputStream _workbookInputStream;
@@ -352,20 +354,27 @@ public class DKPoiSheet extends DKAbstractSheet {
     * if hasRowNum_, types_[0] will represent the ROW_NUM column
     */
    private static Object[] readRow(Row row_, Type[] types_, boolean hasRowNum_) {
+      if (IS_DEBUG_ENABLED) {
+         LOG.debug("types_->{}", Arrays.toString(types_));
+         LOG.debug("hasRowNum_->{}", hasRowNum_);
+      }
       if ((row_ == null) || (types_ == null))
          return null;
       Object[] result = new Object[types_.length];
-      int start = hasRowNum_ ? 1 : 0;
       if (hasRowNum_)
          result[0] = (Integer) row_.getRowNum() + 1;
 
-      for (int i = start; i < types_.length; i++)
-         result[i] = readCell(row_.getCell(i - 1), types_[i]);
+      for (int colIdx = (hasRowNum_ ? 1 : 0), cellIdx = 0; colIdx < types_.length; colIdx++, cellIdx++)
+         result[colIdx] = readCell(row_.getCell(cellIdx), types_[colIdx]);
 
       return result;
    }
 
    private static Object readCell(Cell cell_, Type type_) {
+      if (IS_DEBUG_ENABLED) {
+         LOG.debug("cell_->{}", cell_ == null ? null : cell_);
+         LOG.debug("type_->{}", type_);
+      }
       if ((cell_ == null) || (type_ == null))
          return null;
       if (cell_.getCellType() == Cell.CELL_TYPE_BLANK)

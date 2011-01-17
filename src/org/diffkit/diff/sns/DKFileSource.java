@@ -21,7 +21,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Arrays;
 
@@ -41,7 +40,7 @@ import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
 import org.diffkit.util.DKArrayUtil;
-import org.diffkit.util.DKResourceUtil;
+import org.diffkit.util.DKFileUtil;
 
 /**
  * @author jpanico
@@ -100,7 +99,7 @@ public class DKFileSource implements DKSource {
          throw new RuntimeException(String.format("does not allow both %s and %s params",
             "model_", "keyColumnNames_"));
 
-      _file = this.getFile(filePath_);
+      _file = DKFileUtil.findFile(filePath_);
       _delimiter = delimiter_;
       _model = model_;
       _keyColumnNames = keyColumnNames_;
@@ -263,23 +262,6 @@ public class DKFileSource implements DKSource {
       _lineReader.close();
       _lineReader = null;
       _isOpen = false;
-   }
-
-   private File getFile(String filePath_) {
-      if (filePath_ == null)
-         return null;
-      File fsFile = new File(filePath_);
-      if (fsFile.exists())
-         return fsFile;
-      try {
-         File resourceFile = DKResourceUtil.findResourceAsFile(filePath_);
-         if (resourceFile != null)
-            return resourceFile;
-      }
-      catch (URISyntaxException e_) {
-         throw new RuntimeException(e_);
-      }
-      return fsFile;
    }
 
    private void validateFile() {

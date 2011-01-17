@@ -31,6 +31,7 @@ import org.diffkit.common.annot.NotThreadSafe;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
+import org.diffkit.util.DKFileUtil;
 
 /**
  * @author kratnapu
@@ -40,6 +41,7 @@ public class DKSpreadSheetFileSource implements DKSource {
 
    @SuppressWarnings("rawtypes")
    public static final Class[] HANDLER_CLASSES = { DKPoiSheet.class };
+   private static final Logger LOG = LoggerFactory.getLogger(DKSpreadSheetFileSource.class);
 
    private final DKSheet _sheet;
    private final DKTableModel _requestedModel;
@@ -197,8 +199,15 @@ public class DKSpreadSheetFileSource implements DKSource {
                                       boolean isSorted_, boolean hasHeader_,
                                       boolean validateLazily_) {
       try {
-         return DKAbstractSheet.constructSheet(new File(filePath_), sheetName_,
-            isSorted_, hasHeader_, validateLazily_, (Class<DKSheet>[]) HANDLER_CLASSES);
+         LOG.debug("filePath_->{}", filePath_);
+         LOG.debug("sheetName_->{}", sheetName_);
+         LOG.debug("isSorted_->{}", isSorted_);
+         LOG.debug("hasHeader_->{}", hasHeader_);
+         LOG.debug("validateLazily_->{}", validateLazily_);
+         File file = DKFileUtil.findFile(filePath_);
+         LOG.debug("file->{}", file);
+         return DKAbstractSheet.constructSheet(file, sheetName_, isSorted_, hasHeader_,
+            validateLazily_, (Class<DKSheet>[]) HANDLER_CLASSES);
       }
       catch (Exception e_) {
          throw new RuntimeException(e_);

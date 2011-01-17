@@ -23,6 +23,7 @@ import groovy.util.GroovyTestCase;
 import org.diffkit.common.DKUserException 
 import org.diffkit.diff.sns.DKPoiSheet 
 import org.diffkit.diff.engine.DKColumnModel;
+import org.diffkit.diff.engine.DKTableModel 
 import org.diffkit.diff.engine.DKColumnModel.Type;
 
 import org.diffkit.util.DKResourceUtil 
@@ -34,6 +35,60 @@ import org.diffkit.util.DKTimeUtil;
  */
 public class TestPoiSheet extends GroovyTestCase {
    
+   // read rows using RowIterator, based on model explicitly supplied by Unit. 
+   // There is no ROW_NUM col specified, so that column shouldn't show up.
+   public void testRowIteratorWithModelEasy() {
+      DKColumnModel col1 = [0, 'COLUMN1', DKColumnModel.Type.INTEGER]
+      DKColumnModel col2 = [1, 'COLUMN2', DKColumnModel.Type.STRING]
+      DKColumnModel col3 = [2, 'COLUMN3', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col4 = [3, 'COLUMN4', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col5 = [4, 'COLUMN5', DKColumnModel.Type.STRING]
+      DKColumnModel col6 = [5, 'COLUMN6', DKColumnModel.Type.STRING]
+      DKColumnModel col7 = [6, 'COLUMN7', DKColumnModel.Type.REAL]
+      DKColumnModel col8 = [7, 'COLUMN8', DKColumnModel.Type.STRING]
+      DKColumnModel[] cols = [col1,col2,col3,col4,col5,col6,col7,col8]
+      DKTableModel tableModel = ['MyModel', cols, (int[])[0]]
+      assert !tableModel.hasRowNum()
+      
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, true, false]
+      Iterator rowIterator = poiSheet.getRowIterator(tableModel)
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      // first row should be row_num=2, because there is a header, first 
+      // column is COLUMN1, because there is no ROW_NUM
+      assert aRow[0] == 11111
+      
+      rowIterator.next()
+      rowIterator.next()
+      aRow = rowIterator.next()
+      
+      assert aRow
+      assert aRow[0] == -2222
+      assert aRow[0].class == Long.class
+      assert aRow[1] == '       '
+      assert aRow[1].class == String.class
+      assert aRow[2] == 0.0
+      assert aRow[2].class == BigDecimal.class
+      assert aRow[3] == 3.0
+      assert aRow[3].class == BigDecimal.class
+      assert aRow[4] == '-1.0'
+      assert aRow[4].class == String.class
+      // ????
+      assert aRow[5].toString() == '31-Dec-1899'
+      assert aRow[5].class == String.class
+      assert aRow[6] == 14.2
+      assert aRow[6].class == Double.class
+      assert aRow[7] == 'FALSE'
+      assert aRow[7].class == String.class
+
+   }
+   
+   // read rows using RowIterator, based on model extracted from Sheet
    public void testRowIteratorHard() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
@@ -72,6 +127,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert aRow[8].class == String.class
    }
    
+   // read rows using RowIterator, based on model extracted from Sheet
    public void testRowIteratorEasy() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
@@ -125,6 +181,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert !rowIterator.hasNext()
    }
    
+   // read row using types explicitly specified in Unit
    public void testReadRowHard() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
@@ -158,6 +215,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert result[8].class == Boolean.class
    }
    
+   // read row using types explicitly specified in Unit
    public void testReadRowEasy() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
@@ -206,6 +264,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert result[16].class == String.class
    }
    
+   // read cells using types explicitly specified in Unit
    public void testReadCellHard() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
@@ -230,6 +289,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert DKPoiSheet.readCell( row.getCell(7), Type.BOOLEAN).class == Boolean.class
    }
    
+   // read cells using types explicitly specified in Unit
    public void testReadCellEasy() {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"

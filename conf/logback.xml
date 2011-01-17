@@ -16,11 +16,8 @@
 	</appender>
 
    
-  <logger name="org.diffkit.diff.sns.DKPoiSheet">
-      <level value="debug" />
-   </logger>
   <logger name="org.diffkit">
-      <level value="info" />
+      <level value="warn" />
    </logger>
 
 	<logger name="user" additivity="false">
