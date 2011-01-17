@@ -37,7 +37,7 @@ import org.diffkit.diff.sns.DKWriterSink;
 /**
  * @author jpanico
  */
-//@SuppressWarnings("unchecked")
+// @SuppressWarnings("unchecked")
 public class DKMagicPlanRules {
 
    private static final DKMagicPlanRule LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE = new DKMagicPlanRule(
@@ -271,8 +271,12 @@ public class DKMagicPlanRules {
       DKSpreadSheetFileSource.class, "rhsSource_.sheetName_", "rhsSpreadSheetName", true,
       new PlanValue(true));
    private static final DKMagicPlanRule DEFAULT_SPREADSHEET_SHEET_NAME_RULE = new DKMagicPlanRule(
-      "defaultSheetName_", "if no sheetName is specified in plan, use 'Sheet1'",
+      "defaultSheetName", "if no sheetName is specified in plan, use 'Sheet1'",
       DKSpreadSheetFileSource.class, "sheetName_", null, false, new Constant(null));
+   private static final DKMagicPlanRule DEFAULT_SPREADSHEET_MODEL_RULE = new DKMagicPlanRule(
+      "spreadsheetRequestModel",
+      "MagicPlan does not allow specification of Model-- it's always derived directly from the Sheet",
+      DKSpreadSheetFileSource.class, "requestedModel_", null, false, new Constant(null));
 
    public static DKMagicPlanRule[] RULES = { LHS_DB_SOURCE_FROM_LHS_DB_TABLE_RULE,
       RHS_DB_SOURCE_FROM_RHS_DB_TABLE_RULE, LHS_DB_SOURCE_FROM_DB_TABLE_RULE,
@@ -293,7 +297,7 @@ public class DKMagicPlanRules {
       DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE, IS_SPREADSHEET_SORTED_RULE,
       SPREADSHEET_HAS_HEADER_RULE, LHS_SPREADSHEET_SHEET_NAME_RULE,
       RHS_SPREADSHEET_SHEET_NAME_RULE, DEFAULT_SPREADSHEET_SHEET_NAME_RULE,
-      SPREADSHEET_VALIDATE_LAZILY_RULE };
+      SPREADSHEET_VALIDATE_LAZILY_RULE, DEFAULT_SPREADSHEET_MODEL_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

@@ -54,16 +54,14 @@ public class DKSpreadSheetFileSource implements DKSource {
    private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    public DKSpreadSheetFileSource(String filePath_, String sheetName_,
-                                  DKTableModel requestedModel_,
-                                  String[] requestKeyColumnNames_, int[] readColumnIdxs_,
-                                  boolean isSorted_, boolean hasHeader_,
-                                  boolean validateLazily_) {
+                                  DKTableModel requestedModel_, String[] keyColumnNames_,
+                                  int[] readColumnIdxs_, boolean isSorted_,
+                                  boolean hasHeader_, boolean validateLazily_) {
       if (_isDebugEnabled) {
          _log.debug("filePath_->{}", filePath_);
          _log.debug("sheetName_->{}", sheetName_);
          _log.debug("requestedModel_->{}", requestedModel_);
-         _log.debug("requestKeyColumnNames_->{}",
-            ArrayUtils.toString(requestKeyColumnNames_));
+         _log.debug("keyColumnNames_->{}", ArrayUtils.toString(keyColumnNames_));
          _log.debug("readColumnIdxs_->{}", ArrayUtils.toString(readColumnIdxs_));
          _log.debug("isSorted_->{}", isSorted_);
          _log.debug("hasHeader_->{}", hasHeader_);
@@ -75,7 +73,7 @@ public class DKSpreadSheetFileSource implements DKSource {
       _requestedModel = requestedModel_ == null ? null : requestedModel_.copy();
       if (!ArrayUtils.isEmpty(readColumnIdxs_))
          throw new NotImplementedException("readColumnIdxs_ not yet supported!");
-      _requestedKeyColumnNames = requestKeyColumnNames_;
+      _requestedKeyColumnNames = keyColumnNames_;
    }
 
    /*
