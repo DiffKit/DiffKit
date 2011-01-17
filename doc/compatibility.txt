@@ -7,16 +7,20 @@ v@VERSION@, @BUILDDATE@ (SVN @REVISION@)
 [grid="rows",format="csv",width="100%"]
 [options="header",cols="^,^,^,^,^,^,^"]
 |===========================
-RDBMS,           Sun JRE 1.5,    Sun JRE 1.6,    Java for Mac OS X 10.6, Microsoft JVM, Apache Harmony 5.0/6.0, OpenJDK 6, GCJ
-Oracle 10g,      Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-IBM DB2 9.5,     Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-MySQL 5.1,       Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-H2 1.2.135,      Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-SQL Server 2008, Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-PostgreSQL 9.x,  Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-HyperSQL 2.0,    Y,              Y,              Y,                      ?,              ?,                      ?,          ?
-Sybase ASE 15.X, X,              X,              X,                      X,              X,                      X,          X
-SQLite,          X,              X,              X,                      X,              X,                      X,          X
-Apache Derby,    X,              X,              X,                      X,              X,                      X,          X
+Source,                       Sun JRE 1.5,    Sun JRE 1.6,    Java for Mac OS X 10.6, Microsoft JVM, Apache Harmony 5.0/6.0, OpenJDK 6, GCJ
+Oracle 10g,                   Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+IBM DB2 9.5,                  Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+MySQL 5.1,                    Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+H2 1.2.135,                   Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+SQL Server 2008,              Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+PostgreSQL 9.x,               Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+HyperSQL 2.0,                 Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+MS Excel 97/2000/XP (.xls),   Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+MS Excel 2007 (.xlsx),        Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+HyperSQL 2.0,                 Y,              Y,              Y,                      ?,              ?,                      ?,          ?
+Sybase ASE 15.X,              X,              X,              X,                      X,              X,                      X,          X
+SQLite,                       X,              X,              X,                      X,              X,                      X,          X
+Apache Derby,                 X,              X,              X,                      X,              X,                      X,          X
+Open Document SS .ods,        X,              X,              X,                      X,              X,                      X,          X
 |===========================
 Y=tested successfully; ?=should work, but not tested; X=not supported

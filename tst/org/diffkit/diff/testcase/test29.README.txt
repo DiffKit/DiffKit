@@ -11,7 +11,6 @@ DiffKit for describing columns.
 Assumptions
 -----------
 - lhs & rhs are SpreadSheet FILE tables
-- lhs vs. rhs has no diffs
 - plan file supplies lhs and rhs spreadsheet file paths
 - plan file supplies file path for Sink
 - lhs and rhs tables have identical structure

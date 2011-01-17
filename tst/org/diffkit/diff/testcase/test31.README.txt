@@ -1,0 +1,32 @@
+test31 README
+=========
+
+Description
+----------
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates leaving the sheet 
+name blank in the plan, so that the first sheet is used by default. Demonstrates
+explicitly modeling the ROW_NUM, and how ROW_DIFFs are reported when using ROW_NUM
+as the key. Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types. 
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- plan file supplies lhs and rhs spreadsheet file paths
+- plan file supplies file path for Sink
+- lhs and rhs tables have identical structure
+- PassthroughPlan specifies identical TableModels for LHS and RHS
+- PassthroughPlan specifies most straightforward TableComparison (mappings) 
+- ROW_NUM column is specified as part of the TableModel in the PassthroughPlan file.
+- ROW_NUMs is used as key
+- PassthroughPlan specifies that a header row is present, so will identify diffs
+using column names from header, instead of default Excel column name (A,B,C....).
+
+Expectations
+-----------
+- 1 ROW_DIFF, becuase ROW_NUM is used for alignment and only ROW_NUM=7 is
+different between the two side
+- 32 COLUMN_DIFFs. All columns must be different in the rows where one side is blank
+and the other side isn't (ROW_NUM= 2,3,6 = 3 rows * 8 columns = 24 ROW_DIFFs). 
+All columns explicitly set to different values in ROW_NUM = 5 in order to exercise each column.
+

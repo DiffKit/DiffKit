@@ -377,29 +377,36 @@ public class DKPoiSheet extends DKAbstractSheet {
       }
       if ((cell_ == null) || (type_ == null))
          return null;
-      if (cell_.getCellType() == Cell.CELL_TYPE_BLANK)
-         return null;
-      switch (type_) {
-      case STRING:
-         return cell_.toString();
-      case DATE:
-         return cell_.getDateCellValue();
-      case DECIMAL:
-         return new BigDecimal(cell_.toString());
-      case INTEGER:
-         return new Long(new Double(cell_.getNumericCellValue()).longValue());
-      case REAL:
-         return new Double(cell_.getNumericCellValue());
-      case BOOLEAN:
-         return Boolean.valueOf(cell_.getBooleanCellValue());
-      case TIME:
-         return readTime(cell_);
-      case TIMESTAMP:
-         return readTimestamp(cell_);
-      case MIXED:
-         return cell_.toString();
-      default:
-         return cell_.toString();
+      try {
+         if (cell_.getCellType() == Cell.CELL_TYPE_BLANK)
+            return null;
+         switch (type_) {
+         case STRING:
+            return cell_.toString();
+         case DATE:
+            return cell_.getDateCellValue();
+         case DECIMAL:
+            return new BigDecimal(cell_.toString());
+         case INTEGER:
+            return new Long(new Double(cell_.getNumericCellValue()).longValue());
+         case REAL:
+            return new Double(cell_.getNumericCellValue());
+         case BOOLEAN:
+            return Boolean.valueOf(cell_.getBooleanCellValue());
+         case TIME:
+            return readTime(cell_);
+         case TIMESTAMP:
+            return readTimestamp(cell_);
+         case MIXED:
+            return cell_.toString();
+         default:
+            return cell_.toString();
+         }
+      }
+      catch (Exception e_) {
+         String message = String.format("unable to read cell_->%s type_->%s", cell_,
+            type_);
+         throw new RuntimeException(message, e_);
       }
    }
 
