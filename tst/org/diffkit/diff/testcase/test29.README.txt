@@ -11,13 +11,18 @@ Assumptions
 -----------
 - lhs & rhs are SpreadSheet FILE tables
 - lhs vs. rhs has no diffs
-- plan file supplies lhs  and rhs spreadsheet file paths
+- plan file supplies lhs and rhs spreadsheet file paths
 - plan file supplies file path for Sink
 - lhs and rhs tables have identical structure
-- MagicPlan reverse engineers TableModels from the spreadsheet
-- MagicPlan generates default TableComparison by aligning lhs column to rhs
-column based on name 
+- PassthroughPlan specifies identical TableModels for LHS and RHS
+- PassthroughPlan specifies most straightforward TableComparison (mappings) 
+- ROW_NUM column is not specified as part of the TableModel in the PassthroughPlan file.
+So ROW_NUMs not used.
+- PassthroughPlan specifies no header
+- PassthroughPlan specifies key col 1st col
 
 Expectations
 -----------
-- No Diffs
+- 4 ROW_DIFFs
+- 7 COLUMN_DIFFs
+
