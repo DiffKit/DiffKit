@@ -85,10 +85,26 @@ public class DKTableModel {
       return _name;
    }
 
+   /**
+    * convenience method that checks if column[0] isRowNum()
+    */
    public boolean hasRowNum() {
       if (ArrayUtils.isEmpty(_columns))
          return false;
       return _columns[0].isRowNum();
+   }
+
+   /**
+    * convenience method that checks if key.length == 1, and key column isRowNum
+    */
+   public boolean keyIsRowNum() {
+      int[] key = this.getKey();
+      if (ArrayUtils.isEmpty(key))
+         return false;
+      if (key.length > 1)
+         return false;
+      DKColumnModel keyColumn = this.getColumn(key[0]);
+      return keyColumn.isRowNum();
    }
 
    public DKColumnModel[] getColumns() {
@@ -149,6 +165,19 @@ public class DKTableModel {
 
    public int[] getKey() {
       return Arrays.copyOf(_key, _key.length);
+   }
+
+   /**
+    * convenience method that assumes simple (1 column) key. throws exception if
+    * key is compound
+    */
+   public DKColumnModel getKeyColumn() {
+      int[] key = this.getKey();
+      if (key == null)
+         return null;
+      if (key.length > 1)
+         throw new RuntimeException("compound key!");
+      return this.getColumn(key[0]);
    }
 
    public Object[] getKeyValues(Object[] row_) {

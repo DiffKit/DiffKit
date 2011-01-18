@@ -35,6 +35,73 @@ import org.diffkit.util.DKTimeUtil;
  */
 public class TestPoiSheet extends GroovyTestCase {
    
+   // isSorted = false, so Iterator should sort the rows on the simple key; 
+   // user defined model does not include ROW_NUM
+   public void testSortMedium() {
+      DKColumnModel col1 = [0, 'A', DKColumnModel.Type.STRING]
+      DKColumnModel col2 = [1, 'B', DKColumnModel.Type.INTEGER]
+      DKColumnModel col3 = [2, 'C', DKColumnModel.Type.DATE]
+      DKColumnModel col4 = [3, 'D', DKColumnModel.Type.STRING]
+      DKColumnModel col5 = [4, 'E', DKColumnModel.Type.TIME]
+      DKColumnModel col6 = [5, 'F', DKColumnModel.Type.INTEGER]
+      DKColumnModel col7 = [6, 'G', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col8 = [7, 'H', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col9 = [8, 'I', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col10 = [9, 'J', DKColumnModel.Type.TIMESTAMP]
+      DKColumnModel col11 = [10, 'K', DKColumnModel.Type.STRING]
+      DKColumnModel col12 = [12, 'L', DKColumnModel.Type.INTEGER]
+      DKColumnModel col13 = [13, 'M', DKColumnModel.Type.INTEGER]
+      DKColumnModel col14 = [14, 'N', DKColumnModel.Type.STRING]
+      DKColumnModel col15 = [15, 'O', DKColumnModel.Type.STRING]
+      DKColumnModel col16 = [16, 'P', DKColumnModel.Type.STRING]
+      DKColumnModel[] cols = [col1,col2,col3,col4,col5,col6,col7,col8, col9, col10, col11, col12, col13,col14,col15,col16]
+      DKTableModel tableModel = ['MyModel', cols, (int[])[0]]
+      assert !tableModel.hasRowNum()
+      
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "easy sheet", false, false, false]
+      Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      assert aRow[0] == 1
+      aRow = rowIterator.next()
+      assert aRow[0] == 2
+      (1..10).each { rowIterator.next()}
+      aRow = rowIterator.next()
+      assert aRow[0] == 13
+      (1..7).each { aRow = rowIterator.next()}
+      assert aRow[0] == 20
+      assert aRow[1] == 'uuuu'
+      assert ! rowIterator.hasNext()
+   }
+   // isSorted = false, so Iterator should sort the rows on ROW_NUM, which means
+   // no change in ordering
+   public void testSortEasy() {
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "easy sheet", false, false, false]
+      Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      assert aRow[0] == 1
+      aRow = rowIterator.next()
+      assert aRow[0] == 2
+      (1..10).each { rowIterator.next()}
+      aRow = rowIterator.next()
+      assert aRow[0] == 13
+      (1..7).each { aRow = rowIterator.next()}
+      assert aRow[0] == 20
+      assert aRow[1] == 'uuuu'
+      assert ! rowIterator.hasNext()
+   }
+   
    // read rows using RowIterator, based on model explicitly supplied by Unit. 
    // There is no ROW_NUM col specified, so that column shouldn't show up.
    public void testRowIteratorWithModelEasy() {
@@ -53,7 +120,7 @@ public class TestPoiSheet extends GroovyTestCase {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
-      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, true, false]
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", true, true, false]
       Iterator rowIterator = poiSheet.getRowIterator(tableModel)
       assert rowIterator
       assert rowIterator.hasNext()
@@ -85,7 +152,7 @@ public class TestPoiSheet extends GroovyTestCase {
       assert aRow[6].class == Double.class
       assert aRow[7] == 'FALSE'
       assert aRow[7].class == String.class
-
+      
    }
    
    // read rows using RowIterator, based on model extracted from Sheet
@@ -93,7 +160,7 @@ public class TestPoiSheet extends GroovyTestCase {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
-      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, true, false]
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", true, true, false]
       Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
       assert rowIterator
       assert rowIterator.hasNext()
@@ -132,7 +199,7 @@ public class TestPoiSheet extends GroovyTestCase {
       def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
       println "sourceFile->$sourceFile"
       assert sourceFile
-      DKPoiSheet poiSheet = [sourceFile, "easy sheet", false, false, false]
+      DKPoiSheet poiSheet = [sourceFile, "easy sheet", true, false, false]
       Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
       assert rowIterator
       assert rowIterator.hasNext()

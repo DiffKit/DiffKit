@@ -23,6 +23,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +37,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.list.GrowthList;
 import org.apache.commons.collections.list.LazyList;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -78,9 +80,16 @@ public class DKPoiSheet extends DKAbstractSheet {
    public Iterator<Object[]> getRowIterator(DKTableModel model_) throws IOException {
       DKValidate.notNull(model_);
 
-      int startIndex = this.hasHeader() ? 1 : 0;
-      return new RowIterator(this.getRows(), model_.getColumnTypes(), startIndex,
-         model_.hasRowNum());
+      List<Row> rows = this.getRows();
+      if (this.hasHeader())
+         rows = rows.subList(1, rows.size());
+      if (!this.isSorted()) {
+         // if the key is ROW_NUM, there is no need for further sorting, because
+         // rows come from getRows sorted.
+         if (!model_.keyIsRowNum())
+            Collections.sort(rows, new RowComparator(model_));
+      }
+      return new RowIterator(rows, model_.getColumnTypes(), model_.hasRowNum());
    }
 
    /**
@@ -148,6 +157,9 @@ public class DKPoiSheet extends DKAbstractSheet {
       return _headerRow;
    }
 
+   /**
+    * @return guaranteed to be sorted-- will sort if necessaryF
+    */
    @SuppressWarnings("unchecked")
    private List<Row> getRows() throws IOException {
       if (_rows != null)
@@ -430,19 +442,16 @@ public class DKPoiSheet extends DKAbstractSheet {
       private final List<Row> _rows;
       private final Type[] _types;
       private final boolean _hasRowNum;
-      private int _currentIndex = -1;
+      private int _currentIndex = 0;
 
-      private RowIterator(List<Row> rows_, Type[] types_, int startIndex_,
-                          boolean hasRowNum_) {
+      private RowIterator(List<Row> rows_, Type[] types_, boolean hasRowNum_) {
          LOG.debug("rows_->{}", rows_ == null ? null : rows_.size());
          LOG.debug("types_->{}", types_ == null ? null : Arrays.toString(types_));
-         LOG.debug("startIndex_->{}", startIndex_);
          LOG.debug("hasRowNum_->{}", hasRowNum_);
          DKValidate.notNull(rows_, types_);
          _rows = rows_;
          _types = types_;
          _lastIndex = rows_.size() - 1;
-         _currentIndex = startIndex_;
          _hasRowNum = hasRowNum_;
       }
 
@@ -461,109 +470,49 @@ public class DKPoiSheet extends DKAbstractSheet {
       }
    }
 
-   // public class RowComparator implements java.util.Comparator<Row> {
-   // private int _compareColumnIndex;
-   // private DKColumnModel _compareColumnModel;
-   //
-   // public RowComparator(int compareColumnIndex, DKColumnModel
-   // compareColumnModel) {
-   // _compareColumnIndex = compareColumnIndex;
-   // _compareColumnModel = compareColumnModel;
-   // }
-   //
-   // public int compare(Row row1, Row row2) {
-   //
-   // Cell cell1 = row1.getCell(_compareColumnIndex);
-   // Cell cell2 = row2.getCell(_compareColumnIndex);
-   //
-   // _log.debug("Comparing rows of indices:" + row1.getRowNum() + "&"
-   // + row2.getRowNum());
-   // _log.debug("Comapring cells of index:" + _compareColumnIndex);
-   // _log.debug("cell1:" + cell1);
-   // _log.debug("cell2:" + cell2);
-   //
-   // if (cell1 != null && cell2 != null) {
-   // Object value1 = getCellValue(cell1, _compareColumnModel);
-   // Object value2 = getCellValue(cell2, _compareColumnModel);
-   //
-   // _log.debug("value1:" + value1);
-   // _log.debug("value2:" + value2);
-   //
-   // if (value1 != null && value2 != null) {
-   //
-   // int result = 0;
-   // switch (_compareColumnModel._type) {
-   // case STRING:
-   // if (value1 instanceof String && value2 instanceof String) {
-   // result = ((String) value1).compareTo((String) value2);
-   // }
-   // else {
-   // _log.error("Either of the cell value types are not as expected from model. Expecting String");
-   // }
-   // break;
-   // case DATE:
-   // if (value1 instanceof Date && value2 instanceof Date) {
-   // result = ((Date) value1).compareTo((Date) value2);
-   // }
-   // else {
-   // _log.error("Either of the cell value types are not as expected from model. Expecting Date");
-   // }
-   // break;
-   // case DECIMAL:
-   // if (value1 instanceof Double && value2 instanceof Double) {
-   // result = ((Double) value1).compareTo((Double) value2);
-   // }
-   // else {
-   // _log.error("Either of the cell value types are not as expected from model. Expecting Double");
-   // }
-   // break;
-   // case INTEGER:
-   // if (value1 instanceof Double && value2 instanceof Double) {
-   // result = ((Double) value1).compareTo((Double) value2);
-   // }
-   // else {
-   // _log.error("Either of the cell value types are not as expected from model. Expecting Double");
-   // }
-   // break;
-   // case BOOLEAN:
-   // if (value1 instanceof Boolean && value2 instanceof Boolean) {
-   // result = ((Boolean) value1).compareTo((Boolean) value2);
-   // }
-   // else {
-   // _log.error("Either of the cell value types are not as expected from model. Expecting Boolean");
-   // }
-   // break;
-   // default:
-   // // TODO decide what to do in such error situation
-   // result = 0;
-   // }
-   // _log.debug("Compare result:" + result);
-   // return result;
-   // }
-   //
-   // _log.warn("Null values in the cell. Assuming null is less than any filled value");
-   // if (value1 == null && value2 != null) {
-   // return -1;
-   // }
-   // else if (value1 == null && value2 == null) {
-   // return 0;
-   // }
-   // else if (value1 != null && value2 == null) {
-   // return 1;
-   // }
-   //
-   // }
-   //
-   // if (cell1 == null && cell2 != null) {
-   // return -1;
-   // }
-   // else if (cell1 == null && cell2 == null) {
-   // return 0;
-   // }
-   // else if (cell1 != null && cell2 == null) {
-   // return 1;
-   // }
-   // return 0;
-   // }
-   // }
+   public class RowComparator implements java.util.Comparator<Row> {
+      private final DKTableModel _model;
+      private final int _keyIdx;
+      private final DKColumnModel.Type _keyType;
+
+      public RowComparator(DKTableModel model_) {
+         _model = model_;
+         DKValidate.notNull(_model);
+         this.validateModel(_model);
+
+         DKColumnModel keyColumn = _model.getKeyColumn();
+         _keyIdx = keyColumn.getIndex();
+         _keyType = keyColumn.getType();
+      }
+
+      @SuppressWarnings({ "rawtypes", "unchecked" })
+      public int compare(Row lhsRow_, Row rhsRow_) {
+         if (lhsRow_ == null)
+            throw new IllegalArgumentException("lhsRow_ null");
+         if (rhsRow_ == null)
+            throw new IllegalArgumentException("rhsRow_ null");
+         Comparable lhsValue = (Comparable) readCell(lhsRow_.getCell(_keyIdx), _keyType);
+         Comparable rhsValue = (Comparable) readCell(rhsRow_.getCell(_keyIdx), _keyType);
+         boolean lhsNull = (lhsValue == null) ? true : false;
+         boolean rhsNull = (rhsValue == null) ? true : false;
+         if (lhsNull && rhsNull)
+            return 0;
+         else if (lhsNull)
+            return -1;
+         else if (rhsNull)
+            return 1;
+         return lhsValue.compareTo(rhsValue);
+      }
+
+      private void validateModel(DKTableModel model_) {
+         int[] key = model_.getKey();
+         if (ArrayUtils.isEmpty(key))
+            throw new IllegalArgumentException(String.format("no key for model_->%s",
+               model_));
+         if (key.length > 1)
+            throw new IllegalArgumentException(String.format(
+               "TableModel with compound keys not supported: model_->%s key->%s", model_,
+               model_.getKeyColumnNames(), model_));
+      }
+   }
 }

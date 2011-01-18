@@ -1,0 +1,31 @@
+test32 README
+=========
+
+Description
+----------
+This test is the same as test31, except that the key is COLUMN1 instead of <ROW_NUM>,
+and the spreadsheets are not pre-sorted (isSorted = false), so that DiffKit has to
+sort them internally before diff'ng.
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates leaving the sheet 
+name blank in the plan, so that the first sheet is used by default. Demonstrates
+how ROW_DIFFs are generated when rows are aligned on COLUMN1, instead of ROW_NUM
+(in Test31). Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types. 
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- plan file supplies lhs and rhs spreadsheet file paths
+- plan file supplies file path for Sink
+- lhs and rhs tables have identical structure
+- PassthroughPlan specifies identical TableModels for LHS and RHS
+- PassthroughPlan specifies most straightforward TableComparison (mappings) 
+- ROW_NUM column is *not* specified as part of the TableModel in the PassthroughPlan file.
+- COLUMN1 is specified as the key
+- PassthroughPlan specifies that a header row is present, so will identify diffs
+using column names from header, instead of default Excel column name (A,B,C....).
+
+Expectations
+-----------
+
+
