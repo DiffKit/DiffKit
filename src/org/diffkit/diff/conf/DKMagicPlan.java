@@ -45,6 +45,7 @@ public class DKMagicPlan implements DKPlan {
    private String _rhsSpreadSheetFilePath;
    private String _lhsSpreadSheetName;
    private String _rhsSpreadSheetName;
+   private Boolean _hasHeader;
    private String _sinkFilePath;
    private String _sqlPatchFilePath;
    private String _delimiter;
@@ -127,36 +128,47 @@ public class DKMagicPlan implements DKPlan {
    public void setRhsFilePath(String rhsFilePath_) {
       _rhsFilePath = rhsFilePath_;
    }
-   
+
    public String getRhsSpreadSheetFilePath() {
-	      return _rhsSpreadSheetFilePath;
+      return _rhsSpreadSheetFilePath;
    }
 
    public void setRhsSpreadSheetFilePath(String rhsSpreadSheetFilePath_) {
-	      _rhsSpreadSheetFilePath = rhsSpreadSheetFilePath_;
-   }   
+      _rhsSpreadSheetFilePath = rhsSpreadSheetFilePath_;
+   }
+
    public String getLhsSpreadSheetFilePath() {
-	      return _lhsSpreadSheetFilePath;
+      return _lhsSpreadSheetFilePath;
    }
 
    public void setLhsSpreadSheetFilePath(String lhsSpreadSheetFilePath_) {
-	      _lhsSpreadSheetFilePath = lhsSpreadSheetFilePath_;
-   }   
+      _lhsSpreadSheetFilePath = lhsSpreadSheetFilePath_;
+   }
 
    public String getRhsSpreadSheetName() {
-	      return _rhsSpreadSheetName;
+      return _rhsSpreadSheetName;
    }
 
    public void setRhsSpreadSheetName(String rhsSpreadSheetName_) {
-	      _rhsSpreadSheetName = rhsSpreadSheetName_;
-   }   
-   public String getLhsSpreadSheetName() {
-	      return _lhsSpreadSheetName;
+      _rhsSpreadSheetName = rhsSpreadSheetName_;
    }
+
+   public String getLhsSpreadSheetName() {
+      return _lhsSpreadSheetName;
+   }
+
    public void setLhsSpreadSheetName(String lhsSpreadSheetName_) {
-	      _lhsSpreadSheetName = lhsSpreadSheetName_;
-   }   
-   
+      _lhsSpreadSheetName = lhsSpreadSheetName_;
+   }
+
+   public Boolean getHasHeader() {
+      return _hasHeader;
+   }
+
+   public void setHasHeader(Boolean hasHeader_) {
+      _hasHeader = hasHeader_;
+   }
+
    public String getSinkFilePath() {
       return _sinkFilePath;
    }

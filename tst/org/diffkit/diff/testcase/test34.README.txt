@@ -1,0 +1,29 @@
+test34 README
+=========
+
+Description
+----------
+Key is COLUMN1 instead of <ROW_NUM>,
+and the spreadsheets are not pre-sorted (isSorted = false), so that DiffKit has to
+sort them internally before diff'ng.
+Compare SpreadSheet tables using a MagicPlan. Demonstrates leaving the sheet 
+name blank in the plan, so that the first sheet is used by default. Demonstrates
+how ROW_DIFFs are generated when rows are aligned on COLUMN1, instead of ROW_NUM
+(e.g. Test31). Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types. This is functionally same as test32, except
+that this test is specified using a MagicPlan, but 32 uses a PassthroughPlan.
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- MagicPlan supplies lhs and rhs spreadsheet file paths
+- MagicPlan supplies file path for Sink
+- lhs and rhs tables have identical structure
+- No key is specified in the MagicPlan, so ROW_NUM should be used
+- MagicPlan specifies that a header row is present, so will identify diffs
+using column names from header, instead of default Excel column name (A,B,C....).
+
+Expectations
+-----------
+- 3 ROW_DIFFs
+

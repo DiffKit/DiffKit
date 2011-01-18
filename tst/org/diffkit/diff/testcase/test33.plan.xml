@@ -8,6 +8,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
    <bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
       <property name="lhsSpreadSheetFilePath" value="./test33.lhs.xls" />
       <property name="rhsSpreadSheetFilePath" value="./test33.rhs.xls" />
+      <property name="hasHeader" value="true" />
       <property name="sinkFilePath" value="./test33.sink.diff" />
    </bean>
 
