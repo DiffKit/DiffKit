@@ -1,0 +1,30 @@
+test33 README
+=========
+
+Description
+----------
+Compare SpreadSheet tables using a MagicPlan. Sheet name is not specified, so 
+that the first sheet is used by default. No key is specified in the plan, so 
+ROW_NUM will be used. Demonstrates how ROW_DIFFs are reported when using ROW_NUM
+as the key. Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types. This test is same as test31, except that
+it is specified using a MagicPlan instead of the PassthroughPlan used in test31.
+
+Assumptions
+-----------
+- lhs & rhs are SpreadSheet FILE tables
+- MagicPlan supplies lhs and rhs spreadsheet file paths
+- MagicPlan supplies file path for Sink
+- lhs and rhs tables have identical structure
+- No key is specified in the MagicPlan, so ROW_NUM should be used
+- MagicPlan specifies that a header row is present, so will identify diffs
+using column names from header, instead of default Excel column name (A,B,C....).
+
+Expectations
+-----------
+- 1 ROW_DIFF, becuase ROW_NUM is used for alignment and only ROW_NUM=7 is
+different between the two side
+- 32 COLUMN_DIFFs. All columns must be different in the rows where one side is blank
+and the other side isn't (ROW_NUM= 2,3,6 = 3 rows * 8 columns = 24 ROW_DIFFs). 
+All columns explicitly set to different values in ROW_NUM = 5 in order to exercise each column.
+
