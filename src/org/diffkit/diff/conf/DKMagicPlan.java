@@ -46,6 +46,7 @@ public class DKMagicPlan implements DKPlan {
    private String _lhsSpreadSheetName;
    private String _rhsSpreadSheetName;
    private Boolean _hasHeader;
+   private Boolean _isSorted;
    private String _sinkFilePath;
    private String _sqlPatchFilePath;
    private String _delimiter;
@@ -167,6 +168,14 @@ public class DKMagicPlan implements DKPlan {
 
    public void setHasHeader(Boolean hasHeader_) {
       _hasHeader = hasHeader_;
+   }
+
+   public Boolean getIsSorted() {
+      return _isSorted;
+   }
+
+   public void setIsSorted(Boolean isSorted_) {
+      _isSorted = isSorted_;
    }
 
    public String getSinkFilePath() {

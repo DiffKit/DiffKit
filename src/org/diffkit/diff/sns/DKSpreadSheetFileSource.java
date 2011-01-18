@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.NotThreadSafe;
+import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
 import org.diffkit.diff.engine.DKTableModel;
@@ -172,12 +174,29 @@ public class DKSpreadSheetFileSource implements DKSource {
    private static DKTableModel determineModel(DKTableModel requestedModel_,
                                               DKSheet sheet_, String[] keyColumnNames_)
       throws IOException {
+      if (LOG.isDebugEnabled()) {
+         LOG.debug("requestedModel_->{}", requestedModel_);
+         LOG.debug("sheet_->{}", sheet_);
+         LOG.debug("keyColumnNames_->{}", Arrays.toString(keyColumnNames_));
+      }
       if (requestedModel_ != null)
          return requestedModel_;
       DKTableModel extractedModel = sheet_.getModelFromSheet();
       if (ArrayUtils.isEmpty(keyColumnNames_))
          return extractedModel;
-      return extractedModel.copyWithNewKey(keyColumnNames_);
+      DKColumnModel[] columns = extractedModel.getColumns();
+      if (columns[0].isRowNum()) {
+         DKColumnModel[] newColumns = new DKColumnModel[columns.length - 1];
+         for (int i = 0; i < newColumns.length; i++) {
+            DKColumnModel aColumn = columns[i + 1];
+            newColumns[i] = new DKColumnModel(i, aColumn.getName(), aColumn.getType(),
+               aColumn.getFormatString());
+         }
+         columns = newColumns;
+      }
+      LOG.debug("columns->{}", Arrays.toString(columns));
+      return new DKTableModel(extractedModel.getName(), columns,
+         DKColumnModel.getColumnIndexes(columns, keyColumnNames_));
    }
 
    /**

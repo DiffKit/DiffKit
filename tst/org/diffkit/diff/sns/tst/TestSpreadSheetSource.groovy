@@ -186,7 +186,8 @@ public class TestSpreadSheetSource extends GroovyTestCase {
       assert model
       assert model.name == 'Sheet1'
       assert model.keyColumnNames == (String[])['COLUMN1']
-      assert model.columns.length == 9
+      // NOTE that when have user-supplied key, the ROW_NUM is no longer included
+      assert model.columns.length == 8
       
       // supply own model
       DKColumnModel col1 = [0, 'col1', DKColumnModel.Type.DECIMAL]

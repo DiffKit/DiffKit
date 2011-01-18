@@ -490,6 +490,11 @@ public class DKPoiSheet extends DKAbstractSheet {
          this.validateModel(_model);
 
          DKColumnModel keyColumn = _model.getKeyColumn();
+         // // account for possibility that model_ has a RowNum column, but this
+         // // Comparator operates on *raw* Rows which will not have the RowNum
+         // // column present
+         // int keyIdxOffset = (model_.hasRowNum() && !keyColumn.isRowNum()) ?
+         // -1 : 0;
          _keyIdx = keyColumn.getIndex();
          _keyType = keyColumn.getType();
       }

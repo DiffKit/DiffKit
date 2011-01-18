@@ -250,9 +250,13 @@ public class DKMagicPlanRules {
       "if rhsSpreadSheetFilePath is specified in plan, then use it as the filePath_ in the rhsSpreadSheetFileSource",
       DKSpreadSheetFileSource.class, "rhsSource_.filePath_", "rhsSpreadSheetFilePath",
       true, new PlanValue(true));
-   private static final DKMagicPlanRule IS_SPREADSHEET_SORTED_RULE = new DKMagicPlanRule(
-      "isSorted", "hardwire isSorted to false", DKSpreadSheetFileSource.class,
-      "isSorted_", null, true, new Constant(Boolean.FALSE));
+   private static final DKMagicPlanRule SPREADSHEET_IS_SORTED_RULE = new DKMagicPlanRule(
+      "spreadsheetIsSorted",
+      "assign isSorted from the Plan to the SpreadSheetFileSource",
+      DKSpreadSheetFileSource.class, "isSorted_", "isSorted", true, new PlanValue(true));
+   private static final DKMagicPlanRule DEFAULT_SPREADSHEET_IS_SORTED_RULE = new DKMagicPlanRule(
+      "spreadsheetIsSorted", "hardwire isSorted to true", DKSpreadSheetFileSource.class,
+      "isSorted_", null, false, new Constant(Boolean.TRUE));
    private static final DKMagicPlanRule SPREADSHEET_HAS_HEADER_RULE = new DKMagicPlanRule(
       "hasHeader", "assign hasHeader from the Plan to the SpreadSheetFileSource",
       DKSpreadSheetFileSource.class, "hasHeader_", "hasHeader", true, new PlanValue(true));
@@ -275,7 +279,8 @@ public class DKMagicPlanRules {
       DKSpreadSheetFileSource.class, "rhsSource_.sheetName_", "rhsSpreadSheetName", true,
       new PlanValue(true));
    private static final DKMagicPlanRule DEFAULT_SPREADSHEET_SHEET_NAME_RULE = new DKMagicPlanRule(
-      "defaultSheetName", "if no sheetName is specified in plan, use 'Sheet1'",
+      "defaultSheetName",
+      "if no sheetName is specified in plan, pass in null (name extracted from doc)",
       DKSpreadSheetFileSource.class, "sheetName_", null, false, new Constant(null));
    private static final DKMagicPlanRule DEFAULT_SPREADSHEET_MODEL_RULE = new DKMagicPlanRule(
       "spreadsheetRequestModel",
@@ -298,11 +303,11 @@ public class DKMagicPlanRules {
       DEFAULT_DIFF_KIND_RULE, DIFF_COLUMN_NAMES_RULE, IGNORE_COLUMN_NAMES_RULE,
       DISPLAY_COLUMN_NAMES_RULE, MAX_DIFFS_RULE, DEFAULT_MAX_DIFFS_RULE,
       NUMBER_TOLERANCE_RULE, TOLERANCE_MAP_RULE, WITH_SUMMARY_RULE,
-      DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE, IS_SPREADSHEET_SORTED_RULE,
-      SPREADSHEET_HAS_HEADER_RULE, DEFAULT_SPREADSHEET_HAS_HEADER_RULE,
-      LHS_SPREADSHEET_SHEET_NAME_RULE, RHS_SPREADSHEET_SHEET_NAME_RULE,
-      DEFAULT_SPREADSHEET_SHEET_NAME_RULE, SPREADSHEET_VALIDATE_LAZILY_RULE,
-      DEFAULT_SPREADSHEET_MODEL_RULE };
+      DEFAULT_WITH_SUMMARY_RULE, GROUP_BY_COLUMN_NAMES_RULE, SPREADSHEET_IS_SORTED_RULE,
+      DEFAULT_SPREADSHEET_IS_SORTED_RULE, SPREADSHEET_HAS_HEADER_RULE,
+      DEFAULT_SPREADSHEET_HAS_HEADER_RULE, LHS_SPREADSHEET_SHEET_NAME_RULE,
+      RHS_SPREADSHEET_SHEET_NAME_RULE, DEFAULT_SPREADSHEET_SHEET_NAME_RULE,
+      SPREADSHEET_VALIDATE_LAZILY_RULE, DEFAULT_SPREADSHEET_MODEL_RULE };
 
    private static class TypeRefinement<T> extends RuleImplementation {
       private final Class<T> _type;

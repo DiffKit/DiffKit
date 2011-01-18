@@ -18,7 +18,9 @@ package org.diffkit.diff.engine;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
+import java.util.Arrays;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -26,6 +28,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.Immutable;
+import org.diffkit.util.DKArrayUtil;
 
 /**
  * @author jpanico
@@ -93,6 +96,24 @@ public class DKColumnModel {
    }
 
    /**
+    * convenience method
+    */
+   public static int[] getColumnIndexes(DKColumnModel[] target_, String[] columnNames_) {
+      if (ArrayUtils.isEmpty(target_))
+         return null;
+      if (ArrayUtils.isEmpty(columnNames_))
+         return null;
+      int[] indexes = new int[columnNames_.length];
+      Arrays.fill(indexes, -1);
+      for (int i = 0, j = 0; i < target_.length; i++) {
+         if (!ArrayUtils.contains(columnNames_, target_[i].getName()))
+            continue;
+         indexes[j++] = i;
+      }
+      return DKArrayUtil.compactFill(indexes, -1);
+   }
+
+   /**
     * create new instance that inherits all member values from receiver
     * <em>except</em> table
     */
@@ -114,6 +135,10 @@ public class DKColumnModel {
 
    public Type getType() {
       return _type;
+   }
+
+   public String getFormatString() {
+      return _formatString;
    }
 
    public boolean isRowNum() {

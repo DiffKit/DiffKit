@@ -24,7 +24,6 @@ import org.diffkit.common.DKValidate;
 import org.diffkit.common.annot.Immutable;
 import org.diffkit.common.kvc.DKKeyValueCoder;
 import org.diffkit.diff.engine.DKColumnModel.Type;
-import org.diffkit.util.DKArrayUtil;
 
 /**
  * @author jpanico
@@ -275,16 +274,7 @@ public class DKTableModel {
     * convenience method
     */
    public int[] getColumnIndexes(String[] columnNames_) {
-      if (ArrayUtils.isEmpty(columnNames_))
-         return null;
-      int[] indexes = new int[columnNames_.length];
-      Arrays.fill(indexes, -1);
-      for (int i = 0, j = 0; i < _columns.length; i++) {
-         if (!ArrayUtils.contains(columnNames_, _columns[i].getName()))
-            continue;
-         indexes[j++] = i;
-      }
-      return DKArrayUtil.compactFill(indexes, -1);
+      return DKColumnModel.getColumnIndexes(_columns, columnNames_);
    }
 
    /**
