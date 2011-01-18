@@ -158,7 +158,8 @@ public class DKPoiSheet extends DKAbstractSheet {
    }
 
    /**
-    * @return guaranteed to be sorted-- will sort if necessaryF
+    * @return the raw rows direct from the SS. They are unsorted and unfiltered
+    *         (e.g. header could be present)
     */
    @SuppressWarnings("unchecked")
    private List<Row> getRows() throws IOException {
@@ -436,6 +437,14 @@ public class DKPoiSheet extends DKAbstractSheet {
       return new Timestamp(dateValue.getTime());
    }
 
+   /**
+    * RowIterator is constructed with raw SS Rows, and translates them into
+    * DiffKit rows as it iterates. Two aspects to this transformation:
+    * 
+    * 1) converts the value in each cell into the corresponding
+    * DKColumnModel.Type <br/>
+    * 2) adds the pseudo column <ROW_NUM>, if it is flagged as present
+    */
    private static class RowIterator implements Iterator<Object[]> {
       private final static Logger LOG = LoggerFactory.getLogger(DKPoiSheet.class);
       private final int _lastIndex;

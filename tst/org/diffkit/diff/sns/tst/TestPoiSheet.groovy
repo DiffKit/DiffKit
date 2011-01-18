@@ -37,6 +37,41 @@ public class TestPoiSheet extends GroovyTestCase {
    
    // isSorted = false, so Iterator should sort the rows on the simple key; 
    // user defined model does not include ROW_NUM
+   public void testSortHard() {
+      DKColumnModel col1 = [0, 'COLUMN1', DKColumnModel.Type.INTEGER]
+      DKColumnModel col2 = [1, 'COLUMN2', DKColumnModel.Type.STRING]
+      DKColumnModel col3 = [2, 'COLUMN3', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col4 = [3, 'COLUMN4', DKColumnModel.Type.DECIMAL]
+      DKColumnModel col5 = [4, 'COLUMN5', DKColumnModel.Type.MIXED]
+      DKColumnModel col6 = [5, 'COLUMN6', DKColumnModel.Type.MIXED]
+      DKColumnModel col7 = [6, 'COLUMN7', DKColumnModel.Type.REAL]
+      DKColumnModel col8 = [7, 'COLUMN8', DKColumnModel.Type.STRING]
+      DKColumnModel[] cols = [col1,col2,col3,col4,col5,col6,col7,col8]
+      DKTableModel tableModel = ['MyModel', cols, (int[])[0]]
+      assert !tableModel.hasRowNum()
+      
+      def sourceFile = DKResourceUtil.findResourceAsFile('xcel_test.xls', this)
+      println "sourceFile->$sourceFile"
+      assert sourceFile
+      DKPoiSheet poiSheet = [sourceFile, "Sheet1", false, true, false]
+      assert poiSheet.hasHeader()
+      Iterator rowIterator = poiSheet.getRowIterator(tableModel)
+      assert rowIterator
+      assert rowIterator.hasNext()
+      def aRow = rowIterator.next()
+      assert aRow
+      assert aRow[0] == -2222
+      aRow = rowIterator.next()
+      assert aRow[0] == -1111
+      aRow = rowIterator.next()
+      assert aRow[0] == 2222
+      aRow = rowIterator.next()
+      assert aRow[0] == 11111
+      assert ! rowIterator.hasNext()
+   }
+   
+   // isSorted = false, so Iterator should sort the rows on the simple key; 
+   // user defined model does not include ROW_NUM
    public void testSortMedium() {
       DKColumnModel col1 = [0, 'A', DKColumnModel.Type.STRING]
       DKColumnModel col2 = [1, 'B', DKColumnModel.Type.INTEGER]
@@ -62,20 +97,19 @@ public class TestPoiSheet extends GroovyTestCase {
       println "sourceFile->$sourceFile"
       assert sourceFile
       DKPoiSheet poiSheet = [sourceFile, "easy sheet", false, false, false]
-      Iterator rowIterator = poiSheet.getRowIterator(poiSheet.createModelFromSheet())
+      Iterator rowIterator = poiSheet.getRowIterator(tableModel)
       assert rowIterator
       assert rowIterator.hasNext()
       def aRow = rowIterator.next()
       assert aRow
-      assert aRow[0] == 1
+      assert aRow[0] == 'aaaa'
       aRow = rowIterator.next()
-      assert aRow[0] == 2
+      assert aRow[0] == 'bbbb'
       (1..10).each { rowIterator.next()}
       aRow = rowIterator.next()
-      assert aRow[0] == 13
+      assert aRow[0] == 'nnnn'
       (1..7).each { aRow = rowIterator.next()}
-      assert aRow[0] == 20
-      assert aRow[1] == 'uuuu'
+      assert aRow[0] == 'uuuu'
       assert ! rowIterator.hasNext()
    }
    // isSorted = false, so Iterator should sort the rows on ROW_NUM, which means
