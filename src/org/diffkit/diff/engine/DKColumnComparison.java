@@ -96,7 +96,7 @@ public class DKColumnComparison {
    public String toString() {
       return String.format("%s[%s<->%s,%s]",
          ClassUtils.getShortClassName(this.getClass()), _lhsColumn._name,
-         _rhsColumn._name, ClassUtils.getShortClassName(_diffor.getClass()));
+         _rhsColumn._name, _diffor);
    }
 
    /**

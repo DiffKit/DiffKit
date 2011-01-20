@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.BigDecimalConverter;
+import org.apache.commons.beanutils.converters.BooleanConverter;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.beanutils.converters.DoubleConverter;
 import org.apache.commons.beanutils.converters.IntegerConverter;
@@ -105,6 +106,8 @@ public class DKConvertingDiffor implements DKDiffor {
          return null;
       if (type_ == String.class)
          return new StringConverter();
+      if (type_ == Boolean.class)
+         return new BooleanConverter();
       if (type_ == Short.class)
          return new ShortConverter();
       else if (type_ == Integer.class)
@@ -128,7 +131,8 @@ public class DKConvertingDiffor implements DKDiffor {
    }
 
    public String toString() {
-      return String.format("%s", ClassUtils.getShortClassName(this.getClass()));
+      return String.format("%s(%s,%s)", ClassUtils.getShortClassName(this.getClass()),
+         _lhsConverter, _rhsConverter);
    }
 
    public String getDescription() {

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="rhs.table" class="org.diffkit.db.DKDBTable">
+		<constructor-arg index="0">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="1">
+			<null />
+		</constructor-arg>
+		<constructor-arg index="2" value="TEST36_RHS_TABLE" />
+		<constructor-arg index="3">
+			<list>
+				<ref bean="rhs.column1" />
+				<ref bean="rhs.column2" />
+				<ref bean="rhs.column3" />
+				<ref bean="rhs.column4" />
+				<ref bean="rhs.column5" />
+				<ref bean="rhs.column6" />
+				<ref bean="rhs.column7" />
+				<ref bean="rhs.column8" />
+				<ref bean="rhs.column9" />
+				<ref bean="rhs.column10" />
+				<ref bean="rhs.column11" />
+				<ref bean="rhs.column12" />
+				<ref bean="rhs.column13" />
+            <ref bean="rhs.column14" />
+            <ref bean="rhs.column15" />
+            <ref bean="rhs.column16" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="4" ref="rhs.pk" />
+	</bean>
+
+	<bean id="rhs.pk" class="org.diffkit.db.DKDBPrimaryKey">
+		<constructor-arg index="0" value="test36_rhs_pk" />
+		<constructor-arg index="1">
+			<list>
+				<value>COLUMN1</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="rhs.column1" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN1" />
+		<constructor-arg index="1" value="1" />
+		<constructor-arg index="2" value="VARCHAR" />
+		<constructor-arg index="3" value="128" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column2" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN2" />
+		<constructor-arg index="1" value="2" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="32" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column3" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN3" />
+		<constructor-arg index="1" value="3" />
+		<constructor-arg index="2" value="DATE" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column4" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN4" />
+		<constructor-arg index="1" value="4" />
+		<constructor-arg index="2" value="CHAR" />
+		<constructor-arg index="3" value="4" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column5" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN5" />
+		<constructor-arg index="1" value="5" />
+		<constructor-arg index="2" value="TIME" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column6" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN6" />
+		<constructor-arg index="1" value="6" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column7" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN7" />
+		<constructor-arg index="1" value="7" />
+		<constructor-arg index="2" value="DECIMAL" />
+		<constructor-arg index="3" value="10" />
+		<constructor-arg index="4" value="2" />
+		<constructor-arg index="5" value="true" />
+	</bean>
+
+	<bean id="rhs.column8" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN8" />
+		<constructor-arg index="1" value="8" />
+		<constructor-arg index="2" value="DOUBLE" />
+		<constructor-arg index="3" value="10" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column9" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN9" />
+		<constructor-arg index="1" value="9" />
+		<constructor-arg index="2" value="REAL" />
+		<constructor-arg index="3" value="10" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column10" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN10" />
+		<constructor-arg index="1" value="10" />
+		<constructor-arg index="2" value="TIMESTAMP" />
+		<constructor-arg index="3" value="10" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column11" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN11" />
+		<constructor-arg index="1" value="11" />
+		<constructor-arg index="2" value="BOOLEAN" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column12" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN12" />
+		<constructor-arg index="1" value="12" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+	<bean id="rhs.column13" class="org.diffkit.db.DKDBColumn">
+		<constructor-arg index="0" value="COLUMN13" />
+		<constructor-arg index="1" value="13" />
+		<constructor-arg index="2" value="BIGINT" />
+		<constructor-arg index="3" value="0" />
+		<constructor-arg index="4" value="true" />
+	</bean>
+
+   <bean id="rhs.column14" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN14" />
+      <constructor-arg index="1" value="14" />
+      <constructor-arg index="2" value="NCHAR" />
+      <constructor-arg index="3" value="64" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+   
+   <bean id="rhs.column15" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN15" />
+      <constructor-arg index="1" value="15" />
+      <constructor-arg index="2" value="NVARCHAR" />
+      <constructor-arg index="3" value="256" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+   <bean id="rhs.column16" class="org.diffkit.db.DKDBColumn">
+      <constructor-arg index="0" value="COLUMN16" />
+      <constructor-arg index="1" value="16" />
+      <constructor-arg index="2" value="CLOB" />
+      <constructor-arg index="3" value="1000" />
+      <constructor-arg index="4" value="true" />
+   </bean>
+
+	<bean id="connectionSource" class="org.diffkit.db.DKDatabase">
+		<constructor-arg ref="connectionInfo" />
+	</bean>
+
+</beans>

@@ -426,6 +426,24 @@ public class DKAutomaticTableComparison implements DKTableComparison {
          return new DKConvertingDiffor(String.class, null, baseDiffor_);
       else if ((lhsType == Type.STRING) && (rhsType == Type.TIMESTAMP))
          return new DKConvertingDiffor(null, String.class, baseDiffor_);
+      // I believe these should be directly comparable, so just create a null
+      // converter
+      else if ((lhsType == Type.INTEGER) && (rhsType == Type.DECIMAL))
+         return new DKConvertingDiffor(null, Long.class, baseDiffor_);
+      else if ((lhsType == Type.DECIMAL) && (rhsType == Type.INTEGER))
+         return new DKConvertingDiffor(Long.class, null, baseDiffor_);
+      else if ((lhsType == Type.REAL) && (rhsType == Type.DECIMAL))
+         return new DKConvertingDiffor(BigDecimal.class, null, baseDiffor_);
+      else if ((lhsType == Type.DECIMAL) && (rhsType == Type.REAL))
+         return new DKConvertingDiffor(null, BigDecimal.class, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.BOOLEAN))
+         return new DKConvertingDiffor(Boolean.class, null, baseDiffor_);
+      else if ((lhsType == Type.BOOLEAN) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(null, Boolean.class, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.TEXT))
+         return new DKConvertingDiffor(null, null, baseDiffor_);
+      else if ((lhsType == Type.TEXT) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(null, null, baseDiffor_);
 
       else
          throw new RuntimeException(String.format(
