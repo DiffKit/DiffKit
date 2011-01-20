@@ -1,0 +1,18 @@
+@{COLUMN1=oooo}
+COLUMN8
+<1234.5678
+>1235.5678
+@{COLUMN1=qqqq}
+COLUMN9
+<1234.5678
+>1235.57
+!{COLUMN1=ssss}
+>
+@{COLUMN1=tttt}
+COLUMN13
+<AAAAA
+>AAxAA
+@{COLUMN1=uuuu}
+COLUMN15
+<my clobby text
+>my clXbby text

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="plan" class="org.diffkit.diff.conf.DKMagicPlan">
+		<property name="lhsSpreadSheetFilePath" value="./test35.lhs.xls" />
+		<property name="lhsSpreadSheetName" value="test target" />
+		<property name="rhsFilePath" value="./test35.rhs.csv" />
+		<property name="hasHeader" value="true" />
+		<property name="isSorted" value="false" />
+		<property name="keyColumnNames">
+			<list>
+				<value>COLUMN1</value>
+			</list>
+		</property>
+      <property name="toleranceMap">
+         <map>
+            <entry key="0.1" value="COLUMN8,COLUMN9" />
+         </map>
+      </property>
+		<property name="sinkFilePath" value="./test35.sink.diff" />
+	</bean>
+
+</beans>

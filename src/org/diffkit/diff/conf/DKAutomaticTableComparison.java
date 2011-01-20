@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -409,6 +410,23 @@ public class DKAutomaticTableComparison implements DKTableComparison {
          return new DKConvertingDiffor(null, BigDecimal.class, baseDiffor_);
       else if ((lhsType == Type.STRING) && (rhsType == Type.DECIMAL))
          return new DKConvertingDiffor(BigDecimal.class, null, baseDiffor_);
+      else if ((lhsType == Type.MIXED) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(String.class, null, baseDiffor_);
+      else if ((lhsType == Type.DATE) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(null, null, Date.class,
+            DKColumnModel.DEFAULT_DATE_FORMAT_STRING, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.DATE))
+         return new DKConvertingDiffor(Date.class,
+            DKColumnModel.DEFAULT_DATE_FORMAT_STRING, null, null, baseDiffor_);
+      else if ((lhsType == Type.TIME) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(String.class, null, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.TIME))
+         return new DKConvertingDiffor(null, String.class, baseDiffor_);
+      else if ((lhsType == Type.TIMESTAMP) && (rhsType == Type.STRING))
+         return new DKConvertingDiffor(String.class, null, baseDiffor_);
+      else if ((lhsType == Type.STRING) && (rhsType == Type.TIMESTAMP))
+         return new DKConvertingDiffor(null, String.class, baseDiffor_);
+
       else
          throw new RuntimeException(String.format(
             "unhandled conversion needed: lhsType->%s rhsType->%s", lhsType, rhsType));

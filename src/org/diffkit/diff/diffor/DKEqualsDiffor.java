@@ -15,7 +15,11 @@
  */
 package org.diffkit.diff.diffor;
 
+import java.sql.Time;
+
 import org.apache.commons.lang.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKDiffor;
@@ -26,6 +30,8 @@ import org.diffkit.diff.engine.DKDiffor;
 public class DKEqualsDiffor implements DKDiffor {
 
    private static final DKEqualsDiffor INSTANCE = new DKEqualsDiffor();
+   private final Logger _log = LoggerFactory.getLogger(this.getClass());
+   private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
    private DKEqualsDiffor() {
    }
@@ -45,6 +51,11 @@ public class DKEqualsDiffor implements DKDiffor {
          return false;
       if (lhsNull || rhsNull)
          return true;
+      if (_isDebugEnabled) {
+         if (lhs_ instanceof Time)
+            _log.debug("lhs_->{} rhs_->{}", ((Time) lhs_).getTime(),
+               ((Time) rhs_).getTime());
+      }
       return !lhs_.equals(rhs_);
    }
 

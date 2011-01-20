@@ -1,0 +1,33 @@
+test35 README
+=========
+
+Description
+----------
+Compare a spreadsheet against a flat-file using a MagicPlan. Both the flat-file 
+and the SS have a header. Assumes that both files are already sorted. Also
+demonstrate numerical tolerance. Without tolerance, values in COLUMN8 and COLUMN9
+will be different in all rows.
+
+[N.B. Using a MagicPlan, it's currently possible to diff spreadsheet vs. flat-file 
+only in the case where the key in the spreadsheet is type String. That's because the 
+key type in the spreadsheet must match the key type in the flat-file, and all
+columns are always typed to String in a flat-file when using a MagicPlan.]
+
+Assumptions
+-----------
+- lhs is a SpreadSheet FILE table
+- rhs is a csv FILE table
+- MagicPlan supplies lhs spreadsheet file path
+- MagicPlan supplies rhs csv file path
+- MagicPlan supplies file path for Sink
+- lhs and rhs tables have identical structure
+- key is specified as COLUMN1, which is Type String in SS
+- MagicPlan specifies that a header row is present, so will identify diffs
+using column names from header, instead of default Excel column name (A,B,C....).
+
+Expectations
+------------
+- 1 ROW_DIFF
+- 4 COLUMN_DIFFs (diffs in row='oooo'/col=column8 and row='qqqq'/col=column9
+exceed the specified tolerance.
+

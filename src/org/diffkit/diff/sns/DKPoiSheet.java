@@ -273,6 +273,8 @@ public class DKPoiSheet extends DKAbstractSheet {
     * guaranteed to not return null-- defaults to DECIMAL as last resort
     */
    private static Type getTypeForNumericCell(Cell cell_) {
+      if (IS_DEBUG_ENABLED)
+         LOG.debug("cell_->{}", cell_);
       if (cell_ == null)
          return null;
       int formatNumber = cell_.getCellStyle().getDataFormat();
@@ -280,7 +282,12 @@ public class DKPoiSheet extends DKAbstractSheet {
       Type type = _numericCellTypes.get(formatNumber);
       if (type != null)
          return type;
-      type = mapTypeForFormatString(cell_.getCellStyle().getDataFormatString());
+      String dataFormatString = cell_.getCellStyle().getDataFormatString();
+      if (IS_DEBUG_ENABLED)
+         LOG.debug("dataFormatString->{}", dataFormatString);
+      type = mapTypeForFormatString(dataFormatString);
+      if (IS_DEBUG_ENABLED)
+         LOG.debug("type->{}", type);
       if (type == null)
          type = Type.DECIMAL;
       // cache calculated value
@@ -309,6 +316,8 @@ public class DKPoiSheet extends DKAbstractSheet {
       else if (format_.equals("0.00%"))
          return Type.DECIMAL;
       else if (format_.equalsIgnoreCase("mm/dd/yy"))
+         return Type.DATE;
+      else if (format_.equalsIgnoreCase("YYYY\\-MM\\-DD"))
          return Type.DATE;
       else if (StringUtils.startsWithIgnoreCase(format_, "hh:mm:ss"))
          return Type.TIME;

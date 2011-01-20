@@ -55,11 +55,11 @@ public class DKColumnModel {
    /**
     * should be ISO 8601 compliant
     */
-   private static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
+   public static final String DEFAULT_DATE_FORMAT_STRING = "yyyy-MM-dd";
    /**
     * should be ISO 8601 compliant
     */
-   private static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
+   public static final String DEFAULT_TIME_FORMAT_STRING = "hh:mm:ss";
    /**
     * should be ISO 8601 compliant
     */
