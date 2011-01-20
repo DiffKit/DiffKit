@@ -4,14 +4,28 @@ test36 README
 Description
 ----------
 Compare a SpreadSheet on the LHS vs. a DB Source on the RHS, using a MagicPlan.
+Demonstrates the use of ToleranceMap. Also highlights a bug in DiffKit data type
+coercion. COLUMN5 has the same type (to the extent that you can clearly type SS
+columns) in both the SS and the DB: Time. It's read from both sources a java.sql.Time,
+however there is some subtle difference in the way that the values are read that
+results in different Time (reported by getTime()) values. So COLUMN5 generates
+a diff in every row even though the values appear to be the same in the diff
+report file.
 
 Assumptions
 -----------
 - lhs is a SpreadSheet FILE table
 - rhs is DB table
 
+- MagicPlan supplies lhs spreadsheet file path
+- MagicPlan supplies rhs DB table name and ConnectionInfo
+- MagicPlan supplies file path for Sink
+- lhs and rhs tables have nearly identical structure
+- key is specified as COLUMN1, which is Type String in SS
+- MagicPlan specifies that a header row is present in the Spreadsheet.
+
 Expectations
 -----------
-- 9 ROW_DIFFs
-- 15 COLUMN_DIFFs
+- 7 ROW_DIFFs
+- 33 COLUMN_DIFFs
 
