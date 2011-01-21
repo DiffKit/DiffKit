@@ -37,6 +37,8 @@ DiffKit has been tested on the following environments:
 - Oracle 10g
 - DB2 9.5
 - MySQL 5.1
+- MS Excel 97/2000/XP (.xls)
+- MS Excel 2007 (.xlsx)
 - SQL Server 2008
 - H2 Database 1.2
 - Postgres 9.x

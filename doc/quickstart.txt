@@ -267,6 +267,31 @@ java -jar ../diffkit-app.jar -planfiles test18.plan.xml,
      test18.lhs.dbConnectionInfo.xml,test18.rhs.dbConnectionInfo.xml
 -----------------
 
+Diff'ng Excel spreadsheets
+--------------------------
+Diff'ng Excel spreadsheets uses plan files in the same fashion as diff'ng
+falt-files. The only difference is that in addition to the file paths to
+the Excel documents, you can also provide the name of the sheet within the
+workbook which you want to target. If you don't explicitly provide a sheet name,
+DiffKit will default to the first sheet in the workbook:
+
+.test33.plan.xml
+-----------------
+   ...
+   <property name="lhsSpreadSheetFilePath" value="./test33.lhs.xls" />
+   <property name="rhsSpreadSheetFilePath" value="./test33.rhs.xls" />
+   <property name="hasHeader" value="true" />
+   <property name="sinkFilePath" value="./test33.sink.diff" />
+   ...
+-----------------
+
+invoked this way:
+
+-----------------
+java -jar ../diffkit-app.jar -planfiles test33.plan.xml
+-----------------
+
+
 Generating DB patch files
 ------------------------
 In addition to producing diff reports, as in the previous examples, DiffKit is

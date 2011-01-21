@@ -1,13 +1,13 @@
 
 What
 ----
-DiffKit is an application, and a framework, for comparing two
-tables of data, field-by-field. The tables can come from any of a number of
-sources, such as an RDBMS or CSV file, and DiffKit is able to mix different
+DiffKit is an application, and a framework, for comparing two tables of data,
+field-by-field. The tables can come from any of a number of sources, such as an
+RDBMS, Excel spreadsheet, or CSV file, and DiffKit is able to mix different
 kinds of sources in the same diff operation. DiffKit is like the Unix _diff_
 utility, but for tables instead of lines of text.
-
 .DiffKit
+
 image::diffkit.png[width=500]
 
 DiffKit is able to report the _diffs_ at both the row and field level, and

@@ -502,11 +502,11 @@ Tutorial 4 -- PassthroughPlan
 NOTE: You should complete Tutorial 3 before starting this tutorial. Tutorial 2
 introduces terminology that is used here.
 
-Tutorials 1 and 2 used __MagicPlan__s. These plans are called "magic" because not
-all of the information needed to carry out the diff'ng is explicitly specified;
-most of it is inferred, using reasonable default assumptions. However, sometimes
-you need finer control over the specification than is possible with MagicPlan.
-In that case, you will need to use a _PassthroughPlan_.
+Tutorials 1, 2 and 3 used __MagicPlan__s. These plans are called "magic" because
+not all of the information needed to carry out the diff'ng is explicitly
+specified; most of it is inferred, using reasonable default assumptions.
+However, sometimes you need finer control over the specification than is
+possible with MagicPlan. In that case, you will need to use a _PassthroughPlan_.
 
 At the heart of DiffKit is the _DiffEngine_. In order for the DiffEngine to
 carry out a diff'ng, it must be given a complete specification of how to compare
