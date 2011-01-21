@@ -207,7 +207,7 @@ public class DKApplication {
       DKRuntime.getInstance().getUserLog().info("running TestCases");
       Map<String, ?> testCaseParams = parseTestCaseArgs(args_);
       systemLog.debug("testCaseParams->{}", testCaseParams);
-      DKTestBridge.runTestCases((List<Integer>) testCaseParams.get("cases"),
+      DKTestBridge.runTestCases((String) testCaseParams.get("cases"),
          (List<DKDBFlavor>) testCaseParams.get("flavors"));
    }
 
@@ -226,8 +226,8 @@ public class DKApplication {
             if (elements.length != 2)
                throw new DKUserException(String.format("unrecognized argument value->%s",
                   arg));
-            List<Integer> caseNumbers = DKStringUtil.parseIntegerList(elements[1]);
-            parms.put(elements[0], caseNumbers);
+            String caseRangeString = elements[1];
+            parms.put(elements[0], caseRangeString);
          }
          else if (arg.startsWith("flavors=")) {
             String[] elements = arg.split("=");

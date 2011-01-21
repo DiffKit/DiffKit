@@ -23,7 +23,9 @@
 	<patternset id="build.resources">
 		<include name="**/*.xml" />
 		<include name="**/*.txt" />
-		<include name="**/*.csv" />
+      <include name="**/*.csv" />
+      <include name="**/*.xls" />
+      <include name="**/*.xlsx" />
 		<include name="**/*.diff" />
 		<include name="**/*.exception" />
 	</patternset>
@@ -138,7 +140,9 @@
 				<include name="**/*.csv" />
 				<include name="**/*.diff" />
 				<include name="**/*.xml" />
-				<include name="**/*.txt" />
+            <include name="**/*.txt" />
+            <include name="**/*.xls" />
+            <include name="**/*.xlsx" />
 			</fileset>
 		</copy>
 
@@ -529,18 +533,7 @@
 		</copy>
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}">
-				<include name="**/testcase/dbConnectionInfo*" />
-				<include name="**/testcase/test7*" />
-				<include name="**/testcase/test9*" />
-				<include name="**/testcase/test10*" />
-				<include name="**/testcase/test11*" />
-				<include name="**/testcase/test12*" />
-				<include name="**/testcase/test13*" />
-				<include name="**/testcase/test14*" />
-				<include name="**/testcase/test18*" />
-				<include name="**/testcase/test21*" />
-				<include name="**/testcase/test26*" />
-				<exclude name="**/testcase/*.h2.db" />
+				<include name="**/testcase/**" />
 			</fileset>
 			<filterset>
 				<filter token="TargetDatabase" value="${demodb.name}" />

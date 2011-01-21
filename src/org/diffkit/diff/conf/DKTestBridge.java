@@ -36,12 +36,12 @@ public class DKTestBridge {
    private static final String TESTCASERUNNER_CLASS_NAME = "org.diffkit.diff.testcase.TestCaseRunner";
    private static final Logger LOG = LoggerFactory.getLogger(DKTestBridge.class);
 
-   public static void runTestCases(List<Integer> cases_, List<DKDBFlavor> flavors_) {
-      LOG.info("cases_->{}", cases_);
+   public static void runTestCases(String casesString_, List<DKDBFlavor> flavors_) {
+      LOG.info("cases_->{}", casesString_);
       LOG.info("flavors_->{}", flavors_);
       DKRuntime.getInstance().setIsTest(Boolean.TRUE);
       try {
-         Runnable testCaseRunner = (Runnable) getTestCaseRunner(cases_, flavors_);
+         Runnable testCaseRunner = (Runnable) getTestCaseRunner(casesString_, flavors_);
          testCaseRunner.run();
       }
       catch (Exception e_) {
@@ -55,12 +55,12 @@ public class DKTestBridge {
          testcaseDir_, DKDBFlavor.H2 });
    }
 
-   private static Object getTestCaseRunner(List<Integer> cases_, List<DKDBFlavor> flavors_)
+   private static Object getTestCaseRunner(String casesString_, List<DKDBFlavor> flavors_)
       throws Exception {
       Class<?> testCaseRunnerClass = Class.forName(TESTCASERUNNER_CLASS_NAME);
       LOG.info("testCaseRunnerClass->{}", testCaseRunnerClass);
       Constructor<?> constructor = DKClassUtil.findLongestConstructor(testCaseRunnerClass);
       LOG.debug("constructor->{}", constructor);
-      return constructor.newInstance(cases_, flavors_);
+      return constructor.newInstance(casesString_, flavors_);
    }
 }
