@@ -532,8 +532,8 @@
 			<flattenmapper />
 		</copy>
 		<copy todir="${dist.dir}/eg" overwrite="true">
-			<fileset dir="${tst.dir}">
-				<include name="**/testcase/**" />
+			<fileset dir="${tst.dir}/org/diffkit/diff/testcase">
+            <patternset refid="build.resources" />
 			</fileset>
 			<filterset>
 				<filter token="TargetDatabase" value="${demodb.name}" />
