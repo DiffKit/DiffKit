@@ -21,6 +21,6 @@ HyperSQL 2.0,                 Y,              Y,              Y,                
 Sybase ASE 15.X,              X,              X,              X,                      X,              X,                      X,          X
 SQLite,                       X,              X,              X,                      X,              X,                      X,          X
 Apache Derby,                 X,              X,              X,                      X,              X,                      X,          X
-Open Document SS .ods,        X,              X,              X,                      X,              X,                      X,          X
+Open Document SS (.ods),      X,              X,              X,                      X,              X,                      X,          X
 |===========================
 Y=tested successfully; ?=should work, but not tested; X=not supported

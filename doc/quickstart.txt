@@ -339,7 +339,7 @@ WHERE (COLUMN1='6' );
 
 -----------------
 
-Diff'ng different kinds of Sources
+Mixing different kinds of Sources
 ----------------------------------
 Any _Kind_ of source can appear on either the LHS or the RHS. That means you can
 mix source _Kinds_ in the same comparison. test12.plan.xml demonstrates this:

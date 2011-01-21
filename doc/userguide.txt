@@ -100,7 +100,7 @@ Quality control
 ~~~~~~~~~~~~~~~~
 The integrity of DiffKit is maintained via two levels of testing: unit testing,
 and high level functional regression testing. The DiffKit project contains
-110+ low-level unit tests. These tests are executed before each release.
+160+ low-level unit tests. These tests are executed before each release.
 But more importantly, the DiffKit standalone application carries with it a
 complete, high-level functional regression suite. Not only is this test suite
 exercised before every release but, because it is embedded in the standalone
@@ -112,7 +112,7 @@ Tutorial
 --------
 
 Tutorial 1 -- Diff'ng flat-file tables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 In this tutorial we will diff two CSV files. Like most diff utilities, DiffKit
 arbitrarily names one of the tables (files) the Left Hand Side (_LHS_) and the
 other table (file) the Right Hand Side (_RHS_). In order to carry out a diff,
@@ -499,7 +499,7 @@ different keys.
 [[PassthroughPlan-Tutorial]]
 Tutorial 4 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NOTE: You should complete Tutorial 3 before starting this tutorial. Tutorial 2
+NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial 2
 introduces terminology that is used here.
 
 Tutorials 1, 2 and 3 used __MagicPlan__s. These plans are called "magic" because
