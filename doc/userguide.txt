@@ -19,8 +19,8 @@ data, field-by-field. DiffKit is able to report the differences
 configure how to carry out the comparison (what to compare, what to ignore).
 DiffKit is highly configurable with respect to the sources of tabular data, the
 details of the comparison, and the characteristics of the diff report (output).
-For instance, DiffKit is able to diff CSV files, RDBMS tables, or custom data
-sources, in any combination.
+For instance, DiffKit is able to diff MS Excel files, RDBMS tables, CSV files,
+or custom data sources, in any combination.
 
 .high-level
 image::sources_hl.png[width=700]
@@ -111,7 +111,7 @@ detailed description of this test suite, read <<Test-Cases,Test Cases>>.
 Tutorial
 --------
 
-Tutorial 1 -- Diff'ng file tables
+Tutorial 1 -- Diff'ng flat-file tables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 In this tutorial we will diff two CSV files. Like most diff utilities, DiffKit
 arbitrarily names one of the tables (files) the Left Hand Side (_LHS_) and the
@@ -459,10 +459,47 @@ Test12 can be run this way:
 java -jar ../diffkit-app.jar -planfiles test12.plan.xml,dbConnectionInfo.xml
 -----------------
 
+Tutorial 3 -- Diff'ng spreadsheet tables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NOTE: You should complete Tutorial 2 before starting on this tutorial. Tutorial
+2 introduces terminology that is used here.
+
+In this tutorial we will diff two Excel spreadsheet tables (sheets). Diff'ng
+spreadsheet tables uses plan files in the same fashion as diff'ng flat-files or
+DB tables. But instead of DB connection info, you must provide the path to the
+spreadsheet file and the name of the sheet to use.
+
+test33.plan.xml demonstrates how to specify the table names used in the
+comparison:
+
+.test33.plan.xml
+-----------------
+   ...
+   <property name="lhsSpreadSheetFilePath" value="./test33.lhs.xls" />
+   <property name="rhsSpreadSheetFilePath" value="./test33.rhs.xls" />
+   <property name="hasHeader" value="true" />
+   <property name="sinkFilePath" value="./test33.sink.diff" />
+   ...
+-----------------
+
+We don't specify the sheet name anywhere, so DiffKit will default to using the
+first sheet in the workbook, which in this case happens to be named "Sheet1"
+(the same in both documents). Also notice that hasHeader is set to "true". That
+means DiffKit will use the first row (ROW_NUM =1) as the column name for each 
+column. The output report will explain diffs using these column names instead of
+the default Excel column names: A,B...AA,AB.... Finally, we did not specify the
+key anywhere, which means that DiffKit will use the ROW_NUM as the key for the
+sake of aligning the rows. Test34 (test34.plan.xml) demonstrates the results of
+diff'ng spreadsheets that are nearly identical to those in test33, but using one
+of the user columns (COLUMN1) as the key instead of ROW_NUM. The results are
+completely different because of the different row alignments provided by the
+different keys.
+
+
 [[PassthroughPlan-Tutorial]]
-Tutorial 3 -- PassthroughPlan
+Tutorial 4 -- PassthroughPlan
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NOTE: You should complete Tutorial 2 before starting this tutorial. Tutorial 2
+NOTE: You should complete Tutorial 3 before starting this tutorial. Tutorial 2
 introduces terminology that is used here.
 
 Tutorials 1 and 2 used __MagicPlan__s. These plans are called "magic" because not

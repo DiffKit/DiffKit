@@ -2,16 +2,16 @@ test34 README
 =========
 
 Description
-----------
-Key is COLUMN1 instead of <ROW_NUM>,
-and the spreadsheets are not pre-sorted (isSorted = false), so that DiffKit has to
-sort them internally before diff'ng.
-Compare SpreadSheet tables using a MagicPlan. Demonstrates leaving the sheet 
-name blank in the plan, so that the first sheet is used by default. Demonstrates
-how ROW_DIFFs are generated when rows are aligned on COLUMN1, instead of ROW_NUM
-(e.g. Test31). Demonstrates use of header row (hasHeader -> true). 
-Exercises several different data types. This is functionally same as test32, except
-that this test is specified using a MagicPlan, whereas 32 uses a PassthroughPlan.
+---------- 
+Compare SpreadSheet tables using a MagicPlan. Key is COLUMN1 instead
+of <ROW_NUM>, and the spreadsheets are not pre-sorted (isSorted = false), so
+that DiffKit has to sort them internally before diff'ng. Demonstrates leaving
+the sheet name blank in the plan, so that the first sheet is used by default.
+Demonstrates how ROW_DIFFs are generated when rows are aligned on COLUMN1,
+instead of ROW_NUM (e.g. Test31). Demonstrates use of header row (hasHeader ->
+true). Exercises several different data types. This is functionally same as
+test32, except that this test is specified using a MagicPlan, whereas 32 uses a
+PassthroughPlan.
 
 Assumptions
 -----------
