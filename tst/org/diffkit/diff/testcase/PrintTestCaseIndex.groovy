@@ -27,20 +27,21 @@ import org.diffkit.util.DKStringUtil
 public class PrintTestCaseIndex {
    
    public static void main(String[] args_){
-      File indexFile = ['./TestCaseIndex.txt']
       def instance = new PrintTestCaseIndex()
       
-      instance.writeIndexFile(indexFile)
+      instance.writeIndexFile('TestCases.txt')
    }
    
-   private void writeIndexFile(File indexFile_){
-      println "indexFile_->$indexFile_"
+   private void writeIndexFile(String filename_){
+      println "filename_->$filename_"
       def readmeDirPath = this.defaultDataPath
       println "readmeDirPath->$readmeDirPath"
       URL dataPathUrl = this.class.classLoader.getResource(readmeDirPath)
       println "dataPathUrl->$dataPathUrl"
       File dataDir = [dataPathUrl.toURI()]
       println "dataDir->$dataDir"
+      File indexFile = [dataDir, filename_]
+      println "indexFile->$indexFile"
       def readmeFileList = dataDir.listFiles( {dir, fileName-> fileName ==~ /.*?\.README\.txt/ } as FilenameFilter )
       println "readmeFileList->$readmeFileList" 
       Arrays.sort( readmeFileList, {left, right->
@@ -49,14 +50,14 @@ public class PrintTestCaseIndex {
       )
       println "readmeFileList->$readmeFileList"
       
-      if(indexFile_.exists())
-         indexFile_.delete()
+      if(indexFile.exists())
+         indexFile.delete()
       
       readmeFileList.each { 
          def matcher = it.text =~ /(test\d+) README\s+=+\s+Description\s+-+\s+(?s:(.+(?=\s+Assumptions)))/
-         indexFile_ <<  matcher[0][1].trim() << '\n'
-         indexFile_ << StringUtils.repeat('-', matcher[0][1].trim().size())  << '\n'
-         indexFile_ <<  matcher[0][2].trim() << '\n\n'
+         indexFile <<  matcher[0][1].trim() << '\n'
+         indexFile << StringUtils.repeat('-', matcher[0][1].trim().size())  << '\n'
+         indexFile <<  matcher[0][2].trim() << '\n\n'
       }
    }
    

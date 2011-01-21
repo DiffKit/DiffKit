@@ -491,9 +491,32 @@ the default Excel column names: A,B...AA,AB.... Finally, we did not specify the
 key anywhere, which means that DiffKit will use the ROW_NUM as the key for the
 sake of aligning the rows. Test34 (test34.plan.xml) demonstrates the results of
 diff'ng spreadsheets that are nearly identical to those in test33, but using one
-of the user columns (COLUMN1) as the key instead of ROW_NUM. The results are
-completely different because of the different row alignments provided by the
-different keys.
+of the user columns (COLUMN1) as the key instead of ROW_NUM:
+
+.test34.plan.xml
+-----------------
+   ...
+   <property name="lhsSpreadSheetFilePath" value="./test34.lhs.xls" />
+   <property name="rhsSpreadSheetFilePath" value="./test34.rhs.xls" />
+   <property name="hasHeader" value="true" />
+   <property name="isSorted" value="false" />
+   <property name="keyColumnNames">
+      <list>
+         <value>COLUMN1</value>
+      </list>
+   </property>
+   ...
+-----------------
+
+The results are completely different from those in Test33 because of the
+different row alignments provided by the different keys. Notice that we also
+specified isSorted = false. By default, DiffKit assumes that spreadsheets
+already have the row ordering that you want; in other words, isSorted defaults
+to true. That default row ordering is according to the native ROW_NUM that all
+spreadsheets provide. However, you can instruct DiffKit to override this default
+row ordering with the isSorted = false flag. In that case, DiffKit will itself
+sort the rows according to the keyColumnNames before performing the table
+comparisons.
 
 
 [[PassthroughPlan-Tutorial]]

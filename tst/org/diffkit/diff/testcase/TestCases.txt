@@ -1,0 +1,244 @@
+test1
+-----
+A basic sanity check that compares two identical DB tables using the most straightforward possible 
+comparison. Everything is wired explicitly into a PassthroughPlan.
+
+test2
+-----
+Compare two DB tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan.
+
+test3
+-----
+A basic sanity check that compares two identical File Tables using the most straightforward possible 
+comparison. Everything is wired explicitly into a PassthroughPlan.
+
+test4
+-----
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan.
+
+test5
+-----
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan. Plan limits diffs to ROW_DIFF diffs only.
+
+test6
+-----
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan. Plan limits diffs to COLUMN_DIFF diffs only.
+
+test7
+-----
+Compare two File tables using the most straightforward possible comparison.  
+Everything is wired explicitly into a PassthroughPlan. Plan limits total number of diffs (maxDiffs) to 2.
+
+test8
+-----
+Compare two DB tables using the most automatic default provided by the MagicPlan. Only the two table names
+and the ConnectionInfo are provided in the plan file. Everything else is figured out by MagicPlan.
+
+test9
+-----
+Compare two file tables using the most automatic default provided by the MagicPlan. Only the two file paths 
+and the file path for the Sink are provided in the plan file. Everything else is figured out by MagicPlan.
+
+test10
+------
+Compare two DB tables using mostly automatic default provided by the MagicPlan. Plan specifies keyColumnNames, 
+which are different from the pk defined in the database for the target table. If alignment was carried out using 
+table pk (column1), all rows would be row diffs. Instead, engine is able to align the rows and produce only column diffs
+because of the keyColumnName override (column3).
+
+test11
+------
+Compare two file tables using mostly automatic default provided by the MagicPlan. Plan specifies keyColumnNames, 
+which are different from the default pk (first column) for file based tables. If alignment was carried out using 
+default pk (column1), all rows would be row diffs. Instead, engine is able to align the rows and produce only column diffs
+because of the keyColumnName override (column3).
+
+test12
+------
+Compare heterogenous sources, lhs is DB rhs is FILE, using MagicPlan. Differences in table structure are
+silently ignored by AutomaticTableComparison. Column3 is a BIGINT in the DB, but a STRING in the FILE, 
+because the FILE is only auto modelled. So the Diffor has to perform conversion.
+
+test13
+------
+Demonstrate the use of diffColumnNames and displayColumnNames in MagicPlan.  There are diffs in 
+column3 and column4. The plan uses diffColumnNames to limit the comparison to just column2,
+ensuring that only row diffs are found (there are no column diffs in column2).  By default, only key columns
+are used for display in the diff report, but the plan specifies that column1 and column3 should be used 
+in the display of rows within the diff report.
+
+test14
+------
+Demonstrate the use of ignoreColumnNames and displayColumnNames in MagicPlan.  There are diffs in 
+column3 and column4. The plan uses ignorefColumnNames to exclude column3 and column4 from diffing,
+ensuring that only row diffs are found (there are no column diffs in column2).  By default, only key columns
+are used for display in the diff report, but the plan specifies that column1 and column3 should be used 
+in the display of rows within the diff report.
+
+test15
+------
+Test global numberTolerance and toleranceMap. MagicPlan will ensure that no numeric diffs of magnitude
+less than 3 will be considered (numberTolerance =2), and that any diffs in COLUMN3 and COLUMN4 that 
+are not greater than 4 (toleranceMap; 4=COLUMN3,COLUMN4) will be ignored.
+
+test16
+------
+Test DBSource where clause. There are two rows on the lhs (COLUMN1=0, 5555) that are not on the rhs.
+By default, these would generate ROW diffs. However, we add a lhsWhereClause to the MagicPlan that
+excludes all rows only the rhs that are not on the lhs. The result is that the diff report contains only 
+column diffs.
+
+test17
+------
+Test the boundary case where one table (LHS) has rows, but the other table (RHS) is empty.
+
+test18
+------
+Compare across different databases. Compare two DB tables using the most automatic 
+default provided by the MagicPlan. Only the two table names and the ConnectionInfo are 
+provided in the plan file. Everything else is figured out by MagicPlan.
+
+test19
+------
+Exercise of various SQL data types: VARCHAR, BIGINT, DATE, CHAR, TIME, INT, 
+DECIMAL, DOUBLE, REAL, TIMESTAMP, BOOLEAN, TINYINT, SMALLINT, CLOB
+
+test20
+------
+Demos issue 5. The target DB tables do not have PK defined at the SQL level. User
+has specified keyColumnNames in the plan file. DKDBSource must reorder the rows 
+appropriately for the key definition in the plan file to assure that there is only
+1 row diff.
+
+test21
+------
+Test of diffKind and maxDiffs properties in MagicPlan. Plan limits
+diffs to ROW_DIFF diffs only, and maxDiffs of 2. If BOTH kinds of diffs were
+reported, there would be 4 COLUMN_DIFFs, in addition to the 2 ROW_DIFFs. But the
+diffKind property filters those out. If maxDiff was not specified, it would 
+default to a huge number (Long.MAX), and all 3 row diffs would be reported. But 
+since maxDiffs is specified to the MagicPlan, only the first 2 ROW_DIFFs are
+reported.
+
+test22
+------
+Demonstrates ability of TestCaseRunner to test for Exceptions (or failures) of 
+a specified type. In this case, the MagicPlan file specifies displayColumnNames
+that don't exist in the sources. So we expect that the framework will throw an
+appropriate exception.
+
+test23
+------
+Demonstrates withSummary option of the DKFileSink. Also demonstrates the 
+groupByColumnNames option.
+
+test24
+------
+Demonstrates the TextDiffor and how it can be used to compare CLOBs in a way
+that is insensitive to newlines. Also demonstrates the use of the whereClause.
+
+test25
+------
+Demonstrates the use of dbTableName in MagicPlan. The table name is the
+same on the LHS and RHS. Also demonstrates use of whereClause in MagicPlan. 
+The where clause is the same on the LHS and RHS.
+
+test26
+------
+Demonstrates SqlPatchSink, and how it is used to generate SQL statements 
+(INSERT, DELETE, UPDATE) in order to synchronize two tables. Also demonstrates
+how DiffKit handles creating DML statements for Strings that contain embedded
+single quotes (')
+
+test27
+------
+A basic sanity check that compares two identical Excel XLSX File Tables using the
+most straightforward possible comparison. Everything is wired explicitly into a
+PassthroughPlan.
+
+test28
+------
+Compare two spreadsheet file tables using mostly automatic default provided by
+the MagicPlan. Only the two file names are provided in the plan file.
+
+test29
+------
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates targeting an 
+explicitly named sheet, rather than defaulting to first sheet. Also demonstrates
+a SpreadSheet that exercises all of the different data types available within 
+DiffKit for describing columns.
+
+test30
+------
+Demonstrates situation where all columns in target tables are part of primary
+key defined in the database. This covers issue #62. Even though it's not possible
+to search for column diffs in this scenario, DiffKit must still be able to properly
+find row diffs.
+
+test31
+------
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates leaving the sheet 
+name blank in the plan, so that the first sheet is used by default. Demonstrates
+explicitly modeling the ROW_NUM, and how ROW_DIFFs are reported when using ROW_NUM
+as the key. Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types.
+
+test32
+------
+This test is the same as test31, except that the key is COLUMN1 instead of <ROW_NUM>,
+and the spreadsheets are not pre-sorted (isSorted = false), so that DiffKit has to
+sort them internally before diff'ng.
+Compare SpreadSheet tables using a PassthroughPlan. Demonstrates leaving the sheet 
+name blank in the plan, so that the first sheet is used by default. Demonstrates
+how ROW_DIFFs are generated when rows are aligned on COLUMN1, instead of ROW_NUM
+(e.g. Test31). Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types.
+
+test33
+------
+Compare SpreadSheet tables using a MagicPlan. Sheet name is not specified, so 
+that the first sheet is used by default. No key is specified in the plan, so 
+ROW_NUM will be used. Demonstrates how ROW_DIFFs are reported when using ROW_NUM
+as the key. Demonstrates use of header row (hasHeader -> true). 
+Exercises several different data types. This test is same as test31, except that
+it is specified using a MagicPlan instead of the PassthroughPlan used in test31.
+
+test34
+------
+Compare SpreadSheet tables using a MagicPlan. Key is COLUMN1 instead
+of <ROW_NUM>, and the spreadsheets are not pre-sorted (isSorted = false), so
+that DiffKit has to sort them internally before diff'ng. Demonstrates leaving
+the sheet name blank in the plan, so that the first sheet is used by default.
+Demonstrates how ROW_DIFFs are generated when rows are aligned on COLUMN1,
+instead of ROW_NUM (e.g. Test31). Demonstrates use of header row (hasHeader ->
+true). Exercises several different data types. This is functionally same as
+test32, except that this test is specified using a MagicPlan, whereas 32 uses a
+PassthroughPlan.
+
+test35
+------
+Compare a spreadsheet against a flat-file using a MagicPlan. Both the flat-file 
+and the SS have a header. Assumes that both files are already sorted. Also
+demonstrate numerical tolerance. Without tolerance, values in COLUMN8 and COLUMN9
+will be different in all rows.
+
+[N.B. Using a MagicPlan, it's currently possible to diff spreadsheet vs. flat-file 
+only in the case where the key in the spreadsheet is type String. That's because the 
+key type in the spreadsheet must match the key type in the flat-file, and all
+columns are always typed to String in a flat-file when using a MagicPlan.]
+
+test36
+------
+Compare a SpreadSheet on the LHS vs. a DB Source on the RHS, using a MagicPlan.
+Demonstrates the use of ToleranceMap. Also highlights a bug in DiffKit data type
+coercion. COLUMN5 has the same type (to the extent that you can clearly type SS
+columns) in both the SS and the DB: Time. It's read from both sources a java.sql.Time,
+however there is some subtle difference in the way that the values are read that
+results in different Time (reported by getTime()) values. So COLUMN5 generates
+a diff in every row even though the values appear to be the same in the diff
+report file.
+

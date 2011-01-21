@@ -324,6 +324,7 @@
 				</patternset>
 			</fileset>
 		</copy>
+      <copy file="${tst.dir}/org/diffkit/diff/testcase/TestCases.txt" todir="${dist.dir}/doc" overwrite="true"/>
 
 		<antcall target="html-doc-dist" />
 
@@ -373,15 +374,23 @@
 			<arg line="-a stylesdir=resources" />
 			<arg line="compatibility.txt" />
 		</exec>
-		<exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
-			<arg line="-a linkcss" />
-			<arg line="-a theme=diffkit" />
-			<arg line="-a imagesdir=img" />
-			<arg line="-a scriptsdir=resources" />
-			<arg line="-a stylesdir=resources" />
-			<arg line="-a toc" />
-			<arg line="changelog.txt" />
-		</exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
+         <arg line="-a toc" />
+         <arg line="changelog.txt" />
+      </exec>
+      <exec dir="${dist.dir}/doc" executable="asciidoc" failifexecutionfails="true" searchpath="true">
+         <arg line="-a linkcss" />
+         <arg line="-a theme=diffkit" />
+         <arg line="-a imagesdir=img" />
+         <arg line="-a scriptsdir=resources" />
+         <arg line="-a stylesdir=resources" />
+         <arg line="TestCases.txt" />
+      </exec>
 
 	</target>
 
@@ -525,15 +534,23 @@
 
 	<target name="eg-dist" depends="dist-properties">
 
-		<copy todir="${dist.dir}/eg" overwrite="true">
-			<fileset dir="${tst.dir}">
-				<include name="**/testcase/*.h2.db" />
-			</fileset>
-			<flattenmapper />
-		</copy>
+      <copy todir="${dist.dir}/eg" overwrite="true">
+         <fileset dir="${tst.dir}">
+            <include name="**/testcase/*.h2.db" />
+         </fileset>
+         <flattenmapper />
+      </copy>
+      <copy todir="${dist.dir}/eg" overwrite="true">
+         <fileset dir="${tst.dir}/org/diffkit/diff/testcase">
+            <patternset refid="build.resources" />
+         </fileset>
+         <flattenmapper />
+      </copy>
 		<copy todir="${dist.dir}/eg" overwrite="true">
 			<fileset dir="${tst.dir}/org/diffkit/diff/testcase">
-            <patternset refid="build.resources" />
+            <patternset>
+               <include name="**/*.xml" />
+            </patternset>
 			</fileset>
 			<filterset>
 				<filter token="TargetDatabase" value="${demodb.name}" />
