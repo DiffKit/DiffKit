@@ -63,7 +63,7 @@ public class TestSpreadSheetSource extends GroovyTestCase {
       assert aRow[5] == '-1.0'
       assert aRow[5].class == String.class
       // ????
-      assert aRow[6].toString() == '31-Dec-1899'
+      assert new Date().parse('dd-MMM-yyyy',aRow[6].toString()).time == new Date().parse('dd-MM-yyyy','31-12-1899').time
       assert aRow[6].class == String.class
       assert aRow[7] == 14.2
       assert aRow[7].class == Double.class

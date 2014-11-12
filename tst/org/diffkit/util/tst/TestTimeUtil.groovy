@@ -19,7 +19,7 @@ package org.diffkit.util.tst
 import groovy.util.GroovyTestCase;
 
 import org.diffkit.util.DKTimeUtil;
-
+import groovy.time.TimeCategory
 
 /**
  * @author jpanico
@@ -30,5 +30,16 @@ public class TestTimeUtil extends GroovyTestCase {
       def time = DKTimeUtil.createTime( 5, 3, 20, 100)
       assert time
       assert time.getTime() == 18200100
+   }
+
+   public static String localTime(long time) {
+      use(TimeCategory) {
+         return ((new Date(time))).format('yyyy-MM-dd HH:mm:ss')
+      }
+   }
+   public static String localDate(long time) {
+      use(TimeCategory) {
+         return ((new Date(time))).format('yyyy-MM-dd')
+      }
    }
 }
