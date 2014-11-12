@@ -15,6 +15,7 @@
  */
 package org.diffkit.diff.sns.tst
 
+import org.apache.commons.lang.StringUtils
 
 import java.io.File;
 
@@ -73,7 +74,7 @@ public class TestFileSink extends GroovyTestCase {
 		String actual = DKFileUtil.readFullyAsString( sinkFile)
 		assert actual
 		
-		assert expected == actual
+		assert StringUtils.deleteWhitespace(expected) == StringUtils.deleteWhitespace(actual)
 	}
 	
 	private DKStandardTableComparison createSimplePlan() {

@@ -15,6 +15,8 @@
  */
 package org.diffkit.diff.engine.tst
 
+import org.apache.commons.lang.StringUtils
+
 import java.io.File;
 
 import org.apache.commons.lang.ClassUtils;
@@ -178,7 +180,7 @@ public class TestEngine extends GroovyTestCase {
       assert expectedFile
       assert actualFile
       
-      assert DKFileUtil.readFullyAsString(expectedFile) == DKFileUtil.readFullyAsString(actualFile)
+      assert StringUtils.deleteWhitespace(DKFileUtil.readFullyAsString(expectedFile)) == StringUtils.deleteWhitespace(DKFileUtil.readFullyAsString(actualFile))
    }
    
    private File getExpectedFile(String filename_){
@@ -279,7 +281,7 @@ public class TestEngine extends GroovyTestCase {
       String actual = DKFileUtil.readFullyAsString( sinkFile)
       assert actual
       
-      assert expected == actual
+      assert StringUtils.deleteWhitespace(expected) == StringUtils.deleteWhitespace(actual)
    }
    
    private File getTestFile(String filename_){
