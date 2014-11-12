@@ -187,7 +187,7 @@
 
     <build>
         <plugins>
-            <!-- Compiler plugin enforces Java 1.7 compatibility and activates annotation processors -->
+            <!-- Compiler plugin enforces Java ${maven.compiler.source}/${maven.compiler.target} compatibility and activates annotation processors -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${version.compiler.plugin}</version>
