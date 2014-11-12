@@ -43,7 +43,7 @@ public class TestFileSink extends GroovyTestCase {
 	
 	
 	public void testSink(){
-		File sinkFile = ['./testSink.diff']
+		File sinkFile = ['./tstscratch/testSink.diff']
 		if(sinkFile.exists())
 			sinkFile.delete()
 		

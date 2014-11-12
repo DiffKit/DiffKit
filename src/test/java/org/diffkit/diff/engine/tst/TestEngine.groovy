@@ -190,7 +190,7 @@ public class TestEngine extends GroovyTestCase {
    }
    
    private DKFileSink createSink2(String sinkFileName_){
-      File sinkFile = ['./'+sinkFileName_]
+      File sinkFile = ['./tstscratch/'+sinkFileName_]
       if(sinkFile.exists())
          sinkFile.delete()
       return new DKFileSink(sinkFile, false)
@@ -260,7 +260,7 @@ public class TestEngine extends GroovyTestCase {
       DKFileSource lhsSource = new DKFileSource(lhsFile.absolutePath,  tableModel, null, null,'\\,', true, true)
       DKFileSource rhsSource = new DKFileSource(rhsFile.absolutePath, tableModel, null, null,'\\,',  true, true)
       def filename = 'testSameModelFromFile.diff'
-      File sinkFile = ['./'+filename]
+      File sinkFile = ['./tstscratch/'+filename]
       if(sinkFile.exists())
          sinkFile.delete()
       DKFileSink sink = [sinkFile, false]

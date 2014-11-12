@@ -33,13 +33,13 @@ public class TestFileUtil extends GroovyTestCase {
     * does it work from relative paths, or just absolute?
     */
    public void testCanRead() {
-      assert DKFileUtil.canReadFilePaths((String[]) ['conf/logback.xml'])
+      assert DKFileUtil.canReadFilePaths((String[]) ['src/test/resources/logback.xml'])
    }
    
    public void testPrepend() {
       File sourceTarget = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/prepend_target.txt")
       assert sourceTarget
-      File testTarget = ['./prependTest.tst']
+      File testTarget = ['./tstscratch/prependTest.tst']
       FileUtils.copyFile( sourceTarget, testTarget)
       def prependString = 'prepend\nprepend\nprepend\n---\n'
       DKFileUtil.prepend( prependString, testTarget)
@@ -53,7 +53,7 @@ public class TestFileUtil extends GroovyTestCase {
    public void testCopyWithSubstitution() {
       File sourceFile = DKResourceUtil.findResourceAsFile("org/diffkit/util/tst/copyWithSubstitution_target.txt")
       assert sourceFile
-      File copiedFile = ['./copyWithSubstitutionTest.tst']
+      File copiedFile = ['./tstscratch/copyWithSubstitutionTest.tst']
       def substitutions = ['Beware':'swear', 'frumious':'frumpy']
       DKFileUtil.copyFile( sourceFile, copiedFile, substitutions)
       
@@ -76,7 +76,7 @@ public class TestFileUtil extends GroovyTestCase {
       assert sourceFiles
       assert sourceFiles.length == 3
       
-      File destDir = ['./']
+      File destDir = ['./tstscratch/']
       def substitutions = ['Beware':'swear', 'frumious':'frumpy']
       DKFileUtil.copyDirectory( sourceDirectory, destDir, filenameFilter,substitutions)
       File[] destFiles = destDir.listFiles((FilenameFilter)filenameFilter)
@@ -93,10 +93,10 @@ public class TestFileUtil extends GroovyTestCase {
    
    public void testIsRelative(){
       println "separtor->${File.separator}"
-      println "path->${new File('./')}"
+      println "path->${new File('./tstscratch/')}"
       assert DKFileUtil.isRelative(new File("."))
       assert ! DKFileUtil.isRelative(new File(""))
-      assert DKFileUtil.isRelative(new File('./'))
+      assert DKFileUtil.isRelative(new File('./tstscratch/'))
       assert DKFileUtil.isRelative(new File("./test/"))
       assert DKFileUtil.isRelative(new File(".\\"))
       assert ! DKFileUtil.isRelative(new File("/Users/joe/tmp"))

@@ -151,7 +151,7 @@ public class TestCaseRunner implements Runnable {
          DKRuntime.getInstance().getUserLog().info("couldn't validate flavor->{}, skipping.",flavor_)
          return
       }
-      TestCaseRunnerRun runnerRun = [new File('./'), flavor_]
+      TestCaseRunnerRun runnerRun = [new File('./tstscratch/'), flavor_]
       def classLoader = this.class.classLoader
       _log.info("classLoader->{}",classLoader)
       URL dataPathUrl = classLoader.getResource(_dataPath)
@@ -249,9 +249,9 @@ public class TestCaseRunner implements Runnable {
       def expectedFileTemplates = ["dbConnectionInfo.{flavor}.xml", "test18.lhs.dbConnectionInfo.{flavor}.xml", "test18.rhs.dbConnectionInfo.{flavor}.xml"]
       return (String[]) expectedFileTemplates.collect { it.replace('{flavor}',flavor_.toString().toLowerCase())}
    }
-   
-   
-   private void setupDB(TestCase testCase_) {
+
+
+   public void setupDB(TestCase testCase_) {
       DBTestSetup.setupDB(testCase_.dbSetupFile, testCase_.getConnectionInfoFiles(), 
             testCase_.lhsSourceFile, testCase_.rhsSourceFile)
    }
