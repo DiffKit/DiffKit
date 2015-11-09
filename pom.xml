@@ -5,7 +5,13 @@
     <groupId>org.diffkit</groupId>
     <artifactId>diffkit</artifactId>
     <name>Diff tool</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.1-SNAPSHOT</version>
+
+    <scm>
+        <connection>scm:git:git://github.com/DiffKit/DiffKit.git</connection>
+        <developerConnection>scm:git:git@github.com:DiffKit/DiffKit.git</developerConnection>
+        <url>https://github.com/DiffKit/DiffKit</url>
+    </scm>
 
     <properties>
         <targetJdk>1.6</targetJdk>
