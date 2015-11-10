@@ -30,6 +30,13 @@
             <name>project</name>
             <url>file:${project.basedir}/repo</url>
         </repository>
+		
+       <repository>
+          <id>nexus</id>
+		  <name>Sonatype Public Repo</name>
+          <url>https://maven-us.nuxeo.org/nexus/content/groups/public</url>
+       </repository>
+
     </repositories>
 
     <dependencies>
