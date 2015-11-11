@@ -81,6 +81,13 @@ public enum DKDBType {
 
    static {
       _typeRemappings = new HashMap<DKDBFlavor, Map<DKDBType, DKDBType>>();
+
+      // AS400
+      Map<DKDBType, DKDBType> as400db2Map = new HashMap<DKDBType, DKDBType>();
+      as400db2Map.put(NCHAR, CHAR);
+      as400db2Map.put(NVARCHAR, VARCHAR);
+      _typeRemappings.put(DKDBFlavor.AS400, as400db2Map);
+
       // DB2
       Map<DKDBType, DKDBType> db2Map = new HashMap<DKDBType, DKDBType>();
       db2Map.put(NCHAR, CHAR);
