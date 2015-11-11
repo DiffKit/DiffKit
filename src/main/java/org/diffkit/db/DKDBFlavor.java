@@ -23,8 +23,8 @@ import org.diffkit.common.DKValidate;
 public enum DKDBFlavor {
    H2("org.h2.Driver"), MYSQL("com.mysql.jdbc.Driver"), ORACLE(
       "oracle.jdbc.driver.OracleDriver"), DB2("com.ibm.db2.jcc.DB2Driver"), SQLSERVER(
-      "net.sourceforge.jtds.jdbc.Driver"), POSTGRES("org.postgresql.Driver",
-      true, true), HYPERSQL("org.hsqldb.jdbc.JDBCDriver"), SYBASE("");
+      "net.sourceforge.jtds.jdbc.Driver"), POSTGRES("org.postgresql.Driver", true, true), 
+      HYPERSQL("org.hsqldb.jdbc.JDBCDriver"), SYBASE(""), AS400("com.ibm.as400.access.AS400JDBCDriver");
 
    public final String _driverName;
    public final boolean _ignoreUnrecognizedTypes;
