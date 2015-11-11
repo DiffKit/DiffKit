@@ -68,6 +68,8 @@ public class DKDBConnectionInfo {
 
    public String getJDBCUrl() {
       switch (_flavor) {
+      case AS400:
+         return this.getAS400Url();
       case H2:
          return this.getH2Url();
       case DB2:
@@ -90,6 +92,18 @@ public class DKDBConnectionInfo {
 
    public String getDriverName() {
       return _flavor._driverName;
+   }
+
+   // jdbc:as400://<host>[:<port>]/<database_name>
+   private String getAS400Url() {
+      // Altered by KDB for AS400 access.  For the moment ommitting port.
+      //return String.format("jdbc:as400://%s:%s/%s;translate binary=true", _host, _port, _database);
+      if (_host.length() == 0) {
+          return String.format("jdbc:as400://%s;translate binary=true", _database);
+      }
+      else {
+          return String.format("jdbc:as400://%s;database name=%s;translate binary=true", _host, _database);
+      }
    }
 
    private String getH2Url() {
