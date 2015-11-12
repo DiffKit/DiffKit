@@ -42,10 +42,10 @@ public class TestUnjar extends GroovyTestCase {
       outDir.mkdirs()
       DKUnjar.unjar( jarInStream, outDir)
       
-      String[] fileNames = outDir.list()
+      Set<String> fileNames = outDir.list() as Set<String>
       assert fileNames
-      assert fileNames.length==3
-      assert fileNames == (String[])['unjar1.txt', 'unjar2.txt', 'unjar3.txt']
+      assert fileNames.size()==3
+      assert fileNames == (['unjar1.txt', 'unjar2.txt', 'unjar3.txt'] as Set<String>)
    }
    
    public void testUnjarWithSubstitutions(){
@@ -59,10 +59,11 @@ public class TestUnjar extends GroovyTestCase {
       def substitutions = ['Beware':'swear', 'frumious':'frumpy']
       DKUnjar.unjar( jarInStream, outDir, substitutions)
       
-      String[] fileNames = outDir.list()
+      Set<String> fileNames = outDir.list() as Set<String>
       assert fileNames
-      assert fileNames.length==3
-      assert fileNames == (String[])['unjar1.txt', 'unjar2.txt', 'unjar3.txt']
-      assert FileUtils.readFileToString(new File(outDir, fileNames[0])) == FileUtils.readFileToString(new File(outDir, fileNames[2]))
+      assert fileNames.size()==3
+      assert fileNames == (['unjar1.txt', 'unjar2.txt', 'unjar3.txt'] as Set<String>)
+      assert FileUtils.readFileToString(new File(outDir, 'unjar1.txt')) ==
+             FileUtils.readFileToString(new File(outDir, 'unjar3.txt'))
    }
 }
