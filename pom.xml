@@ -4,7 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.diffkit</groupId>
     <artifactId>diffkit</artifactId>
-    <name>Diff tool</name>
+    <packaging>jar</packaging>
+    <name>diff-app</name>
     <version>0.9.1-SNAPSHOT</version>
 
     <scm>
@@ -134,6 +135,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jt400</groupId>
+            <artifactId>jt400</artifactId>
+            <version>8.5</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>ojdbc14</groupId>-->
@@ -269,7 +275,29 @@
                 </dependencies>
             </plugin>
 
-
+            <!--
+                 Some dope added by me.
+             -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.diffkit.diff.conf.DKLauncher</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
