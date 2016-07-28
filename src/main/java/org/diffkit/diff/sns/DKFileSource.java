@@ -223,16 +223,23 @@ public class DKFileSource implements DKSource {
    private Object[] createRow(String line_) throws IOException {
       if (line_ == null)
          return null;
-      String[] strings = line_.split(_delimiter, -1);
+      // Each field may or may not be enclosed in double quotes
+      String[] strings = line_.split(_delimiter + "(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
       DKColumnModel[] readColumns = this.getReadColumns();
       if (strings.length != readColumns.length)
          throw new RuntimeException(String.format(
-            "columnCount->%s in row->%s does not match modelled table->%s",
-            strings.length, Arrays.toString(strings), _model));
+                 "columnCount->%s in row->%s does not match modelled table->%s",
+                 strings.length, Arrays.toString(strings), _model));
       try {
          Object[] row = new Object[strings.length];
          for (int i = 0; i < strings.length; i++) {
-            row[i] = readColumns[i].parseObject(strings[i]);
+            // When strings are enclosed by quotes, remove them.
+            final String s;
+            if (strings[i].startsWith("\"") && strings[i].endsWith("\""))
+               s = strings[i].substring(1, strings[i].length()-1);
+            else
+               s = strings[i];
+            row[i] = readColumns[i].parseObject(s);
          }
          return row;
       }
