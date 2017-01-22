@@ -56,7 +56,7 @@ public class DKDiffEngine {
       return context;
    }
 
-   private void diff(DKContext context_) throws IOException {
+   protected void diff(DKContext context_) throws IOException {
       long maxDiffs = context_._tableComparison.getMaxDiffs();
       _log.info("maxDiffs->{}", maxDiffs);
       context_.open();
