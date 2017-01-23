@@ -5,5 +5,7 @@ jdk:
 
 before_install:
   - pip install --user codecov
+  - export MAVEN_SKIP_RC='true'
+  - export MAVEN_OPTS='-Xmx1024m'
 after_success:
   - codecov
