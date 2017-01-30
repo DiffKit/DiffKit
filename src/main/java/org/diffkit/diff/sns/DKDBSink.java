@@ -76,7 +76,7 @@ public class DKDBSink extends DKAbstractSink {
          _log.error(null, e_);
          throw new RuntimeException(e_);
       }
-      _log.info("_connection->{}", _connection);
+      _log.debug("_connection->{}", _connection);
    }
 
    public void close(DKContext context_) throws IOException {

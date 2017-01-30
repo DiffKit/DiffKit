@@ -62,11 +62,11 @@ public class DKDemoDB {
          throw new RuntimeException(String.format(
             "cannot find connectionInfo in Spring config file->%s",
             CONNECTION_INFO_CONFIG_FILE_PATH));
-      LOG.info("connectionInfo->{}", connectionInfo);
+      LOG.debug("connectionInfo->{}", connectionInfo);
       DKDatabase connectionSource = new DKDatabase(connectionInfo);
       DKDBTableDataAccess tableDataAccess = new DKDBTableDataAccess(connectionSource);
       DKDBTable table = tableDataAccess.getTable(PROBE_TABLE_NAME);
-      LOG.info("table->{}", table);
+      LOG.debug("table->{}", table);
       return (table != null);
    }
 }

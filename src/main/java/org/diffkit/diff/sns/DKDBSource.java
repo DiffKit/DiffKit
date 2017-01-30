@@ -79,12 +79,12 @@ public class DKDBSource implements DKSource {
    public DKDBSource(String tableName_, String whereClause_, DKDatabase database_,
                      DKTableModel model_, String[] keyColumnNames_, int[] readColumnIdxs_)
       throws SQLException {
-      _log.info("tableName_->{}", tableName_);
-      _log.info("whereClause_->{}", whereClause_);
-      _log.info("database_->{}", database_);
-      _log.info("model_->{}", model_);
-      _log.info("keyColumnNames_->{}", keyColumnNames_);
-      _log.info("readColumnIdxs_->{}", readColumnIdxs_);
+      _log.debug("tableName_->{}", tableName_);
+      _log.debug("whereClause_->{}", whereClause_);
+      _log.debug("database_->{}", database_);
+      _log.debug("model_->{}", model_);
+      _log.debug("keyColumnNames_->{}", keyColumnNames_);
+      _log.debug("readColumnIdxs_->{}", readColumnIdxs_);
 
       if (readColumnIdxs_ != null)
          throw new NotImplementedException("readColumnIdxs_ not yet implemented");
@@ -96,7 +96,7 @@ public class DKDBSource implements DKSource {
       _database = database_;
       DKValidate.notNull(_database);
       _table = _database.getTable(tableName_);
-      _log.info("table->{}", _table);
+      _log.debug("table->{}", _table);
       DKValidate.notNull(_tableName);
       if (_table == null)
          throw new RuntimeException(String.format("couldn't find table named->%s",
@@ -104,7 +104,7 @@ public class DKDBSource implements DKSource {
       this.validateKeyColumnNames(_table, keyColumnNames_);
       _keyColumnNames = keyColumnNames_;
       _model = this.getModel(model_, _keyColumnNames, _table);
-      _log.info("_model->{}", _model);
+      _log.debug("_model->{}", _model);
       DKValidate.notNull(_model);
       this.validateModel(_model, _table);
    }
