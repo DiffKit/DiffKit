@@ -292,7 +292,7 @@ public class DKFileSource implements DKSource {
 
    private void readHeader() throws IOException {
       String line = this.readLine();
-      _log.info("header->{}", line);
+      _log.debug("header->{}", line);
       _headerColumnNames = line.split(_delimiter);
    }
 

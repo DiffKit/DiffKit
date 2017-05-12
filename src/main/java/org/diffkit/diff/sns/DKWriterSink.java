@@ -82,7 +82,7 @@ public class DKWriterSink extends DKAbstractSink {
 
    public void open(DKContext context_) throws IOException {
       super.open(context_);
-      _log.info("_writer->{}", _writer);
+      _log.debug("_writer->{}", _writer);
    }
 
    public void close(DKContext context_) throws IOException {

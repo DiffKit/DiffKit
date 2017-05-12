@@ -42,28 +42,28 @@ public class DKDiffEngine {
    public DKContext diff(DKSource lhs_, DKSource rhs_, DKSink sink_,
                          DKTableComparison tableComparison_,
                          Map<UserKey, ?> userDictionary_) throws IOException {
-      _log.info("lhs_->{}", lhs_);
-      _log.info("rhs_->{}", rhs_);
-      _log.info("sink_->{}", sink_);
-      _log.info("tableComparison_->{}", tableComparison_.getDescription());
+      _log.debug("lhs_->{}", lhs_);
+      _log.debug("rhs_->{}", rhs_);
+      _log.debug("sink_->{}", sink_);
+      _log.debug("tableComparison_->{}", tableComparison_.getDescription());
       _log.debug("userDictionary_->{}", userDictionary_);
 
       DKValidate.notNull(lhs_, rhs_, sink_, tableComparison_);
       DKContext context = new DKContext(lhs_, rhs_, sink_, tableComparison_,
          userDictionary_);
-      _log.info("context->{}", context);
+      _log.debug("context->{}", context);
       this.diff(context);
       return context;
    }
 
    protected void diff(DKContext context_) throws IOException {
       long maxDiffs = context_._tableComparison.getMaxDiffs();
-      _log.info("maxDiffs->{}", maxDiffs);
+      _log.debug("maxDiffs->{}", maxDiffs);
       context_.open();
       int oneSide = -1;
       Object[][] rows = new Object[2][];
       Comparator<Object[]> rowComparator = context_._tableComparison.getRowComparator();
-      _log.info("rowComparator->{}", rowComparator);
+      _log.debug("rowComparator->{}", rowComparator);
       while (context_._sink.getDiffCount() < maxDiffs) {
          if (_isDebug)
             _log.debug("diffCount->{}", context_._sink.getDiffCount());

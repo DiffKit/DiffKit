@@ -111,7 +111,7 @@ public class TestCaseRunner implements Runnable {
    }
    
    public TestCaseRunnerRun run(DKDBFlavor flavor_){
-      _log.info("flavor_->{}",flavor_)
+      _log.debug("flavor_->{}",flavor_)
       def runnerRun = this.setupRunnerRun(flavor_)
       if(!runnerRun) {
          _log.info("can't setup runnerRun; exiting.")
@@ -135,7 +135,7 @@ public class TestCaseRunner implements Runnable {
       }
       
       Collections.sort(testCases)
-      _log.info("testCases->{}",testCases)
+      _log.debug("testCases->{}",testCases)
       testCases.each {
          this.setupAndExecute(it, runnerRun)
       }
@@ -153,18 +153,18 @@ public class TestCaseRunner implements Runnable {
       }
       TestCaseRunnerRun runnerRun = [new File('./tstscratch/'), flavor_]
       def classLoader = this.class.classLoader
-      _log.info("classLoader->{}",classLoader)
+      _log.debug("classLoader->{}",classLoader)
       URL dataPathUrl = classLoader.getResource(_dataPath)
-      _log.info("dataPathUrl->{}",dataPathUrl)
+      _log.debug("dataPathUrl->{}",dataPathUrl)
       def substitutionMap = [:]
       substitutionMap.put(TARGET_DATABASE_TOKEN, DEFAULT_TESTCASE_DATABASE)
       substitutionMap.put(TEST18_LHS_TARGET_DATABASE_TOKEN, TEST18_LHS_TARGET_DATABASE)
       substitutionMap.put(TEST18_RHS_TARGET_DATABASE_TOKEN, TEST18_RHS_TARGET_DATABASE)
       if(dataPathUrl.toExternalForm().startsWith("jar:")){
          String testDataArchiveResourcePath = _dataPath + TEST_CASE_DATA_ARCHIVE_NAME
-         _log.info("testDataArchiveResourcePath->{}",testDataArchiveResourcePath)
+         _log.debug("testDataArchiveResourcePath->{}",testDataArchiveResourcePath)
          InputStream archiveInputStream = classLoader.getResourceAsStream(testDataArchiveResourcePath)
-         _log.info("archiveInputStream->{}",archiveInputStream)
+         _log.debug("archiveInputStream->{}",archiveInputStream)
          if(!archiveInputStream) {
             _log.error("couldn't find archive at path->{}",testDataArchiveResourcePath)
             return null
@@ -287,7 +287,7 @@ public class TestCaseRunner implements Runnable {
    }
    
    private void setupAndExecute(TestCase testCase_, TestCaseRunnerRun runnerRun_){
-      _log.info("testCase_->{}",testCase_.description)
+      _log.debug("testCase_->{}",testCase_.description)
       DKPlan plan = null
       Exception exception = null
       try{

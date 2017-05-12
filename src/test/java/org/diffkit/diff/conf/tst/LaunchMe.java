@@ -28,7 +28,7 @@ public class LaunchMe {
    private static final Logger LOG = LoggerFactory.getLogger(LaunchMe.class);
 
    public static void main(String[] args_) {
-      LOG.info("args_->{}", Arrays.toString(args_));
+      LOG.debug("args_->{}", Arrays.toString(args_));
    }
 
 }

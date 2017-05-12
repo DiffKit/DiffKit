@@ -170,7 +170,7 @@ public class DKPoiSheet extends DKAbstractSheet {
          throw new IOException(String.format("no sheet!"));
       Iterator<Row> rowIterator = sheet.rowIterator();
       _rows = IteratorUtils.toList(rowIterator);
-      _log.info("row count->{}", (_rows == null) ? 0 : _rows.size());
+      _log.debug("row count->{}", (_rows == null) ? 0 : _rows.size());
       return _rows;
    }
 
